@@ -1,0 +1,150 @@
+{
+  "handoff_id": "HOSTING146_SERVICES_20261114",
+  "utc": "2026-11-14T16:16:39.151097+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "next verified executor",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "64fad2871e0a716d9964f506bdef1050612b173d",
+  "selected_worktree_status": " M AGENTS.md\n M PLAN.md\n M backend/tools/tool_registry.py\n M docs/CODEX_HANDOFF.md\n M docs/agent_sync/current_long_term_goal.json\n M frontend/firebase.json\n M frontend/package.json\n?? Launch-BS-Chat-Web.cmd\n?? backend/fe_express_owned_records.py\n?? backend/tests/test_bs_chat_tool_bridge_registry.py\n?? backend/tools/bs_chat_tool_bridge.py\n?? docs/AI_BS_MASTER_IMPLEMENTATION_PLAN.md\n?? docs/agent_sync/PRODUCTION_RELEASE_2026-11-14.json\n?? docs/agent_sync/PRODUCTION_RELEASE_2026-11-14.md\n?? docs/agent_sync/SERVICE_STARTUP_2026-11-14.json\n?? docs/agent_sync/SERVICE_STARTUP_2026-11-14.md\n?? docs/agent_sync/SERVICE_STARTUP_SUPPLEMENT_2026-11-14.json\n?? frontend/bs-chat.html\n?? frontend/bs-chat.jsx\n?? frontend/src/utils/feExpressOfflineStore.js\n?? frontend/vite.bs-chat.config.mjs\n",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 26740,
+      "sha256": "2135b6177cccba4db2b982ac8043286e65b921d8dbc55d6704e1eab792948934"
+    },
+    {
+      "path": "PLAN.md",
+      "bytes": 113823,
+      "sha256": "623167ff784fbda3b921f2edf5c74df7f0c4e1530baf792f835308389a4d817a"
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "bytes": 1507348,
+      "sha256": "52139d22d18bc99b07d351f76b4ac1ede0ae58e10e6e646603421c7a5cc6500b"
+    },
+    {
+      "path": "docs/AI_BS_MASTER_IMPLEMENTATION_PLAN.md",
+      "bytes": 15535,
+      "sha256": "75fc4caab12b2b42fcd3d2061b4d03e01cc5f4f1c018eedcc500ebe961e6e828"
+    },
+    {
+      "path": "docs/agent_sync/current_long_term_goal.json",
+      "bytes": 13153,
+      "sha256": "53a64975ef3d2b69db22569f5d7eba9a0d31d1ad5257fbdf8133bf4ce9644238"
+    },
+    {
+      "path": "docs/agent_sync/PRODUCTION_RELEASE_2026-11-14.json",
+      "bytes": 4963,
+      "sha256": "0bfe3b6b58779752cba4b955f576bc0c0044e42cc7703a7692c77e33ccb929e6"
+    },
+    {
+      "path": "docs/agent_sync/PRODUCTION_RELEASE_2026-11-14.md",
+      "bytes": 4119,
+      "sha256": "367fb848586e4f685238e90d45d4f58a7b88b42d2c9a6c13586a1bd33fc8e32f"
+    },
+    {
+      "path": "docs/agent_sync/SERVICE_STARTUP_2026-11-14.json",
+      "bytes": 6007,
+      "sha256": "86a2df3137a1331b616546ca99f8ffed3a0ebf64e042a3df8dfdbb189f222a36"
+    },
+    {
+      "path": "docs/agent_sync/SERVICE_STARTUP_SUPPLEMENT_2026-11-14.json",
+      "bytes": 4160,
+      "sha256": "ab6cb0bfd5ea866f314a581534b81072715a230b4251061970d556bb15409bb5"
+    },
+    {
+      "path": "docs/agent_sync/SERVICE_STARTUP_2026-11-14.md",
+      "bytes": 3454,
+      "sha256": "5047625854f64588eea402fc71cb215b3acb75ce662227af42c3e2c409201642"
+    },
+    {
+      "path": "frontend/bs-chat.html",
+      "bytes": 1856,
+      "sha256": "01ccf0cca200736c916f2af0955ab24f35787e001fb42f03db8669aebe6afec4"
+    },
+    {
+      "path": "frontend/bs-chat.jsx",
+      "bytes": 5784,
+      "sha256": "db026374aa57004493f8295d5584518afed16603dbcd9c786bec757d7fc81fb4"
+    },
+    {
+      "path": "frontend/vite.bs-chat.config.mjs",
+      "bytes": 274,
+      "sha256": "f53e3de37f23afc5900773d967c6022c296e7541cb89ab827b8e47b1775c2950"
+    },
+    {
+      "path": "frontend/firebase.json",
+      "bytes": 2656,
+      "sha256": "cfb98f68144fb2b01b8052ef1e3a2a5102e4f87629e19ed4ac4c9eeac7087323"
+    },
+    {
+      "path": "frontend/package.json",
+      "bytes": 3676,
+      "sha256": "f39b0beed59736b8ba99cc57e8d49cea31c0ae03a0a7e108f851b6e3716f77c6"
+    },
+    {
+      "path": "Launch-BS-Chat-Web.cmd",
+      "bytes": 65,
+      "sha256": "4ff36f9614323cb2d42e99cd1c60fc374d5e6a8d3a9d5335b214205b92467e35"
+    },
+    {
+      "path": "backend/tools/tool_registry.py",
+      "bytes": 300394,
+      "sha256": "43de24c347cdca474499771c94495bbc764853a223b65ca0b5542f8c14ec6039"
+    },
+    {
+      "path": "backend/tools/bs_chat_tool_bridge.py",
+      "bytes": 11196,
+      "sha256": "06b2b25f6201906e74f8f23de5b432c23e041a831572f2da96eaadc2ffa1b51c"
+    },
+    {
+      "path": "backend/tests/test_bs_chat_tool_bridge_registry.py",
+      "bytes": 5839,
+      "sha256": "b2acfc7b6bba646a85fb101ef8e4fbd93a64156b3fe80654a8243a2cd779ed3f"
+    },
+    {
+      "path": "backend/fe_express_owned_records.py",
+      "bytes": 10199,
+      "sha256": "8445d3338e962dcc5c7dd9e249f7465c944205f06ac6df9098c69e120ab1282a"
+    },
+    {
+      "path": "frontend/src/utils/feExpressOfflineStore.js",
+      "bytes": 8881,
+      "sha256": "32a01e96ffb774329057591ac4298690934d28b24eb68a41112fe00dbd9a1a97"
+    }
+  ],
+  "scope": "Selected source/status close; unrelated dirty worktree preserved, no commit or full-tree snapshot",
+  "evidence": [
+    "backups/production_release_20261114_v01/final-smoke.json",
+    "backups/production_release_20261114_v01/hosted-verification.json",
+    "backups/production_release_20261114_v01/public-api-reconnected.json",
+    "backups/bs_chat_tool_bridge_registry_20261114_v01/receipt.json",
+    "backups/services_start_20261114_v01/execution-ledger.jsonl",
+    "backups/services_start_20261114_v01/optional_chroma_live/interpreted-acceptance.json"
+  ],
+  "verified_drive": [
+    "backups/production_release_20261114_v01/drive-verified.json",
+    "backups/production_release_20261114_v01/apk-drive-verified.json",
+    "backups/services_start_20261114_v01/drive-verified.json"
+  ],
+  "completed": [
+    "Hosting146 deployment and all1141 static asset hashes",
+    "Dedicated debug Android APK build/signature and scoped Drive restore",
+    "Existing tunnel reconnect and public health/auth/CORS observations",
+    "Disabled-default diagnostic registry source with12 synthetic checks",
+    "Reviewed service startup and canonical Chroma FTS repair with record preservation"
+  ],
+  "incomplete": [
+    "Authenticated mounted BS-Chat/coding/creative workflows",
+    "Android device/sign-in/streaming and production signing",
+    "Native package146 parity; held inconsistent146 remains unpromoted",
+    "Node token hold, RecDebut review hold, WSL HLS failure",
+    "Encoder/VST processing qualification and reboot persistence",
+    "FE owned route/UI and personal-payment integration",
+    "Original ten goals and six additions"
+  ],
+  "next": "Continue existing FE owned storage with authenticated route/UI integration; separately requalify the two retained ComfyUI-dependent failures now that8189 is running, without treating startup as model/whole-suite acceptance.",
+  "goal_status": "ACTIVE",
+  "complete": false,
+  "selected_source_manifest_sha256": "74010502b698abb03ba4e2e96a7249ccfc56e08867c186a8bbbe556b7964d644"
+}

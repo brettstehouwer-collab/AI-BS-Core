@@ -1,0 +1,24 @@
+{
+    "State":  "PREFLIGHT_PASSED_NO_BOOT",
+    "SID":  "S-1-5-21-2133766663-4066672948-2456486318-1005",
+    "PID":  226452,
+    "VMUUID":  "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+    "StartedUTC":  "2026-10-24T16:07:12.4621478Z",
+    "Commands":  [
+                     {
+                         "ExitCode":  0,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "TimedOut":  false
+                     }
+                 ],
+    "BootRequested":  false,
+    "ContainmentAccepted":  false,
+    "GuestCommandsEnabled":  false,
+    "PasswordStored":  false,
+    "SettingsSHA256":  "F4155B28B0FF3E373CFE9D15F1562949651221413D3AA081BE585FE06704B0CB",
+    "FinishedUTC":  "2026-10-24T16:07:23.6572006Z"
+}

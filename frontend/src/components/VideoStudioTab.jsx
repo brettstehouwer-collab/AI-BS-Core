@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import VLCPreviewMonitor from './VLCPreviewMonitor';
 
+/** @param {{"BACKEND_URL"?: string, "backendUrl"?: string, "sharedVideoPrompt"?: string, "setSharedVideoPrompt"?: (arg0: string) => void}} props */
 export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPrompt, setSharedVideoPrompt }) {
-    const activeBackend = backendUrl || BACKEND_URL || 'http://localhost:8080';
-    const [videoPath, setVideoPath] = useState('C:\\AI-BS\\screenplay_projects\\Echoes_Within\\generated_scene_research_complex.mp4');
+    const activeBackend = backendUrl || BACKEND_URL || '';
+    const [videoPath, setVideoPath] = useState('');
     const [streamUrl, setStreamUrl] = useState('');
     const [isStreaming, setIsStreaming] = useState(false);
     
@@ -12,11 +13,11 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
         "INT. SUB-LEVEL 4 RESEARCH COMPLEX - DAY\nThe emergency alarms pierce the air, echoing off the metallic walls. Dr. Aris Vance bursts through the heavy blast doors, clutching an encrypted datapad to his chest.\nMAYA (O.S.)\nThey're inside the mainframe!\nAris rushes towards Maya, who frantically works on the quantum console.\nARIS (urgently)\nHow much time do we have?\nMAYA (glancing at the console)\nTwo minutes before the automated defense turrets activate.\nAris inserts an override key into a nearby console. Sparks erupt from the overhead conduit as the elevator cable snaps with a deafening CRACK."
     );
     const [isGenerating, setIsGenerating] = useState(false);
-    const [generationLogs, setGenerationLogs] = useState([]);
+    const [generationLogs, setGenerationLogs] = useState(/** @type {Array<string>} */ ([]));
     const [generationEngine, setGenerationEngine] = useState("comfyui"); // "comfyui", "diffusers", "unreal"
     const [videoStyle, setVideoStyle] = useState("cinematic");
     const [isBatchMode, setIsBatchMode] = useState(false);
-    const [activeJobId, setActiveJobId] = useState(null);
+    const [activeJobId, setActiveJobId] = useState(/** @type {string | null} */ (null));
 
     // Recent generated scenes list
     const [recentClips, setRecentClips] = useState([
@@ -52,7 +53,8 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
         }
     ]);
 
-    const STYLE_MODIFIERS = {
+    /** @type {Record<string, string>} */
+const STYLE_MODIFIERS = {
         "none": "",
         "cinematic": "Hyper-realistic cinematic film, 8k resolution, photorealistic, shot on ARRI Alexa, cinematic lighting. ",
         "3d": "High quality 3D animation, Pixar style, Unreal Engine 5 render, vibrant colors, soft lighting. ",
@@ -96,7 +98,8 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
 
     // Polling effect for batch mode
     useEffect(() => {
-        let interval;
+        /** @type {ReturnType<typeof setInterval> | undefined} */
+    let interval;
         if (activeJobId && isGenerating) {
             interval = setInterval(async () => {
                 try {
@@ -183,7 +186,7 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
                 }
             }
         } catch (error) {
-            setGenerationLogs(prev => [...prev, `❌ [ERROR] Connection failed: ${error.message}`]);
+            setGenerationLogs(prev => [...prev, `❌ [ERROR] Connection failed: ${(error instanceof Error ? error.message : String(error))}`]);
         } finally {
             setIsGenerating(false);
         }
@@ -201,7 +204,7 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
                         ⚡ RTX 4090 (24GB VRAM)
                     </span>
                     <span style={{ fontSize: '0.8rem', background: '#1e3a8a', color: '#93c5fd', padding: '3px 10px', borderRadius: '4px', border: '1px solid #3b82f6' }}>
-                        ComfyUI Port 8189 (Online)
+                        ComfyUI Port 8189 (status not checked)
                     </span>
                 </div>
             </div>
@@ -376,7 +379,7 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
                         videoPath={videoPath} 
                         streamUrl={streamUrl}
                         backendUrl={activeBackend}
-                        title={recentClips.length > 0 ? recentClips[0].title : "AI-BS Cinematic Video Preview"}
+                        title={videoPath ? (recentClips.find(clip => clip.path === videoPath)?.title || 'Selected media') : 'Select or open a media file'}
                     />
 
                     {/* Recent Generated Scenes Shelf */}
@@ -387,7 +390,7 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
                         padding: '14px 18px'
                     }}>
                         <h4 style={{ margin: '0 0 10px 0', fontSize: '0.85rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span>🎞️</span> Generated Scene Clips
+                            <span>🎞️</span> Scene Clip Paths (availability not checked)
                         </h4>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             {recentClips.map((clip, idx) => (

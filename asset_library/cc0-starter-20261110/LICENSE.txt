@@ -1,0 +1,7 @@
+Poly Haven starter assets — CC0-1.0
+Asset files are available for commercial use, modification and redistribution; attribution is not required.
+Official license: https://polyhaven.com/license
+CC0: https://creativecommons.org/publicdomain/zero/1.0/
+Studio Small 09: Sergej Majboroda; https://polyhaven.com/a/studio_small_09
+Metal Plate: Rob Tuytel; https://polyhaven.com/a/metal_plate
+Keep this provenance voluntarily. This pack contains raw EXR/PNG only, no add-ons/scripts/.blend files.

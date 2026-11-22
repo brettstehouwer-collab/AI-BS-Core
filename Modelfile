@@ -1,0 +1,2 @@
+FROM llama3:latest
+SYSTEM "You are the Stehouwer LLM. Provide concise, expert answers."

@@ -20,7 +20,7 @@ export function useStehouwerHybrid() {
         const response = await fetch(`${BACKEND_URL}/api/v1/hybrid-chat/stream`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: userPrompt }),
+          body: JSON.stringify({ prompt: userPrompt, user_prompt: userPrompt }),
         });
 
         const reader = response.body.getReader();

@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.25)
+project(AIBSOpeningWorkshopExample LANGUAGES CXX)
+find_package(AIBS 0.15.0 EXACT CONFIG REQUIRED)
+add_executable(opening_workshop_example main.cpp)
+target_compile_features(opening_workshop_example PRIVATE cxx_std_20)
+target_link_libraries(opening_workshop_example PRIVATE AIBS::WarmOpening AIBS::OpeningWorkshop)
+if(MSVC)
+  target_compile_options(opening_workshop_example PRIVATE /W4 /WX)
+endif()
+get_target_property(AIBS_EXAMPLE_HEADERS AIBS::WarmOpening INTERFACE_INCLUDE_DIRECTORIES)
+file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/installed-sdk-$<CONFIG>.txt" CONTENT
+  "AIBS_DIR=${AIBS_DIR}\nHEADERS=${AIBS_EXAMPLE_HEADERS}\nWARM_OPENING=$<TARGET_FILE:AIBS::WarmOpening>\nWORKSHOP=$<TARGET_FILE:AIBS::OpeningWorkshop>\n")

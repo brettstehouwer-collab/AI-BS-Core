@@ -1,0 +1,13 @@
+{
+  "input_sha256": "a4853b0872fd26d1805d63345549b66c2d60404dd7acd658d13cbacb45a47042",
+  "state": "BLOCKED",
+  "static_checks": [
+    {
+      "path": "src/app.js",
+      "kind": "syntax",
+      "status": "not_run",
+      "reason": "JavaScript/JSX parsing requires a qualified project toolchain."
+    }
+  ],
+  "entry_sha256": "7b899b9b6bc6c0dac6553fce0cb690371e101f31ee9b120fa8254a30aa7d6337"
+}

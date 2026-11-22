@@ -1,0 +1,2229 @@
+{
+  "at": "2026-11-03T17:59:43.295060+00:00",
+  "classification": "progress: installedSDK consumers, frozen103current-route/restart and preserved launcher deployment",
+  "goal_complete": false,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "studio_candidate": "5.329.103",
+  "SDK": "0.16.4",
+  "candidate_static": {
+    "at": "2026-11-03T17:34:10.154216+00:00",
+    "status": "passed_static_candidate_not_deployed",
+    "version": "5.329.103",
+    "SDK_version": "0.16.4",
+    "executable": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe",
+    "executable_sha256": "1ff82c6797514cdc3446455a014b60db0f166a8a80dde4b5b9c1c9564826ed35",
+    "package_files": 2301,
+    "package_bytes": 588139180,
+    "runtime_pending": true,
+    "deployment_changed": false,
+    "goal_complete": false,
+    "all_owned_processes_joined": true
+  },
+  "runtime_summary": {
+    "status": "passed_packaged_smokes_limited_normal_and_post_static",
+    "saved_play_checks": 45,
+    "creator_checks": 5,
+    "normal_window_title": "AI-BS Sovereign Studio v5.329.103 [Windows 10/11 x64 Pure Native]",
+    "all_owned_jobs_joined": true,
+    "package_unchanged": true,
+    "old_release_and_sdk_unchanged": true
+  },
+  "current_routes": {
+    "status": "passed_both_packaged_player_world_routes_and_restarts",
+    "routes": [
+      "repair",
+      "bypass"
+    ],
+    "player_world": true,
+    "actual_memory_HUD_survives_restart": true,
+    "logical_history_unchanged": true,
+    "authoring_and_previous_slots_unchanged": true
+  },
+  "CPU_groups": {
+    "package": 126,
+    "hub": 24
+  },
+  "entry_UI_tests": {
+    "status": "passed",
+    "count": 5,
+    "scope": "Source hub UI with actual immutable103bundled resources; static verifier separately pins source-to-frozen bytes. Not a claim of an externally automated click in the frozen process."
+  },
+  "SDK_profiles": [
+    {
+      "configuration": "Release",
+      "file_count": 449,
+      "consumer_test_count": 7
+    },
+    {
+      "configuration": "Debug",
+      "file_count": 449,
+      "consumer_test_count": 7
+    }
+  ],
+  "source_files": {
+    "BroadcastStudioApp/package-lock.json": {
+      "bytes": 222037,
+      "sha256": "ef318e644c909f77d2baa2b8eb28905945a8c41925616e89ececdd7e694c585a"
+    },
+    "BroadcastStudioApp/package.json": {
+      "bytes": 3012,
+      "sha256": "dfc70f4e1a602b226428510162e41df60f57ab54b9b4e7d4043b6f3ea0f94e34"
+    },
+    "BroadcastStudioApp/src/version.js": {
+      "bytes": 357,
+      "sha256": "028dfc6ee28d5c4fe84876a0940a45dcf409435b13a4091e8531929e2e47cb7a"
+    },
+    "engine/CMakeLists.txt": {
+      "bytes": 60783,
+      "sha256": "7d0ce47174bc2db2e6b16bbc9acd1c00fa65ccbea350b7d0812bc83e58d824bc"
+    },
+    "engine/README.md": {
+      "bytes": 23548,
+      "sha256": "eea2d3aa29b572fe600829640abf0af9580fef2bbd8251b8c91e42489260b50a"
+    },
+    "engine/apps/asset_cooker.cpp": {
+      "bytes": 29513,
+      "sha256": "8b99c71e6eeb35f6ce6482bf93934e3fb722b5771895b26ba7cff268b82b334b"
+    },
+    "engine/apps/asset_showcase.cpp": {
+      "bytes": 9282,
+      "sha256": "a8ae9e0e7714408b76f8d5b6b511a8bc9112de148509e39cd8136ebb43d40e49"
+    },
+    "engine/apps/audio_cooker.inl": {
+      "bytes": 9547,
+      "sha256": "daeb17aa00e82d001dff0b0967e4ac9e9911bc7e9c657e0f136eb09e5fea44f1"
+    },
+    "engine/apps/chapter_aim_prompt.inl": {
+      "bytes": 10205,
+      "sha256": "112937e2459a0b0c7ffe0c8e6d2fd5a049dce93c64378e01568bacb39f57587e"
+    },
+    "engine/apps/character_cooker.inl": {
+      "bytes": 9921,
+      "sha256": "cdae8e3a2a3e86299103b9868c310f09212de84aed79552064e84b96d3d05e4f"
+    },
+    "engine/apps/content_host.cpp": {
+      "bytes": 17400,
+      "sha256": "5723dbf41dbcf18607a3ac071784a9b8001308e5c5573648bff4530bff8ae463"
+    },
+    "engine/apps/creator.cpp": {
+      "bytes": 782,
+      "sha256": "3d4e82e65f1eb276403a81a4ddd3c6274b9eeb045382760a3990e7eec1e76770"
+    },
+    "engine/apps/creator_host.cpp": {
+      "bytes": 13180,
+      "sha256": "17daf92e90ecb024f5ea673851da75a149e19fd6129f6d90f5462420fbaa6d76"
+    },
+    "engine/apps/creator_viewport.cpp": {
+      "bytes": 15284,
+      "sha256": "b8f1b24a630bb0d816328f880dc9a14846b289cffd2b16ad42b355c0478d2f41"
+    },
+    "engine/apps/durable_world.cpp": {
+      "bytes": 143918,
+      "sha256": "036fa220624dc83b6141e5d5a2f1a33acf78b648835d0e63d9ac4f7ca992b213"
+    },
+    "engine/apps/first_boot.cpp": {
+      "bytes": 2256,
+      "sha256": "e41a81639193a206c5e81c06dfe4b7a507a40e419eeddca9a144e872e13db35e"
+    },
+    "engine/apps/memory_content_budget.hpp": {
+      "bytes": 1471,
+      "sha256": "b69d4d409b5fc9efcd8d4fe7b2409059a7722b2fb304d60000f510cf65acd892"
+    },
+    "engine/apps/memory_proof.inl": {
+      "bytes": 7468,
+      "sha256": "1ea835c97d21db2fc531a02fd24b3b6043b661fd34d51dd7317d6ef34bc85d05"
+    },
+    "engine/apps/memory_runtime.inl": {
+      "bytes": 19476,
+      "sha256": "d96528fadb514bd236c9c0f4dade5cc2edf01c04e15d106af2bd5db63a35fb98"
+    },
+    "engine/apps/motherboard_sandbox.cpp": {
+      "bytes": 8259,
+      "sha256": "41e03dd4529ace9e7d3d1ea2c0a961edf367387a96343b728a5da495fd76134e"
+    },
+    "engine/apps/native_world.cpp": {
+      "bytes": 23856,
+      "sha256": "47f463a2b681dab9ea112bb0cc86feb91850ee61c05a7e91f11bb064f475d3d5"
+    },
+    "engine/apps/obstacle_course.cpp": {
+      "bytes": 15996,
+      "sha256": "9e310065b193b40df4a06cdbcb5a39fc8649019a9afcee79699ebf88e2511437"
+    },
+    "engine/apps/opening_inspection_panel.inl": {
+      "bytes": 8690,
+      "sha256": "c462e7aad4178671f8eecdf65fe30b7145187ab99fbac6cb75f7e0cd2ba61f51"
+    },
+    "engine/apps/opening_native_proof.inl": {
+      "bytes": 6720,
+      "sha256": "5bf3d10fc0f0b342510c05c003ef9b19918d08b08d58d0e314d59815be398354"
+    },
+    "engine/apps/opening_runtime.inl": {
+      "bytes": 2042,
+      "sha256": "228f09fcdf10fda977b6202c54fb945810e6e24d16ee5f1f551c946acdd84e75"
+    },
+    "engine/apps/opening_tour_guard.hpp": {
+      "bytes": 1430,
+      "sha256": "355f24b0d1652581c92691372674338091dd1b42c1d4c6169f544e1b1dbbcafa"
+    },
+    "engine/apps/opening_tour_runtime.inl": {
+      "bytes": 8698,
+      "sha256": "8ff79c9333bafad3eab5a25e279ed7d266554d16e572b10dea7702c4a15b2033"
+    },
+    "engine/apps/performance_runtime.inl": {
+      "bytes": 9782,
+      "sha256": "545aedb77c3ba68d9c04667e7dcae164d1718f558f736bf09d0c730430db981c"
+    },
+    "engine/apps/recording_hud.hpp": {
+      "bytes": 4222,
+      "sha256": "5d4f80cfa0a7f37d6b741408287709cb6b2b82bc66c669297827b65f52006603"
+    },
+    "engine/apps/recording_runtime.inl": {
+      "bytes": 6107,
+      "sha256": "42e5cc72c19312053e514d3ee3ff9e77a3576bf909da1f814422ef19c0637537"
+    },
+    "engine/apps/reviewed_audio_captions.inl": {
+      "bytes": 11204,
+      "sha256": "851b5d3e72d5fdbad5904a22c16c63ea783e57a00953e5df4b45b0c02fef4245"
+    },
+    "engine/apps/video_encoder.cpp": {
+      "bytes": 21398,
+      "sha256": "8043f125e6fc06ced69d07963eaa86b1f65c7223104f6f9ea84208584fc44745"
+    },
+    "engine/apps/video_encoder.hpp": {
+      "bytes": 2942,
+      "sha256": "dd38cdd362eaa1d0c068d6ec96b3a511ed52b42ce132969401e21f4a24756385"
+    },
+    "engine/apps/warm_opening_project.cpp": {
+      "bytes": 9944,
+      "sha256": "f94b77942f225fc8cdf6d5f28b0f090957703057b24648db6bafbd3c04aef251"
+    },
+    "engine/apps/workshop_tour_path.hpp": {
+      "bytes": 2224,
+      "sha256": "eac30a47ee075ce633fc4b423483634f5a8849762ab59134bf81d6aea5f0aa34"
+    },
+    "engine/apps/workshop_tour_runtime.inl": {
+      "bytes": 11337,
+      "sha256": "d6d8ab20300706bd143de1a909384be1356265933ae098ba2449c735d4c0efc3"
+    },
+    "engine/cmake/CgltfDependency.cmake": {
+      "bytes": 691,
+      "sha256": "98746cd973d603b9e9729ee09a00d570e06ce389b96d2143736407d883460357"
+    },
+    "engine/cmake/JoltDependency.cmake": {
+      "bytes": 1245,
+      "sha256": "8cfcd7c5199be5a7fe3d13991350a7ae9a6a662296f005c71406738b96c58a07"
+    },
+    "engine/cmake/JoltDependency.lock.json": {
+      "bytes": 828,
+      "sha256": "b16d0f9851fd40dc440467f97a5ee312346de7c902907c8e30e70bcfaf54fa71"
+    },
+    "engine/cmake/SQLiteDependency.cmake": {
+      "bytes": 1023,
+      "sha256": "b40bbd25c9b82f7488439171860be6c120821a26c82bbf0a1f9d26fe2fd2cf7c"
+    },
+    "engine/cmake/SQLiteDependency.lock.json": {
+      "bytes": 980,
+      "sha256": "675d5b961209cfacfc685266b1e1133fe4a58ac155b2a0216cb1c28b435251c6"
+    },
+    "engine/examples/opening_workshop/CMakeLists.txt": {
+      "bytes": 758,
+      "sha256": "8b4683b13f9093e650bf92b47ec18c344743eaf16544b769f3e517bd0cc0af37"
+    },
+    "engine/examples/opening_workshop/README.md": {
+      "bytes": 2099,
+      "sha256": "55d0a17341298b3a9cb7fb5d42943a6930ea296c40edc38735335b8428b9a7e7"
+    },
+    "engine/examples/opening_workshop/main.cpp": {
+      "bytes": 8313,
+      "sha256": "e9b92cb291de348d3dcba979dbe3146bb075f9515c4c7eeb8f413df0402e4aa5"
+    },
+    "engine/examples/sdk_consumer/CMakeLists.txt": {
+      "bytes": 1156,
+      "sha256": "8c752979c31c41e6951f5eafc795fc61bbd369bd11385f61836dbb7a418b253a"
+    },
+    "engine/examples/sdk_consumer/guide_gpu.cpp": {
+      "bytes": 10902,
+      "sha256": "81c30b192628924e3ee34d7db9b139eddf89f528223f6c9ae7ad7b2a55467ed9"
+    },
+    "engine/examples/sdk_consumer/main.cpp": {
+      "bytes": 33229,
+      "sha256": "5a5ed09ad29b3ef708f7ba46277e8acd51d261db721303e94097c491721dd548"
+    },
+    "engine/games/content_authoring.cpp": {
+      "bytes": 48438,
+      "sha256": "5fc34b1ca39e5366459d09a323bc2e51b23bff54358545079f8d63e50754b54a"
+    },
+    "engine/games/durable_first_boot.cpp": {
+      "bytes": 22005,
+      "sha256": "8e759f3ca62775c4479f3662f00a7f72b35b523a1278035ae74ed7b802e2fa4c"
+    },
+    "engine/games/first_boot.cpp": {
+      "bytes": 14060,
+      "sha256": "a504671036a248515add48a8636967e0e22b23d80fa4fc44c1c6d2fb4f035fdc"
+    },
+    "engine/games/first_boot_chapter.cpp": {
+      "bytes": 57799,
+      "sha256": "2357a226922114bc163f4add239abb5572ff74e1d89fa515741ee46151206dba"
+    },
+    "engine/games/first_boot_content.cpp": {
+      "bytes": 49814,
+      "sha256": "a83ecc7dc1f4aed65b9a2a1ee831e7d8185e638b03188d037187e4a4a5dfc1a6"
+    },
+    "engine/games/initial_view.cpp": {
+      "bytes": 3179,
+      "sha256": "8e416d422e323f686c310899ab5d3fe052a3234236de01cc853105e53af60717"
+    },
+    "engine/games/movement_course.cpp": {
+      "bytes": 5153,
+      "sha256": "80a4b41ae78d8bf5e17d7af88ef9004b590b909b42babf471d56c7a2ab216de6"
+    },
+    "engine/games/opening_inspections.cpp": {
+      "bytes": 5662,
+      "sha256": "579eaf97786e4a60d5ea1785ca2d0e63b5fbf325505ebcbe0579d50698f79a52"
+    },
+    "engine/games/opening_tour.cpp": {
+      "bytes": 2982,
+      "sha256": "a46661fd1460ac4c5892a632db99f4e55525ed2135fa9ff03ea3473d01744a28"
+    },
+    "engine/games/opening_workshop.cpp": {
+      "bytes": 8593,
+      "sha256": "bc4b0245e64c6886a5358473ce73034fc2e6ae0667e1dd3404188ab0789c8cc7"
+    },
+    "engine/games/warm_opening.cpp": {
+      "bytes": 16886,
+      "sha256": "1c2eba4eb08859ece8f60688c237bad4603092a7a863385fb5a5a197c1a2106e"
+    },
+    "engine/include/aibs/asset_scene.hpp": {
+      "bytes": 1445,
+      "sha256": "96e9db46ad9837dfcc5c72b6e7e41dd1bb36ec16398025a9a2fffb7279aab33b"
+    },
+    "engine/include/aibs/asset_store.hpp": {
+      "bytes": 5465,
+      "sha256": "132d597378517d25965033a3ff5dd7523606f0c7fea50f88ffe2e36d3de356b0"
+    },
+    "engine/include/aibs/assets.hpp": {
+      "bytes": 1761,
+      "sha256": "90b33a7fea076012faa610247b6415ac454decdac8ca577f1888361b6eab30cb"
+    },
+    "engine/include/aibs/audio_assets.hpp": {
+      "bytes": 1783,
+      "sha256": "d7d65513a87f3f48d7ea8a568e0fe73333286d94a966f7b3ab42b87010a8173d"
+    },
+    "engine/include/aibs/audio_codec.hpp": {
+      "bytes": 346,
+      "sha256": "fdc8ea8d92e24d9a59a1ec16964622e74a9cda6bc36a66f382d6759e6de1883d"
+    },
+    "engine/include/aibs/audio_playback.hpp": {
+      "bytes": 2515,
+      "sha256": "176c635370fb807b9b6691b724477b7018f88497f517f0395a3960a56782a7d4"
+    },
+    "engine/include/aibs/chapter_viewport.hpp": {
+      "bytes": 2582,
+      "sha256": "e66eebdadd5d6df48b9533da52ca5f3ad87ab83d627ce350660ed69561138c08"
+    },
+    "engine/include/aibs/character_assets.hpp": {
+      "bytes": 1485,
+      "sha256": "89c98e595a7ebd426aafe2b33838db610794ee9ece8859d46357251b38c9d63f"
+    },
+    "engine/include/aibs/character_codec.hpp": {
+      "bytes": 472,
+      "sha256": "e3255ca29931e24cef53465472e34c423a47e0d687be5b00f18c79b053ecd4d7"
+    },
+    "engine/include/aibs/character_import.hpp": {
+      "bytes": 1588,
+      "sha256": "fd293e62d645fc740463bf9e3d588d8836a949716b1c706e80c2c2df0010cb77"
+    },
+    "engine/include/aibs/character_scene.hpp": {
+      "bytes": 4830,
+      "sha256": "d50acb18f9b5c9371eb5db38c1d8514a1e10c2edbb8ae3b0d5964bd0747f49ed"
+    },
+    "engine/include/aibs/companion_runtime.hpp": {
+      "bytes": 2460,
+      "sha256": "0b4891be645e0e419bd6eebe1056bb420f0637e39961325aedb0703add134a9e"
+    },
+    "engine/include/aibs/content_authoring.hpp": {
+      "bytes": 5650,
+      "sha256": "6d68c1f3f6d0b738d8504dd90e2f621d32df0d6c78af7d27e753a67cae6ff030"
+    },
+    "engine/include/aibs/content_dependencies.hpp": {
+      "bytes": 1241,
+      "sha256": "ec8da61c5819da2f673a5cc2c7216253537cb80bf2e87a8a8cc5701ac74e592c"
+    },
+    "engine/include/aibs/content_lighting.hpp": {
+      "bytes": 551,
+      "sha256": "4a9ce3a8403bdf6bac7b54bfec7db16196542b715130d343d739aaa8c778f8b6"
+    },
+    "engine/include/aibs/creator_host.hpp": {
+      "bytes": 5192,
+      "sha256": "1e7c911b76ab80e993adb0e3029c37de1ab826bc1f8777250f1a544235393de2"
+    },
+    "engine/include/aibs/creator_payload.hpp": {
+      "bytes": 5878,
+      "sha256": "22f7a1d2f071ca4802484f375f9eebd76a5d8e65e20a1917e302f8857de768df"
+    },
+    "engine/include/aibs/creator_viewport.hpp": {
+      "bytes": 3741,
+      "sha256": "f15e4c9ad4f91f0af9456d27eaee036135d9fe9926f5fbdd7689eaf1a16a8fd4"
+    },
+    "engine/include/aibs/creator_wire.hpp": {
+      "bytes": 5215,
+      "sha256": "b9325914c99a8587594e87608f05b3d6ca6388ec6a38153f253adfc3e0184cb3"
+    },
+    "engine/include/aibs/durable_first_boot.hpp": {
+      "bytes": 3825,
+      "sha256": "7ca27d66d414ea696e326d143a166d9d93d68092328144ee1cc189568a9a2ed3"
+    },
+    "engine/include/aibs/engine.hpp": {
+      "bytes": 4681,
+      "sha256": "465003b46edc226053a02676baf9017b21b62fbad786555f833527ee352cf255"
+    },
+    "engine/include/aibs/first_boot.hpp": {
+      "bytes": 1555,
+      "sha256": "f968ec3cc2cc6b3a666571916ecb490c2db7f88a74e605ec909a66aef778e252"
+    },
+    "engine/include/aibs/first_boot_chapter.hpp": {
+      "bytes": 4634,
+      "sha256": "afc78174386d6f305a47e339d3538fbe541383819f64ec6dbdf65188ea2331c7"
+    },
+    "engine/include/aibs/first_boot_content.hpp": {
+      "bytes": 7130,
+      "sha256": "034a8a10b7e0d2b98dce5e9dd4c579a805851d2d56cec91eeafeaf245902ffd1"
+    },
+    "engine/include/aibs/frame_measurement.hpp": {
+      "bytes": 2640,
+      "sha256": "1c4522aa1d56c61e0b436e380628b213fcd6637a4f460e84aa0b19b0f1e020ea"
+    },
+    "engine/include/aibs/gameplay.hpp": {
+      "bytes": 6784,
+      "sha256": "19be9eef8e8facc6b80209942a467b9489d5ac3be8ca38aff25ec036685ce537"
+    },
+    "engine/include/aibs/gameplay_codec.hpp": {
+      "bytes": 1302,
+      "sha256": "06a18974f02bd1155372f544b2189d8068220535e9c44520684f5b8d61e922d0"
+    },
+    "engine/include/aibs/gameplay_store.hpp": {
+      "bytes": 4360,
+      "sha256": "ffe612c4902626a1a9c3ccbc9c2c412ff4a40b9b71d1dbc6c424235fc0ba34dc"
+    },
+    "engine/include/aibs/gameplay_worker.hpp": {
+      "bytes": 3092,
+      "sha256": "270e5b31df100b09993e20e50686433501eed708f5a47d47074b015a563c4c3e"
+    },
+    "engine/include/aibs/gameplay_world.hpp": {
+      "bytes": 3083,
+      "sha256": "29c2bf25f2c45e645cf79d76f75a9a186aa7948d54fa37f2f49c3a6f6b681c5e"
+    },
+    "engine/include/aibs/guide_camera.hpp": {
+      "bytes": 1616,
+      "sha256": "8b6ce5ac2e82d2d05394279b343fbe76fcb1f0cb55d01ea0ccefe53540c1b02b"
+    },
+    "engine/include/aibs/guide_controller.hpp": {
+      "bytes": 3866,
+      "sha256": "0c335520f2c2e799e83b436cc6858561929e64672777412005317c74a49ed2e2"
+    },
+    "engine/include/aibs/guide_presentation.hpp": {
+      "bytes": 1501,
+      "sha256": "06de4e9ec0d38c6053fe2f7a4238e1f0fc3b2e4f9e63f218d3067abe098c3c38"
+    },
+    "engine/include/aibs/image_assets.hpp": {
+      "bytes": 1079,
+      "sha256": "59729e49b83793697bde8c303b1adad8b907148dd617b885641b6c7e3071cc7c"
+    },
+    "engine/include/aibs/initial_view.hpp": {
+      "bytes": 1496,
+      "sha256": "0b734b8cbab3b842334e6aaa3da5eed1b1cfd2f980d0e8366b804817c9a5b1f7"
+    },
+    "engine/include/aibs/legacy_import.hpp": {
+      "bytes": 1674,
+      "sha256": "9566c13b1732280cf7bb01966c6e645bc5690b7d0d46e09da4b89f441e50f6d0"
+    },
+    "engine/include/aibs/lighting.hpp": {
+      "bytes": 2750,
+      "sha256": "d87b671db0d2ce3d6e85f75583d7b6b8afc25059a9b4a8e7a6bdea708be39a49"
+    },
+    "engine/include/aibs/memory_playback.hpp": {
+      "bytes": 2707,
+      "sha256": "66581e7a9023a7bcd92bcc1a454d898fd54aa543b71ba485b8c03a44596e9468"
+    },
+    "engine/include/aibs/movement_course.hpp": {
+      "bytes": 499,
+      "sha256": "788b1c514616513ea2c410a0b7f55471637c2df22fea3bbd9a2673cd1e16aa82"
+    },
+    "engine/include/aibs/opening_inspections.hpp": {
+      "bytes": 2044,
+      "sha256": "09d28d965570a17ef5cc6984f75439848560e75966fd464af9b885a394e82b75"
+    },
+    "engine/include/aibs/opening_tour.hpp": {
+      "bytes": 919,
+      "sha256": "d8b1c7b4d9b36f1c15b14ddee852752dc87ad1b0a1b521425153db20f12f06b1"
+    },
+    "engine/include/aibs/opening_workshop.hpp": {
+      "bytes": 2106,
+      "sha256": "b62cd519a9a6d9e9f63340c5ea06387b4c8721f44bab8ab79d330edad83b701f"
+    },
+    "engine/include/aibs/persistence.hpp": {
+      "bytes": 1400,
+      "sha256": "b898017e3229d65af53a9e16a362bb15dc2d2aab433e86723fbd8aa9640d098c"
+    },
+    "engine/include/aibs/physics.hpp": {
+      "bytes": 2462,
+      "sha256": "e38b7bb350b863ca21e49844714ca57d3747279a940f6e0409a469052a06a04a"
+    },
+    "engine/include/aibs/placed_assets.hpp": {
+      "bytes": 1498,
+      "sha256": "1bca041594cd6231cb056ac08043ab0585830820c17954ad1bfba506b371e330"
+    },
+    "engine/include/aibs/platform.hpp": {
+      "bytes": 1218,
+      "sha256": "3afbff0d40452e3ea136060bbe8318a599a36e57ec2ef733579256643bb94ad3"
+    },
+    "engine/include/aibs/player.hpp": {
+      "bytes": 1262,
+      "sha256": "42fc54930e0e912b5e697a31b7b62b22b8ca9bcc43c2b31d7fbfb1a4a9b48c70"
+    },
+    "engine/include/aibs/render.hpp": {
+      "bytes": 6837,
+      "sha256": "d44cb33b8db910f9eb5452dcd8e84ba424994a554ad52f5cfa527f4be6590ba6"
+    },
+    "engine/include/aibs/scene.hpp": {
+      "bytes": 1224,
+      "sha256": "bade61e06098b94514661575634997cfc6eccb63444ede83c4a1988393dd6035"
+    },
+    "engine/include/aibs/surface_assets.hpp": {
+      "bytes": 1257,
+      "sha256": "d97c55d796b94e1c83109e7b590815acead7d9a9f20bdb3648a685780a1d3828"
+    },
+    "engine/include/aibs/surface_codec.hpp": {
+      "bytes": 633,
+      "sha256": "538fee151d07d5a101ee3a52c441cb48d98a2f1c7fb83094fc88bbb94359a32b"
+    },
+    "engine/include/aibs/textured_scene.hpp": {
+      "bytes": 508,
+      "sha256": "ddecfab4733f1628c91e1f5b79f7d2daa89f1e8b406ece1dcd32bf181561fc52"
+    },
+    "engine/include/aibs/warm_opening.hpp": {
+      "bytes": 1781,
+      "sha256": "5bd7e111ddcbbd9c7688d8f302061a7e49b28f2697f7bcb62eec3a2aa419e494"
+    },
+    "engine/shaders/character.hlsl": {
+      "bytes": 3345,
+      "sha256": "d935b87a4a913457752720a538f1489785c6c2b1a6504bfb54ba310c317cc0c0"
+    },
+    "engine/shaders/lighting.hlsli": {
+      "bytes": 1912,
+      "sha256": "4e22d9d761fc952bbb1cf083a5c1b0ef01d000954956484137e50a2726a09c51"
+    },
+    "engine/shaders/motherboard.hlsl": {
+      "bytes": 1032,
+      "sha256": "0d24f961dc5c92b7c3467cc381e525b0c87beb1084cffbb3789f340c396f3bde"
+    },
+    "engine/shaders/shadow.hlsl": {
+      "bytes": 189,
+      "sha256": "6a808e24e599d6663fe1569de2833286065beacc4765541043446fa271af3014"
+    },
+    "engine/shaders/textured.hlsl": {
+      "bytes": 1157,
+      "sha256": "31f7158e19dd9e4943f2104b8e9c94039addc025505b85642dc19d9fc722ab78"
+    },
+    "engine/src/asset_scene.cpp": {
+      "bytes": 9993,
+      "sha256": "8f6068d112ba4dc39392b899f66769a5ec4d6b73decd1d11e8d0eeeccdd602ab"
+    },
+    "engine/src/asset_store.cpp": {
+      "bytes": 25742,
+      "sha256": "e022ecb78daebfd6c1b1a5945a82106348904dcc62ba6de6a595daf24a89996c"
+    },
+    "engine/src/assets.cpp": {
+      "bytes": 22009,
+      "sha256": "72277b396640c36a874601730fc781d19ff9886b0369f9bfd4bf07b97bb31904"
+    },
+    "engine/src/audio_assets.cpp": {
+      "bytes": 4071,
+      "sha256": "c5eeae2a88e5f46f55f9e83b810da5347dc2c20efea13327f05df8a7ad333f96"
+    },
+    "engine/src/audio_codec.cpp": {
+      "bytes": 5001,
+      "sha256": "012bbc8099baefb736edb64fca0ebb81898039d84dc0563d7fcef8f2d86a8f8f"
+    },
+    "engine/src/audio_detail.hpp": {
+      "bytes": 4573,
+      "sha256": "22bf73e49e2dd98c323ab7e3881324d268ad3ab3e71b29fc3b89f1f358b7b9c1"
+    },
+    "engine/src/audio_device.hpp": {
+      "bytes": 1022,
+      "sha256": "6124d041ca2e85d3a2c453c945522aead5a3894ebfe9b551773a967ea1b304a4"
+    },
+    "engine/src/audio_playback.cpp": {
+      "bytes": 7170,
+      "sha256": "19a6f782781200cfdfd27245505093991eac9ef97720d7bc6646822b76bb00b9"
+    },
+    "engine/src/audio_xaudio2.cpp": {
+      "bytes": 5140,
+      "sha256": "a6d337e3aadc99a88c1cf28153a5dce4ae9a71e678b007a9b03fd44c40f0e49c"
+    },
+    "engine/src/authoring.cpp": {
+      "bytes": 8589,
+      "sha256": "668c9b467f53f29000218f55ef70428941a62b520c355490e144e2e403046d8b"
+    },
+    "engine/src/character_assets.cpp": {
+      "bytes": 4904,
+      "sha256": "9667a717abd17b82721adcac45938c93cccdddf9e81bf3bf84c11edce04380e5"
+    },
+    "engine/src/character_codec.cpp": {
+      "bytes": 15888,
+      "sha256": "26e1906c7e84ebaac81775b0717c6610873dbb60e12d07670b232c0bb6861b9b"
+    },
+    "engine/src/character_import.cpp": {
+      "bytes": 48163,
+      "sha256": "1d2a57b6f5de6a9ad20c64faa23d366f963d3ef2b1d7803a4581d23bcf1b8595"
+    },
+    "engine/src/character_scene.cpp": {
+      "bytes": 14332,
+      "sha256": "b97123df134f89343db0b60505f19459d15ccca6f848ab9636f345fce3259f93"
+    },
+    "engine/src/companion_runtime.cpp": {
+      "bytes": 12149,
+      "sha256": "9fada5eb8d8970fbb6e37d86433b48c055f1d0f737cb1fc5e2f9ab5373c787df"
+    },
+    "engine/src/content_dependencies.cpp": {
+      "bytes": 3765,
+      "sha256": "86abe1dc0607ea918d707ab0648206e881bf6182522c9bf7b3bca3613d612532"
+    },
+    "engine/src/content_lighting.cpp": {
+      "bytes": 3113,
+      "sha256": "e4589043b3988fc1bc41da85b2d9fb6e4322c2787d39a95f1928106ee22ec74f"
+    },
+    "engine/src/core.cpp": {
+      "bytes": 635,
+      "sha256": "045ba5102a7f11f8d88c6490dcb0603570045818050023764f2b4d66c155555e"
+    },
+    "engine/src/creator_host.cpp": {
+      "bytes": 20407,
+      "sha256": "ccaf4c22857f25ff64f701110ae0672341c8a4e4c2da59f206dd2d5ae4a5656b"
+    },
+    "engine/src/frame_measurement.cpp": {
+      "bytes": 5409,
+      "sha256": "4920e551368a6145177878f6786b8c480c3373235c3627253cdd1e2efb918c90"
+    },
+    "engine/src/gameplay.cpp": {
+      "bytes": 17921,
+      "sha256": "5eb7c66f5739b9fefbb0da4006e58e867bf1610f74911115b96f281dba8139f5"
+    },
+    "engine/src/gameplay_codec.cpp": {
+      "bytes": 22130,
+      "sha256": "ac032d06a74799fcfb45f60f75b04bd01a81ac2158f471f583a2a0addb7dc2ae"
+    },
+    "engine/src/gameplay_store.cpp": {
+      "bytes": 46015,
+      "sha256": "e991fc8740623f1156269969cd31e3b8ef3e87bde19043232e318bd0ab2d2da3"
+    },
+    "engine/src/gameplay_worker.cpp": {
+      "bytes": 11665,
+      "sha256": "0b94909b8c8d5a189102bfbc33128c4b8639b3c7babf2a87acb71d9424009eb8"
+    },
+    "engine/src/gameplay_world.cpp": {
+      "bytes": 15381,
+      "sha256": "9dda3909cfc76928c91ac8646311a47dd1bd599cf2104f2e2ae548384bab7413"
+    },
+    "engine/src/guide_controller.cpp": {
+      "bytes": 14167,
+      "sha256": "256af746cf416c8e522879a697df312a956a0d5d7ebcb53297e63f191e1fc57a"
+    },
+    "engine/src/guide_presentation.cpp": {
+      "bytes": 9127,
+      "sha256": "4617b2517d8b0e490990c37758216591f73a33f026c27ab4c8e3bf5da0b9960a"
+    },
+    "engine/src/identity.cpp": {
+      "bytes": 1236,
+      "sha256": "aecc0e06e789faa261647bd8eae3544f0c2a080e3d50921ec01aabca43358c51"
+    },
+    "engine/src/image_assets.cpp": {
+      "bytes": 5816,
+      "sha256": "51f2364267ba95ae389c3eb6b3b7e4c035ccac3f8103f0d7fac99d14eeb69f50"
+    },
+    "engine/src/legacy_import.cpp": {
+      "bytes": 8012,
+      "sha256": "b0a005f193b1f13751546e38b3f4952321e25bfea82ee1f4ba39295d60d94667"
+    },
+    "engine/src/lighting.cpp": {
+      "bytes": 6762,
+      "sha256": "c8e1c597c51bf2a96949c58eb9b502779e2bb77e83df0a43adaf8fc6973803c0"
+    },
+    "engine/src/memory_detail.hpp": {
+      "bytes": 276,
+      "sha256": "e5387adbff0e9d1a332c375899415c3d2c98c4fda14de1bf41fa963ad01c813a"
+    },
+    "engine/src/memory_playback.cpp": {
+      "bytes": 8233,
+      "sha256": "4735fe51b714f1a4d97f2d97b08592962bb9e47f655177ce90df5fcec2455834"
+    },
+    "engine/src/persistence.cpp": {
+      "bytes": 20005,
+      "sha256": "66416825d8060cdd1eb4d9b2bf30eb0dea7a20c8500f3385c24e13d317c21fcc"
+    },
+    "engine/src/physics.cpp": {
+      "bytes": 10778,
+      "sha256": "ee99b3031ddbde9673d96b684b90437429d3791e5a0f68ab6b7ee9f95e10224b"
+    },
+    "engine/src/placed_assets.cpp": {
+      "bytes": 9214,
+      "sha256": "0b7bc2bfa664e31720090e19e9f18c8b31bafea9cd0bb17ca9a5dc22e626b931"
+    },
+    "engine/src/platform_win32.cpp": {
+      "bytes": 9578,
+      "sha256": "c59ad5dcb438146e39e706e145424f32c68bc9ff6c90a1c270f18a0c1d4c939b"
+    },
+    "engine/src/player.cpp": {
+      "bytes": 2715,
+      "sha256": "4d54e149fd975ce25f8834ce845e778fe8f6b5af7199daa126b9f344a0f5a9e4"
+    },
+    "engine/src/render_character.inl": {
+      "bytes": 24474,
+      "sha256": "eb9fd21f610a90f6de20c32c000df82e03199f5e535ec29b19f7da6f98336186"
+    },
+    "engine/src/render_dx12.cpp": {
+      "bytes": 54169,
+      "sha256": "b7dea9bfe5260dcab16cc9cfaa826e4277b9b023f74857d20bb2021662024cc0"
+    },
+    "engine/src/render_lighting.inl": {
+      "bytes": 10297,
+      "sha256": "cd2948e5898f74864b7191094030c045c0dee71fa2646552b0ee442a8c621147"
+    },
+    "engine/src/render_submission.hpp": {
+      "bytes": 1230,
+      "sha256": "0452453373fc2f66b6f0a9abae308748d09056c5b0749c34e6bba07a04699655"
+    },
+    "engine/src/render_textures.inl": {
+      "bytes": 11788,
+      "sha256": "ab328c71c84199907643ee7a531195cf3fc75e6ca46bfbcb469bd1432b9eb002"
+    },
+    "engine/src/scene.cpp": {
+      "bytes": 7004,
+      "sha256": "82399a0515e456923eb4090a71e476d7bf614d9cced6109c0666008b52bc2a30"
+    },
+    "engine/src/surface_assets.cpp": {
+      "bytes": 10655,
+      "sha256": "25bdf23793c42e5845f9a9f7c51f27c574ee143d0f272e569e8beb890071b5f2"
+    },
+    "engine/src/surface_codec.cpp": {
+      "bytes": 7190,
+      "sha256": "d2747498062cd911e0e27006cf88a0ab9b520c1164bd14cf8419e263ffc6dd91"
+    },
+    "engine/src/textured_scene.cpp": {
+      "bytes": 1300,
+      "sha256": "309dc57ff49c38830979ebdcc8fb08df82e226044521d4ebde7c16c9815c8953"
+    },
+    "engine/src/world.cpp": {
+      "bytes": 588,
+      "sha256": "9534107b898d3f71b74808bc3ea71905cd7045f01c5c38f13078dc0db675f3cf"
+    },
+    "engine/tests/asset_placement_content_tests.cpp": {
+      "bytes": 16879,
+      "sha256": "0ca4791c7075706b00bd9051737d7dbef7b175515f5989d24e0cc7cd2d22b693"
+    },
+    "engine/tests/asset_scene_tests.cpp": {
+      "bytes": 16964,
+      "sha256": "efd895127d7d3fa4f99d6cc5d845f132ddb580abff1a5345ac25ccfbf32a5c71"
+    },
+    "engine/tests/asset_store_tests.cpp": {
+      "bytes": 15209,
+      "sha256": "20fd640724275e459ae925ee9b93e13c1c035d6db9463c4f71e01d74a3a4dec8"
+    },
+    "engine/tests/asset_tests.cpp": {
+      "bytes": 8486,
+      "sha256": "ad5ff1454d5b6bd990047085c69d13616c28480389ca6b936b1de952d119fbde"
+    },
+    "engine/tests/audio_content_tests.cpp": {
+      "bytes": 19513,
+      "sha256": "32163c40e3b21afc511722c2ba8507a0805885d5276cbd440102595ad6ceaa87"
+    },
+    "engine/tests/audio_playback_device_tests.cpp": {
+      "bytes": 6749,
+      "sha256": "382b763925feb890607e3289bdfa7001169e9c440cd496cfc1db73e35aaf9748"
+    },
+    "engine/tests/audio_playback_tests.cpp": {
+      "bytes": 11289,
+      "sha256": "934195233e364f2dc20a6f5bd7ee2232ef1e55b81de0ee297c6ca89dc6112f44"
+    },
+    "engine/tests/audio_store_tests.cpp": {
+      "bytes": 8742,
+      "sha256": "55ea34c125a04519e3f0359f63da0bb08a01e79c7016b27d4c47dcf170e3573f"
+    },
+    "engine/tests/audio_tests.cpp": {
+      "bytes": 17237,
+      "sha256": "cbc546a2d0671427aadd8c11c5f66e2937d5639d8b72bba94590f8285db51d20"
+    },
+    "engine/tests/budget_gpu_tests.cpp": {
+      "bytes": 12335,
+      "sha256": "d5a62b4eb796a7dc3eb06db564762787f9ab3f7d8ecf92d293caa9fb38ef29b8"
+    },
+    "engine/tests/chapter_aim_prompt_tests.cpp": {
+      "bytes": 14716,
+      "sha256": "b8d74e3d910d85f2530783cf9de28839097f73a88de9edfcfee849382f46b58f"
+    },
+    "engine/tests/chapter_lighting_fixture.cpp": {
+      "bytes": 4636,
+      "sha256": "37a891538099a0f79dab6ea84e97983fd768ef30fe7122708387679ad4578280"
+    },
+    "engine/tests/chapter_viewport_tests.cpp": {
+      "bytes": 3916,
+      "sha256": "0fb6bee441fc23f332bcce4ad2fafd50eb97005734409233d2a6bdbc88f5b972"
+    },
+    "engine/tests/character_assets_tests.cpp": {
+      "bytes": 6750,
+      "sha256": "8097197effa753c90f9e316a67572bf1b2d5ade225a5730cd03defec74d38048"
+    },
+    "engine/tests/character_codec_tests.cpp": {
+      "bytes": 7395,
+      "sha256": "106fbfd852cf70f52b3b3ead4523ab3c682560647e2d1b859c64b1dbe257f507"
+    },
+    "engine/tests/character_gpu_tests.cpp": {
+      "bytes": 28691,
+      "sha256": "a337afafa38e3bfbb5bb6133a65a19bbaa3d86f8c404227334fb20e16e1a619e"
+    },
+    "engine/tests/character_import_tests.cpp": {
+      "bytes": 13234,
+      "sha256": "bbd59ccec678ede89d40732255462019b1a57be6f2c430f01023dcb00e4eb43b"
+    },
+    "engine/tests/character_material_gpu_tests.cpp": {
+      "bytes": 19897,
+      "sha256": "6baf552a2c51ccc875a7f17614a440c91921943eea4ae367c7d91a8027cec5c9"
+    },
+    "engine/tests/character_scene_tests.cpp": {
+      "bytes": 13467,
+      "sha256": "59315405011d2ad316f8ff324a20b11d2d0824e8273c3d5cecd4e683f01eb486"
+    },
+    "engine/tests/character_store_tests.cpp": {
+      "bytes": 15459,
+      "sha256": "7ece1abe674f655fb5a96bf5770c2147f3b8f0ed05a9c3edb07392c3b03e22d3"
+    },
+    "engine/tests/checkpoint_assessment_tests.cpp": {
+      "bytes": 6437,
+      "sha256": "f93fb5694a35e4f5621ae661dc5a712e26e8239c4a457397ba664aaee9e70c42"
+    },
+    "engine/tests/checkpoint_probe.cpp": {
+      "bytes": 2030,
+      "sha256": "a5dcc718bbd31b0e6c786b889834cc54d6c8cbac79c884dc4809df0267d7c08f"
+    },
+    "engine/tests/companion_content_tests.cpp": {
+      "bytes": 13804,
+      "sha256": "2db5d488c301d5d0b088b1264bfb5db4f2030028abca9f3b018102166b2f8948"
+    },
+    "engine/tests/companion_native_fixture.cpp": {
+      "bytes": 4680,
+      "sha256": "2f7b7f07a981c48b8996869d1fed21ece35376e8c86b91c71a6c45d11a2cbb65"
+    },
+    "engine/tests/companion_runtime_tests.cpp": {
+      "bytes": 11853,
+      "sha256": "bf7b9934cf739f205e9c7fab404b34e851648eff49f7bf7dcda88713c5043347"
+    },
+    "engine/tests/companion_semantics_tests.cpp": {
+      "bytes": 15148,
+      "sha256": "a8c8de1e6e87c9520968bc1448866454e42836c1a1a7902d6699e77a9269dbd8"
+    },
+    "engine/tests/content_authoring_tests.cpp": {
+      "bytes": 7934,
+      "sha256": "fbdb4f846979a8f77d4706ad2dfe06ba8f7fca1182dd4558462516e83ba0f238"
+    },
+    "engine/tests/content_dependency_tests.cpp": {
+      "bytes": 3529,
+      "sha256": "cffc2eea781d3a7345e7b3656d68bda507bc6d2f8f7702d8aed3f2647d554d2d"
+    },
+    "engine/tests/content_lighting_tests.cpp": {
+      "bytes": 9569,
+      "sha256": "49a461c2183e4a041066e38c8e27b19328f0b4c86493c597cf4b9349a90e96fd"
+    },
+    "engine/tests/content_play_fixture.cpp": {
+      "bytes": 2103,
+      "sha256": "72e8208cedcbc42c50f3041d18ece37869a5ee6167f8ebcf27d7b187faf72fde"
+    },
+    "engine/tests/content_v3_tests.cpp": {
+      "bytes": 10974,
+      "sha256": "0ebde1f04be17cbf6c4c719430dfe06cf031cdeb17d0e06f88c329f41655eba2"
+    },
+    "engine/tests/creator_host_tests.cpp": {
+      "bytes": 2253,
+      "sha256": "aecdc85c71dde34833f4e9a749427b435ac115221d9d1167d04dab455f9fe4c4"
+    },
+    "engine/tests/creator_host_validation_tests.cpp": {
+      "bytes": 28943,
+      "sha256": "4d2f75c8a85fd680edec80f13a51e7e2add7c2c91abebf2f170ef3901d0bdee0"
+    },
+    "engine/tests/creator_introspection_tests.cpp": {
+      "bytes": 8799,
+      "sha256": "189fb85b704256a8881e73e618e1a0a520f659fdf79627e565e6faa7f2d7d54f"
+    },
+    "engine/tests/creator_payload_probe.cpp": {
+      "bytes": 828,
+      "sha256": "3a097aa46cf2929d18338e929963c8a7ff96ba858d2f56c60801e526f61a773d"
+    },
+    "engine/tests/creator_viewport_tests.cpp": {
+      "bytes": 3084,
+      "sha256": "75494d3f732a2db2fd4d3ba6da5706e95738e9845c04aa1d7a66e99c027720fb"
+    },
+    "engine/tests/creator_wire_probe.cpp": {
+      "bytes": 792,
+      "sha256": "6ca7b845d169eaf05d6d8aa05983a2e506c487fa18fef3b397ba4c035c5123ad"
+    },
+    "engine/tests/durable_first_boot_tests.cpp": {
+      "bytes": 22322,
+      "sha256": "6c96145753b5e4558a0e5d40afb2ab7c8757c30fa0ffcf308f1603c5b9517e59"
+    },
+    "engine/tests/first_boot_chapter_tests.cpp": {
+      "bytes": 32891,
+      "sha256": "3a1980192be5f65b2d94c549ad411b446424a4e98af17e8dcd0acc31db4a39f8"
+    },
+    "engine/tests/first_boot_chapter_traversal_tests.cpp": {
+      "bytes": 10689,
+      "sha256": "e9254a311d184c6ceafb29ed0d87f63c70d22d4d4c1e1f85d54bf8aee1e8a533"
+    },
+    "engine/tests/first_boot_content_tests.cpp": {
+      "bytes": 10419,
+      "sha256": "69546038a575c48493f8278e364df5b643b09ea68c8fee7daf1d84aece68763e"
+    },
+    "engine/tests/first_boot_tests.cpp": {
+      "bytes": 13766,
+      "sha256": "987b4a561efb57dc8ddddf758b329e152b75eddfff6a7595892f9fc9a423b127"
+    },
+    "engine/tests/fixtures/character_import/README.md": {
+      "bytes": 264,
+      "sha256": "eff277d97e38d6139ba522ec9ebd0739296377da1b14fcfa025de71eec644e6f"
+    },
+    "engine/tests/fixtures/character_import/source-oracle.txt": {
+      "bytes": 1972,
+      "sha256": "d4c706856d06e98ce3bd520697153104d5e66d86b122c024df9a0c4dd2f664af"
+    },
+    "engine/tests/fixtures/generate_character_import.py": {
+      "bytes": 16471,
+      "sha256": "3f6125502ae9fff05867a963763a7ec6cd35ae4eb5633352aa2dcc5501c50c7a"
+    },
+    "engine/tests/fixtures/semantic_v1_fixture.hpp": {
+      "bytes": 1527,
+      "sha256": "3bb42b9e4885eb4fe44d461e86f95105591a3c8b4ba1cbb6d61ebfc9e28e5edb"
+    },
+    "engine/tests/fixtures/semantic_v1_golden.hpp": {
+      "bytes": 9738,
+      "sha256": "b5423513eb0c04f62c9420c20c2a67f3bf82c24fe6c5b47519b427003f191d7a"
+    },
+    "engine/tests/fixtures/semantic_v2_golden.hpp": {
+      "bytes": 3550,
+      "sha256": "f12f94a5b6579891509a46359f5f70174411d870d63b70c95c1f092b866228cb"
+    },
+    "engine/tests/foundation_tests.cpp": {
+      "bytes": 5697,
+      "sha256": "489a28eac4592e1db2a1c55be80d8fdedcf579727784a14ecde146da6f6559f1"
+    },
+    "engine/tests/frame_measurement_tests.cpp": {
+      "bytes": 6152,
+      "sha256": "fc68917afe693c6211cc2afac85e7d1c4e55a7217ed4f4418542ab161b6f38ea"
+    },
+    "engine/tests/gameplay_codec_tests.cpp": {
+      "bytes": 11351,
+      "sha256": "fd3dafbc94501a61e5447fb66305ce1745de6d919e7315059dc322210776e9ac"
+    },
+    "engine/tests/gameplay_readonly_tests.cpp": {
+      "bytes": 16857,
+      "sha256": "b821f938da981155e2a80b38f54aabb4afee805ee4c818a6f8acf6d089a851a9"
+    },
+    "engine/tests/gameplay_registry_probe.cpp": {
+      "bytes": 12024,
+      "sha256": "d43dbb3f99b3c2bf87a663d8449c2a68c6de7a257006948cd2ed1d323b03dbfe"
+    },
+    "engine/tests/gameplay_registry_tests.cpp": {
+      "bytes": 14216,
+      "sha256": "f320f5710f0f3b7ad6a946493979d145d0b88b7dcde1974f2eae44997917440e"
+    },
+    "engine/tests/gameplay_store_probe.cpp": {
+      "bytes": 5987,
+      "sha256": "3562dbbdb463e97ef9463334e5221481dafd75ee7389cb26ff09bda82b77797d"
+    },
+    "engine/tests/gameplay_store_tests.cpp": {
+      "bytes": 22096,
+      "sha256": "390e8e3f5638baa745d6a5b182a44590ae68a5a36a0a1172978248c274814185"
+    },
+    "engine/tests/gameplay_tests.cpp": {
+      "bytes": 14725,
+      "sha256": "30c13a40d4441a665e618940d132e8e98c62b3dfef029cfd164ddcc3a0458803"
+    },
+    "engine/tests/gameplay_worker_tests.cpp": {
+      "bytes": 21331,
+      "sha256": "1ec7706a983a5a8260a969a9a18f0576ed30284abe99aace924c99ed6cb14c75"
+    },
+    "engine/tests/gameplay_world_tests.cpp": {
+      "bytes": 17527,
+      "sha256": "3e775b5ca4f47692a77eaff4033f0937029ef4aec3a6ec3a5a398951c5f9a3f5"
+    },
+    "engine/tests/guide_camera_tests.cpp": {
+      "bytes": 2227,
+      "sha256": "db200c56b21c0c9a4dee9549d50c142f8b02b55c2da54effaabe96d656a58832"
+    },
+    "engine/tests/guide_controller_tests.cpp": {
+      "bytes": 8999,
+      "sha256": "5092b229d844258b729eb3c7dea81dbd3f1f6125dd9b04dc861dee99dae10ad2"
+    },
+    "engine/tests/guide_presentation_continuity_tests.cpp": {
+      "bytes": 4803,
+      "sha256": "ff3a14e6b7c91f246b856f6912591c71c0974771232cc58476ff31a1679450d1"
+    },
+    "engine/tests/guide_presentation_tests.cpp": {
+      "bytes": 8911,
+      "sha256": "fce46eeaa5513f320c49ceac7ffb081beac0aadc95ec687944da234755355412"
+    },
+    "engine/tests/guide_semantic_scene_tests.cpp": {
+      "bytes": 10754,
+      "sha256": "b9216c8aa46bcb684def8678559a56925b585952525150891eda3c3e68451d3e"
+    },
+    "engine/tests/image_assets_tests.cpp": {
+      "bytes": 1920,
+      "sha256": "ca7ad7f46031798ad114265e7d920f4d18fb7bffc8edd60ffcd53d653bb23dc1"
+    },
+    "engine/tests/initial_view_content_tests.cpp": {
+      "bytes": 5442,
+      "sha256": "3ebdaf211f526f27bab9589e88a3930185371348f6b21b3565f658acd9ce0309"
+    },
+    "engine/tests/initial_view_tests.cpp": {
+      "bytes": 5565,
+      "sha256": "a31500beb5c0dc4274d49867a6b4e3f0d8c437893a48c0688d4523a2f1cd61aa"
+    },
+    "engine/tests/legacy_import_tests.cpp": {
+      "bytes": 11226,
+      "sha256": "ddd9f4a018ef9af563ad3b62705ccbde3a041abcdfbb23cc0dbcc436de1f9350"
+    },
+    "engine/tests/lighting_gpu_tests.cpp": {
+      "bytes": 12020,
+      "sha256": "b6d86d3253978eaefdc9206e0d20f324d82d6ff5a75fcf110a2e5c723488796a"
+    },
+    "engine/tests/lighting_tests.cpp": {
+      "bytes": 8215,
+      "sha256": "0fbd4477246898ed2d2be56c0cf285a6faaf22bf59cf3163c55b14dc034b9564"
+    },
+    "engine/tests/memory_native_fixture.cpp": {
+      "bytes": 6430,
+      "sha256": "62efa7d77ac1736c27323817646c825ff537801b5cb0ef3c24944f926ce4e24d"
+    },
+    "engine/tests/memory_playback_device_tests.cpp": {
+      "bytes": 6281,
+      "sha256": "0aef4e6a488af4441bb318d43d7e726f0c7b451433f624eb4ff00f83d8aed46a"
+    },
+    "engine/tests/memory_playback_tests.cpp": {
+      "bytes": 10286,
+      "sha256": "8c221ece2da36d2d8f57d4fe469da754fd6335df24f27aae6068768a6c312d25"
+    },
+    "engine/tests/memory_scene_budget_tests.cpp": {
+      "bytes": 1585,
+      "sha256": "c962938b6471e83876ca47fb5f9d8a49eda1b7fd90fb0a687b79cdba5202dca8"
+    },
+    "engine/tests/mock_encoder.cpp": {
+      "bytes": 337,
+      "sha256": "fcb536c139dca64805dfc5c585d088f805bf8f1ae685b466a6bd8d0fb1fef479"
+    },
+    "engine/tests/movement_course_tests.cpp": {
+      "bytes": 3852,
+      "sha256": "e654bdbef2722e00b853f2b0bbdd58b98f5fafe178a4f122294e75333089fdcf"
+    },
+    "engine/tests/native_saved_play_tests.cpp": {
+      "bytes": 14268,
+      "sha256": "8b48a6c1c85751d6b68007aa1a960a1b4ef98f87d5252f2b0cf43ee7bd6c2253"
+    },
+    "engine/tests/opening_content_tests.cpp": {
+      "bytes": 15820,
+      "sha256": "10757cf74e3640157a23325ff506c7f088e66299f31e46b8522e010e979b2842"
+    },
+    "engine/tests/opening_inspection_tests.cpp": {
+      "bytes": 6977,
+      "sha256": "276227c99cd77deb3bab9b56e53b254a7048b104b6ec0794e3ac277d6e502391"
+    },
+    "engine/tests/opening_tour_tests.cpp": {
+      "bytes": 5038,
+      "sha256": "ca5d38f655f228eb1c0a9d77ca0a8d8370ee105449c373b0bda36e9bc29d600f"
+    },
+    "engine/tests/opening_workshop_integration_tests.cpp": {
+      "bytes": 18151,
+      "sha256": "95b930b97559852657e911faf983ae6525c5d97fd2fd48fe0bdae5ddb33e2f67"
+    },
+    "engine/tests/opening_workshop_tests.cpp": {
+      "bytes": 15997,
+      "sha256": "8f8ded29b4de72c14fca3b08e03a3eb02fb891f7d5adaddaa7040a8e3dfb156b"
+    },
+    "engine/tests/persistence_tests.cpp": {
+      "bytes": 5510,
+      "sha256": "f7e592d9bbd4b3560f58fe7817b04808d30b514366bf0b40ff7561c3ff63ad57"
+    },
+    "engine/tests/physics_tests.cpp": {
+      "bytes": 9906,
+      "sha256": "83686ec256a859e63ea0a3fe812fca2728199e95a96f449fe377a1519f99817b"
+    },
+    "engine/tests/placed_assets_tests.cpp": {
+      "bytes": 3957,
+      "sha256": "c39aedaf5821f58157c69a2ea07338060906888dd1f9b1999555b294999c3d97"
+    },
+    "engine/tests/placement_render_fixture.cpp": {
+      "bytes": 14008,
+      "sha256": "44e8e864ac2ee6eea0bc47f0cf334aec06578f00e738941454f253a6ddf2b2db"
+    },
+    "engine/tests/player_tests.cpp": {
+      "bytes": 6047,
+      "sha256": "50597a69f02ab6c25048c31f8662202daf21b78e6fb9fa7b205599928fe3b536"
+    },
+    "engine/tests/recording_hud_tests.cpp": {
+      "bytes": 8278,
+      "sha256": "f389b7e4abcc46d5b7e2b77b35a382bfe9fbaccdcf260ed8264e7715a0a7e80a"
+    },
+    "engine/tests/recording_readback_tests.cpp": {
+      "bytes": 8800,
+      "sha256": "3412e9a01590d3be9d07ea1b81d1abf8b5e16c20afcd0a299037e704a47228d7"
+    },
+    "engine/tests/render_submission_tests.cpp": {
+      "bytes": 1997,
+      "sha256": "b3badf55e577f0e59f7f0b5195709975e6ed536ceca20ef814dd240b2b739d6a"
+    },
+    "engine/tests/render_validation_native.cpp": {
+      "bytes": 2681,
+      "sha256": "5c6920afde76b7f60c098731e4a5ab6fc555c700f3bc8bdc9bf4f456e2119489"
+    },
+    "engine/tests/renderer_tests.cpp": {
+      "bytes": 1894,
+      "sha256": "9657af6009bf250edaeaae2f1479fbe9fa9a03a2b618e6eca8ab1d989794368b"
+    },
+    "engine/tests/report_helper.hpp": {
+      "bytes": 2688,
+      "sha256": "1d96736074df51833b82c6722ea86a5d9713472918a175f569a37ed12199c554"
+    },
+    "engine/tests/reviewed_audio_captions_tests.cpp": {
+      "bytes": 6670,
+      "sha256": "742604ff23152aae9cd51dc226d52a29269d573a49f2f588fba1d7fa6afeecb9"
+    },
+    "engine/tests/scene_tests.cpp": {
+      "bytes": 7076,
+      "sha256": "27d98ad4c384369b8cab9f263f51a26cb964e9171f6414fdf779a569e94b34dc"
+    },
+    "engine/tests/semantic_v2_store_tests.cpp": {
+      "bytes": 15640,
+      "sha256": "15c184db25d0bb0f064068a14d935bc58b9bf8097a9c81d81c18c5d19315e701"
+    },
+    "engine/tests/semantic_v2_tests.cpp": {
+      "bytes": 8286,
+      "sha256": "673171e5d9e8e1324c6a2f653657d626c5c54828654944058a02db1ef7f70cdc"
+    },
+    "engine/tests/status_panel_tests.cpp": {
+      "bytes": 5133,
+      "sha256": "f1eb3b92e765a67058a40d2525795650fb54b2867c024ade942a00f9db90d302"
+    },
+    "engine/tests/surface_assets_tests.cpp": {
+      "bytes": 3090,
+      "sha256": "81a3020fee020aa92308ff1cd143ab33a696e4eb9e7ed44fb326913e673df8e2"
+    },
+    "engine/tests/surface_codec_tests.cpp": {
+      "bytes": 5669,
+      "sha256": "2428784eb69f4dec5585315e7d5e4037a037751eb35868245209aac7d21e4f9b"
+    },
+    "engine/tests/surface_placement_tests.cpp": {
+      "bytes": 9053,
+      "sha256": "cc39c20236f1832190c5ba09906306da317b6e22d9738254dc2d85d8a3c935f6"
+    },
+    "engine/tests/surface_store_tests.cpp": {
+      "bytes": 4487,
+      "sha256": "140c7cdeb2b4a27055b1bb4ad5eeeadae57c1bc65a6896751782a54eaaff0fb9"
+    },
+    "engine/tests/test_asset_placement_view.py": {
+      "bytes": 24920,
+      "sha256": "69f21b6c4e453004e7d11a6e0086112e8d6ce6570ebbe6930ea55d86f52766b4"
+    },
+    "engine/tests/test_asset_view.py": {
+      "bytes": 12203,
+      "sha256": "37f9e17be2e075601a25ab00834232ca48fa6de21dc2963b15c500af3ca4a371"
+    },
+    "engine/tests/test_build_monitor.py": {
+      "bytes": 61091,
+      "sha256": "b4b79d5e5c5c0ed1261faa5055a5f0bf79967426e46a518206edfc866d22a276"
+    },
+    "engine/tests/test_character_asset_receipts.py": {
+      "bytes": 1476,
+      "sha256": "0729d4e402b2128b03c50c2e3ef5843d2045c6cc9f5e3ad46599a1208dacfaca"
+    },
+    "engine/tests/test_character_creator_integration.py": {
+      "bytes": 14932,
+      "sha256": "b5f2bde2de37acc92b2fab5f94394f2ec880edeb9cb96054a08095fa631d99d4"
+    },
+    "engine/tests/test_content_ai.py": {
+      "bytes": 17016,
+      "sha256": "8edd75e92731fbb5713adc07493635ded23459b234de2f3bbb83d1e0755be658"
+    },
+    "engine/tests/test_content_ai_view.py": {
+      "bytes": 14314,
+      "sha256": "0964c842072eea251a8efc317bf80f11314bd39870506fcecdb29c623d8952ce"
+    },
+    "engine/tests/test_content_client.py": {
+      "bytes": 8559,
+      "sha256": "ed3583aeac0b6f9aa7cc4fda61939d2833eb9b2f2b2dfa108db9a1e21822cde3"
+    },
+    "engine/tests/test_content_dependency_transport.py": {
+      "bytes": 22125,
+      "sha256": "f1ca963eb08a7ab3de0ec6696832631e834ab74ad7397fdf5cc94cb2fa89bd1a"
+    },
+    "engine/tests/test_content_job_process.py": {
+      "bytes": 3571,
+      "sha256": "e9107f7188019c1e8dd1d27bd452abfb7a35c13f1eed73efdc6dceb5df9e35b7"
+    },
+    "engine/tests/test_content_jobs.py": {
+      "bytes": 2595,
+      "sha256": "8d2ab89ea71ffaec632f3a8313c9198f91e8bb91ea6bdde002413e49655cd016"
+    },
+    "engine/tests/test_content_projection.py": {
+      "bytes": 6193,
+      "sha256": "079a3d9f07b61d5538e194e7f8a19613cf012ef258101f67b8ea189f3a60507f"
+    },
+    "engine/tests/test_content_proposals.py": {
+      "bytes": 3606,
+      "sha256": "5aeb4a45d1bf48ccbc07e7ab9f96571ed34539c2f332e03d5f9611a4120405a7"
+    },
+    "engine/tests/test_content_view.py": {
+      "bytes": 16008,
+      "sha256": "457e50e9ac592bea46ae6fd95fe64920090941b9fc6ef7f96c6d4c67b1f9e1b0"
+    },
+    "engine/tests/test_creator_client.py": {
+      "bytes": 11170,
+      "sha256": "8e2d300da50ee8cffb299d1b8a29ef634310ca155bbf5003473f4f73aac0646f"
+    },
+    "engine/tests/test_creator_commands.py": {
+      "bytes": 3351,
+      "sha256": "b1172070668077882292e14a2f727dc5997a3c9efde9854fc8fb1cb73c845ebd"
+    },
+    "engine/tests/test_creator_payload.py": {
+      "bytes": 3357,
+      "sha256": "825b6fd54f291bc65264e0159ed4e8db7aca0c40a76cd0cc392483093dc03453"
+    },
+    "engine/tests/test_creator_viewport.py": {
+      "bytes": 4242,
+      "sha256": "a39cdd05752e7b4c1124635293ce75e65847ead95c49dd5393e476b751d95938"
+    },
+    "engine/tests/test_creator_wire.py": {
+      "bytes": 3443,
+      "sha256": "309c0b07ba323af932522a26d5ee16f0fdf07fa38230679a86808a37788849ca"
+    },
+    "engine/tests/test_creator_workspace.py": {
+      "bytes": 16442,
+      "sha256": "3f830d2ddf4fe005afc075df9c114b943b2dc0ce36ee0a7a1df4325b8fd9a218"
+    },
+    "engine/tests/test_game_build_runtime_discovery.py": {
+      "bytes": 9410,
+      "sha256": "7a00614a37114b613fd533bfc1cb068ef735c718c767390bef16f7b89aec4982"
+    },
+    "engine/tests/test_initial_view_creator.py": {
+      "bytes": 16650,
+      "sha256": "8352754602deaa3fa1f1ea61b778e8b49180a0fca548df0fd15ff1b7cd338e20"
+    },
+    "engine/tests/test_memory_creator_native.py": {
+      "bytes": 11131,
+      "sha256": "efa7e38fb1773a85420b82c6d4387393103c4c7d22dd30e7aa498db89c8186d7"
+    },
+    "engine/tests/test_memory_native_runtime.py": {
+      "bytes": 5695,
+      "sha256": "e658120cacab7abc02538b24fec53567997867e2eae549a5fecc69bee3d3d278"
+    },
+    "engine/tests/test_memory_ui.py": {
+      "bytes": 13576,
+      "sha256": "297de0d3419cadbe13ffc6ba057664db3c40fa63ba9df5c41f3cc8cfd4ea27a3"
+    },
+    "engine/tests/test_native_build_view.py": {
+      "bytes": 53168,
+      "sha256": "55ce9dc0cf1c53856e7882649493ddc76dfaf3f3bb8f207308cb5e63a12d1ea9"
+    },
+    "engine/tests/test_opening_creator.py": {
+      "bytes": 14335,
+      "sha256": "ce43b3cd1216d732275499b1d4a48fa34217d3d1baca4bfea4a4f3f78bc5684d"
+    },
+    "engine/tests/test_opening_creator_native.py": {
+      "bytes": 11697,
+      "sha256": "4aa5a6ea4449f4cbae7f36905f87018876e9ca51f9f607422ff851d8d02f462c"
+    },
+    "engine/tests/test_opening_project.py": {
+      "bytes": 17458,
+      "sha256": "4be1c053481bbc8a8425bcdf3bc4b06c6c473472997f31bde0db0559f6177f02"
+    },
+    "engine/tests/test_opening_reader_compatibility.py": {
+      "bytes": 6618,
+      "sha256": "706e42726a45862bf03bd73e44b4a2f52d89f79a62cc2bd84254399b337e3bfe"
+    },
+    "engine/tests/test_resource_cache.py": {
+      "bytes": 1017,
+      "sha256": "cd02355975601f78fd443e549ff471762265ac90e5ede2da7ad9194669c978df"
+    },
+    "engine/tests/test_saved_chapter_export.py": {
+      "bytes": 11354,
+      "sha256": "763219cef7571292e222dcb093447d84add71e97259a48cc95aec40c2a21c747"
+    },
+    "engine/tests/test_saved_chapter_ui.py": {
+      "bytes": 10181,
+      "sha256": "1ee2ec7894fadf66f0d8d398932f9b2a67730c760ff3191dea5707c72d2fb454"
+    },
+    "engine/tests/test_saved_play_client.py": {
+      "bytes": 14338,
+      "sha256": "0194b68bf8b57a1dce204230845788c56e0fd41b0841b62b6df1fe8a96b675c1"
+    },
+    "engine/tests/test_saved_play_storage.py": {
+      "bytes": 15843,
+      "sha256": "5ddb4c1d364ae0ba2f187ff91747111060e5426b795e13a2de6bd99d669a707a"
+    },
+    "engine/tests/test_surface_creator_integration.py": {
+      "bytes": 10926,
+      "sha256": "3da619b8989150549ea54ece2f203063bc3579d2f030699f1c41dabdb4b80b0b"
+    },
+    "engine/tests/test_surface_project_assets.py": {
+      "bytes": 8191,
+      "sha256": "bc0066d86310f0d640e350009c95f9676f4227dd30b31a7c06d12f5b6d22db77"
+    },
+    "engine/tests/test_warm_build_monitor.py": {
+      "bytes": 10682,
+      "sha256": "8432cc64fce8fa9f7618c09c1d8638a33556f21af1c4c35e8c4413f5a0ea367f"
+    },
+    "engine/tests/test_workshop_config.py": {
+      "bytes": 627,
+      "sha256": "b5d235549bc11d5988b9e3a7ab14cc1164fd30d6bed50f879fc2b00065083375"
+    },
+    "engine/tests/test_workshop_creator.py": {
+      "bytes": 33551,
+      "sha256": "2e8a8cb8979f65449db6e06b84c5dd4367a848a715e918dc0a5dbdcc5812bd7e"
+    },
+    "engine/tests/textured_gpu_tests.cpp": {
+      "bytes": 5551,
+      "sha256": "b0195a9de931adf2eb8a0fcb054aec19f83de731473faa19446e9c6a90859d76"
+    },
+    "engine/tests/verify_asset_cooker.py": {
+      "bytes": 23646,
+      "sha256": "8b70fc945472a6aa5a5a0aeb0b20275fc9a41cdf064a7e1d46b182726a03d62d"
+    },
+    "engine/tests/verify_asset_pipeline.py": {
+      "bytes": 4893,
+      "sha256": "b6551d9c720a960df0fda55883cb140fe77bde75daba48253548517a463e51d5"
+    },
+    "engine/tests/verify_audio_cooker.py": {
+      "bytes": 9212,
+      "sha256": "abf755bffd7c558bffe7843f36fee442fe555777b781569b37161e4d40a2060e"
+    },
+    "engine/tests/verify_chapter_lighting.py": {
+      "bytes": 10521,
+      "sha256": "1130802ceb9065bcd1ce55a290ba213486418ed4c22d79d63397c2315ab061f3"
+    },
+    "engine/tests/verify_chapter_viewport.py": {
+      "bytes": 8300,
+      "sha256": "725752db3bd5a8f80691a5356d99619c59cce096514b855c225600f1fb1d0c84"
+    },
+    "engine/tests/verify_character_cooker.py": {
+      "bytes": 18899,
+      "sha256": "dfb3c4223e703972789563106456751938d6e35d3f087a1e64584d5706ff631f"
+    },
+    "engine/tests/verify_character_native.py": {
+      "bytes": 4166,
+      "sha256": "85a5b328452709fd4508b627241741b6505d05212dfc5eda171cefeb01f560e1"
+    },
+    "engine/tests/verify_checkpoint_bounds.py": {
+      "bytes": 4323,
+      "sha256": "17eb6ff370924c3ac7f07eafe8d25b7e9cee5bfd42cf7685268963c303bd1b35"
+    },
+    "engine/tests/verify_checkpoint_processes.py": {
+      "bytes": 4574,
+      "sha256": "e009191a2b9e8be42c804dcf0d269b34019ed8f2512ee76f576ca4933f033fea"
+    },
+    "engine/tests/verify_companion_native.py": {
+      "bytes": 7353,
+      "sha256": "f3f7b596088a382eaef402b8830d983098358c5aa710647616b6d1b74fc13c25"
+    },
+    "engine/tests/verify_content_play.py": {
+      "bytes": 7634,
+      "sha256": "14f1daaf21f190a34913b4334577aa412d19dbafea356a5ed466b90f902a48df"
+    },
+    "engine/tests/verify_content_process.py": {
+      "bytes": 11140,
+      "sha256": "0192b2267266defe2e319bf93fe800db30f9cdbab9ae4e8f6cd579d4b4e58101"
+    },
+    "engine/tests/verify_content_profile.py": {
+      "bytes": 4149,
+      "sha256": "1a6d29788086415ee6ae1d50334589c779be85ffeb35c5772d2693e2d256d7ea"
+    },
+    "engine/tests/verify_content_stop.py": {
+      "bytes": 3565,
+      "sha256": "54e8d64de6dc0a824cbb06a6ad12b52671db195b29a3a344978dc3f88e98114b"
+    },
+    "engine/tests/verify_creator_payload.py": {
+      "bytes": 3535,
+      "sha256": "2473b940f3e17695354e9c939cec2f0b8104181028ee01827fb47ebc52bb1df5"
+    },
+    "engine/tests/verify_creator_process.py": {
+      "bytes": 13058,
+      "sha256": "f481999f10a9e9197297abfcee46368c3027d90c7c9fa1d1f4ec3e787aeaff57"
+    },
+    "engine/tests/verify_creator_wire.py": {
+      "bytes": 2469,
+      "sha256": "5face32b38e7c12a8685a771d1a7f0c3ad1bb6cd8c320f9e2418a213c10b0e7f"
+    },
+    "engine/tests/verify_durable_cli.py": {
+      "bytes": 1719,
+      "sha256": "c1d7271c7520f5368c44f6cb8df3d415c0f9e84fbb38fa2673a2a3557ba2a354"
+    },
+    "engine/tests/verify_durable_world.py": {
+      "bytes": 17980,
+      "sha256": "c8a774fde6f3a3326175d02a80c6a98d8cf023449ee4b0fb7a537c3aa9cad0d6"
+    },
+    "engine/tests/verify_first_boot_chapter.py": {
+      "bytes": 21588,
+      "sha256": "1ae9c8bb5492f9f1ed1dbf9346b30b105b63780ea81ac6d45e5fe6964d7a4448"
+    },
+    "engine/tests/verify_gameplay_store_processes.py": {
+      "bytes": 5370,
+      "sha256": "5c70e4001d049ee433b4fffeb0b10f306f49c6f702c6d9033817cd251019549e"
+    },
+    "engine/tests/verify_native_recording.py": {
+      "bytes": 5072,
+      "sha256": "ffd9f548d040069d446a1d0141d9cc1b2e907c5e5c6d2687e2048bab51832ba6"
+    },
+    "engine/tests/verify_obstacle_course.py": {
+      "bytes": 3322,
+      "sha256": "21958250b142d9d1dd21d580772d5042c2601aef91c44c0c3ece60fdc84bc263"
+    },
+    "engine/tests/verify_opening_presentation.py": {
+      "bytes": 15260,
+      "sha256": "f00f99a2bf2a80b7191f9da3116130d6dd1f983f6ba7aa30b1cd544aebcb41b6"
+    },
+    "engine/tests/verify_opening_project_native.py": {
+      "bytes": 12869,
+      "sha256": "656ae9602edf8017d1f558760b7dfda95c8e3f914dcad685dc24645055f08b54"
+    },
+    "engine/tests/verify_placement_render.py": {
+      "bytes": 19171,
+      "sha256": "a975b46fbbd4aaf75c8331b907670666b4c78ca630231f131f129882f4ac2be9"
+    },
+    "engine/tests/verify_registry_processes.py": {
+      "bytes": 10586,
+      "sha256": "6f3fe59af2ace8d9328dce64d3aba485171cb45800b96336ab0a9be905c5b9d7"
+    },
+    "engine/tests/verify_reviewed_audio_cooker.py": {
+      "bytes": 13729,
+      "sha256": "2a35ab7195a5933d96af0510032d210e653080efeeee4e67881af4649c0e03f9"
+    },
+    "engine/tests/verify_saved_chapter_export_native.py": {
+      "bytes": 8331,
+      "sha256": "240a693bf897423f79663aebe6ff3e550f2844667e344121944592bf60b35218"
+    },
+    "engine/tests/verify_saved_chapter_play_native.py": {
+      "bytes": 19957,
+      "sha256": "2e7e9d47d821cfc4f8ab3f7c7f102e1fbe8919038e4259e6985c953a2ce234c6"
+    },
+    "engine/tests/verify_saved_chapter_publication_native.py": {
+      "bytes": 9767,
+      "sha256": "adbb8467c06ac94f4189383c43e7cb7e5f1dcf4df497d984e0d8e0044641f72d"
+    },
+    "engine/tests/verify_saved_play_cpu.py": {
+      "bytes": 8529,
+      "sha256": "d423604a5c8b68e09258ebff7b98566e886c1d9e2ea393a95e2dd882a1a0d5b7"
+    },
+    "engine/tests/verify_surface_cooker.py": {
+      "bytes": 10673,
+      "sha256": "173e6270987d90bb297fd8beae05f4d9c2154fae939cab71ff73f2278ed5d968"
+    },
+    "engine/tests/verify_surface_persistence.py": {
+      "bytes": 2228,
+      "sha256": "824e028e8ffd6eb4ac2fbeac211b6701ea9eb30d3efb45f1e89b5dddfb37a7f2"
+    },
+    "engine/tests/verify_surface_showcase.py": {
+      "bytes": 1824,
+      "sha256": "2e8aa69f1cb6f168f9b63b89e2cfefd6110883381e924528f3cbabb058c29716"
+    },
+    "engine/tests/verify_viewport_updates.py": {
+      "bytes": 4315,
+      "sha256": "49a92a8173770e2fb1fc38706bd11f3978634438307a469c8de630465a6ce8ff"
+    },
+    "engine/tests/verify_warm_opening_native.py": {
+      "bytes": 15742,
+      "sha256": "7d7e2117ba20133a2ffc16e1b0adb98f1347175df32120cb74d21c66c7f17215"
+    },
+    "engine/tests/verify_workshop_creator_native.py": {
+      "bytes": 11117,
+      "sha256": "dd950dbcaba54875d090006233f664cf3594f05ad83e6ed36855cc005d2c0905"
+    },
+    "engine/tests/verify_world_scene.py": {
+      "bytes": 5049,
+      "sha256": "9a41aaec3c3d9f3f1b20c241f83491aac55c83913d5efe2a1d8a65d5985c1dfc"
+    },
+    "engine/tests/video_encoder_tests.cpp": {
+      "bytes": 6078,
+      "sha256": "54b4dbcb88d68e628a81235a681e5948a3f331f1983ca9ebf919b0bab16b7789"
+    },
+    "engine/tests/warm_opening_route_geometry_tests.cpp": {
+      "bytes": 4325,
+      "sha256": "6b36f2fc1d0354fbae174e740318a01f8d1ff818fe96ce6f71d62faefc393d05"
+    },
+    "engine/tests/warm_opening_tests.cpp": {
+      "bytes": 7914,
+      "sha256": "461c8ab2441a1a6e3304b936070a0207fb1410553950ef3169515aa4f6053f0c"
+    },
+    "engine/tests/workshop_authoring_tests.cpp": {
+      "bytes": 14082,
+      "sha256": "49eef30758c1b372b6baf1e6d7368b0d5dca55017db6a2d73b5aa3c1fc62c05c"
+    },
+    "engine/tests/workshop_tour_path_tests.cpp": {
+      "bytes": 4487,
+      "sha256": "8ba0e3c739bb00a32342033e6fdb75d0c12670729cf0023993c8f2b62acdabe9"
+    },
+    "engine/third_party/Jolt-LICENSE.txt": {
+      "bytes": 1052,
+      "sha256": "800abe35d64ad9defd636ff1ee8c961e06f0ebca3ef8d10083e8aa0e8ef86ac3"
+    },
+    "engine/third_party/SQLite-NOTICE.txt": {
+      "bytes": 739,
+      "sha256": "0a17810e3cd70c6d3e7dd1956e307f14a189c5aa64440afdc9728109ef1f23e3"
+    },
+    "engine/third_party/cgltf/LICENSE.txt": {
+      "bytes": 1186,
+      "sha256": "511eb24881df750c82d27a722d78e172d5c1ef0f76144eca00e134638d3ff0fe"
+    },
+    "engine/third_party/cgltf/PIN.json": {
+      "bytes": 297,
+      "sha256": "50a10e62b6f00c7de26083f28ae7dd1df1b81236cdd99aee93f3e530fe4e1165"
+    },
+    "engine/third_party/cgltf/cgltf.h": {
+      "bytes": 202865,
+      "sha256": "e378a21c084bf1f288bb799de827bb26906efb024255f1ecf1705ea13f11c6ec"
+    },
+    "engine/tools/make_motherboard_asset.py": {
+      "bytes": 9673,
+      "sha256": "ec56b9f39a4c413aec3ccc515e49edd70bee08260b65585bfc1212c8ac826df6"
+    },
+    "engine/tools/resource_cache.py": {
+      "bytes": 2976,
+      "sha256": "c85005b017b73abdb0ed3468cab5d08b30166789f363071e976ba8ee9e2d933e"
+    },
+    "engine/tools/workshop/connection.py": {
+      "bytes": 428,
+      "sha256": "41d87c4f11aa32c7adad6cef83179eb9c4b153b19d1169efd4a9d0047ff169de"
+    },
+    "engine/tools/workshop/make_capacitor.py": {
+      "bytes": 1824,
+      "sha256": "e0548ff7d08390ee0b6847320401fcffd162968429cb670372e1da08132c4607"
+    },
+    "engine/tools/workshop/start_blender.py": {
+      "bytes": 629,
+      "sha256": "c2f19239497a2135724f8b140d8de325461dddd12c0b0d6106b48d2a9f2448e0"
+    },
+    "engine/tools/workshop/transcribe_memory.py": {
+      "bytes": 1337,
+      "sha256": "1cbe44405d650a415c9d186fc28f2159b1777c4d213a3a1cda8bf224541f121d"
+    },
+    "engine/tools/workshop/verify_connection.py": {
+      "bytes": 1884,
+      "sha256": "97a5f8efeb5f79c039271fcc57505320ae0d236a561c813a294e1b09e1a41f42"
+    },
+    "frontend/components/components/version.js": {
+      "bytes": 357,
+      "sha256": "028dfc6ee28d5c4fe84876a0940a45dcf409435b13a4091e8531929e2e47cb7a"
+    },
+    "frontend/components/version.js": {
+      "bytes": 357,
+      "sha256": "028dfc6ee28d5c4fe84876a0940a45dcf409435b13a4091e8531929e2e47cb7a"
+    },
+    "frontend/package-lock.json": {
+      "bytes": 778995,
+      "sha256": "5a0aff25b03461116c67aac8f5db087cea3ff83a9181e381be4936ba4610a39e"
+    },
+    "frontend/package.json": {
+      "bytes": 3583,
+      "sha256": "4c4c88b92d22643587decb7c1cc4c57a0a1fa3f89eea543c735552a7a40121ea"
+    },
+    "frontend/public/version.json": {
+      "bytes": 196,
+      "sha256": "6c8ace3fa4befac9e4bbfee497cc838df3c3076430ee4d76476a1790aae5e717"
+    },
+    "frontend/src/components/components/version.js": {
+      "bytes": 357,
+      "sha256": "028dfc6ee28d5c4fe84876a0940a45dcf409435b13a4091e8531929e2e47cb7a"
+    },
+    "frontend/src/components/version.js": {
+      "bytes": 357,
+      "sha256": "028dfc6ee28d5c4fe84876a0940a45dcf409435b13a4091e8531929e2e47cb7a"
+    },
+    "frontend/src/version.js": {
+      "bytes": 357,
+      "sha256": "028dfc6ee28d5c4fe84876a0940a45dcf409435b13a4091e8531929e2e47cb7a"
+    },
+    "frontend/version.js": {
+      "bytes": 357,
+      "sha256": "028dfc6ee28d5c4fe84876a0940a45dcf409435b13a4091e8531929e2e47cb7a"
+    },
+    "native_studio/__init__.py": {
+      "bytes": 779,
+      "sha256": "731235db95122aef1ec73f5585a84556c6b942b26e14b44931842899fd1edafc"
+    },
+    "native_studio/accounting_view.py": {
+      "bytes": 51983,
+      "sha256": "225df8b8f7e2f0ca34d3e9386a1a84661418418be2d95c3741bd0a7f86488e94"
+    },
+    "native_studio/ai_compute.py": {
+      "bytes": 6454,
+      "sha256": "5e7054e6e838892bff9c7a4eef6558a0a04a99c839276c1d258c74bdf6c2145e"
+    },
+    "native_studio/app.py": {
+      "bytes": 53220,
+      "sha256": "2e2f167a3942f9775af0baf43e15d50ffcba22acf0fd2483aa8a89230b092192"
+    },
+    "native_studio/asset_release_smoke.py": {
+      "bytes": 18620,
+      "sha256": "1ed05adf0a39acd869b497b2dbe5afe07b3c50ec55c4f4eba4139082cc0834e8"
+    },
+    "native_studio/audio_kernel.py": {
+      "bytes": 23916,
+      "sha256": "271409cf43cc6b67ab6d10475f7b8289c8a14c82475b88d4ec55a0acf14cf60d"
+    },
+    "native_studio/automation_console_view.py": {
+      "bytes": 15636,
+      "sha256": "29f13dddf285365c8341329ca22d22897b03c64984bb9866235e6490e86394b5"
+    },
+    "native_studio/banquet_cad_view.py": {
+      "bytes": 11802,
+      "sha256": "9ba22277a2a9170b9acfd567a8dad690785d1ee9790d4b0ead5728823df743d1"
+    },
+    "native_studio/bible_hub_view.py": {
+      "bytes": 11382,
+      "sha256": "fe1ff00f596d6fe59d798467162081d2e21a857955c34278aee0dfdd0fd1cbe8"
+    },
+    "native_studio/broadcast_control.py": {
+      "bytes": 3576,
+      "sha256": "df1c42362fe54a5873ecdb3d4bb57a06168c0fb395c99a7f68c14f9892f7f5ad"
+    },
+    "native_studio/broadcast_ipc.py": {
+      "bytes": 9216,
+      "sha256": "533c272f472700db7af78c2d6d1be93b924634cf842f26b38630ce6246d54780"
+    },
+    "native_studio/broadcast_preview.py": {
+      "bytes": 11461,
+      "sha256": "b7a102d2d21093ec5026953d4e8b2502dd90b3623be506862438d815ddf9dab8"
+    },
+    "native_studio/broadcast_secondary_control.py": {
+      "bytes": 16549,
+      "sha256": "11de286c08f246c166f4a0ed0fe7e417b19fa41cf5f36f937a7a6888db5b0f13"
+    },
+    "native_studio/broadcast_service.py": {
+      "bytes": 11760,
+      "sha256": "64abe6398f26293e0c9413be784d4e05a02e0b702f6107b74379a6fbd80417cd"
+    },
+    "native_studio/broadcast_stream_engine.py": {
+      "bytes": 57404,
+      "sha256": "e74b1d8be7434228d0ba1824e292023b26324cb42781d2f405f5ec90e9914bc9"
+    },
+    "native_studio/bs_chat_ide_full.py": {
+      "bytes": 118766,
+      "sha256": "eefa887c39ef824d1e2389bc0b191101bb7dff107e2b8962e51bc2a9f9e83f19"
+    },
+    "native_studio/calendar_view.py": {
+      "bytes": 12413,
+      "sha256": "ffe4a865df5d91633a07abd70de0a48aa0f52defc8f4db0f185a6f459b5d3450"
+    },
+    "native_studio/chat_recovery.py": {
+      "bytes": 15660,
+      "sha256": "16113a2b3ae2637f70de2b565cabd3e3f22ecca980bcda38382c1235d68ec10e"
+    },
+    "native_studio/chat_service.py": {
+      "bytes": 6612,
+      "sha256": "bcf4390594b813b91571a988c94fe89cca44e689113edd0464aa345858e76225"
+    },
+    "native_studio/clients_crm_view.py": {
+      "bytes": 20973,
+      "sha256": "a20651607add30276b3da18b22f6b944c6039cce9271c595219355023d90a60e"
+    },
+    "native_studio/cloud_drive_view.py": {
+      "bytes": 15563,
+      "sha256": "2d1e69dff38ea0ddf3d27f3cdc933427b4fb33e5434c76dc771e7d08264f5bcc"
+    },
+    "native_studio/cluster_view.py": {
+      "bytes": 11206,
+      "sha256": "05cbea1cf35a7a3f6fe8f4e285a7e813786b2c22fae0d1ed16625132711c43d5"
+    },
+    "native_studio/comfy_workspace_view.py": {
+      "bytes": 19793,
+      "sha256": "539c9c3cc22a1266ef04a112667700b705abd214ab6b8b9e50365db1ac9e5df6"
+    },
+    "native_studio/compute_view.py": {
+      "bytes": 9119,
+      "sha256": "1981813679862ca173791c2ea4e83026a1e3b0ba257c26990f55544253e6fdb8"
+    },
+    "native_studio/creation_suite_subtools.py": {
+      "bytes": 63121,
+      "sha256": "d89c6dc7f9b287c5522d2fcb918896f1e9d9d8d73c11198326ecf4bb3e39dbf8"
+    },
+    "native_studio/creative_suite_views.py": {
+      "bytes": 52581,
+      "sha256": "64727f0e413de460d62e793dcf679f677f18d88d4ad35cccdba07b2eacd8bf93"
+    },
+    "native_studio/crypto_swarm_view.py": {
+      "bytes": 13382,
+      "sha256": "d9beb2055093661ab588109ac02264b65c667e577432903fd3baf4009b3b030c"
+    },
+    "native_studio/daw_subviews.py": {
+      "bytes": 36491,
+      "sha256": "858974a2cb8b57258019c8ddc4566f37c8a714b43b223e538f218b944993be25"
+    },
+    "native_studio/dpg_hud.py": {
+      "bytes": 9177,
+      "sha256": "670eacdf954565a2ff2c469d44a4fcd8919b1891bfd8eee321ad41781b61d063"
+    },
+    "native_studio/ecosystem_blueprint_view.py": {
+      "bytes": 35850,
+      "sha256": "d72735a76803edf83fca5cee5f753b0bebbfa250d2f4c36751da1c76e1911f70"
+    },
+    "native_studio/email_client_view.py": {
+      "bytes": 54364,
+      "sha256": "472db27f6fcd0b801bedd954062f360ffa4fc2de52042b2d4ac81e391eebf036"
+    },
+    "native_studio/engine.py": {
+      "bytes": 19933,
+      "sha256": "ce022003b06474133cda5a9a7f9a5b252b48fa91263d7d8034e27795293d96f1"
+    },
+    "native_studio/engineering_views.py": {
+      "bytes": 9530,
+      "sha256": "6d6e6ff17b68b0877d533bc469de99a7269e796606d2ca0ff0afab8f653b4dec"
+    },
+    "native_studio/executive_cockpit_full.py": {
+      "bytes": 23965,
+      "sha256": "905094082208a035b55cc51bc50835c816f8f14eb2cc50518d40c2f9fd5925d8"
+    },
+    "native_studio/executive_service.py": {
+      "bytes": 7675,
+      "sha256": "a40df62370f3b1da549e593246996181c8b397ea30fee951fecfd895e1fa11bb"
+    },
+    "native_studio/fe_express_service.py": {
+      "bytes": 6659,
+      "sha256": "ac517c3cee9a9ddf40470ce13bc4abf0babd505f23f18a8a635751452ab83e8d"
+    },
+    "native_studio/fe_express_view.py": {
+      "bytes": 51261,
+      "sha256": "21beec2e8158c63d75f1e7dc9fb91ac4e60b87f0e270b5c4b9e9afd89ef8aefa"
+    },
+    "native_studio/game_build_monitor.py": {
+      "bytes": 45990,
+      "sha256": "7f1b7bbfae717d909c46eb714c2421cbe86117dc5871a87eeab545291150c919"
+    },
+    "native_studio/game_build_view.py": {
+      "bytes": 46053,
+      "sha256": "c7138af5b10cc81cafea67a87b0f524d4eaae334772bfaaf1f127b45a7365799"
+    },
+    "native_studio/game_engine/__init__.py": {
+      "bytes": 69,
+      "sha256": "b7c60e065540c183f99d92aa795815a210196d9936faa21cbe03820229be1c20"
+    },
+    "native_studio/game_engine/asset_view.py": {
+      "bytes": 28940,
+      "sha256": "fc24fe373d152e45af53b91d7b74d355a2e0027f27b1161633e2326146505f19"
+    },
+    "native_studio/game_engine/content_ai.py": {
+      "bytes": 21895,
+      "sha256": "65f115baaacdef504f9e4ea397766c80ddd8b12c743a51bb7fcadd8486e6e61d"
+    },
+    "native_studio/game_engine/content_client.py": {
+      "bytes": 1380,
+      "sha256": "1ea52acda8dc248daf70a466a39b3da05b54a1f413a1c5b78c680c28fa530be3"
+    },
+    "native_studio/game_engine/content_commands.py": {
+      "bytes": 21340,
+      "sha256": "aa1d25ec632bf92d0c5aa4760fcfaa6fdf710723a2b3a08a33bbb919029d534d"
+    },
+    "native_studio/game_engine/content_jobs.py": {
+      "bytes": 5527,
+      "sha256": "9cfffad87386fe30ad2b608491f85391bd5835cfccb252dfa24c390d008694cd"
+    },
+    "native_studio/game_engine/content_play.py": {
+      "bytes": 11569,
+      "sha256": "487aa5b62ca32f699668ace9413a318f909d1cca5dbd5f955e7b35d5aa6b74f2"
+    },
+    "native_studio/game_engine/content_preview.py": {
+      "bytes": 16203,
+      "sha256": "2135985861606277ec8159fa652830a4e3af77665f8d41af49fcabcc05201cc9"
+    },
+    "native_studio/game_engine/content_proposals.py": {
+      "bytes": 5704,
+      "sha256": "7e559cc0ad25d94c447f16f039f41e97bdb30e71aa48e41366a5f39ddd4fcb5a"
+    },
+    "native_studio/game_engine/content_view.py": {
+      "bytes": 109372,
+      "sha256": "4f51323a46fd65f91f0d9c19f7ab55cab1e46af871d65be9e770f9ae96e6dd74"
+    },
+    "native_studio/game_engine/creator_client.py": {
+      "bytes": 19029,
+      "sha256": "2b914a46430a85487db500fe916cbd94b3a42c770139aee2713eb0ab68704de5"
+    },
+    "native_studio/game_engine/creator_commands.py": {
+      "bytes": 4993,
+      "sha256": "49176ef4625f5234da3e0a8ad951c7079864c3aaf5afaf73989aaff04116dd3d"
+    },
+    "native_studio/game_engine/creator_payload.py": {
+      "bytes": 6522,
+      "sha256": "c7be7d9315a66f4119655ee97c6e0b143e04836c13740d33d9ec02d2c8af09e7"
+    },
+    "native_studio/game_engine/creator_view.py": {
+      "bytes": 28543,
+      "sha256": "06bc5df15d2fecb47e3fa08cef6ce9e5c51a13647397461f4e7bd6b07580fc49"
+    },
+    "native_studio/game_engine/creator_viewport.py": {
+      "bytes": 9037,
+      "sha256": "3c44e86f9bae46db1637376cafce370487a2f84caba9f4c5ac7b6719cc00393d"
+    },
+    "native_studio/game_engine/creator_wire.py": {
+      "bytes": 4355,
+      "sha256": "727afbead08880209e4030e826b9ef4fdca9a4a68e67964d182f9d8345df0ba9"
+    },
+    "native_studio/game_engine/opening_assets.py": {
+      "bytes": 8520,
+      "sha256": "271b53e23d62a3e0fa25292b8f211d111c7e3de496952585bdc18e9ca3832b47"
+    },
+    "native_studio/game_engine/opening_fields.py": {
+      "bytes": 8574,
+      "sha256": "7b58fdabb38b778159effda0488a18b9df9dd207b80b49c006672a2594a806a8"
+    },
+    "native_studio/game_engine/opening_project.py": {
+      "bytes": 14274,
+      "sha256": "f8ba02056f22d8a92c99f0346df82459edcc8a88b143c5b53e2fefb9199923d7"
+    },
+    "native_studio/game_engine/project_assets.py": {
+      "bytes": 8038,
+      "sha256": "e5fba35cf646d632949c9af8cf96f34c63528f0d762771219008c8902f819cad"
+    },
+    "native_studio/game_engine/project_model.py": {
+      "bytes": 4471,
+      "sha256": "26475ef34f5d2fc2c9b5028284e690e30ad34bf7abee002f8ec3fabe9906b3fe"
+    },
+    "native_studio/game_engine/saved_chapter_export.py": {
+      "bytes": 12691,
+      "sha256": "75438167be1bb8647b2f3d623d4df71cc7a9e1f5418b69ea75f5777fdf27d007"
+    },
+    "native_studio/game_engine/saved_play.py": {
+      "bytes": 19006,
+      "sha256": "f0ad17519beb188a2bff0286554893b65d59649e979f36f742d753260edd11b9"
+    },
+    "native_studio/game_engine/saved_play_storage.py": {
+      "bytes": 26117,
+      "sha256": "0e6dc7616fc2e0bb09c732b3d87c2cf6c4a643da36e5eaa10e61dc51253ac4c8"
+    },
+    "native_studio/game_engine/workshop_fields.py": {
+      "bytes": 13729,
+      "sha256": "b2e736146f074ec75c66881c8c6898d2facbdfb229ca355e030ee8806632b6a6"
+    },
+    "native_studio/game_release_smoke.py": {
+      "bytes": 28519,
+      "sha256": "212c90490472314ad2cb5c11765d97d4a47a67cdf7ce2ee05af62e1e2e326d5d"
+    },
+    "native_studio/intelligence_views.py": {
+      "bytes": 108559,
+      "sha256": "b9515abae45991c9a8462a2ce227748cc1fe9d48ba61fcf9a19f9d19d3d60df7"
+    },
+    "native_studio/lexicon_view.py": {
+      "bytes": 10128,
+      "sha256": "24b5490168c76d1aae3d8d19f1ff2020f13d95479bf5d31ba9f85bbc9367e37a"
+    },
+    "native_studio/local_connection.py": {
+      "bytes": 11168,
+      "sha256": "166407a089f63f5e259e5376826c546b0d348fa7a953119ea7d1abc11565dea6"
+    },
+    "native_studio/media_client.py": {
+      "bytes": 7472,
+      "sha256": "69c1f7cb349fccb996faa9024b56cfc4993bded218c3e53fd3d227deeeba7377"
+    },
+    "native_studio/media_view.py": {
+      "bytes": 7199,
+      "sha256": "668472dcb189ba3aa0da3a7ec23af896af1ae9c6139b9b2edc591e55deedb906"
+    },
+    "native_studio/music_daw_view.py": {
+      "bytes": 65960,
+      "sha256": "c3abafef24418ba8c9ca91bc2d75a2a1292af03497c941f090d40f05c6b8424b"
+    },
+    "native_studio/navigation_registry.py": {
+      "bytes": 12386,
+      "sha256": "945c62776aeb5c4fc9a128968cd2345a4a7378ec384b711b94d82c3e3257a4b1"
+    },
+    "native_studio/neural_swarm_router.py": {
+      "bytes": 16739,
+      "sha256": "637ecd121ed499f8e0700a02ccae8b5b752477101329380c8bbbd0d0e243bb53"
+    },
+    "native_studio/noto_inventory_view.py": {
+      "bytes": 13524,
+      "sha256": "563f5303463726cc1ee75e386cb5dc0db1594599c5815427d9bf85f3a4b5d873"
+    },
+    "native_studio/nutrition_view.py": {
+      "bytes": 24164,
+      "sha256": "cc79e6d16f8a32adc40ccd46e5bd45aaf4ee64fa4d1c98c57eb35e1beded31a6"
+    },
+    "native_studio/omni_broadcast_studio.py": {
+      "bytes": 132795,
+      "sha256": "4a8d018527d55d145f7d612da02346c08459d85647029a16b3065ce9b56fd5eb"
+    },
+    "native_studio/onboarding_view.py": {
+      "bytes": 18116,
+      "sha256": "ccbd18f2385e6117300f93165ac8e7fea1748cefbd0bce412385216ce5a276a8"
+    },
+    "native_studio/operations_views.py": {
+      "bytes": 43221,
+      "sha256": "6be78504435ba3ddaf217aa235a13f7d0f86401ebefd9d148de2cef28ee4c7c7"
+    },
+    "native_studio/pattern_export.py": {
+      "bytes": 5547,
+      "sha256": "74bd78996af6de43fd189a18ea28b65cba62b436621f47b574f96d65d0b60b5a"
+    },
+    "native_studio/phone_repair_view.py": {
+      "bytes": 11052,
+      "sha256": "51988d47f520ce3038f25c332d3993b54a12d1210391dad2f03c0381b30b3752"
+    },
+    "native_studio/placement_release_smoke.py": {
+      "bytes": 31103,
+      "sha256": "1c6b044e723fb2bf439c00b757d4ea68708bb802195202343f31421100878666"
+    },
+    "native_studio/power_washing_view.py": {
+      "bytes": 13994,
+      "sha256": "966843a584539739da0f9fccebf69e336c12bc456b0d63a20cda66a2fdc427b3"
+    },
+    "native_studio/rec_debut_view.py": {
+      "bytes": 22741,
+      "sha256": "93f4bc97159daace83589621b054662ceb2e343e2a346fbe4686d9dbcdd504a2"
+    },
+    "native_studio/runtime_policy.py": {
+      "bytes": 1908,
+      "sha256": "fd116e82955dc271a6a8108acf5ab237c55bf9ae7c898abfc0e290f51927e5ad"
+    },
+    "native_studio/saved_play_release_smoke.py": {
+      "bytes": 17833,
+      "sha256": "8f66c94665bd34cce872f9ff7f44909736d4e5b0c9e1145dbd3c61abdacd6e94"
+    },
+    "native_studio/screen_mirror_view.py": {
+      "bytes": 10219,
+      "sha256": "34ca616805eecf629b1ceac5b415488e7e73d61432eee7d98f0df7c1831bade6"
+    },
+    "native_studio/screenplay_client.py": {
+      "bytes": 18411,
+      "sha256": "c452d8bc4d03e9bbbee31d52443599b081d8f2296f511b88bc02aad2a358bb73"
+    },
+    "native_studio/screenwriting_modals.py": {
+      "bytes": 255035,
+      "sha256": "3071739f28c7cf3a04a1a206a388b17595ad5dea3aa159d51076078a161307ea"
+    },
+    "native_studio/screenwriting_view.py": {
+      "bytes": 129545,
+      "sha256": "6b9a4c346283ab9cae90422bfd6acfdf37ef47fc4488717e7a24411e18ce7e44"
+    },
+    "native_studio/service_orchestrator.py": {
+      "bytes": 21613,
+      "sha256": "7783fe88e9ec4e6614eb291648a415d749f88582594c0945179dc3351a54812e"
+    },
+    "native_studio/steam_gaming_view.py": {
+      "bytes": 20748,
+      "sha256": "7f88b078644ac4d425fbb4541395cc19dd0d53d3d53b5e6a7c3d9503f4717bf2"
+    },
+    "native_studio/subsystem_views.py": {
+      "bytes": 11411,
+      "sha256": "6877cb52c5d100ad7353f8c8a039b57fc00b7ec84318b45353eecb8eea0cd85e"
+    },
+    "native_studio/syndication_view.py": {
+      "bytes": 20439,
+      "sha256": "9fd9eb878dc9ccd9b26e084eaba3f5ace39f6a107bf41c4a2b4fc3f3e1618bc4"
+    },
+    "native_studio/system_health_view.py": {
+      "bytes": 22054,
+      "sha256": "ac75dfe57160d49c63f18eca98bf2f9d170f65ae61cb9a70667da1f62d853284"
+    },
+    "native_studio/telemetry_hub.py": {
+      "bytes": 7786,
+      "sha256": "7acfb5d548aecf79424c09aaca2abad9017b02c71aeed56df94f110fbe6e9fb2"
+    },
+    "native_studio/telemetry_shm.py": {
+      "bytes": 4059,
+      "sha256": "9cbc576519a25cc834206a912abad254aa68f9b20f5ea46305b9389a92b5d5b2"
+    },
+    "native_studio/theme.py": {
+      "bytes": 8451,
+      "sha256": "19461f62e63eff93482f1affd56e7129a7a1bf273cd70a133a25273816a37492"
+    },
+    "native_studio/updater.py": {
+      "bytes": 18061,
+      "sha256": "438b16bc19203301c459baf0dbaad6b3347aac82ad26157254ce2dbca0809897"
+    },
+    "native_studio/views.py": {
+      "bytes": 22133,
+      "sha256": "9d9ecd5f601b784f15cb137364406044a59f5c18a93906288ba5afd75057f6b6"
+    },
+    "native_studio/web_telemetry_view.py": {
+      "bytes": 15543,
+      "sha256": "fb2bf328f74202a1a7e4de11b94254e512ce0dee309c383748f5bdc20632a34f"
+    },
+    "native_studio/widgets.py": {
+      "bytes": 5164,
+      "sha256": "c25c7265fce237850a20e384acfd5b479e504eca6347b0ca7273e63da2ed3097"
+    },
+    "native_studio/widgets_web_parity.py": {
+      "bytes": 4861,
+      "sha256": "91a02d3a0055d458858e26eaa1e30b0d3b2d8e33b830aaf64c83446435cc8228"
+    },
+    "package-lock.json": {
+      "bytes": 201,
+      "sha256": "fa99fad2c8a57af2ed3111bbf77aa1dc2bedc0289b89bf807ce59502cbb12438"
+    },
+    "package.json": {
+      "bytes": 430,
+      "sha256": "e26deebcf386c7244b1c62c08f76e4fc39fcba8f4c5646f083b25c651f46ddf3"
+    },
+    "release.json": {
+      "bytes": 195,
+      "sha256": "fb53f9501e8e47b68908490034c0312aed47023b08c87ca2aa185e0c6d1f2f88"
+    },
+    "scripts/build_native_game_release.py": {
+      "bytes": 24013,
+      "sha256": "6b3f3fdc2fc9d7a687f04670da138f6fc69e8eccb25cb45cd864147198097239"
+    },
+    "scripts/build_native_web_parity.py": {
+      "bytes": 18194,
+      "sha256": "52b128f42f5e33d8c124053f485044f6629b98a82885e1e357529507fea11b98"
+    },
+    "scripts/release-version.cjs": {
+      "bytes": 11693,
+      "sha256": "ea8f695190e65f8ba2def743d1377f64467aa7e55f81db821d4d64b30469aa06"
+    },
+    "scripts/tests/test_asset_release_smoke.py": {
+      "bytes": 8353,
+      "sha256": "8c7743fb57459b8bfce5d5351d54141ce0ccbd562a75e82461440de3f4bdb228"
+    },
+    "scripts/tests/test_game_release_smoke.py": {
+      "bytes": 5768,
+      "sha256": "cf10d75812df97c0928293046e27b9bb8ae296901f19c94e6d61be9c1bca488d"
+    },
+    "scripts/tests/test_native_game_release.py": {
+      "bytes": 30031,
+      "sha256": "d1d07d0d957dbf952d8afd6707ed109b12a1d1c5d47fced95998a47b39dbc44b"
+    },
+    "scripts/tests/test_native_release_signing.py": {
+      "bytes": 8502,
+      "sha256": "7176ebdf995c216037e6188d09ea6100eda7d2cfc588bee70bc7cd5915796cb6"
+    },
+    "scripts/tests/test_opening_release_bundle.py": {
+      "bytes": 10979,
+      "sha256": "b470cac59e93b7dff90fde219ed337a2d8ab9851d71674191ec2f21c6255d2ce"
+    },
+    "scripts/tests/test_placement_release_smoke.py": {
+      "bytes": 9361,
+      "sha256": "637e2fdefd2f57487f36eb3ef29c648eb89f8d9c0e4d38225e5166166be9a4b1"
+    },
+    "scripts/tests/test_saved_play_release.py": {
+      "bytes": 12919,
+      "sha256": "29c47badcc68977241e766343a494fc5ce4c5791a0db5e5ed4b9575c082ab009"
+    },
+    "scripts/tests/test_saved_play_release_smoke.py": {
+      "bytes": 9209,
+      "sha256": "bdc54e7caa74f8301380ad6f343e46d96c1ece02023c076199f3c6cee201fa64"
+    },
+    "scripts/tests/test_warm_opening_entry.py": {
+      "bytes": 4744,
+      "sha256": "30c34b73bb820e4c1ab3c224dd58c66677bee6b903ef2ae8e841e817af3e4a4e"
+    },
+    "scripts/verify_native_creator_release.py": {
+      "bytes": 53652,
+      "sha256": "3e4ef71ce3251d395c037aa2021133f4052739f944a45f5b1871efc02b4f5190"
+    },
+    "ui_modernization/__init__.py": {
+      "bytes": 82,
+      "sha256": "851626a38d373a1517b335e827e42a11400141c0c8c3133a849921819bf10853"
+    },
+    "ui_modernization/components/__init__.py": {
+      "bytes": 71,
+      "sha256": "8687c46bb820bab6b97f8d3bb8dccd14f707e0210d78229ce380cdb4f4b26cd8"
+    },
+    "ui_modernization/components/native_badge.py": {
+      "bytes": 722,
+      "sha256": "6a1ae14a215164dd3f0cf350c6f0c0e37dda872c7be4283ec138a8b3d9a867ab"
+    },
+    "ui_modernization/generated/native_palette.py": {
+      "bytes": 841,
+      "sha256": "33a38d5083f9438cf9d8d98aa9e20cb1068652b8edfcb3090cf4e48f6b462c96"
+    },
+    "ui_modernization/generated/studio_overview.py": {
+      "bytes": 3360,
+      "sha256": "129b7a03350f05cde307d677243c4de43fb952fe6ef17e4b8702d278ef144f5b"
+    },
+    "version.txt": {
+      "bytes": 11,
+      "sha256": "962785036dc503b3df83efe7ce58f6364e818ff4bbbf92ae4c7a283fb035fd39"
+    }
+  },
+  "excluded": "Original family references/recordings, credentials, private Git/Master data, compiled binaries, user saves and art masters are not in this software-source checkpoint. Owned test evidence may contain current authored guidance. Earlier cooked content/art backups remain required.",
+  "deployment": {
+    "schema": 1,
+    "status": "verified_deployed_creator_opening_preview",
+    "utc": "2026-11-03T17:54:07.4508877+00:00",
+    "studio_version": "5.329.103",
+    "sdk_version": "0.16.4",
+    "executable": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe",
+    "executable_sha256": "1ff82c6797514cdc3446455a014b60db0f166a8a80dde4b5b9c1c9564826ed35",
+    "shortcuts_updated": 5,
+    "links": [
+      {
+        "backup": "D:\\AI-BS-Game-Resources\\P41\\SDK0164Studio103\\launchers-before\\001.lnk",
+        "before": {
+          "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AI-BS Sovereign Studio.lnk",
+          "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.102\\AI_BS_Studio\\AI_BS_Studio.exe",
+          "arguments": "",
+          "working_directory": "C:\\AI-BS",
+          "icon": "C:\\AI-BS\\native_studio\\releases\\v5.329.102\\AI_BS_Studio\\AI_BS_Studio.exe,0",
+          "description": "AI-BS Sovereign Studio v5.329.102",
+          "hotkey": "",
+          "window_style": 1,
+          "run_flags": 0,
+          "sha256": "20fc33fae519f2f6b60bbda7f06d5a6ded710336fead032006bb06875c55a412"
+        },
+        "after": {
+          "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AI-BS Sovereign Studio.lnk",
+          "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe",
+          "arguments": "",
+          "working_directory": "C:\\AI-BS",
+          "icon": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe,0",
+          "description": "AI-BS Sovereign Studio v5.329.103",
+          "hotkey": "",
+          "window_style": 1,
+          "run_flags": 0,
+          "sha256": "9568359f762f053c0222c9487ded48c5c29d145e2785a7da67496d2dcdf1c40b"
+        }
+      },
+      {
+        "backup": "D:\\AI-BS-Game-Resources\\P41\\SDK0164Studio103\\launchers-before\\002.lnk",
+        "before": {
+          "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AI-BS Sovereign Studio\\AI-BS Sovereign Studio.lnk",
+          "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.102\\AI_BS_Studio\\AI_BS_Studio.exe",
+          "arguments": "",
+          "working_directory": "C:\\AI-BS",
+          "icon": "C:\\AI-BS\\native_studio\\releases\\v5.329.102\\AI_BS_Studio\\AI_BS_Studio.exe,0",
+          "description": "AI-BS Sovereign Studio v5.329.102",
+          "hotkey": "",
+          "window_style": 1,
+          "run_flags": 0,
+          "sha256": "c3174fe5838ff6e0ac0da338994c08b1687a06952fbdeebd2c263cde0c1bdd63"
+        },
+        "after": {
+          "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AI-BS Sovereign Studio\\AI-BS Sovereign Studio.lnk",
+          "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe",
+          "arguments": "",
+          "working_directory": "C:\\AI-BS",
+          "icon": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe,0",
+          "description": "AI-BS Sovereign Studio v5.329.103",
+          "hotkey": "",
+          "window_style": 1,
+          "run_flags": 0,
+          "sha256": "895480901bc70deaa894aa25667036d57f29e63d8de7aad57768dddada4db96c"
+        }
+      },
+      {
+        "backup": "D:\\AI-BS-Game-Resources\\P41\\SDK0164Studio103\\launchers-before\\003.lnk",
+        "before": {
+          "path": "C:\\Users\\footb\\Desktop\\AI-BS Executive Studio.lnk",
+          "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.102\\AI_BS_Studio\\AI_BS_Studio.exe",
+          "arguments": "",
+          "working_directory": "C:\\AI-BS",
+          "icon": "C:\\AI-BS\\native_studio\\releases\\v5.329.102\\AI_BS_Studio\\AI_BS_Studio.exe,0",
+          "description": "AI-BS Sovereign Studio v5.329.102",
+          "hotkey": "",
+          "window_style": 1,
+          "run_flags": 0,
+          "sha256": "d5ff910335cf9b49594b124c56aa24bf4e231dbc10d04bb935db334b73680159"
+        },
+        "after": {
+          "path": "C:\\Users\\footb\\Desktop\\AI-BS Executive Studio.lnk",
+          "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe",
+          "arguments": "",
+          "working_directory": "C:\\AI-BS",
+          "icon": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe,0",
+          "description": "AI-BS Sovereign Studio v5.329.103",
+          "hotkey": "",
+          "window_style": 1,
+          "run_flags": 0,
+          "sha256": "51f27fc57dd2eecd1e83efebed3b1502e50f3d19a2065d40bdd10b82d618da3c"
+        }
+      },
+      {
+        "backup": "D:\\AI-BS-Game-Resources\\P41\\SDK0164Studio103\\launchers-before\\004.lnk",
+        "before": {
+          "path": "C:\\Users\\footb\\Desktop\\AI-BS Sovereign Studio.lnk",
+          "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.102\\AI_BS_Studio\\AI_BS_Studio.exe",
+          "arguments": "",
+          "working_directory": "C:\\AI-BS",
+          "icon": "C:\\AI-BS\\native_studio\\releases\\v5.329.102\\AI_BS_Studio\\AI_BS_Studio.exe,0",
+          "description": "AI-BS Sovereign Studio v5.329.102",
+          "hotkey": "",
+          "window_style": 1,
+          "run_flags": 0,
+          "sha256": "cbb91bb5b5cae41f81ba4e322c938a82d8847e824f8858d65df2921ff8d1004e"
+        },
+        "after": {
+          "path": "C:\\Users\\footb\\Desktop\\AI-BS Sovereign Studio.lnk",
+          "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe",
+          "arguments": "",
+          "working_directory": "C:\\AI-BS",
+          "icon": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe,0",
+          "description": "AI-BS Sovereign Studio v5.329.103",
+          "hotkey": "",
+          "window_style": 1,
+          "run_flags": 0,
+          "sha256": "20fd080047c7e9394ca8b93a74dcfc6634b4ed3a85cf5c6790488f92a5171460"
+        }
+      },
+      {
+        "backup": "D:\\AI-BS-Game-Resources\\P41\\SDK0164Studio103\\launchers-before\\005.lnk",
+        "before": {
+          "path": "C:\\Users\\footb\\OneDrive\\Desktop\\AI-BS Executive Studio.lnk",
+          "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.102\\AI_BS_Studio\\AI_BS_Studio.exe",
+          "arguments": "",
+          "working_directory": "C:\\AI-BS",
+          "icon": "C:\\AI-BS\\native_studio\\releases\\v5.329.102\\AI_BS_Studio\\AI_BS_Studio.exe,0",
+          "description": "AI-BS Executive Studio v5.329.102",
+          "hotkey": "",
+          "window_style": 1,
+          "run_flags": 0,
+          "sha256": "a2c4b13d22fede3bd4ae2c8e5d30fe7ed472f5df1d30e3b483d61dbe74a70312"
+        },
+        "after": {
+          "path": "C:\\Users\\footb\\OneDrive\\Desktop\\AI-BS Executive Studio.lnk",
+          "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe",
+          "arguments": "",
+          "working_directory": "C:\\AI-BS",
+          "icon": "C:\\AI-BS\\native_studio\\releases\\v5.329.103\\AI_BS_Studio\\AI_BS_Studio.exe,0",
+          "description": "AI-BS Executive Studio v5.329.103",
+          "hotkey": "",
+          "window_style": 1,
+          "run_flags": 0,
+          "sha256": "e48f66b47145358952ed71e4d40a4c454f7232675e0d46c154219957b7d99816"
+        }
+      }
+    ],
+    "old102_executable_retained": true,
+    "existing_user_saves_modified": false,
+    "running_user_applications_stopped": false,
+    "performance_pacing_likeness_verified": false,
+    "goal_complete": false
+  },
+  "remaining": "Player-active1080p60, first-time8\u201312minute pacing, final Adam likeness/animation approval, reviewed optional-recording captions and final source/art-master closeout remain unverified/incomplete. Wider M5/Unreal/phone/combat/vehicles remain deferred.",
+  "next_step": "Implement a clear user-started active-window profiling workflow, then measure actual Release1080p performance and first-time opening pacing. Continue naturalistic Adam face/animation work and optional recording caption review; preserve broader plan and complete final source/art-master backup before final acceptance.",
+  "storage_GiB": {
+    "C": 62.58,
+    "D": 70.07,
+    "E": 136.73
+  },
+  "source_backup41A": {
+    "at": "2026-11-03T17:53:45.465793+00:00",
+    "status": "verified_authenticated_raw_restore_all_members",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\41A_Studio103_SDK0164_Software_Source_And_Verification.zip",
+    "bytes": 3100421,
+    "sha256": "19f364626893d8c5dc0b9af885e60cb1437611c42d61da8e810c4b23ec1bb8b0",
+    "members": 675,
+    "source_files": 496,
+    "goal_complete": false,
+    "scope": "Software source and evidence; binaries/family originals/user saves/art masters excluded",
+    "drive_file_id": "1fVbLUCN8vdntuKhn5A8qa9B7_30Nv7GJ",
+    "drive_folder_id": "1RkITbJ7kkMFUf9EANFXsA9hm3euu-FWg",
+    "drive_url": "https://drive.google.com/file/d/1fVbLUCN8vdntuKhn5A8qa9B7_30Nv7GJ/view?usp=drivesdk",
+    "restored_cache": "D:\\AI-BS-Game-Resources\\cache\\19f364626893d8c5dc0b9af885e60cb1437611c42d61da8e810c4b23ec1bb8b0.zip",
+    "binary_cloud_restoration_verified": false
+  },
+  "backup41B": "preparing local supplementary archive, raw restoration not yet verified",
+  "source_snapshot_current": true,
+  "all_owned_jobs_joined": true
+}

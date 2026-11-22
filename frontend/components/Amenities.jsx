@@ -1,4 +1,4 @@
-import React from 'react';
+import 'react';
 import { theme } from '../styles/theme';
 
 export const BuiltInBar = ({ tapsCount = 16, barLengthFeet = 32 }) => {
@@ -26,7 +26,8 @@ export const BuiltInBar = ({ tapsCount = 16, barLengthFeet = 32 }) => {
   );
 };
 
-export const AVTechnology = ({ screenResolution = '4K Micro-LED', dmxActive = true }) => {
+/** @param {{screenResolution?:string,dmxActive?:boolean}} props */
+export const AVTechnology = ({ screenResolution = '4K Micro-LED' }) => {
   return (
     <div style={{
       background: 'rgba(13, 17, 23, 0.75)',

@@ -1,0 +1,204 @@
+{
+  "at": "2026-11-04T20:18:15.170736+00:00",
+  "status": "verified_private_review_package_and_authorized_cloud_backups",
+  "package": "E:\\AI_BS_Resources\\FirstBoot\\P97\\PrivateOpeningReview\\package",
+  "launch_current": "E:\\AI_BS_Resources\\FirstBoot\\P97\\PrivateOpeningReview\\package\\Play_Current_Draft.cmd",
+  "launch_previous": "E:\\AI_BS_Resources\\FirstBoot\\P97\\PrivateOpeningReview\\package\\Play_Previous_Preview.cmd",
+  "qualification": {
+    "at": "2026-11-04T20:07:24.507806+00:00",
+    "status": "passed_private_review_package_admission_and_native_matrix_ready_for_user",
+    "package": "E:\\AI_BS_Resources\\FirstBoot\\P97\\PrivateOpeningReview\\package",
+    "package_manifest_sha256": "2a215c71e859f1c8906706452938fb68e744af054db0a7540219d39712a89bdb",
+    "immutable_files": 75,
+    "admission_tests": {
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "passed": true
+    },
+    "native_checks": 32,
+    "native_plan": {
+      "repair": [
+        "opening-tour",
+        "help",
+        "door-cycle",
+        "depart-return",
+        "fall-return",
+        "reload",
+        "inspect"
+      ],
+      "bypass": [
+        "opening-tour",
+        "decline",
+        "door-cycle",
+        "depart-return",
+        "feed-loss",
+        "relay-rebuild",
+        "fall-return",
+        "reload",
+        "inspect"
+      ]
+    },
+    "native_evidence": "E:/T97N",
+    "models": [
+      "draft31",
+      "previous20"
+    ],
+    "source_added": [
+      "engine/tools/standalone_opening_review.py",
+      "engine/tools/verify_private_review_package.py"
+    ],
+    "installed_release_changed": false,
+    "published_SDK_changed": false,
+    "human_gameplay_started": false,
+    "human_pacing_accepted": false,
+    "performance_accepted": false,
+    "likeness_approved": false,
+    "original_family_media_included": false,
+    "goal_complete": false,
+    "limitations": [
+      "Standalone review package, not installed Studio update",
+      "Unfinished Adam likeness and residual collar seam",
+      "Caption listening review deferred; no original audio bound",
+      "Temporary-play native fixtures are not human/player-world performance acceptance"
+    ],
+    "next_step": "User may launch Play_Current_Draft.cmd when ready and report route, active minutes and confusing steps. Retain old sessions. Continue unresolved art/normal seam and final packaged acceptance; do not infer completion from automated tests."
+  },
+  "source_audit": {
+    "status": "passed_AST_stdlib_and_scoped_credential_patterns",
+    "hashes": {
+      "C:\\AI-BS\\engine\\tools\\standalone_opening_review.py": "f031f4745393a15cd3ce74603b01c9f6298b52a24748a17b98fb1cf79425a198",
+      "C:\\AI-BS\\engine\\tools\\verify_private_review_package.py": "83107b921da0ac048cf94cf2830cfe5a9cdd4796a644de64e3d73fc855c02652",
+      "E:\\AI_BS_Resources\\FirstBoot\\P97\\PrivateOpeningReview\\package\\review_driver.py": "fc5307264625bfe051d0f0ddb7698f78bdaa05c14764f6c848f86e281b53a844",
+      "E:\\AI_BS_Resources\\FirstBoot\\P97\\PrivateOpeningReview\\package\\opening_assets.py": "271b53e23d62a3e0fa25292b8f211d111c7e3de496952585bdc18e9ca3832b47"
+    },
+    "TypeScript": "not_applicable_no_TS_changes"
+  },
+  "source_freshness": "Two new Python tools qualified with12focused tests; published nativeSDK0172/runtime bytes unchanged and packaged native32matrix passed. No new full CTest run or installed UI deployment claimed.",
+  "restored_package_check": {
+    "status": "passed_relocated_cloud_restored_package_readiness_factory_and_native_admission",
+    "archive_sha256": "8649ea87551bfa46fcbcc1140626f4683a563d4e6ec375d3e1d5f76cce614903",
+    "immutable_files": 75,
+    "same_workstation": true,
+    "clean_machine_claim": false,
+    "source_checkout_used_by_package": false,
+    "existing_saves_used": false,
+    "human_gameplay_started": false,
+    "performance_acceptance": false
+  },
+  "backup_receipts": {
+    "90A": {
+      "archive": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\90A_Adam_v27_Geometry_And_Export.zip",
+      "bytes": 8323686,
+      "sha256": "4a858c9bd804e8bac7de316ddd48a0f51324fee5be5ca871cc9ebafcddd84e97",
+      "members": 11,
+      "goal_complete": false,
+      "at": "2026-11-04T20:04:30.453092+00:00",
+      "drive_folder_id": "1kAMNTXWPZm1LrwYWwCfOl-pCD4DNCNOJ",
+      "drive_file_id": "1ZJK4UYEKkWjseALMe_0l_jFCskaRr2XL",
+      "drive_restore_verified": true,
+      "all_members_verified": true
+    },
+    "96A": {
+      "archive": "E:\\AI_BS_Resources\\FirstBoot\\P96\\DetailedWalkthrough\\96A_Detailed_Walkthrough_And_Integrated_Draft.zip",
+      "bytes": 110775658,
+      "sha256": "97a5e91c74606d92ad86db769196a6dc2017e61e50fb2ad59325123843d57680",
+      "members": 57,
+      "cloud_upload_authorized": true,
+      "cloud_backup_verified": true,
+      "at": "2026-11-04T20:07:19.830745+00:00",
+      "drive_folder_id": "1-5aRqF4J6OMvHdOro0aF5F8BAcxNPbhf",
+      "drive_file_id": "1ZyMFqaTeSBEIR5wM3FXMXRALoHAMKl9i",
+      "drive_restore_verified": true,
+      "all_members_verified": true,
+      "goal_complete": false,
+      "authorization_record": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\derived_art_backup_authorization_20261104.json",
+      "restore_method": "ordered_byte_parts_downloaded_reassembled_and_verified",
+      "drive_file_kind": "multipart_index_json",
+      "parts": [
+        {
+          "name": "96A.part01",
+          "bytes": 67108864,
+          "sha256": "2317f8df437000e70cf3f942982a9b620997b31b0f4d76fff7eaf10eb7aa3fde",
+          "drive_file_id": "1-XVmEmru869Vf0CgVvlrAiXiV18t9mQX",
+          "downloaded_sha_verified": true
+        },
+        {
+          "name": "96A.part02",
+          "bytes": 43666794,
+          "sha256": "a62b50f1ff0f846b8ebfada7f808426aa624c18e8af9c8d8c2b1245e655da93c",
+          "drive_file_id": "1L6egLNis51THQ6LtGqUtLwjGgFufPa4j",
+          "downloaded_sha_verified": true
+        }
+      ]
+    },
+    "97A": {
+      "archive": "E:\\AI_BS_Resources\\FirstBoot\\P97\\PrivateOpeningReview\\97A_Private_Opening_Review_Package.zip",
+      "bytes": 16285520,
+      "sha256": "8649ea87551bfa46fcbcc1140626f4683a563d4e6ec375d3e1d5f76cce614903",
+      "members": 128,
+      "cloud_upload_authorized": true,
+      "cloud_backup_verified": true,
+      "authorization_record": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\derived_art_backup_authorization_20261104.json",
+      "at": "2026-11-04T20:10:00.704489+00:00",
+      "drive_folder_id": "1Yabg73qD4w5MRDNpkLi0rJSCyvJMXEBX",
+      "drive_file_id": "1FLAlQ2QPoz1cZ26qhjtsKBj4Ng3Oh8DO",
+      "drive_restore_verified": true,
+      "all_members_verified": true,
+      "goal_complete": false
+    }
+  },
+  "cloud_media_integrity": {
+    "at": "2026-11-04T20:13:11.812893+00:00",
+    "status": "passed_streamed_cloud_video_and_restoration_files_exact",
+    "files": [
+      {
+        "label": "index",
+        "drive_file_id": "1ZyMFqaTeSBEIR5wM3FXMXRALoHAMKl9i",
+        "bytes": 1272,
+        "sha256": "5c4d91a972bfd4d647a31fd30b296816bda8819fc724560be92e550651e64119",
+        "verified": true
+      },
+      {
+        "label": "restore_script",
+        "drive_file_id": "19bZ0orK294t2YZbBergbdxG9cBJfDngR",
+        "bytes": 796,
+        "sha256": "74eb602694b96e9a740c0a19a37cfc172cd2042242f109a2e2c9ad675637031f",
+        "verified": true
+      },
+      {
+        "label": "walkthrough",
+        "drive_file_id": "11Ds_BKim3-U9Dvn31DTi5oH2ijJwaFuf",
+        "bytes": 101895457,
+        "sha256": "b4c0a9dde2240c27d06dc11277b891b225e51f293a5d989b5079fe5d08fd44fe",
+        "verified": true
+      }
+    ],
+    "signed_urls_retained": false
+  },
+  "future_derived_art_backup_authorization": "docs/game_engine/checkpoints/derived_art_backup_authorization_20261104.json",
+  "old_art_upload_hold_resolved": true,
+  "original_family_media_remains_excluded": true,
+  "installed_studio": "5.329.107 / bundledSDK0171, unchanged",
+  "drive_video_url": "https://drive.google.com/file/d/11Ds_BKim3-U9Dvn31DTi5oH2ijJwaFuf/view?usp=drivesdk",
+  "backup_folder_url": "https://drive.google.com/drive/folders/1Yabg73qD4w5MRDNpkLi0rJSCyvJMXEBX",
+  "free_GiB": {
+    "C": 152.41,
+    "D": 24.25,
+    "E": 44.35
+  },
+  "human_play_started": false,
+  "human_pacing_accepted": false,
+  "current_gameplay_performance_accepted": false,
+  "likeness_approved": false,
+  "goal_complete": false,
+  "next_step": "Qualify Follow/Wait/Recall/pause with the current packaged runtime using the retained normal-player-world harness and isolated fixtures; do not use persistent proof bypass. User may play the new review launcher when ready; retain no human acceptance claim. Continue residual collar/topology/likeness work, deferred caption listening review, real1080p60measurement and final installed-package acceptance/backup.",
+  "repository_identity_local_only": {
+    "branch": "codex/audit-v532976-20261031",
+    "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7"
+  },
+  "private_git_status_file": "E:\\AI_BS_Resources\\FirstBoot\\P97\\PrivateOpeningReview\\git-status-close-local-only.txt"
+}

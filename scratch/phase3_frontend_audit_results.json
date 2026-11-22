@@ -1,0 +1,82 @@
+{
+  "frontend_src_components_count": 234,
+  "frontend_components_legacy_count": 207,
+  "duplicates_found": [
+    "AIProviderSettingsModal.jsx",
+    "AdaptationStatusBar.jsx",
+    "AdminSecurityMonitorTab.jsx",
+    "AdminSharedDriveTab.css",
+    "AdminSharedDriveTab.jsx",
+    "AdvertisingTab.jsx",
+    "AdvertisingTabWrapper.jsx",
+    "AgentMemoryDashboardTab.jsx",
+    "AgentPlanReviewCard.css",
+    "AgentPlanReviewCard.jsx",
+    "AnalyticsOverlay.jsx",
+    "AppContext.jsx",
+    "ArtifactRenderer.jsx",
+    "ArtifactsAndToolsModal.jsx",
+    "AutomatedClientSchedulerTab.jsx",
+    "BanquetArchitectTab.jsx",
+    "BetaAnalyticsTab.jsx",
+    "BibleStudyTab.jsx",
+    "BrettDataTab.jsx",
+    "BroadcastStudio.jsx",
+    "BullshitAdminSuite.jsx",
+    "BullshitChiaManager.jsx",
+    "BullshitCreationSuite.jsx",
+    "BullshitCryptoSwarm.jsx",
+    "BullshitEvolutionHistory.jsx",
+    "BullshitKnowledgeSuite.jsx",
+    "BullshitLeadMatrix.jsx",
+    "BullshitPanicButton.jsx",
+    "BullshitTelemetrySuite.jsx",
+    "CalendarActionTasksTab.jsx"
+  ],
+  "navigation_tabs_count": 0,
+  "media_routing_violations": [
+    {
+      "file": "NotosEnterpriseOSTab.jsx",
+      "matches": [
+        "/assets/notos/notos_family_indoors.jpg\" alt=\"Noto Family Indoors\" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%",
+        "/assets/notos/notos_family_outdoors.png\" alt=\"Noto Family Outdoors\" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%",
+        "/assets/notos/notos_wine_cellar.jpg\" alt=\"Cellar\" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%"
+      ]
+    },
+    {
+      "file": "ProjectNoCoStudioTab.jsx",
+      "matches": [
+        "/noco_master_plan_23acres.jpg\"\n                  alt=\"NoCo Farm & Theatre 23 Acres Master Plan\"\n                  style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '8px', border: '1px solid rgba(0, 255, 255, 0.3)', boxShadow: '0 0 20px rgba(0, 255, 255, 0.2)",
+        "/noco_master_plan_siheyuan.jpg\"\n                  alt=\"NoCo Siheyuan Courtyard Blueprint Variant\"\n                  style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '8px', border: '1px solid rgba(122, 40, 138, 0.4)', boxShadow: '0 0 20px rgba(122, 40, 138, 0.2)"
+      ]
+    },
+    {
+      "file": "components\\NotosEnterpriseOSTab.jsx",
+      "matches": [
+        "/assets/notos/notos_family_indoors.jpg\" alt=\"Noto Family Indoors\" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%",
+        "/assets/notos/notos_family_outdoors.png\" alt=\"Noto Family Outdoors\" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%",
+        "/assets/notos/notos_wine_cellar.jpg\" alt=\"Cellar\" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%"
+      ]
+    },
+    {
+      "file": "components\\ProjectNoCoStudioTab.jsx",
+      "matches": [
+        "/noco_master_plan_23acres.jpg\"\n                  alt=\"NoCo Farm & Theatre 23 Acres Master Plan\"\n                  style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '8px', border: '1px solid rgba(0, 255, 255, 0.3)', boxShadow: '0 0 20px rgba(0, 255, 255, 0.2)",
+        "/noco_master_plan_siheyuan.jpg\"\n                  alt=\"NoCo Siheyuan Courtyard Blueprint Variant\"\n                  style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '8px', border: '1px solid rgba(122, 40, 138, 0.4)', boxShadow: '0 0 20px rgba(122, 40, 138, 0.2)"
+      ]
+    }
+  ],
+  "vite_config_chunks": {
+    "has_manualChunks": true,
+    "has_firebase": true,
+    "has_recharts": true,
+    "has_lucide": true,
+    "has_xyflow": true
+  },
+  "trainer_frontend_files": {
+    "has_main_ts": true,
+    "has_preload_ts": true,
+    "has_renderer_tsx": true,
+    "has_daemon_resource": true
+  }
+}

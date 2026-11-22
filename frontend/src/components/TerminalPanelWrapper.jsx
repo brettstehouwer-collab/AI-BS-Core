@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from "react";
 import TerminalPanel from './TerminalPanel';
 import { useAppStore } from './useAppStore';
 
@@ -55,9 +55,9 @@ const COMMAND_GROUPS = [
 
 export default function TerminalPanelWrapper() {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
-  const terminalRef = useRef(null);
+  const terminalRef = useRef(/** @type {((command: string) => void) | null} */ (null));
   const [selectedCmd, setSelectedCmd] = useState('');
-  const [injecting, setInjecting] = useState(false);
+  const [] = useState(false);
 
   // Inject the selected command into the xterm terminal via the shared ref
   const injectCommand = () => {

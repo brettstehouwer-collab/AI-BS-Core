@@ -1,0 +1,36 @@
+{
+  "kind": "trusted_local_result",
+  "input_sha256": "3bc88727fe6d70c3767c402ec9a57b829cc22a1e97390a903fe6e79290ee5ac2",
+  "state": "CANCELLED",
+  "checks": [
+    {
+      "check_id": "python",
+      "returncode": 0,
+      "error": "cancelled",
+      "execution_time_ms": 93,
+      "stdout": "",
+      "stderr": "",
+      "preview_truncated": false,
+      "log_file": "check_logs\\python.json",
+      "log_sha256": "f8b8e0facec7d29c78c3cab46aac997d6cf652d8c187472372399c3e78961d17"
+    }
+  ],
+  "static_checks": [
+    {
+      "path": "src/app.py",
+      "kind": "syntax",
+      "status": "passed"
+    }
+  ],
+  "started_at": 1794782858.8456733,
+  "worker": null,
+  "resource_limits": {
+    "cpu_percent": 20,
+    "job_memory_bytes": 536870912,
+    "below_normal_priority": true
+  },
+  "npm_policy": "Selected script may use a shell; pre/post lifecycle hooks disabled; no installation requested.",
+  "finished_at": 1794782859.0222144,
+  "runtime_seal": "7ea5d24ca8f8dfa05c8a0960d25af54ba9bfa473a6a7ac19ee56441bf6cdd506",
+  "entry_sha256": "2e027de4dfd71d910310b331dc132c76cd57cd89e1fcef8d8ba3e3fd3a30255e"
+}

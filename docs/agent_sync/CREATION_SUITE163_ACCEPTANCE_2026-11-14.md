@@ -1,0 +1,11 @@
+# Creation Suite163 full-route controlled acceptance
+
+The user URL http://localhost:5173/?tab=unified_creation maps to the full App, UniversalCreationSuite, PlaywrightTab and default Writing Studio. The separately served frozen release163 full production bundle passed14 controlled browser/API assertions with a synthetic Firebase identity and ephemeral signing trust root. The actual protected selected production handlers and Go gateway were used with disposable stores. Edit/save retained typed roles; PDF download bytes/readback and original FDX checks passed; browser restart restored the saved synthetic draft and reset the export profile; unsupported export preserved the draft. Browser/API/gateway drained with exit0.
+
+Attempt01 reached the full shell but document requests received fixture404 because the full App uses8080 while the standalone relay allowed8000. Its seven preliminary checks and failure are retained. Only the new owned fixture was corrected to relay screenwriting requests on both ports. Attempt02 passed14. No application source fix was needed.
+
+Unrelated requests including Firestore presence, login notification, telemetry, models/providers, health and adaptation/audio were explicitly unavailable404 and never forwarded live. Synthetic sign-in is not real Google account acceptance. This qualifies the full frozen App route in an owned browser, not a visual pass of the user's current5173 session, current dirty source parity, production CORS, every Creation Suite tool, mobile/Android, original-layout rich PDF, native draft/error or complete release acceptance. PDF existed only as test download bytes, not a delivered user document.
+
+No version bump, redeployment, daemon restart, provider call, campaign send, private-store write or default native promotion. Current version remains5.329.163. Full original ten-goal/six-addition goal remains ACTIVE/incomplete. Next independent gate: relocate the clean native163 candidate into an owned disposable directory and qualify controlled startup/Creator using the existing frozen verifier without changing defaults or requesting manual gameplay. Preserve earlier held input/error gates.
+
+Drive receipt: backups/creation_suite163_20261114_v01/engineering/drive-verified.json. Seven members/4098bytes downloaded exactly; permissions unchanged. Closing pointers postdate archive seal.

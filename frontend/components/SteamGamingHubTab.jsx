@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Play, Gamepad2, HardDrive, RefreshCw, Cpu, CheckCircle2, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Play, Gamepad2, RefreshCw, AlertTriangle, ShieldCheck } from "lucide-react";
 
+/** @param {{"backendUrl"?: string}} props */
 export default function SteamGamingHubTab({ backendUrl = 'http://127.0.0.1:8080' }) {
-  const [games, setGames] = useState([]);
-  const [runningGames, setRunningGames] = useState([]);
+  const [games, setGames] = useState(/** @type {Array<{"size_gb": number, "appid": string, "header_image": string, "name": string, "library": string, "full_path": string, "is_running": boolean}>} */ ([]));
+  const [, setRunningGames] = useState([]);
   const [gameModeActive, setGameModeActive] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [launchingAppId, setLaunchingAppId] = useState(null);
+  const [launchingAppId, setLaunchingAppId] = useState(/** @type {string | null} */ (null));
   const [statusMessage, setStatusMessage] = useState('');
 
   const fetchLibrary = async () => {
@@ -32,7 +33,8 @@ export default function SteamGamingHubTab({ backendUrl = 'http://127.0.0.1:8080'
     return () => clearInterval(interval);
   }, [backendUrl]);
 
-  const handleLaunchGame = async (game) => {
+  /** @param {{"appid": string, "name": string}} game */
+const handleLaunchGame = async ( game) => {
     setLaunchingAppId(game.appid);
     setStatusMessage(`Activating Game Mode & Launching ${game.name}...`);
     try {
@@ -46,14 +48,14 @@ export default function SteamGamingHubTab({ backendUrl = 'http://127.0.0.1:8080'
         })
       });
       if (res.ok) {
-        const data = await res.json();
+        (await res.json());
         setStatusMessage(`🎮 ${game.name} launched! Ollama VRAM yielded for 100% RTX 4090 GPU execution.`);
         setTimeout(fetchLibrary, 3000);
       } else {
         setStatusMessage(`Failed to launch: ${res.statusText}`);
       }
     } catch (e) {
-      setStatusMessage(`Launch error: ${e.message}`);
+      setStatusMessage(`Launch error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setLaunchingAppId(null);
     }
@@ -177,7 +179,8 @@ export default function SteamGamingHubTab({ backendUrl = 'http://127.0.0.1:8080'
           gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
           gap: '20px'
         }}>
-          {games.map((game) => (
+          {games.map(
+( game) => (
             <div
               key={game.appid}
               style={{
@@ -198,7 +201,7 @@ export default function SteamGamingHubTab({ backendUrl = 'http://127.0.0.1:8080'
                   alt={game.name}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   onError={(e) => {
-                    e.target.style.display = 'none';
+                    e.currentTarget.style.display = 'none';
                   }}
                 />
                 <div style={{

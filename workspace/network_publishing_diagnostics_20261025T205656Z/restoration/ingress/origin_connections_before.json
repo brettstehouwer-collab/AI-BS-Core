@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-25T21:28:02.249403+00:00",
+  "passive_connection_metadata": [
+    {
+      "pid": 16512,
+      "created": 1792907224.949339,
+      "established_loopback_origin_connection_counts_by_port": {}
+    },
+    {
+      "pid": 34912,
+      "created": 1792907269.7080383,
+      "established_loopback_origin_connection_counts_by_port": {
+        "8000": 3
+      }
+    },
+    {
+      "pid": 6252,
+      "created": 1792907174.92084,
+      "established_loopback_origin_connection_counts_by_port": {}
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "mode": "review_only",
+  "root": "C:\\ProgramData\\AI-BS-WorkerControl",
+  "controller_sid": "S-1-5-21-2133766663-4066672948-2456486318-1001",
+  "vm_worker_sid": "S-1-5-21-2133766663-4066672948-2456486318-1005",
+  "roots": {
+    "deployment": "C:\\ProgramData\\AI-BS-WorkerControl\\deployment",
+    "state": "C:\\ProgramData\\AI-BS-WorkerControl\\state",
+    "sealed_inputs": "C:\\ProgramData\\AI-BS-WorkerControl\\sealed_inputs",
+    "incoming_outputs": "C:\\ProgramData\\AI-BS-WorkerControl\\incoming_outputs",
+    "receipts": "C:\\ProgramData\\AI-BS-WorkerControl\\receipts"
+  },
+  "files": [
+    {"path":"C:\\ProgramData\\AI-BS-WorkerControl\\deployment\\python.exe","sha256":"4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a","kind":"runtime","signer":"Python Software Foundation"},
+    {"path":"C:\\ProgramData\\AI-BS-WorkerControl\\deployment\\connector\\run_paired.py","sha256":"8bcf16d8c9c6dd7b252f1450d73e0eacab79e5950a956af7b02cb8e4baacee49","kind":"controller","signer":""},
+    {"path":"C:\\ProgramData\\AI-BS-WorkerControl\\deployment\\connector\\guest_pairing.py","sha256":"fc147c962d81d31bf26719377dce388157fb21fe9d34531390713d8165be0cb3","kind":"controller","signer":""},
+    {"path":"C:\\ProgramData\\AI-BS-WorkerControl\\deployment\\connector\\tls_channel.py","sha256":"769e15403ffab8d32357dbac935e249847c34cead10da6df6f36bcf362541739","kind":"controller","signer":""},
+    {"path":"C:\\ProgramData\\AI-BS-WorkerControl\\deployment\\protocol\\scoped_exchange.py","sha256":"ffdf1c1e45405906a77b66a01acc666f46daee0651d8df1fe92dfa1ac683b985","kind":"controller","signer":""},
+    {"path":"C:\\ProgramData\\AI-BS-WorkerControl\\deployment\\protocol\\replay_claims.py","sha256":"bfef0a001b5d2cb705f9fcde3021dcc95621952a255e2c52aba186fb331943d9","kind":"controller","signer":""}
+  ]
+}

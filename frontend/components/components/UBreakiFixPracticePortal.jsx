@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const SCENARIOS = [
   {
@@ -113,9 +113,9 @@ export default function UBreakiFixPracticePortal() {
   const [step, setStep] = useState(1);
   const [timeLeft, setTimeLeft] = useState(240);
   const [timerActive, setTimerActive] = useState(true);
-  const [checkedIqc, setCheckedIqc] = useState({});
-  const [waiversSigned, setWaiversSigned] = useState({ dataLoss: false, disassembly: false, preDamage: false });
-  const [simResult, setSimResult] = useState(null);
+  const [checkedIqc, setCheckedIqc] = useState(/** @type {Record<string, boolean>} */ ({}));
+  const [waiversSigned, setWaiversSigned] = useState(/** @type {Record<string, boolean>} */ ({ dataLoss: false, disassembly: false, preDamage: false }));
+  const [simResult, setSimResult] = useState(/** @type {{"pass": boolean, "score": number, "feedback": Array<string>, "explanation": string, "elapsed": number} | null} */ (null));
   const [totalScore, setTotalScore] = useState(0);
   const [completedScenarios, setCompletedScenarios] = useState(0);
 
@@ -130,7 +130,7 @@ export default function UBreakiFixPracticePortal() {
     } else if (timeLeft === 0 && !simResult) {
       handleFinalDecision('TIMEOUT');
     }
-    return () => clearInterval(timer);
+    return () => { if (timer !== null) clearInterval(timer); };
   }, [timerActive, timeLeft, simResult]);
 
   const resetScenario = (nextIdx = 0) => {
@@ -143,11 +143,13 @@ export default function UBreakiFixPracticePortal() {
     setSimResult(null);
   };
 
-  const handleIqcToggle = (key) => {
+  /** @param {string} key */
+const handleIqcToggle = ( key) => {
     setCheckedIqc(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleFinalDecision = (action) => {
+  /** @param {string} action */
+const handleFinalDecision = ( action) => {
     setTimerActive(false);
     const elapsedSeconds = 240 - timeLeft;
     const isUnderFourMinutes = elapsedSeconds <= 240;
@@ -193,7 +195,8 @@ export default function UBreakiFixPracticePortal() {
     });
   };
 
-  const formatTime = (secs) => {
+  /** @param {number} secs */
+const formatTime = ( secs) => {
     const m = Math.floor(secs / 60);
     const s = secs % 60;
     return `${m}:${s < 10 ? '0' : ''}${s}`;

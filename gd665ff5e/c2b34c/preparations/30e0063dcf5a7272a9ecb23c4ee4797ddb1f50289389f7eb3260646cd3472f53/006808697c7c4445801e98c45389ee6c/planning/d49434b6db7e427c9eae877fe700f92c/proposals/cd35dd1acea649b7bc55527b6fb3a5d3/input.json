@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "006808697c7c4445801e98c45389ee6c",
+  "plan_id": "d49434b6db7e427c9eae877fe700f92c",
+  "snapshot_sha256": "ad864c44df5ab8eded17b6aa8139275d4c4ed00012c73c72285e47b283db65e8",
+  "review_digest": "98afc43a5cd5916a3879b24f24822d3a5eec1d44b56c840ca4002360c823bcc4",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "cd35dd1acea649b7bc55527b6fb3a5d3",
+  "reviewed_plan_sha256": "bae54d94974c369ed2a30b917f093214b3e4194e40c5909cd031aeedde14791c",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 33484,
+    "created": 1794771330.1265812
+  },
+  "created_at_utc": "2026-11-15T19:35:32.478462+00:00",
+  "entry_sha256": "a9d4b41df737c8de80b5f0e899fbcd17d6946c7fd831fd5581945edd0ce49e88"
+}

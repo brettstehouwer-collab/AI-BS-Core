@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getApiBase } from '../config/api';
 
+/** @param {{backendUrl?: string}} props */
 export default function DeepLearningStudioTab({ backendUrl }) {
   const apiHost = backendUrl || getApiBase() || `${backendUrl}`;
 
   // Autograd DAG State
   const [x1Val, setX1Val] = useState(2.0);
   const [x2Val, setX2Val] = useState(3.0);
-  const [dagResult, setDagResult] = useState(null);
-  const [isBuildingDag, setIsBuildingDag] = useState(false);
+  const [dagResult, setDagResult] = useState(/** @type {{dag_nodes:{id:string,col:string,label:string,type:string,val:number|string,backward_op?:string}[]}|null} */ (null));
+  const [, setIsBuildingDag] = useState(false);
 
   // DL Domain Benchmarking State
   const [selectedDomain, setSelectedDomain] = useState('nlp');
-  const [batchSize, setBatchSize] = useState(32);
-  const [benchmarkResult, setBenchmarkResult] = useState(null);
-  const [isBenchmarking, setIsBenchmarking] = useState(false);
+  const [batchSize] = useState(32);
+  const [benchmarkResult, setBenchmarkResult] = useState(/** @type {{latency_ms:number,vram_usage_mb:number,hardware_backend:string,batch_size:number,architecture_description:string}|null} */ (null));
+  const [, setIsBenchmarking] = useState(false);
 
   const fetchAutogradDag = async () => {
     setIsBuildingDag(true);
@@ -22,7 +23,7 @@ export default function DeepLearningStudioTab({ backendUrl }) {
       const res = await fetch(`${apiHost}/v1/dl/build-dag`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ x1: parseFloat(x1Val), x2: parseFloat(x2Val) })
+        body: JSON.stringify({ x1: Number(x1Val), x2: Number(x2Val) })
       });
       if (res.ok) {
         const json = await res.json();
@@ -41,7 +42,7 @@ export default function DeepLearningStudioTab({ backendUrl }) {
       const res = await fetch(`${apiHost}/v1/dl/benchmark`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ domain, batch_size: parseInt(batchSize) })
+        body: JSON.stringify({ domain, batch_size: Number(batchSize) })
       });
       if (res.ok) {
         const json = await res.json();
@@ -199,7 +200,7 @@ export default function DeepLearningStudioTab({ backendUrl }) {
                     borderRadius: '6px',
                     padding: '12px',
                     display: 'flex',
-                    justify: 'space-between',
+                    justifyContent: 'space-between',
                     alignItems: 'center'
                   }}>
                     <div>

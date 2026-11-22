@@ -1,0 +1,9 @@
+# A4 actual-store preservation preflight
+
+A bounded read-only inventory inspected the two environment files and two key locations declared by the reviewed source. Key-file contents were not read; no decryption, consumer import/startup, source/config/store write, key replacement or migration occurred. Target paths were checked for redirection before reads and environment file identity/size/mtime remained stable during each read. Only aggregate classifications were persisted.
+
+The actual configuration contains mixed value formats and duplicate/override behavior. It cannot safely be treated as the earlier three-raw-token synthetic fixture. An existing declared key is present, but validity, decryptability, key equivalence and private permissions are unqualified. No directly named consumer process was observed; that does not establish that imported consumers or every writer are stopped. Prefix classification is not authenticated ciphertext validation. Coverage is these declared locations, not a whole-machine credential inventory.
+
+Detailed counts and filesystem metadata stay local in backups/vault_actual_preflight_20261114_v01/inventory.local.json. Neither that record nor the inventory script, environment values, field names, keys or ciphertext are included in the cloud progress archive. The older restricted canary archive remains untouched; no repackage, appeal or bypass occurred.
+
+Next review the existing owner-private directory helper and concrete destination, then prepare and verify a local-only preservation set of original key/config before any private decryptability check or migration. Actual private recovery, coherent consumer switch and repository/history remediation remain open. No key generation/rotation, writer pause, untracking or history rewrite follows from this preflight. Source remains156; original goal ACTIVE/incomplete.

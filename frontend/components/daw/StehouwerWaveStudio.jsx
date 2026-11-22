@@ -1,13 +1,9 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { 
-  Play, Pause, Square, SkipBack, SkipForward, Circle, 
-  Scissors, Copy, Clipboard, Volume2, Sliders, 
-  Upload, Download, ZoomIn, ZoomOut, 
-  Mic, Radio, Music, X, FileAudio, Sparkles, Layers
-} from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from "react";
+import { Play, Pause, Square, SkipBack, SkipForward, Circle, Scissors, Copy, Clipboard, Upload, Download, ZoomIn, ZoomOut, Mic, Radio, Music, X, FileAudio } from "lucide-react";
 import { LatencyMonitorHUD } from './LatencyMonitorHUD';
 
 // Helper function to encode an AudioBuffer to a WAV Blob
+/** @param {AudioBuffer} buffer */
 function audioBufferToWavBlob(buffer) {
   const numOfChan = buffer.numberOfChannels;
   const length = buffer.length * numOfChan * 2 + 44;
@@ -17,17 +13,20 @@ function audioBufferToWavBlob(buffer) {
   let offset = 0;
   let pos = 0;
 
+  /** @param {string} str */
   function writeString(str) {
     for (let i = 0; i < str.length; i++) {
       out.setUint8(pos++, str.charCodeAt(i));
     }
   }
 
+  /** @param {number} data */
   function setUint16(data) {
     out.setUint16(pos, data, true);
     pos += 2;
   }
 
+  /** @param {number} data */
   function setUint32(data) {
     out.setUint32(pos, data, true);
     pos += 4;
@@ -54,7 +53,7 @@ function audioBufferToWavBlob(buffer) {
   while (offset < buffer.length) {
     for (let i = 0; i < numOfChan; i++) {
       let sample = Math.max(-1, Math.min(1, channels[i][offset]));
-      sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0;
+      sample = (sample < 0 ? sample * 32768 : sample * 32767) | 0;
       out.setInt16(pos, sample, true);
       pos += 2;
     }
@@ -65,6 +64,7 @@ function audioBufferToWavBlob(buffer) {
 }
 
 // Format seconds into Stehouwer Precision Timecode: 00:00.000
+/** @param {number} seconds */
 function formatPrecisionTime(seconds) {
   if (isNaN(seconds) || seconds < 0) seconds = 0;
   const mins = Math.floor(seconds / 60);
@@ -74,6 +74,7 @@ function formatPrecisionTime(seconds) {
 }
 
 // Format seconds into Musical Bar / Beat timecode at given BPM: 034.2.2
+/** @param {number} seconds @param {number} [bpm] */
 function formatMusicalBar(seconds, bpm = 85) {
   if (isNaN(seconds) || seconds < 0) return '001.1.1';
   const totalBeats = seconds * (bpm / 60);
@@ -83,6 +84,7 @@ function formatMusicalBar(seconds, bpm = 85) {
   return `${String(bar).padStart(3, '0')}.${beat}.${subBeat}`;
 }
 
+/** @param {{onSendToPlaylist?: (buffer: AudioBuffer, name: string) => void}} props */
 export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
   // Transport & Playback State
   const [isPlaying, setIsPlaying] = useState(false);
@@ -90,48 +92,48 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [playheadTime, setPlayheadTime] = useState(0);
   const [selection, setSelection] = useState({ start: 0, end: 0, active: false });
-  const [clipboard, setClipboard] = useState(null);
+  const [clipboard, setClipboard] = useState(/** @type {AudioBuffer | null} */ (null));
   const [bpm, setBpm] = useState(85);
   const [rulerMode, setRulerMode] = useState('musical'); // 'musical' | 'timecode'
-  const [latencyOffsetMs, setLatencyOffsetMs] = useState(0);
+  const [] = useState(0);
 
   // Tools: 'select' (I-beam / F1), 'envelope' (F2), 'draw' (F3), 'zoom' (F4), 'timeshift' (F5), 'multitool' (F6)
   const [activeTool, setActiveTool] = useState('select');
 
   // Zoom & View Metrics
   const [pixelsPerSecond, setPixelsPerSecond] = useState(80);
-  const [scrollLeft, setScrollLeft] = useState(0);
+  const [, setScrollLeft] = useState(0);
 
   // Audio Tracks: id, name, isMuted, isSolo, gain (dB), pan (-1 to 1), channelMode ('stereo' | 'mono'), clips: [{ id, startOffset, buffer, name }]
-  const [tracks, setTracks] = useState([]);
-  const [selectedTrackId, setSelectedTrackId] = useState(null);
+  const [tracks, setTracks] = useState(/** @type {import('/types/wave').WaveTrack[]} */ ([]));
+  const [selectedTrackId, setSelectedTrackId] = useState(/** @type {string | null} */ (null));
 
   // Dual Channel VU Meters (0 to 1)
   const [vuLeft, setVuLeft] = useState(0);
   const [vuRight, setVuRight] = useState(0);
 
   // DSP Effects Dialogs
-  const [activeEffectModal, setActiveEffectModal] = useState(null);
-  const [noiseProfile, setNoiseProfile] = useState(null);
+  const [activeEffectModal, setActiveEffectModal] = useState(/** @type {string | null} */ (null));
+  const [noiseProfile, setNoiseProfile] = useState(/** @type {number | null} */ (null));
   const [noiseReductionDb, setNoiseReductionDb] = useState(12);
   const [amplifyTargetDb, setAmplifyTargetDb] = useState(0.0);
   const [vocalMode, setVocalMode] = useState('remove'); // 'remove' (Karaoke L-R) or 'isolate' (Acapella L+R)
   const [speedMultiplier, setSpeedMultiplier] = useState(1.0);
 
   // Web Audio Context & Node References
-  const audioContextRef = useRef(null);
-  const activeSourcesRef = useRef([]);
-  const animationFrameRef = useRef(null);
+  const audioContextRef = useRef(/** @type {AudioContext | null} */ (null));
+  const activeSourcesRef = useRef(/** @type {AudioBufferSourceNode[]} */ ([]));
+  const animationFrameRef = useRef(/** @type {number | null} */ (null));
   const startTimeRef = useRef(0);
   const pausedAtRef = useRef(0);
-  const mediaRecorderRef = useRef(null);
-  const recordingChunksRef = useRef([]);
+  const mediaRecorderRef = useRef(/** @type {MediaRecorder | null} */ (null));
+  const recordingChunksRef = useRef(/** @type {Blob[]} */ ([]));
   const recordingStartTimeRef = useRef(0);
 
-  const timelineContainerRef = useRef(null);
+  const timelineContainerRef = useRef(/** @type {HTMLDivElement | null} */ (null));
   const isDraggingSelectionRef = useRef(false);
   const isTimeShiftingRef = useRef(false);
-  const dragStartPosRef = useRef({ x: 0, trackId: null, clipId: null, initialStartOffset: 0 });
+  const dragStartPosRef = useRef(/** @type {import('/types/wave').WaveDragState} */ ({ x: 0, trackId: null, clipId: null, initialStartOffset: 0 }));
 
   // Initialize Web Audio Context
   const getAudioContext = useCallback(() => {
@@ -228,7 +230,8 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
     setIsPaused(false);
 
     let lastRenderTime = 0;
-    const updatePlayhead = (frameTime) => {
+    /** @param {number} [frameTime] */
+    const updatePlayhead = (frameTime = 0) => {
       const now = ctx.currentTime;
       const currentPos = now - startTimeRef.current;
 
@@ -284,7 +287,8 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
   // Live Microphone Recording
   const startRecording = async () => {
     try {
-      let stream = null;
+      /** @type {MediaStream} */
+      let stream;
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
       } else {
@@ -347,7 +351,8 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
       const ctx = getAudioContext();
       startTimeRef.current = ctx.currentTime - playheadTime;
       let lastRecTime = 0;
-      const recPlayhead = (frameTime) => {
+      /** @param {number} [frameTime] */
+      const recPlayhead = (frameTime = 0) => {
         const now = ctx.currentTime;
         if (!frameTime || frameTime - lastRecTime >= 50) {
           lastRecTime = frameTime;
@@ -361,9 +366,9 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
     } catch (err) {
       console.warn('Mic record error:', err);
       let errorMsg = 'Microphone access was denied or not supported by this browser.';
-      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+      if (err instanceof Error && (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')) {
         errorMsg = 'Microphone access was denied by the browser.\n\nTo allow:\n1. If running in a browser window: Click the lock/site settings icon in the address bar and toggle Microphone to Allow.\n2. In Windows: Ensure Settings > Privacy & security > Microphone has "Let desktop apps access your microphone" turned ON.\n3. Relaunch via Launch_Desktop_Studio.bat to apply auto-permissions.';
-      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+      } else if (err instanceof Error && (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError')) {
         errorMsg = 'No physical microphone device was detected on this PC. Please connect a microphone or audio interface.';
       }
       alert(errorMsg);
@@ -383,6 +388,7 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
   };
 
   // Ingest audio file (Drag-and-drop or File Input)
+  /** @param {File} file */
   const handleAudioFileUpload = async (file) => {
     if (!file) return;
     const ctx = getAudioContext();
@@ -410,7 +416,7 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
       setTracks(prev => [...prev, newTrack]);
       setSelectedTrackId(newTrack.id);
     } catch (err) {
-      alert(`Could not decode audio file: ${err.message}`);
+      alert(`Could not decode audio file: ${(err instanceof Error ? err.message : String(err))}`);
       console.warn('Audio decode error:', err);
     }
   };
@@ -419,6 +425,7 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
   const handleSplitAtCursor = () => {
     const splitPoint = (selection.active && selection.start) ? selection.start : playheadTime;
     setTracks(prevTracks => prevTracks.map(track => {
+      /** @type {import("/types/wave").WaveClip[]} */
       const updatedClips = [];
       (track.clips || []).forEach(clip => {
         if (!clip.buffer) {
@@ -532,6 +539,7 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
     const ctx = getAudioContext();
 
     setTracks(prev => prev.map(track => {
+      /** @type {import("/types/wave").WaveClip[]} */
       const newClips = [];
       (track.clips || []).forEach(clip => {
         if (!clip.buffer) {
@@ -626,6 +634,7 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
     const ctx = getAudioContext();
 
     setTracks(prev => prev.map(track => {
+      /** @type {import("/types/wave").WaveClip[]} */
       const trimmedClips = [];
       (track.clips || []).forEach(clip => {
         if (!clip.buffer) return;
@@ -880,8 +889,9 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
 
   // Global keyboard shortcuts
   useEffect(() => {
+    /** @param {KeyboardEvent} e */
     const handleKeyDown = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.target instanceof HTMLElement && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
 
       if (e.code === 'Space') {
         e.preventDefault();
@@ -945,8 +955,10 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
   });
 
   // Timeline Mouse Selection & Slipping
+  /** @param {import("react").MouseEvent} e @param {string} trackId @param {string | null} [clipId] */
   const handleTimelineMouseDown = (e, trackId, clipId = null) => {
     if (e.button !== 0) return;
+    if (!timelineContainerRef.current) return;
     const rect = timelineContainerRef.current.getBoundingClientRect();
     const clickX = e.clientX - rect.left + timelineContainerRef.current.scrollLeft;
     const timeAtClick = Math.max(0, clickX / pixelsPerSecond);
@@ -971,11 +983,12 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
     }
   };
 
+  /** @param {import("react").MouseEvent} e */
   const handleTimelineMouseMove = (e) => {
     if (isTimeShiftingRef.current) {
       const deltaX = e.clientX - dragStartPosRef.current.x;
       const deltaTime = deltaX / pixelsPerSecond;
-      const newStart = Math.max(0, dragStartPosRef.current.initialStartOffset + deltaTime);
+      const newStart = Math.max(0, (dragStartPosRef.current.initialStartOffset ?? 0) + deltaTime);
 
       setTracks(prev => prev.map(t => {
         if (t.id !== dragStartPosRef.current.trackId) return t;
@@ -985,7 +998,8 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
         };
       }));
     } else if (isDraggingSelectionRef.current) {
-      const rect = timelineContainerRef.current.getBoundingClientRect();
+      if (!timelineContainerRef.current) return;
+    const rect = timelineContainerRef.current.getBoundingClientRect();
       const currentX = e.clientX - rect.left + timelineContainerRef.current.scrollLeft;
       const currentTime = Math.max(0, currentX / pixelsPerSecond);
       const start = Math.min(dragStartPosRef.current.x, currentTime);
@@ -1002,13 +1016,15 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
   };
 
   // Waveform Renderer
+  /** @param {{clip: import("/types/wave").WaveClip; channelIndex?: number; height?: number}} props */
   const WaveformRenderer = ({ clip, channelIndex = 0, height = 75 }) => {
-    const canvasRef = useRef(null);
+    const canvasRef = useRef(/** @type {HTMLCanvasElement | null} */ (null));
 
     useEffect(() => {
       const canvas = canvasRef.current;
       if (!canvas || !clip.buffer) return;
       const ctx = canvas.getContext('2d');
+      if (!ctx) return;
       const width = canvas.width;
       ctx.clearRect(0, 0, width, height);
 
@@ -1552,7 +1568,7 @@ export const StehouwerWaveStudio = ({ onSendToPlaylist }) => {
           position: 'relative',
           background: '#070a10'
         }}
-        onScroll={(e) => setScrollLeft(e.target.scrollLeft)}
+        onScroll={(e) => setScrollLeft(e.currentTarget.scrollLeft)}
       >
         {/* Timeline Header Timecode Ruler */}
         <div style={{

@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "f9f51dc9b48145d49114c45303929335",
+  "plan_id": "9636fa7e841a48f18bd0e3ab288ad89b",
+  "snapshot_sha256": "77128aa3ab395ac33fafa2e0fb8fa1945a8e42ae17752bbf0e57a1c187c94474",
+  "review_digest": "08d1330f875bcea19e1721f0993238cf0cccb88be01733d9b39bcc255bd4554d",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "0d5f0898eca849f194a90ead422c9c33",
+  "reviewed_plan_sha256": "1c0042f2a6025775e3f04d8154b48177135fe87cee8de777c15f3501656486f5",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 56884,
+    "created": 1794718688.082398
+  },
+  "created_at_utc": "2026-11-15T04:58:12.472260+00:00",
+  "entry_sha256": "2b6a4e3a99abc313db2343aa7814d81db1e765709687f42a87648da650b06ea0"
+}

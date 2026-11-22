@@ -2,6 +2,13 @@ import { readChatHttpResponse } from './chatHttpResponse.js';
 
 // One selected backend and one explicit save at a time. Keep retry identity until
 // confirmed; a lost response must never cause a fallback-origin duplicate write.
+/**
+ * @param {{ state: {busy: boolean; pending: {signature: string; id: string; body: string} | null}; backendUrl: string;
+ * getMessages: () => import('/types/domain').ChatMessage[];
+ * setMessages: (update: import('/types/domain').Update<import('/types/domain').ChatMessage[]>) => void;
+ * isCurrentBackend: () => boolean; sessionTitle: string; source: string;
+ * beforeClear?: (info: {serialized: string; backendUrl: string; receipt: {owner: string}}) => Promise<boolean | void> | boolean | void }} options
+ */
 export async function archiveChatAndClear({ state, backendUrl, getMessages, setMessages,
   isCurrentBackend, sessionTitle, source, beforeClear }) {
   if (state.busy) throw new Error('An archive save is already in progress.');

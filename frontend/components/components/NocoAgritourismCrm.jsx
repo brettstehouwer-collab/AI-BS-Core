@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 export default function NocoAgritourismCrm() {
   const [selectedEventId, setSelectedEventId] = useState('event1');
   const [selectedPodId, setSelectedPodId] = useState('pod1');
-  const [bookingModalOpen, setBookingModalOpen] = useState(false);
-  const [applicantName, setApplicantName] = useState('');
-  const [applicantMedium, setApplicantMedium] = useState('Music Production');
+  const [] = useState(false);
+  const [] = useState('');
+  const [] = useState('Music Production');
 
   // Flagship Events Data
   const [events, setEvents] = useState([
@@ -54,7 +54,7 @@ export default function NocoAgritourismCrm() {
   ]);
 
   // 8 ÖÖD Pod Artist Residency Grid
-  const [pods, setPods] = useState([
+  const [pods] = useState([
     { id: 'pod1', name: 'ÖÖD Pod 1 (Northwest Fir)', status: 'Occupied', artist: 'Elena Rostova', medium: 'Acoustic Cello & Sound Sculptor', dates: 'Oct 15 – Nov 15', fellowship: 'NYSCA Grant' },
     { id: 'pod2', name: 'ÖÖD Pod 2 (Pine Ridge)', status: 'Occupied', artist: 'Marcus Vance', medium: 'Screenwriting & Audio DSP', dates: 'Oct 20 – Dec 1', fellowship: 'Sovereign AI Grant' },
     { id: 'pod3', name: 'ÖÖD Pod 3 (Lakeside East)', status: 'Reserved', artist: 'Dr. Aris Thorne', medium: 'Botanical Frequency Synthesizer', dates: 'Nov 1 – Nov 30', fellowship: 'MIT Media Lab' },

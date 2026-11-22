@@ -1,8 +1,14 @@
-import React, { useState, useMemo, useEffect } from 'react';
+/** @typedef {{summary:{total_bible_books:number,total_bible_chapters:number,total_bible_verses:number,nt_verses_count:number},categories:Record<string,string[]>,books:Record<string,{name:string,chapters_count:number,verses_count:number,chapters:string[][]}>}} BibleDataset */
+import { useState, useMemo, useEffect } from 'react';
 import { useAppStore } from './useAppStore.js';
 import kjvData from '../data/newTestamentData.json';
 import nivData from '../data/newTestamentData_NIV.json';
 
+/** @type {BibleDataset["books"]} */
+const kjvBooks = kjvData.books;
+/** @type {BibleDataset["books"]} */
+const nivBooks = nivData.books;
+/** @type {Record<string,string>} */
 const CATEGORY_ICONS = {
   'All': '📜',
   'The Gospels': '✝️',
@@ -12,7 +18,8 @@ const CATEGORY_ICONS = {
   'Prophecy / Apocalyptic': '🔥'
 };
 
-export default function BibleStudyTab({ backendUrl }) {
+/** @param {{backendUrl?:string}} props */
+export default function BibleStudyTab({}) {
   const setActiveTab = useAppStore(state => state.setActiveTab);
 
   // Translation state: 'KJV' | 'NIV' | 'PARALLEL'
@@ -26,10 +33,11 @@ export default function BibleStudyTab({ backendUrl }) {
   const [fontFamily, setFontFamily] = useState('serif'); // 'serif' | 'sans'
   const [searchQuery, setSearchQuery] = useState('');
   const [searchScope, setSearchScope] = useState('all'); // 'all' | 'current'
-  const [copiedVerse, setCopiedVerse] = useState(null);
-  const [aiAnalysisStatus, setAiAnalysisStatus] = useState(null);
+  const [copiedVerse, setCopiedVerse] = useState(/** @type {string|number|null} */ (null));
+  const [aiAnalysisStatus, setAiAnalysisStatus] = useState(/** @type {string|null} */ (null));
 
   // Active dataset based on translation
+  /** @type {BibleDataset} */
   const activeDataset = translation === 'NIV' ? nivData : kjvData;
 
   // Books in current category
@@ -69,8 +77,8 @@ export default function BibleStudyTab({ backendUrl }) {
   // Verses for parallel comparison (KJV vs NIV)
   const parallelData = useMemo(() => {
     if (translation !== 'PARALLEL') return null;
-    const kjvBook = kjvData.books[selectedBook];
-    const nivBook = nivData.books[selectedBook];
+    const kjvBook = kjvBooks[selectedBook];
+    const nivBook = nivBooks[selectedBook];
     const kjvCh = kjvBook?.chapters?.[selectedChapter - 1] || [];
     const nivCh = nivBook?.chapters?.[selectedChapter - 1] || [];
     const maxLen = Math.max(kjvCh.length, nivCh.length);
@@ -170,7 +178,7 @@ export default function BibleStudyTab({ backendUrl }) {
   };
 
   // Copy individual verse
-  const copyVerseText = (verseNum, text) => {
+  const copyVerseText = (/** @type {number} */ verseNum, /** @type {string} */ text) => {
     navigator.clipboard.writeText(`${selectedBook} ${selectedChapter}:${verseNum} (${translation}) - "${text}"`);
     setCopiedVerse(verseNum);
     setTimeout(() => setCopiedVerse(null), 1800);
@@ -933,7 +941,7 @@ export default function BibleStudyTab({ backendUrl }) {
                   </div>
 
                   {parallelData.map((row) => {
-                    const isCopied = copiedVerse === row.num;
+                    (copiedVerse === row.num);
                     return (
                       <div
                         key={row.num}

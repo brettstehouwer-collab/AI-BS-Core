@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Users, Mail, Send, Sparkles, Plus, Tag, CheckCircle2, AlertCircle, 
-  BarChart3, Eye, MousePointer, ShieldCheck, Filter, RefreshCw, FileText, 
-  ChevronRight, ExternalLink, Layers, Play, Clock, Search
-} from 'lucide-react';
+/** @typedef {{id: string, email: string, first_name?: string, last_name?: string, company?: string, phone?: string, status?: string, tags: string | string[], created_at?: string}} Subscriber */
+/** @typedef {{id: string, subject: string, preview_text?: string, created_at?: string, status: string, target_tags?: string | string[], sent_count: number, opened_count: number, clicked_count: number, bounce_count: number}} Campaign */
+import { useState, useEffect, useRef } from 'react';
+import { Users, Send, Sparkles, Plus, BarChart3, Eye, MousePointer, ShieldCheck, Filter, RefreshCw, FileText, Search } from 'lucide-react';
 
 const DEFAULT_TAGS = [
   'All', 
@@ -16,6 +14,7 @@ const DEFAULT_TAGS = [
   'Contacted'
 ];
 
+/** @param {{backendUrl?: string}} props */
 export default function CampaignAutomationTab({ backendUrl: propBackendUrl }) {
   const defaultApiUrl = typeof window !== 'undefined' && (
     window.location.hostname !== 'localhost' || 
@@ -31,7 +30,7 @@ export default function CampaignAutomationTab({ backendUrl: propBackendUrl }) {
   const [activeSubTab, setActiveSubTab] = useState('audience');
 
   // Audience State
-  const [subscribers, setSubscribers] = useState([]);
+  const [subscribers, setSubscribers] = useState(/** @type {Subscriber[]} */ ([]));
   const [selectedTag, setSelectedTag] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddSubOpen, setIsAddSubOpen] = useState(false);
@@ -42,7 +41,7 @@ export default function CampaignAutomationTab({ backendUrl: propBackendUrl }) {
   const [newSubTags, setNewSubTags] = useState('Need to Email, Girls Basketball');
 
   // Campaign Builder State
-  const [campaigns, setCampaigns] = useState([]);
+  const [campaigns, setCampaigns] = useState(/** @type {Campaign[]} */ ([]));
   const [subject, setSubject] = useState('Important Recruiting Reminder from Dennis Bell (Former NY Knick)');
   const [previewText, setPreviewText] = useState('If you are not getting offers, it is not your talent but your exposure.');
   const [targetTag, setTargetTag] = useState('Need to Email');
@@ -70,7 +69,7 @@ President, Recreational Debut (501c3)`
   const [aiTopic, setAiTopic] = useState('NCAA Eligibility Center & 850 Coach Exposure');
   const [aiAudience, setAiAudience] = useState('High School Student-Athletes & Parents');
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
-  const [aiSubjectOptions, setAiSubjectOptions] = useState([]);
+  const [, setAiSubjectOptions] = useState(/** @type {string[]} */ ([]));
 
   // Telemetry & Dispatch State
   const [isDispatching, setIsDispatching] = useState(false);
@@ -79,7 +78,7 @@ President, Recreational Debut (501c3)`
   
   // Bulk Upload State
   const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
 
   // Load Subscribers from Backend
   const loadSubscribers = async () => {
@@ -137,8 +136,9 @@ President, Recreational Debut (501c3)`
   });
 
   // Handle Bulk Upload
-  const handleBulkUpload = async (e) => {
-    const file = e.target.files[0];
+  /** @param {import("react").ChangeEvent<HTMLInputElement>} e */
+const handleBulkUpload = async (e) => {
+    const file = e.target.files?.[0];
     if (!file) return;
     
     setIsUploading(true);
@@ -159,15 +159,16 @@ President, Recreational Debut (501c3)`
         alert("Upload failed: " + errorText);
       }
     } catch (err) {
-      alert("Error uploading file: " + err.message);
+      alert("Error uploading file: " + errorMessage(err));
     } finally {
       setIsUploading(false);
-      if (e.target) e.target.value = null;
+      if (e.target) e.target.value = '';
     }
   };
 
   // Handle Add Subscriber
-  const handleAddSubscriber = async (e) => {
+  /** @param {import("react").FormEvent} e */
+const handleAddSubscriber = async (e) => {
     e.preventDefault();
     if (!newSubEmail.trim()) return;
 
@@ -257,7 +258,7 @@ President, Recreational Debut (501c3)`
   };
 
   // Quick Preset Loader for Dennis's Nurture Sequences
-  const loadPresetTemplate = (presetNum) => {
+  const loadPresetTemplate = (/** @type {number} */ presetNum) => {
     if (presetNum === 1) {
       setSubject("Important Recruiting Reminder from Dennis Bell (Former NY Knick)");
       setPreviewText("If you're not getting any offers, it's not your talent but your exposure.");
@@ -868,6 +869,7 @@ President, Recreational Debut
   );
 }
 
+/** @type {Record<string,import("react").CSSProperties>} */
 const styles = {
   container: {
     padding: '24px',
@@ -1068,9 +1070,6 @@ const styles = {
   },
   tr: {
     transition: 'background 0.2s',
-    '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.02)'
-    }
   },
   tagChip: {
     background: 'rgba(56, 189, 248, 0.1)',
@@ -1250,3 +1249,9 @@ const styles = {
     fontSize: '13px'
   }
 };
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}

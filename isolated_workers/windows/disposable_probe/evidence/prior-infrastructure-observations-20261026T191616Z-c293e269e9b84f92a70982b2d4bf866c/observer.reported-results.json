@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "classification": "RETROSPECTIVE_TRANSCRIPTION_OF_PREVIOUSLY_OBSERVED_TRUSTED_INFRASTRUCTURE_TOOL_RESULTS",
+  "suite": "Observer",
+  "reported_passed": 24,
+  "reported_failed": 0,
+  "original_execution_utc": null,
+  "original_stdout_retained_in_this_file": false,
+  "verification": "PREVIOUS_TOOL_OUTPUT_OBSERVATION_ONLY_NOT_A_NEW_EXECUTION",
+  "transcribed_utc": "2026-10-26T19:16:16.3817651Z",
+  "source_path": "C:\\AI-BS\\isolated_workers\\windows\\disposable_probe\\Observe-InstallScreen.ps1",
+  "current_source_sha256": "2bb7c4fbb1ed5ca267ee83a4cd297486e7b808c25e2a60810cd89f4e9d247668",
+  "test_path": "C:\\AI-BS\\isolated_workers\\windows\\disposable_probe\\Test-ObserveInstallInfrastructure.ps1",
+  "current_test_sha256": "f944350deb37d0983e0f3502c9536410f003804a391e2db59d20ad5d7a872d3c",
+  "vm_operations": 0,
+  "guest_input": 0,
+  "candidate_execution": false,
+  "rerun_performed_to_create_this_record": false
+}

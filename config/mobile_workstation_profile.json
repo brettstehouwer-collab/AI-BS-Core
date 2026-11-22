@@ -1,0 +1,19 @@
+{
+  "active_profile_id": "desktop_native",
+  "profile": {
+    "id": "desktop_native",
+    "label": "Desktop Native Resolution (100% Standard DPI)",
+    "width": 0,
+    "height": 0,
+    "dpi_percent": 100,
+    "ui_zoom": 1.0,
+    "code_font_size": "0.85rem",
+    "button_padding": "3px 8px",
+    "recommended_for": "Local Desktop Monitors (RTX 4090 Direct)"
+  },
+  "os_resolution_applied": false,
+  "os_change_result": "skipped (UI/IDE virtual DPI scaling active)",
+  "native_width": 1920,
+  "native_height": 1440,
+  "updated_at": "2026-11-14 20:50:00"
+}

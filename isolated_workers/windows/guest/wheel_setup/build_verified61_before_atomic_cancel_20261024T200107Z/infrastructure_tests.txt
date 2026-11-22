@@ -1,0 +1,62 @@
+PASS close before Install is unverified nonzero
+PASS first human action admitted once
+PASS failed GUI close returns nonzero
+PASS completed outcome cannot be replaced
+PASS cannot report verified without Install action
+PASS cancelled GUI close returns nonzero
+PASS only verified GUI close reports success
+PASS exact offline guest admitted
+PASS null rejected
+PASS wrong UUID
+PASS malformed UUID
+PASS host model
+PASS unknown manufacturer
+PASS Oracle VirtualBox
+PASS host worker SID
+PASS host operator SID
+PASS missing SID
+PASS x86 rejected
+PASS non-medium rejected
+PASS enabled NIC rejected
+PASS unobserved NICs rejected
+PASS actual stdout stderr exit
+PASS actual normal result facts retained
+PASS combined bytes bounded
+PASS actual output cap fact retained
+PASS actual monotonic deadline
+PASS actual timeout fact retained
+PASS cancel before start
+PASS overall monotonic budget refuses new process
+PASS newline args rejected
+PASS relative executable rejected
+PASS exclusive intent retained
+PASS real exclusive lease
+PASS kernel lease denies competing filesystem handle
+PASS durable exact stdout stderr numeric exit
+PASS durable bounded local-only evidence
+PASS durable overflow fact
+PASS durable timeout and deadline facts
+PASS overbound evidence rejected before file creation
+PASS flushed result retained
+PASS released lease still prohibits replay
+PASS corrupt intent prohibits replay
+PASS actual size hash pin
+PASS held media forbids writes
+PASS wrong size rejected
+PASS wrong hash rejected
+PASS reparse attribute rejected
+PASS actual filesystem junction rejected
+PASS actual ordinary path accepted
+PASS strict fixed manifest accepted
+PASS manifest label rejected
+PASS manifest path rejected
+PASS manifest wheel hash rejected
+PASS manifest arbitrary command rejected
+PASS manifest duplicate key rejected
+PASS exact runtime response accepted
+PASS other Python version refused
+PASS other Python prefix refused
+PASS runtime uncertainty refused
+PASS fixed no-network pip arguments
+PASS pip preflight contains os.devnull and no configuration dump
+RESULT 61 trusted infrastructure checks passed; no pip, Python, Node, installer, or project runtime executed.

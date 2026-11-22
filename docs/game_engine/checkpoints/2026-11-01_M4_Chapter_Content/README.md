@@ -1,0 +1,9 @@
+# Chapter content SDK/runtime checkpoint
+
+SDK/runtime chapter content now separates authored geometry/defaults/cues from actual player outcomes. Immutable AIBD definitions and SHA256 ContentBinding preserve exact content identity; new content requires a retained revision and new Play branch. Moved door/socket/NPC geometry, isolation, relay build/connect/disconnect/dismantle, optional decline, actual moved-door capsule crossing and SQLite restart pass. Debug43/43, Release43/43, both installed SDK consumers1/1 and107 Python/Qt checks pass. Typed creator host/UI and owned native Play remain unfinished. Studio94/public87 remain retained; full personal20–30minute alpha/audio/assets/RTXawakening remains unfinished.
+
+Consolidated selected game source/evidence, not a whole workstation backup. No earlier overlays are needed for the selected set. Restore into a review directory and reconcile local changes first. Includes complete SDK sources/build manifests, ledger/contracts, native tests, closed synthetic SQLite/definition proofs and monitor source. Generated binaries/dependencies/models and original memoir/photos/player saves/separate Unreal are excluded.
+
+Actual proof: source native fixtures produce ten validated batches/fourteen semantic outcomes in temporary Play; exact binding and receipts survive SQLite reopen. Encoded definition SHA256 matches Python hashlib. Local archive CRC/per-file readback/SHA256 and Drive size/parent checks have different scopes; remote cryptographic validation/quota are unavailable.
+
+Next: typed content host and retained authoring history/identity handling, chapter authoring UI, then owned native Play/Stop. Existing numeric editor/preview are retained; the new chapter definition is not yet exposed there. No automatic migration, global navigation or complete20–30minute alpha is claimed. Studio94/public87 remain deployed. No local cleanup or removal was performed.

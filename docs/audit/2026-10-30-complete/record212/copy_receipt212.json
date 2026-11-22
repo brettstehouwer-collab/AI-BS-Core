@@ -1,0 +1,34 @@
+{
+  "utc": "2026-11-01T00:25:55.291757+00:00",
+  "source_preserved": true,
+  "project_copy": "C:\\AI-BS\\October7_VocalStudio_DAW",
+  "files_copied": 10591,
+  "bytes": 7146613269,
+  "robocopy_exit": 1,
+  "all_lengths_match": true,
+  "entrypoint_and_html_hashes": [
+    {
+      "path": "October7_VocalStudio_DAW.exe",
+      "sha256": "2085931d44cb043d7daf674f208fb169eba0ca29d777eb729b23ddc790faac3d"
+    },
+    {
+      "path": "October7_VocalStudio_Native.exe",
+      "sha256": "6073c20fee1c7f6cdd61de784a82d14ad02bd62b0ada26c4d38b2bc14603628e"
+    },
+    {
+      "path": "VOICECOACH PROGRAM.html",
+      "sha256": "48bf3db02931ba4cc4d5efdf85818f6fa51074c7ac9dc39cea42a9b1764d2a52"
+    },
+    {
+      "path": "_internal/VOICECOACH PROGRAM.html",
+      "sha256": "df8d7f656bc7c7dad81d5c8076decd758ffe79a285fe2910dda9c2fc1c604226"
+    }
+  ],
+  "workspace_files_updated": [
+    "AI-BS.code-workspace",
+    "AI-BS_Sovereign.code-workspace"
+  ],
+  "program_launched": false,
+  "audio_or_microphone_accessed": false,
+  "live_trading": "DISABLED"
+}

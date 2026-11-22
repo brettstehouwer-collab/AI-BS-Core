@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "60338e486683403ab169e6af5ce5585e",
+  "plan_id": "a17b6f4cbae54188a21b381f6c02c4bb",
+  "snapshot_sha256": "1c626cf871c3130222cd925b10671f39a8b56b7877972366c87267c3e522d450",
+  "review_digest": "01b3adbc8060b92160c06c77a8ee10b1ebf9f20729273e94e0b768e725f5a701",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "98f352ab73bb4ac487da28d55ae3d94d",
+  "reviewed_plan_sha256": "9ffa274dbbd80030c802c2281bd39ef1b4684a2fa851bf2ea45532114ca4c772",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 33296,
+    "created": 1794779753.3821661
+  },
+  "created_at_utc": "2026-11-15T21:56:00.934484+00:00",
+  "entry_sha256": "2e74b1a7c65551d8849cb8cf4733f96ef591d00aeaa5cd5521a1ee7a36fdbe15"
+}

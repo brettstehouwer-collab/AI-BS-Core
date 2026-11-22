@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+/** @typedef {{id: string, clientName: string, apiName: string, apiKey: string, baseUrl: string, category: string}} SavedApi */
+/** @typedef {{id?: string | number, image?: {uri: string}, message?: string, url?: string, [key: string]: unknown}} FeedCard */
+/** @typedef {{id: string, timestamp: number, source: string, data: FeedCard}} SavedData */
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 const RAPID_CATEGORIES = [
@@ -24,6 +27,7 @@ const RAPID_CATEGORIES = [
   { id: 'health', label: 'Health', icon: '🏃' }
 ];
 
+/** @type {Record<string, {value: string, label: string}[]>} */
 const TASK_MAPPINGS = {
   entertainment: [
     { value: 'facebook_group_videos', label: 'Facebook Group Videos' },
@@ -51,15 +55,16 @@ const TASK_MAPPINGS = {
   ]
 };
 
+/** @param {{backendUrl?: string}} props */
 export default function BrettDataTab({ backendUrl }) {
   const [activeSubTab, setActiveSubTab] = useState('api_hub');
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(/** @type {string | null} */ (null));
   const [rawJson, setRawJson] = useState('');
-  const [parsedData, setParsedData] = useState(null);
+  const [parsedData, setParsedData] = useState(/** @type {FeedCard[] | null} */ (null));
   const [parseError, setParseError] = useState('');
 
   // Live Fetch State
-  const [apis, setApis] = useState([]);
+  const [apis, setApis] = useState(/** @type {SavedApi[]} */ ([]));
   const [selectedApiId, setSelectedApiId] = useState('');
   const [manualApiKey, setManualApiKey] = useState('');
   const [taskType, setTaskType] = useState('facebook_group_videos');
@@ -72,10 +77,10 @@ export default function BrettDataTab({ backendUrl }) {
   const [testManualApiKey, setTestManualApiKey] = useState('');
   const [testIsFetching, setTestIsFetching] = useState(false);
   const [testRawJson, setTestRawJson] = useState('');
-  const [testParsedList, setTestParsedList] = useState(null);
+  const [testParsedList, setTestParsedList] = useState(/** @type {FeedCard[] | null} */ (null));
   const [testError, setTestError] = useState('');
 
-  const [vaultItems, setVaultItems] = useState([]);
+  const [vaultItems, setVaultItems] = useState(/** @type {SavedData[]} */ ([]));
 
   // API Manager States
   const [newApi, setNewApi] = useState({ clientName: '', apiName: '', apiKey: '', baseUrl: '', category: '' });
@@ -111,7 +116,8 @@ export default function BrettDataTab({ backendUrl }) {
       .catch(err => console.error("Failed to fetch vault data:", err));
   }, [backendUrl]);
 
-  const handleSaveToVault = (item, source) => {
+  /** @param {FeedCard} item @param {string} source */
+const handleSaveToVault = (item, source) => {
     const payload = {
       id: crypto.randomUUID(),
       timestamp: Date.now(),
@@ -128,13 +134,15 @@ export default function BrettDataTab({ backendUrl }) {
     });
   };
 
-  const handleDeleteFromVault = (id) => {
+  /** @param {string} id */
+const handleDeleteFromVault = (id) => {
     fetch(`${backendUrl}/api/proxy/8001/api/v1/vault/data/${id}`, { method: "DELETE" }).then(() => {
       setVaultItems(vaultItems.filter(i => i.id !== id));
     });
   };
 
-  const handleSendToClipboard = (item) => {
+  /** @param {SavedData} item */
+const handleSendToClipboard = (item) => {
     const formatted = JSON.stringify(item.data, null, 2);
     navigator.clipboard.writeText(formatted).then(() => {
       alert('Copied to clipboard! You can now paste this anywhere.');
@@ -143,10 +151,11 @@ export default function BrettDataTab({ backendUrl }) {
     });
   };
 
-  const handleAddApi = (e) => {
+  /** @param {import("react").FormEvent} e */
+const handleAddApi = (e) => {
     e.preventDefault();
     if (!newApi.apiName || !newApi.apiKey) return;
-    const apiObj = { id: Date.now().toString(), clientName: newApi.clientName || 'Custom', ...newApi };
+    const apiObj = { ...newApi, id: Date.now().toString(), clientName: newApi.clientName || 'Custom' };
     
     fetch(`${backendUrl}/api/proxy/8001/api/v1/vault/keys`, {
       method: "POST",
@@ -158,17 +167,20 @@ export default function BrettDataTab({ backendUrl }) {
     });
   };
 
-  const handleDeleteApi = (id) => {
+  /** @param {string} id */
+const handleDeleteApi = (id) => {
     fetch(`${backendUrl}/api/proxy/8001/api/v1/vault/keys/${id}`, { method: "DELETE" }).then(() => {
       setApis(apis.filter(api => api.id !== id));
     });
   };
 
-  const copyToClipboard = (text) => {
+  /** @param {string} text */
+const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
   };
 
-  const handleAskRecommender = async (e) => {
+  /** @param {import("react").FormEvent} e */
+const handleAskRecommender = async (e) => {
     e.preventDefault();
     if (!query) return;
     setIsLoadingRecommender(true);
@@ -193,7 +205,8 @@ export default function BrettDataTab({ backendUrl }) {
     }
   };
 
-  const handleRunTest = async (e) => {
+  /** @param {import("react").FormEvent} e */
+const handleRunTest = async (e) => {
     e.preventDefault();
     if (!testerApiId || !testerEndpoint) return;
     const apiToTest = apis.find(a => a.id === testerApiId);
@@ -202,7 +215,8 @@ export default function BrettDataTab({ backendUrl }) {
     setTesterResponse('Running test...');
     try {
       let finalUrl = testerEndpoint;
-      const headers = { 'Accept': 'application/json' };
+      /** @type {Record<string, string>} */
+const headers = { 'Accept': 'application/json' };
       if (testerAuthType === 'Query Parameter') {
         const separator = finalUrl.includes('?') ? '&' : '?';
         finalUrl = `${finalUrl}${separator}${testerAuthKeyName}=${encodeURIComponent(apiToTest.apiKey)}`;
@@ -218,7 +232,8 @@ export default function BrettDataTab({ backendUrl }) {
           headers['x-rapidapi-key'] = apiToTest.apiKey;
         }
       } catch (e) {}
-      const options = { method: testerMethod, headers };
+      /** @type {RequestInit} */
+const options = { method: testerMethod, headers };
       if (testerMethod !== 'GET' && testerMethod !== 'HEAD' && testerBody) {
         options.body = testerBody;
         headers['Content-Type'] = 'application/json';
@@ -233,7 +248,7 @@ export default function BrettDataTab({ backendUrl }) {
       };
       setTesterResponse(JSON.stringify(responsePayload, null, 2));
     } catch (err) {
-      setTesterResponse(JSON.stringify({ error: err.message }, null, 2));
+      setTesterResponse(JSON.stringify({ error: errorMessage(err) }, null, 2));
     } finally {
       setIsTesting(false);
     }
@@ -285,14 +300,15 @@ export default function BrettDataTab({ backendUrl }) {
         setParsedData(null);
       }
     } catch (err) {
-      setParseError('Failed to fetch data: ' + err.message);
+      setParseError('Failed to fetch data: ' + errorMessage(err));
       setParsedData(null);
     } finally {
       setIsFetching(false);
     }
   };
 
-  const getTaskHelperText = (type) => {
+  /** @param {string} type */
+const getTaskHelperText = (type) => {
     switch (type) {
       case 'facebook_group_videos': return "Fetches videos from a Facebook group. Target ID: The numerical ID of the group (e.g., 1571965316444595).";
       case 'facebook_user_search': return "Searches for a user on Facebook. Target ID: The user's name or search term.";
@@ -305,12 +321,13 @@ export default function BrettDataTab({ backendUrl }) {
     }
   };
 
-  const extractArrayFromJSON = (obj) => {
-    if (Array.isArray(obj)) return obj;
+  /** @param {unknown} obj @returns {FeedCard[] | null} */
+const extractArrayFromJSON = (obj) => {
+    if (Array.isArray(obj)) return jsonCards(obj);
     if (obj && typeof obj === 'object') {
-      for (const key of Object.keys(obj)) {
-        if (Array.isArray(obj[key])) return obj[key];
-        const nested = extractArrayFromJSON(obj[key]);
+      for (const value of Object.values(obj)) {
+        if (Array.isArray(value)) return jsonCards(value);
+        const nested = extractArrayFromJSON(value);
         if (nested) return nested;
       }
     }
@@ -333,7 +350,8 @@ export default function BrettDataTab({ backendUrl }) {
     setTestParsedList(null);
 
     try {
-      const headers = { 'Accept': 'application/json' };
+      /** @type {Record<string, string>} */
+const headers = { 'Accept': 'application/json' };
       const urlObj = new URL(testEndpoint);
       if (urlObj.hostname.includes('rapidapi.com')) {
         headers['x-rapidapi-host'] = urlObj.hostname;
@@ -352,7 +370,7 @@ export default function BrettDataTab({ backendUrl }) {
         setTestParsedList(null);
       }
     } catch (err) {
-      setTestError('Failed to fetch data: ' + err.message);
+      setTestError('Failed to fetch data: ' + errorMessage(err));
       setTestParsedList(null);
     } finally {
       setTestIsFetching(false);
@@ -370,7 +388,7 @@ export default function BrettDataTab({ backendUrl }) {
       } else if (data && data.videos) {
         setParsedData(data.videos);
       } else if (Array.isArray(data)) {
-        setParsedData(data); // Generic array
+        setParsedData(jsonCards(data)); // Generic array
       } else {
         setParseError('Parsed successfully, but could not find a "videos" array or a standard list of items in the JSON.');
         setParsedData(null);
@@ -545,7 +563,7 @@ export default function BrettDataTab({ backendUrl }) {
                                } else {
                                   alert(data.error);
                                }
-                             } catch (err) { alert('Failed: ' + err.message); }
+                             } catch (err) { alert('Failed: ' + errorMessage(err)); }
                           }}
                           style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid var(--accent)', color: 'white', borderRadius: '8px', padding: '0 12px', cursor: 'pointer', whiteSpace: 'nowrap' }}
                           title="Extract Group ID from URL"
@@ -630,8 +648,8 @@ export default function BrettDataTab({ backendUrl }) {
                               transition: 'background 0.2s',
                               marginBottom: '8px'
                             }}
-                            onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
-                            onMouseOut={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
+                            onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
+                            onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                             >
                               Watch on Source
                             </a>
@@ -645,8 +663,8 @@ export default function BrettDataTab({ backendUrl }) {
                             cursor: 'pointer',
                             fontSize: '0.9rem'
                           }}
-                          onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
-                          onMouseOut={(e) => e.target.style.background = 'transparent'}>
+                          onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                          onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
                             💾 Save to Vault
                           </button>
                         </div>
@@ -753,8 +771,8 @@ export default function BrettDataTab({ backendUrl }) {
                       cursor: 'pointer',
                       fontSize: '0.9rem'
                     }}
-                    onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
-                    onMouseOut={(e) => e.target.style.background = 'transparent'}>
+                    onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
                       💾 Save to Vault
                     </button>
                   </div>
@@ -1006,4 +1024,17 @@ export default function BrettDataTab({ backendUrl }) {
 
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}
+
+/** Preserve arbitrary JSON values as cards without assuming every array member is an object.
+ * @param {unknown[]} values @returns {FeedCard[]} */
+function jsonCards(values) {
+  return values.map(value => typeof value === 'object' && value !== null && !Array.isArray(value)
+    ? /** @type {FeedCard} */ (value) : { value });
 }

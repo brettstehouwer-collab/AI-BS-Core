@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 const SOVEREIGN_TOOLS = [
   // 1. Terminal Coding
@@ -129,10 +129,11 @@ const SOVEREIGN_TOOLS = [
   }
 ];
 
+/** @param {{"onLaunchAgent": (arg0: string, arg1: string) => void}} props */
 export default function SovereignMatrixWidget({ onLaunchAgent }) {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [copiedId, setCopiedId] = useState(null);
+  const [copiedId, setCopiedId] = useState(/** @type {string | null} */ (null));
 
   const categories = [
     { id: 'all', label: 'All Open-Source Tools' },
@@ -152,7 +153,8 @@ export default function SovereignMatrixWidget({ onLaunchAgent }) {
     return matchCat && matchSearch;
   });
 
-  const handleCopyCmd = (id, cmd) => {
+  /** @param {typeof copiedId} id @param {string} cmd */
+const handleCopyCmd = ( id,  cmd) => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(cmd);
       setCopiedId(id);

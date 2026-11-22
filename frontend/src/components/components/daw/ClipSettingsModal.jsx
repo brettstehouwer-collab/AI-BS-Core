@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { theme } from '../../styles/theme';
-import { 
-  Sliders, Volume2, RotateCcw, Sparkles, X, Scissors, Layers, Check
-} from 'lucide-react';
+import { useState } from "react";
+import "../../styles/theme";
+import { Sparkles, X, Scissors, Layers, Check } from "lucide-react";
 
+/** @param {{clip?: import("/types/wave").EditableClip | null; onClose: () => void; onUpdateClip?: (clip: import("/types/wave").EditableClip) => void; onMakeUnique?: (clip: import("/types/wave").EditableClip | null | undefined) => void; onOpenEdison?: (clip: import("/types/wave").EditableClip | null | undefined) => void; onOpenSlicex?: (clip: import("/types/wave").EditableClip | null | undefined) => void}} props */
 export default function ClipSettingsModal({ clip, onClose, onUpdateClip, onMakeUnique, onOpenEdison, onOpenSlicex }) {
   const [pitch, setPitch] = useState(clip?.pitch || 0); // -12 to +12 semitones
   const [fineTune, setFineTune] = useState(clip?.fineTune || 0); // -50 to +50 cents

@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-03T23:20:09.799659+00:00",
+  "status": "verified_failed_attempt_diagnostics_backed_up_goal_active",
+  "handoff": "docs/agent_sync/manifest_20261103_P59_hair_build_diagnostic.json",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\59A_Hair_Build_Failed_Attempts_And_Diagnostic.zip",
+    "bytes": 186545,
+    "sha256": "d4240fd3adc71f40a2fcf1bf01d8d03bf5d6d6db41888cecf650106c5b18a489",
+    "members": 36,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "drive_file_id": "1jebtuRuM6viUCamMVD0Bwa5ve2XCaR-8",
+    "drive_folder_id": "1Z9W5ChAE177djWJT0EexHhDcWhUQJDHr",
+    "at": "2026-11-03T23:20:09.799659+00:00",
+    "verification": "Metadata readback and raw download: SHA256, CRC, exact member set, embedded manifest and every member SHA256/length verified. Contains failed build diagnostics, not a passed art candidate."
+  },
+  "new_candidate_published": false,
+  "next_step": "Run a small isolated Blender fixture for mesh reassignment: preserve ordered group names/indices, assign replacement mesh, recreate definitions, restore weights, save/reopen and compare exact names/indices/weights. Only after that proves the root fix, resume the separate full hair-cap build. Retain both failed attempts and all existing art.",
+  "storage_free_GiB": {
+    "C:/": 58.38,
+    "D:/": 51.64,
+    "E:/": 136.73
+  },
+  "goal_complete": false
+}

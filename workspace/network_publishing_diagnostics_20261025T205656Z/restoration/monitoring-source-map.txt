@@ -1,0 +1,46 @@
+MONITORING SOURCE MAP AND READ-ONLY AGGREGATE BASELINE
+Recorded: 2026-10-25T21:26:09.336521+00:00 (UTC)
+Actor: /root/network_baseline
+Scope: SOURCE inspection plus one guarded aggregate SQLite read; no browser navigation, HTTP monitor requests, telemetry activation, visitor-record export, application change or network change.
+
+USER-REPORTED PURPOSE
+The operator identifies http://localhost:5173/?tab=beta as their web-traffic monitoring page. This does not independently authorize scans, capture, notifications, session synchronization or raw visitor-data export.
+
+OBSERVED SOURCE MAP
+frontend/App.jsx:78,238 maps tab=beta to BetaAnalyticsTab, labeled Web Traffic & Telemetry.
+BetaAnalyticsTab.jsx:89 defaults to user_sessions. Its private analytics effect at431-455 refreshes immediately and every6000ms after client/operator/unlock and verified-user checks. The UI contains a static client-side admission barrier; no values are retained here, and that barrier is not server authentication.
+frontend/src/utils/analyticsData.js:19-55 requests traffic-summary for selected site and two site counters, /api/admin/security-telemetry, and /api/analytics/publishing-events. Responses include live events, active bans/security events and form-abandonment fields; these are not aggregate-only data.
+UserSessionTelemetryWidget.jsx:230-286 polls /api/telemetry/user-sessions/summary every5000ms, subscribes to Firestore users and automatically POSTs /api/telemetry/user-sessions/sync-users when the subscription yields users. Opening an already-unlocked monitoring page is therefore not a read-only diagnostic.
+EcosystemPortMonitorWidget.jsx:21-85 opens a reconnecting WebSocket and4s telemetry polling; its dispatch/discovery buttons issue POSTs to /api/v1/system/ecosystem/ports/dispatch and /discover. These workflows were not invoked.
+
+MONITOR ENDPOINT SAFETY
+/api/analytics/traffic-summary: commercial_gateway/site_analytics_router.py:603-609 uses default read-write SQLite connection and PRAGMA journal_mode=WAL / synchronous=NORMAL before SELECTs. The function also selects individual form values, sessions and live events; limit=0 does not suppress all fixed-size raw-data arrays. Not used.
+/api/network-telemetry/summary and /capture-mode GET: calls network_telemetry_engine.get_summary. modules/network_telemetry.py:39-47,725 calls is_npcap_available, which sets scapy.conf.use_pcap=True on a cache miss. Summary also contains recent flow/endpoint/hash data. Not used.
+/api/network-telemetry/air/scan GET: actively scans wireless/Bluetooth sensors and persists results. Explicitly outside restoration scope.
+POST capture-mode, set-interface, engine/switch, clear, air/clear, audit-ledger/scan: mutating capture/configuration/buffer/scan workflows. Not used.
+/api/analytics/notify-login POST: dispatches multichannel notifications and writes SQLite records. Not used.
+Server analytics report admission exists in security/analytics_access.py and private gateway aliases; actual current authorization behavior was not probed in this source-only review.
+
+PUBLISHING SCRIPT PRIVACY
+C:/StehouwerPublishing.com/website-rebuild/public/analytics.js (15029bytes) automatically sends pageview and30s heartbeat events, plus scroll/click/copy/error/media/form events, to /api/analytics/track. Focusout handler213-225 sends the complete input value whenever it contains an at-sign, with no password-type exclusion. This must not be described as harmless aggregate counting. Source/dist location does not establish publication approval.
+Corresponding public/security-shield.js (5200bytes) automatically injects only a badge; conditional form/honeypot/rate/crisis helpers POST /api/analytics/security-event to http://127.0.0.1:8000, which is the visitor's own loopback from a remote site and unsuitable for remote HTTPS delivery. The backend stores security-event JSON plus source IP.
+The inspected two scripts contain no eval/new Function/script-element-loading or executive/tools/crawl endpoints. This limited source search does not certify all site bundles. The publishing track handler writes visitor/device/event rows and calls a geolocation helper; that intake was not exercised. Parent restoration scope omits both scripts and does not enable visitor capture or notifications.
+
+GUARDED AGGREGATE BASELINE
+Receipt: monitoring-aggregate-before.json
+Authority path: C:/AI-BS/backend/commercial_gateway/site_analytics.db, established by source constants at site_analytics_router.py:17-18.
+Read admission: existing file; mode=ro&immutable=1; query_only=ON;1.5s progress deadline; no WAL before/after; unchanged file bytes/mtime. No app imports, DB creation, journal-mode PRAGMA, application route invocation or writes.
+Query (executed once):
+SELECT COUNT(*), COUNT(DISTINCT session_id), MAX(timestamp)
+FROM site_traffic_events WHERE site_id = ?
+Parameter: stehouwer_publishing
+Result status: stable_aggregate_read
+Event rows: 4932
+Distinct sessions: 606
+Maximum event timestamp UTC: 2026-10-23T17:44:52.652988+00:00
+No individual identifier, IP, email, URL query, form value, record or credential was exported.
+COUNT(*) includes every event type, not just pageviews; distinct sessions are not distinct people. Source's total_pageviews/unique_visitors labels exceed these semantics. No claim of real-time website availability follows from these historical aggregates.
+
+RESTORATION ACCEPTANCE INTERPRETATION
+When unsafe tracking scripts are omitted and HTTP probes do not execute JavaScript, probes are not expected to add rows to site_traffic_events. Lack of new analytics rows is not static website failure. Verify restoration through independently timestamped DNS, exact intended Host header/raw HTTP status/body identity and origin/tunnel configuration. Normal server access logs may record those probes; ASGI counters are application-process telemetry and need not observe a separate static origin on port80.
+A later aggregate comparison must repeat only the same guarded SQL or mark it unavailable if WAL/metadata admission fails. Immutable mode ignores WAL; never use its result as current while transaction frames exist. Do not force a checkpoint or alter journaling to obtain a comparison.

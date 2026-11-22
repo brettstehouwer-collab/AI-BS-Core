@@ -1,17 +1,7 @@
-"""Universal AV Omni-Broadcast Studio & Hardware NVENC 4K/8K Video Streamer.
+"""Native broadcast controls and a read-only, delayed program monitor.
 
-Direct Win32 Direct2D / DirectX GUI with 100% feature parity with http://localhost:5173 BroadcastStudio & OmniStudioTab:
-1. Master Studio Navigation & Multi-View Layouts (Broadcast, Music DAW, Neural Audio F5-TTS, Video Meetings & 4-Grid Matrix).
-2. Live Program/Preview Canvas with 16:9 Landscape vs 9:16 Shorts/TikTok orientation toggle, live waveform, scanlines, and active game hook.
-3. Live Scenes Manager (Add/Remove scenes, Cut/Fade/Swipe transitions, OBS WebSocket Port 4455 & Kernel Port 8088 dispatch).
-4. Live Sources Layer Manager (Add/Remove sources, eye visibility toggle, opacity slider, source volume, layer reordering).
-5. Running Windows & Active Game Auto-Detection (continuous polling of Port 8005 /api/windows & /api/game/active every 2.5s).
-6. Advanced 5-Channel Multi-Track Audio Mixer (Desktop WASAPI, Mic/Aux, DAW Master Bus, WebRTC Guest, AI Sidekick Voice with real-time VU Peak Meters).
-7. Multi-Destination RTMP Streaming & Endpoints (Twitch, YouTube Live 4K, Kick, Facebook Live, Custom RTMP, Sovereign HLS Port 8089).
-8. Unified Twitch / IRC Social Hub Chat & AI Sidekick (Port 8006).
-9. Neural Voice & Audio AI Suite (F5-TTS Voice Profiles, Zero-Shot Synthesis, Suno Music Generator).
-10. Video Meetings & WebRTC Executive Strategy Hub (Call controls, screen share, scheduled meetings).
-11. Real Broadcast & Hardware Kernel Dispatch (Start/Stop stream on Port 8005/8088, NVENC MKV recording, OBS Virtual Cam, UE5 signaling).
+The coordinator owns capture and dispatch. The monitor decodes its local HLS
+output independently; scene drafts and preview controls do not change capture.
 """
 
 from __future__ import annotations
@@ -39,6 +29,7 @@ from PyQt6.QtGui import (
     QCursor,
     QFont,
     QGuiApplication,
+    QImage,
     QLinearGradient,
     QMouseEvent,
     QPainter,
@@ -79,6 +70,9 @@ from PyQt6.QtWidgets import (
 )
 
 from native_studio.engine import EngineBus, GpuProbe
+from native_studio.broadcast_control import stream_payload, send_broadcast_command
+from native_studio.broadcast_secondary_control import read_broadcast_status, select_broadcast_source, validate_source
+from native_studio.broadcast_preview import NativeBroadcastPreview
 from native_studio.theme import PALETTE
 from native_studio.broadcast_stream_engine import (
     STREAM_PLATFORM_SPECS,
@@ -98,13 +92,26 @@ def get_desktop_capture_windows() -> List[Dict[str, Any]]:
     """Enumerate real top-level application windows on Windows, strictly excluding AI-BS itself."""
     if sys.platform != "win32" or ctypes is None:
         return []
+    user32=None
+    hdesk=None
     try:
         user32 = ctypes.windll.user32
+        try:
+            user32.OpenInputDesktop.argtypes=[wintypes.DWORD,wintypes.BOOL,wintypes.DWORD]
+            user32.OpenInputDesktop.restype=wintypes.HANDLE
+            user32.CloseDesktop.argtypes=[wintypes.HANDLE]
+            user32.CloseDesktop.restype=wintypes.BOOL
+        except AttributeError: pass  # Synthetic fixture callables have no C prototype.
         hdesk = user32.OpenInputDesktop(0, False, 0x01FF)
+        if not hdesk: return []
         my_pid = os.getpid()
         windows: List[Dict[str, Any]] = []
 
         WNDENUMPROC = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+        try:
+            user32.EnumDesktopWindows.argtypes=[wintypes.HANDLE,WNDENUMPROC,wintypes.LPARAM]
+            user32.EnumDesktopWindows.restype=wintypes.BOOL
+        except AttributeError: pass
 
         def _enum_cb(hwnd: int, lparam: int) -> bool:
             if user32.IsWindowVisible(hwnd):
@@ -116,9 +123,9 @@ def get_desktop_capture_windows() -> List[Dict[str, Any]]:
                 if length > 0:
                     buff = ctypes.create_unicode_buffer(length + 1)
                     user32.GetWindowTextW(hwnd, buff, length + 1)
-                    title = buff.value.strip()
+                    title = buff.value
                     ignored = {"Program Manager", "Windows Input Experience", "Default IME", "MSCTFIME UI"}
-                    if title and title not in ignored:
+                    if title.strip() and title not in ignored:
                         rect = wintypes.RECT()
                         user32.GetWindowRect(hwnd, ctypes.byref(rect))
                         w = rect.right - rect.left
@@ -137,6 +144,10 @@ def get_desktop_capture_windows() -> List[Dict[str, Any]]:
         return windows
     except Exception:
         return []
+    finally:
+        if hdesk and user32 is not None:
+            try: user32.CloseDesktop(hdesk)
+            except Exception: pass
 
 
 class NativeScreenCaptureThread(QThread):
@@ -209,11 +220,14 @@ class LiveBroadcastCanvas(QWidget):
 
         self.is_streaming = False
         self.is_recording = False
+        self._coordinator_preview_unavailable = False
+        self._program_preview_image: Optional[QImage] = None
+        self._program_preview_state = 'unavailable'
         self.orientation = "horizontal"  # "horizontal" (16:9) | "vertical" (9:16)
         self.active_source_title = "🎮 Direct3D 11 Zero-Copy Hook: Standby"
         self.resolution_text = "1920x1080 @ 60 FPS"
-        self.bitrate_text = "6,000 kbps"
-        self.latency_text = "0.31 ms NVENC"
+        self.bitrate_text = "Bitrate not measured"
+        self.latency_text = "Not measured"
         self.uptime_seconds = 0
 
         # Layer visibility flags
@@ -237,30 +251,93 @@ class LiveBroadcastCanvas(QWidget):
         self._anim_timer.timeout.connect(self._on_anim_tick)
         self._anim_timer.start(50)  # 20 FPS monitor refresh for HUD animations
 
-        # Live capture thread with window-specific hook and scaling cache
+        # QScreen and QPixmap are GUI objects. Capture on this widget's GUI
+        # thread through a bounded timer, never through the legacy QThread.
         self._current_frame: Optional[QPixmap] = None
         self._cached_scaled_frame: Optional[QPixmap] = None
         self._cached_scaled_size: tuple[int, int] = (0, 0)
-        self._capture_thread = NativeScreenCaptureThread(target_fps=30, parent=self)
-        self._capture_thread.frame_ready.connect(self._on_frame_received)
-        if os.environ.get("QT_QPA_PLATFORM") != "offscreen":
-            self._capture_thread.start()
+        self._capture_thread = None  # compatibility identity; never instantiated
+        self._capture_hwnd = 0
+        self._desktop_capture_enabled = False
+        self._preview_shutdown = False
+        self.preview_capture_status = "Select a window to preview."
+        self._capture_timer = QTimer(self)
+        self._capture_timer.setInterval(100)  # at most 10 preview grabs per second
+        self._capture_timer.timeout.connect(self._capture_preview_frame)
 
     def set_target_window(self, hwnd: int, title: str = "") -> None:
-        """Sets the specific window HWND to capture directly, eliminating desktop DC contention."""
-        self._capture_thread.set_target_window(hwnd, title)
+        """Select an explicit HWND; zero never authorizes foreground capture."""
+        self._capture_hwnd = hwnd if type(hwnd) is int and hwnd > 0 else 0
+        self._clear_capture_frame()
+        self._sync_capture_timer()
         if title:
             clean_title = title if (title.startswith("🎮") or title.startswith("⚡")) else f"🎮 {title}"
             self.active_source_title = clean_title
         self.update()
 
     def _on_frame_received(self, pixmap: QPixmap) -> None:
+        if pixmap is None or pixmap.isNull():
+            self._clear_capture_frame()
+            return
         self._current_frame = pixmap
         self._cached_scaled_frame = None  # Invalidate cached scaled pixmap
         self.update()
 
+    def set_desktop_capture_enabled(self, enabled: bool) -> None:
+        """Opt into screen preview separately from selecting a window."""
+        self._desktop_capture_enabled = enabled is True
+        self._clear_capture_frame()
+        self._sync_capture_timer()
+
+    def _clear_capture_frame(self) -> None:
+        self._current_frame = None
+        self._cached_scaled_frame = None
+        self._cached_scaled_size = (0, 0)
+        self.update()
+
+    def _sync_capture_timer(self) -> None:
+        selected = (self._game_capture_enabled and self._capture_hwnd > 0) or self._desktop_capture_enabled
+        if (self._preview_shutdown or not selected
+                or QGuiApplication.platformName().lower() in {"offscreen", "minimal"}
+                or os.environ.get("QT_QPA_PLATFORM", "").lower() in {"offscreen", "minimal"}):
+            self._capture_timer.stop()
+            return
+        self._capture_timer.start()
+
+    def _capture_preview_frame(self) -> None:
+        """One GUI-thread grab of only the selected window or opted-in screen."""
+        if QThread.currentThread() != self.thread() or self._preview_shutdown:
+            return
+        target = self._capture_hwnd if self._game_capture_enabled and self._capture_hwnd > 0 else None
+        if target is None and self._desktop_capture_enabled:
+            target = 0
+        if target is None:
+            self.preview_capture_status = "Select a window to preview."
+            self._clear_capture_frame()
+            return
+        try:
+            if target > 0:
+                user32 = ctypes.windll.user32 if ctypes is not None else None
+                if (user32 is None or not user32.IsWindow(target)
+                        or not user32.IsWindowVisible(target) or user32.IsIconic(target)):
+                    raise ValueError("Selected preview window is unavailable")
+            screen = QGuiApplication.primaryScreen()
+            if screen is None:
+                raise ValueError("Preview screen is unavailable")
+            pixmap = screen.grabWindow(target)
+            if pixmap.isNull() or pixmap.width() <= 10 or pixmap.height() <= 10:
+                raise ValueError("Preview pixels are unavailable")
+            self.preview_capture_status = "Selected window preview." if target else "Explicit screen preview."
+            self._on_frame_received(pixmap)
+        except Exception:
+            self.preview_capture_status = "Preview unavailable; no frame captured."
+            self._clear_capture_frame()
+
     def set_game_capture_enabled(self, enabled: bool) -> None:
         self._game_capture_enabled = enabled
+        if not enabled:
+            self._clear_capture_frame()
+        self._sync_capture_timer()
         self.update()
 
     def set_pip_camera_enabled(self, enabled: bool) -> None:
@@ -311,9 +388,11 @@ class LiveBroadcastCanvas(QWidget):
     def shutdown(self) -> None:
         if hasattr(self, "_anim_timer") and self._anim_timer.isActive():
             self._anim_timer.stop()
-        if hasattr(self, "_capture_thread") and self._capture_thread.isRunning():
-            self._capture_thread.stop()
-            self._capture_thread.wait(1000)
+        self._preview_shutdown = True
+        if hasattr(self, "_capture_timer"):
+            self._capture_timer.stop()
+        self._clear_capture_frame()
+        self.clear_program_preview()
 
     def closeEvent(self, event: Any) -> None:
         self.shutdown()
@@ -333,6 +412,25 @@ class LiveBroadcastCanvas(QWidget):
         self.is_streaming = streaming
         if not streaming:
             self.uptime_seconds = 0
+        self.update()
+
+    def set_coordinator_preview_unavailable(self) -> None:
+        self._coordinator_preview_unavailable=True
+        self.update()
+
+    def set_program_preview_image(self, image: QImage) -> None:
+        """Own a decoded program frame; never select or capture a window."""
+        if self._preview_shutdown:
+            return
+        self._program_preview_image = image.copy() if isinstance(image, QImage) and not image.isNull() else None
+        self.update()
+
+    def clear_program_preview(self) -> None:
+        self._program_preview_image = None
+        self.update()
+
+    def set_program_preview_status(self, state: str) -> None:
+        self._program_preview_state = state
         self.update()
 
     def set_recording(self, recording: bool) -> None:
@@ -388,6 +486,28 @@ class LiveBroadcastCanvas(QWidget):
 
         # Canvas background bezel
         painter.fillRect(0, 0, w, h, QColor("#05080f"))
+
+        if self._coordinator_preview_unavailable:
+            image = self._program_preview_image
+            if image is not None and not image.isNull():
+                available_h = max(1, h - 26)
+                scale = min(w / image.width(), available_h / image.height())
+                iw, ih = image.width() * scale, image.height() * scale
+                painter.drawImage(QRectF((w-iw)/2, (available_h-ih)/2, iw, ih), image)
+                painter.setPen(QPen(QColor('#cbd5e1')))
+                painter.setFont(QFont('Segoe UI', 9))
+                painter.drawText(QRectF(6, h-25, w-12, 24), Qt.AlignmentFlag.AlignCenter, 'Program preview (delayed)')
+                return
+            painter.setPen(QPen(QColor('#cbd5e1')))
+            painter.setFont(QFont('Segoe UI',12,QFont.Weight.Bold))
+            labels = {'disabled': 'Program preview is off', 'closed': 'Program preview is off',
+                      'held': 'Waiting for a verified source', 'waiting': 'Waiting for program preview',
+                      'buffering': 'Program preview is buffering', 'stale': 'Program preview is stale'}
+            painter.drawText(QRectF(12,h/2-32,w-24,28),Qt.AlignmentFlag.AlignCenter,
+                             labels.get(self._program_preview_state, 'Preview unavailable'))
+            painter.setFont(QFont('Segoe UI',9))
+            painter.drawText(QRectF(12,h/2+4,w-24,24),Qt.AlignmentFlag.AlignCenter,'Output 1280x720 30 FPS')
+            return
 
         # ── DUAL STUDIO MODE (PREVIEW A / PROGRAM B) ──
         if self.studio_mode:
@@ -506,7 +626,7 @@ class LiveBroadcastCanvas(QWidget):
             if self.safe_areas_enabled:
                 self._draw_safe_areas(painter, prog_rect)
 
-            badge_text = "● LIVE OUTPUT" if self.is_streaming else "● PROGRAM (LIVE)"
+            badge_text = "● SERVICE ACK" if self.is_streaming else "● PROGRAM PREVIEW"
             badge_color = QColor(220, 38, 38, 220) if self.is_streaming else QColor(15, 23, 42, 220)
             painter.setBrush(QBrush(badge_color))
             painter.setPen(QPen(prog_color, 1))
@@ -630,8 +750,8 @@ class LiveBroadcastCanvas(QWidget):
             vu_y = box_y + box_h / 2 - 18
             painter.fillRect(QRectF(vu_x, vu_y, vu_w, vu_h), QColor(15, 23, 42, 180))
             painter.fillRect(QRectF(vu_x + 6, vu_y, vu_w, vu_h), QColor(15, 23, 42, 180))
-            lvl_l = int(vu_h * (0.55 + 0.35 * math.sin(self._phase * 2.2)))
-            lvl_r = int(vu_h * (0.50 + 0.40 * math.cos(self._phase * 1.8)))
+            lvl_l = 0  # No measured audio producer
+            lvl_r = 0
             painter.fillRect(QRectF(vu_x, vu_y + vu_h - lvl_l, vu_w, lvl_l), QColor("#10b981"))
             painter.fillRect(QRectF(vu_x + 6, vu_y + vu_h - lvl_r, vu_w, lvl_r), QColor("#10b981"))
 
@@ -654,7 +774,7 @@ class LiveBroadcastCanvas(QWidget):
             painter.setFont(QFont("Segoe UI", 7, QFont.Weight.Bold))
             mins = int(self.uptime_seconds) // 60
             secs = int(self.uptime_seconds) % 60
-            painter.drawText(QRectF(badge_x + 18, badge_y, badge_w - 18, badge_h), Qt.AlignmentFlag.AlignCenter, f"LIVE {mins:02d}:{secs:02d}")
+            painter.drawText(QRectF(badge_x + 18, badge_y, badge_w - 18, badge_h), Qt.AlignmentFlag.AlignCenter, f"ACK {mins:02d}:{secs:02d}")
         else:
             painter.setBrush(QBrush(QColor(15, 23, 42, 220)))
             painter.setPen(QPen(QColor("#334155"), 1))
@@ -868,7 +988,8 @@ class LiveScenesAndSourcesWidget(QWidget):
         item, ok = QInputDialog.getItem(self, "Add Broadcast Source", "Select Source Type:", types, 0, False)
         if ok and item:
             new_id = f"s{len(self.sources_list) + 1}"
-            self.sources_list.append({"id": new_id, "name": f"➕ {item}", "type": "custom", "enabled": True})
+            source_type = {"Game Hook (DirectX 11)":"game", "Webcam / UVC Device":"cam", "Screen / Display Capture":"screen", "DAW Audio Stems":"daw", "ComfyUI Visual Stream":"comfy", "Text / Chat HUD":"text"}[item]
+            self.sources_list.append({"id": new_id, "name": f"➕ {item}", "type": source_type, "enabled": True})
             self._refresh_sources_ui()
 
 
@@ -883,10 +1004,10 @@ class ChannelVuMeter(QWidget):
         super().__init__(parent)
         self.setFixedWidth(16)
         self.setFixedHeight(110)
-        self.left_peak = 0.65
-        self.right_peak = 0.60
-        self.target_l = 0.65
-        self.target_r = 0.60
+        self.left_peak = 0.0
+        self.right_peak = 0.0
+        self.target_l = 0.0
+        self.target_r = 0.0
 
     def set_levels(self, l: float, r: float) -> None:
         self.target_l = max(0.0, min(1.0, l))
@@ -1001,7 +1122,7 @@ class AdvancedAudioMixerWidget(QFrame):
         hdr = QHBoxLayout()
         hdr.addWidget(QLabel("<b style='color: #10b981; font-size: 9pt;'>🎚️ ADVANCED BROADCAST AUDIO MIXER</b>"))
         hdr.addStretch()
-        hdr.addWidget(QLabel("<span style='color: #64748b; font-size: 7.5pt;'>WASAPI + ASIO ROUTING • MMCSS P15</span>"))
+        hdr.addWidget(QLabel("<span style='color: #64748b; font-size: 7.5pt;'>Audio levels not measured • Local mixer draft</span>"))
         root.addLayout(hdr)
 
         channels_row = QHBoxLayout()
@@ -1025,17 +1146,13 @@ class AdvancedAudioMixerWidget(QFrame):
         # Pulse Timer for VU Meters
         self._vu_timer = QTimer(self)
         self._vu_timer.timeout.connect(self._animate_vu_meters)
-        self._vu_timer.start(80)
+        # No meter producer is connected; leave the animation timer stopped.
+        self._animate_vu_meters()
 
     def _animate_vu_meters(self) -> None:
         for ch in [self.ch_desktop, self.ch_mic, self.ch_daw, self.ch_guest, self.ch_ai]:
-            if ch.is_muted:
-                ch.meter.set_levels(0.0, 0.0)
-            else:
-                vol_factor = ch.slider.value() / 100.0
-                base_l = (0.4 + 0.5 * random.random()) * vol_factor
-                base_r = (0.35 + 0.55 * random.random()) * vol_factor
-                ch.meter.set_levels(base_l, base_r)
+            ch.meter.set_levels(0.0, 0.0)
+            ch.meter.setToolTip('Audio input levels are not measured. These are local mixer draft controls.')
 
     def shutdown(self) -> None:
         if hasattr(self, "_vu_timer") and self._vu_timer.isActive():
@@ -1054,12 +1171,15 @@ class ActiveGameDiscoveryWidget(QFrame):
     """Auto-detects open running games/windows via real OS enumeration and Port 8005/8088."""
 
     game_selected = pyqtSignal(str, int)  # Emits (title, hwnd)
+    source_draft_changed = pyqtSignal()
 
     def __init__(self, bus: Optional[EngineBus] = None, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.bus = bus
         self.setStyleSheet("background: #0d121d; border: 1px solid #1e293b; border-radius: 8px; padding: 10px;")
         self._window_map: Dict[str, int] = {}
+        self._window_title_by_handle: Dict[int, str] = {}
+        self._window_pid_by_handle: Dict[int, int] = {}
         self._current_window_items: List[tuple[str, int]] = []
         self._daemon_games: List[str] = []
         self._probe_inflight = False
@@ -1069,7 +1189,7 @@ class ActiveGameDiscoveryWidget(QFrame):
         lay.setSpacing(6)
 
         hdr = QHBoxLayout()
-        hdr.addWidget(QLabel("<b style='color: #00f0ff; font-size: 8.5pt;'>🎮 WINDOW-SPECIFIC CAPTURE ENGINE</b>"))
+        hdr.addWidget(QLabel("<b style='color: #00f0ff; font-size: 8.5pt;'>Broadcast source</b>"))
         hdr.addStretch()
 
         self.btn_refresh = QPushButton("🔄 Refresh Windows")
@@ -1077,6 +1197,11 @@ class ActiveGameDiscoveryWidget(QFrame):
         self.btn_refresh.clicked.connect(self.fetch_active_windows)
         hdr.addWidget(self.btn_refresh)
         lay.addLayout(hdr)
+
+        self.combo_source_mode = QComboBox()
+        for label,mode in [('Automatic game','auto_game'),('Selected window','window'),('Screen sharing','screen')]:
+            self.combo_source_mode.addItem(label,mode)
+        lay.addWidget(self.combo_source_mode)
 
         # Game source dropdown
         self.combo_games = QComboBox()
@@ -1086,17 +1211,31 @@ class ActiveGameDiscoveryWidget(QFrame):
 
         # Checkboxes
         c_row = QHBoxLayout()
-        self.chk_auto = QCheckBox("⚡ Auto-Detect Foreground Game")
+        self.chk_auto = QCheckBox("Auto Game")
         self.chk_auto.setChecked(True)
         self.chk_auto.setStyleSheet("color: #cbd5e1; font-size: 7.5pt; font-weight: bold;")
         c_row.addWidget(self.chk_auto)
 
         self.txt_custom = QLineEdit()
-        self.txt_custom.setPlaceholderText("Filter: chrome / cod / obs / daw")
+        self.txt_custom.setPlaceholderText("Filter windows by title")
         self.txt_custom.setStyleSheet("background: #070b12; color: #f8fafc; border: 1px solid #1e293b; padding: 3px 6px; font-size: 7.5pt; border-radius: 3px;")
         self.txt_custom.textChanged.connect(self._on_filter_changed)
         c_row.addWidget(self.txt_custom)
         lay.addLayout(c_row)
+
+        self.combo_screens = QComboBox()
+        self.combo_screens.addItem('Choose a screen…',None)
+        for screen in QGuiApplication.screens():
+            if screen.name(): self.combo_screens.addItem(screen.name(),screen.name())
+        self.combo_screens.setToolTip('Screen sharing is held until explicit monitor capture is supported. No automatic fallback.')
+        lay.addWidget(self.combo_screens)
+        self.lbl_source_help = QLabel('Choose a source draft, then Apply source. Automatic game holds black without a verified game.')
+        self.lbl_source_help.setWordWrap(True)
+        lay.addWidget(self.lbl_source_help)
+        self.combo_source_mode.currentIndexChanged.connect(self._on_source_mode_changed)
+        self.chk_auto.toggled.connect(self._on_auto_game_toggled)
+        self.combo_screens.currentIndexChanged.connect(lambda _index: self.source_draft_changed.emit())
+        self._on_source_mode_changed()
 
         # Initial window fetch
         self.fetch_active_windows()
@@ -1109,24 +1248,44 @@ class ActiveGameDiscoveryWidget(QFrame):
     def _on_filter_changed(self, text: str) -> None:
         self.fetch_active_windows()
 
+    def _on_source_mode_changed(self, _index: int = 0) -> None:
+        mode=self.combo_source_mode.currentData()
+        self.chk_auto.blockSignals(True);self.chk_auto.setChecked(mode=='auto_game');self.chk_auto.blockSignals(False)
+        self.combo_games.setEnabled(mode=='window')
+        self.combo_screens.setVisible(mode=='screen')
+        self.source_draft_changed.emit()
+
+    def _on_auto_game_toggled(self, checked: bool) -> None:
+        self.combo_source_mode.setCurrentIndex(0 if checked else 1)
+
+    def source_selection(self) -> tuple[str, dict | None]:
+        mode=self.combo_source_mode.currentData()
+        if mode=='auto_game': return mode,None
+        if mode=='screen': source={'screen_id':self.combo_screens.currentData()}
+        else:
+            hwnd=self._window_map.get(self.combo_games.currentText(),0)
+            source={'hwnd':hwnd,'pid':self._window_pid_by_handle.get(hwnd),'title':self._window_title_by_handle.get(hwnd,'')}
+        return mode,validate_source(mode,source)
+
     def _on_game_changed(self, idx: int) -> None:
         selected_text = self.combo_games.currentText()
         hwnd = self._window_map.get(selected_text, 0)
-        self.game_selected.emit(selected_text, hwnd)
+        raw_title=self._window_title_by_handle.get(hwnd,selected_text)
+        self.game_selected.emit(raw_title, hwnd)
+        self.source_draft_changed.emit()
 
     def fetch_active_windows(self) -> None:
         """Queries OS desktop windows directly and queries Port 8005/8088 asynchronously for running games."""
         real_windows = get_desktop_capture_windows()
+        self._window_title_by_handle={w["hwnd"]:w["title"] for w in real_windows}
+        self._window_pid_by_handle={w["hwnd"]:w["pid"] for w in real_windows if type(w.get("pid")) is int}
         filter_kw = self.txt_custom.text().strip().lower() if hasattr(self, "txt_custom") else ""
 
-        auto_label = "⚡ Auto-Detect Foreground Game/Window"
+        auto_label = "Choose a window…"
         new_items: List[tuple[str, int]] = [(auto_label, 0)]
 
         # Include any discovered daemon games from async background worker
-        if self.chk_auto.isChecked():
-            for g_label in self._daemon_games:
-                if not any(item[0] == g_label for item in new_items):
-                    new_items.append((g_label, 0))
+        # Automatic discovery is owned by the shared coordinator sampler.
 
         for w in real_windows:
             title = w["title"]
@@ -1158,7 +1317,7 @@ class ActiveGameDiscoveryWidget(QFrame):
             self.combo_games.blockSignals(False)
 
         # Offload Port 8005 / 8088 daemon probing to EngineBus worker thread (Zero GUI blocking)
-        self._trigger_async_daemon_probe()
+        # Manual list refresh never selects a source or probes legacy daemons.
 
     def _trigger_async_daemon_probe(self) -> None:
         if self._probe_inflight or not self.chk_auto.isChecked():
@@ -1228,6 +1387,7 @@ class MultiRtmpSettingsWidget(QFrame):
         self._probe_thread: Optional[PlatformPingProbeThread] = None
         self._profile_mgr = StreamProfileManager()
         self._build_ui()
+        self.load_saved_settings(self._profile_mgr.load())
 
     def _build_ui(self) -> None:
         lay = QVBoxLayout(self)
@@ -1249,8 +1409,10 @@ class MultiRtmpSettingsWidget(QFrame):
 
         # ── PLATFORM QUICK PRESETS ROW ──
         preset_row = QHBoxLayout()
+        self.preset_buttons=[]
         preset_row.setSpacing(4)
-        preset_row.addWidget(QLabel("<span style='color: #94a3b8; font-size: 7pt; font-weight: bold;'>PRESETS:</span>"))
+        self.lbl_presets=QLabel("<span style='color: #94a3b8; font-size: 7pt; font-weight: bold;'>PRESETS:</span>")
+        preset_row.addWidget(self.lbl_presets)
 
         presets = [
             ("Twitch", "🟣 Twitch 1080p", "#a855f7"),
@@ -1265,6 +1427,8 @@ class MultiRtmpSettingsWidget(QFrame):
                 f"background: #111827; color: {p_color}; border: 1px solid {p_color}40; font-size: 7pt; font-weight: bold; border-radius: 3px; padding: 2px 5px;"
             )
             btn.clicked.connect(lambda chk=False, pid=p_id: self.apply_platform_preset(pid))
+            btn.setProperty('coordinatorPresetName',p_id)
+            self.preset_buttons.append(btn)
             preset_row.addWidget(btn)
         preset_row.addStretch()
         lay.addLayout(preset_row)
@@ -1310,7 +1474,7 @@ class MultiRtmpSettingsWidget(QFrame):
         lay.addLayout(enc_row)
 
         # Encoder specs banner
-        self.lbl_enc_specs = QLabel("🔒 Rate Control: CBR • GOP: 2.0s (120f) • B-Frames: 2 • Audio: AAC 320k 48kHz • Dual NVENC 0.3ms")
+        self.lbl_enc_specs = QLabel("Encoder settings draft • Runtime encoder and latency not measured")
         self.lbl_enc_specs.setStyleSheet("color: #64748b; font-size: 6.8pt;")
         lay.addWidget(self.lbl_enc_specs)
 
@@ -1361,13 +1525,15 @@ class MultiRtmpSettingsWidget(QFrame):
             d_row.setSpacing(4)
 
             chk = QCheckBox(d_label)
-            chk.setChecked(d_checked)
+            saved_cfg = self._profile_mgr.load()
+            config_key = "sovereign_srt" if d_key == "sovereign" else d_key
+            chk.setChecked(saved_cfg.get("destinations", {}).get(config_key, {}).get("enabled", False))
             chk_color = "#22c55e" if d_key == "sovereign" else "#cbd5e1"
             chk.setStyleSheet(f"color: {chk_color}; font-size: 7.2pt;")
             d_row.addWidget(chk, 1)
             self.dest_checkboxes[d_key] = chk
 
-            b_lbl = QLabel(d_default_ping)
+            b_lbl = QLabel("Not checked")
             b_lbl.setStyleSheet(
                 "background: #0f172a; color: #38bdf8; border: 1px solid #1e293b; border-radius: 3px; font-size: 6.8pt; padding: 1px 4px;"
             )
@@ -1385,6 +1551,7 @@ class MultiRtmpSettingsWidget(QFrame):
         self.chk_kick = self.dest_checkboxes["kick"]
 
     def apply_platform_preset(self, platform_id: str) -> None:
+        if getattr(self,'_coordinator_profile',False): return
         spec = STREAM_PLATFORM_SPECS.get(platform_id)
         if not spec:
             return
@@ -1424,17 +1591,7 @@ class MultiRtmpSettingsWidget(QFrame):
         else:
             self.combo_res.setCurrentIndex(0)
 
-        # 4. Check the appropriate destination
-        if platform_id == "Twitch":
-            self.chk_tw.setChecked(True)
-        elif platform_id == "YouTube Live":
-            self.chk_yt.setChecked(True)
-        elif platform_id == "Kick":
-            self.chk_kick.setChecked(True)
-        elif platform_id == "TikTok Live" and "tiktok" in self.dest_checkboxes:
-            self.dest_checkboxes["tiktok"].setChecked(True)
-        elif platform_id == "Sovereign Broadcast":
-            self.chk_hls.setChecked(True)
+        # Encoder profiles do not change the user-selected destinations.
 
         gop_sec = spec.get("keyframe_interval_sec", 2.0)
         rc = spec.get("rate_control", "CBR")
@@ -1500,12 +1657,41 @@ class MultiRtmpSettingsWidget(QFrame):
     def _auto_select_best(self) -> None:
         self.apply_platform_preset("YouTube Live")
 
+    def load_saved_settings(self, config: dict) -> None:
+        for key, checkbox in self.dest_checkboxes.items():
+            name='sovereign_srt' if key=='sovereign' else key
+            checkbox.setChecked(config.get('destinations',{}).get(name,{}).get('enabled') is True)
+        encoder=config.get('encoder',{})
+        values=[(self.combo_codec,str(encoder.get('codec','H.264 (CBR Studio Standard)'))),
+                (self.combo_res,str(encoder.get('resolution','1920x1080'))),
+                (self.combo_bitrate,f"{int(encoder.get('bitrate_kbps',6000)):,} kbps")]
+        for combo,value in values:
+            index=next((i for i in range(combo.count()) if combo.itemText(i)==value or combo.itemText(i).startswith(value+' ')), -1)
+            if index<0:
+                combo.addItem(value);index=combo.count()-1
+            combo.setCurrentIndex(index)
+
+        if getattr(self,'_coordinator_profile',False): self.use_coordinator_profile()
+
+    def use_coordinator_profile(self) -> None:
+        self._coordinator_profile=True
+        for combo,label in [(self.combo_codec,'H.264 (coordinator profile)'),(self.combo_res,'1280x720 (720p 30fps)'),(self.combo_bitrate,'4,500 kbps')]:
+            combo.blockSignals(True);combo.clear();combo.addItem(label);combo.setEnabled(False);combo.blockSignals(False)
+            combo.setToolTip('The shared coordinator uses this fixed output profile.')
+        self.lbl_presets.setText("<span style='color: #94a3b8; font-size: 7pt; font-weight: bold;'>Presets unavailable</span>")
+        names={'Twitch':'Twitch','YouTube Live':'YouTube','Kick':'Kick','TikTok Live':'TikTok','Sovereign Broadcast':'Local'}
+        for button in self.preset_buttons:
+            button.setEnabled(False)
+            button.setText(names[str(button.property('coordinatorPresetName'))])
+            button.setToolTip('Fixed coordinator profile: 720p at 30 FPS, H.264, 4500 kb/s. This preset is unavailable.')
+        self.btn_auto_best.setEnabled(False)
+        self.btn_auto_best.setToolTip('Fixed coordinator profile: 720p at 30 FPS. Automatic profile selection is unavailable.')
+
     def _open_requirements_dialog(self) -> None:
         dlg = StreamRequirementsDialog(parent=self)
+        dlg.profile_applied.connect(self.load_saved_settings)
         if dlg.exec() == QDialog.DialogCode.Accepted:
-            applied = dlg.get_selected_platform_profile()
-            if applied:
-                self.apply_platform_preset(applied)
+            self.load_saved_settings(dlg.cfg)
 
     def shutdown(self) -> None:
         if self._probe_thread and self._probe_thread.isRunning():
@@ -1536,8 +1722,8 @@ class UnifiedStreamChatWidget(QFrame):
         hdr.addWidget(QLabel("<b style='color: #c084fc; font-size: 8.5pt;'>💬 TWITCH / IRC STREAM CHAT (PORT 8006)</b>"))
         hdr.addStretch()
 
-        self.chk_ai_sidekick = QCheckBox("🤖 AI Sidekick Active")
-        self.chk_ai_sidekick.setChecked(True)
+        self.chk_ai_sidekick = QCheckBox("Local chat draft (not connected)")
+        self.chk_ai_sidekick.setChecked(False)
         self.chk_ai_sidekick.setStyleSheet("color: #38bdf8; font-size: 7pt; font-weight: bold;")
         hdr.addWidget(self.chk_ai_sidekick)
         lay.addLayout(hdr)
@@ -1546,8 +1732,7 @@ class UnifiedStreamChatWidget(QFrame):
         self.chat_view.setReadOnly(True)
         self.chat_view.setFont(QFont("Consolas", 8))
         self.chat_view.setStyleSheet("background: #05080f; color: #cbd5e1; border: 1px solid #1e293b; border-radius: 4px; padding: 6px;")
-        self.chat_view.append(f"<b style='color: #a855f7;'>[System]</b> Connected to Social Hub IRC Gateway on Port 8006.")
-        self.chat_view.append(f"<b style='color: #38bdf8;'>AI_Sidekick:</b> Sovereign Broadcast Co-Pilot is online and monitoring game state.")
+        self.chat_view.setPlainText('Social Hub connection not checked. Messages below are local drafts; no external delivery is connected.')
         lay.addWidget(self.chat_view)
 
         # Quick Commands Row
@@ -1564,7 +1749,7 @@ class UnifiedStreamChatWidget(QFrame):
         # Input Row
         inp_row = QHBoxLayout()
         self.txt_msg = QLineEdit()
-        self.txt_msg.setPlaceholderText("Send chat message to Twitch & Kick...")
+        self.txt_msg.setPlaceholderText("Write a local chat draft (not sent)...")
         self.txt_msg.setStyleSheet("background: #070b12; color: #f8fafc; border: 1px solid #334155; padding: 5px; border-radius: 3px; font-size: 8pt;")
         self.txt_msg.returnPressed.connect(self._send_chat)
         inp_row.addWidget(self.txt_msg, 1)
@@ -1580,28 +1765,17 @@ class UnifiedStreamChatWidget(QFrame):
         if not msg:
             return
         self.txt_msg.clear()
-        self.chat_view.append(f"<b style='color: #00f0ff;'>You:</b> {msg}")
-
-        # AI Sidekick auto-reply if enabled
-        if self.chk_ai_sidekick.isChecked() and (msg.startswith("!") or "?" in msg):
-            QTimer.singleShot(600, lambda: self._generate_ai_reply(msg))
+        self.chat_view.append('Local draft (not sent):')
+        # insertPlainText keeps user HTML inert.
+        self.chat_view.insertPlainText(msg)
+        self.chat_view.append('External chat delivery and AI replies are not connected.')
 
     def _send_command(self, cmd: str) -> None:
         self.txt_msg.setText(cmd)
         self._send_chat()
 
     def _generate_ai_reply(self, prompt: str) -> None:
-        if "!game" in prompt:
-            ans = "Active Stream: Direct3D 11 Zero-Copy Capture on RTX 4090 Dual NVENC."
-        elif "!specs" in prompt:
-            ans = "Specs: AMD Ryzen 9 9950X (16C/32T), NVIDIA GeForce RTX 4090 24GB VRAM, 64GB DDR5, WASAPI Exclusive Pro Audio."
-        elif "!music" in prompt:
-            ans = "Soundtrack: October 7 Vocal Studio Native DAW (<2.8ms ASIO latency bus)."
-        elif "!uptime" in prompt:
-            ans = "Broadcast Uptime: Stream is healthy with 0 dropped frames."
-        else:
-            ans = f"Acknowledged '{prompt}'. AI-BS Sovereign matrix telemetry is nominal."
-        self.chat_view.append(f"<b style='color: #38bdf8;'>AI_Sidekick:</b> {ans}")
+        self.chat_view.append('AI Sidekick unavailable: no model or live telemetry source is connected.')
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -1748,7 +1922,7 @@ class VideoMeetingsWebRtcWidget(QWidget):
         meet_lay = QVBoxLayout(c_meet)
         meet_lay.setSpacing(8)
 
-        meet_lay.addWidget(QLabel("<b style='color: #f8fafc; font-size: 9.5pt;'>Executive Business Review (Room: meet-928-401)</b>"))
+        meet_lay.addWidget(QLabel("<b style='color: #f8fafc; font-size: 9.5pt;'>Video meetings: no session connected</b>"))
 
         # Video feed placeholder
         vid_box = QFrame()
@@ -1756,7 +1930,7 @@ class VideoMeetingsWebRtcWidget(QWidget):
         vid_box.setStyleSheet("background: #05080f; border: 1px solid #00f0ff; border-radius: 6px;")
         vb_lay = QVBoxLayout(vid_box)
         vb_lay.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        lbl_v = QLabel("📹 P2P Encrypted WebRTC Video Feed Active\nParticipants: Brett Stehouwer, Sean Stehouwer, Julie Stehouwer")
+        lbl_v = QLabel("Video feed unavailable\nNo participant roster has been verified")
         lbl_v.setStyleSheet("color: #38bdf8; font-weight: bold; font-size: 8.5pt; text-align: center;")
         lbl_v.setAlignment(Qt.AlignmentFlag.AlignCenter)
         vb_lay.addWidget(lbl_v)
@@ -1765,9 +1939,11 @@ class VideoMeetingsWebRtcWidget(QWidget):
         # Call Controls Bar
         ctrl_bar = QHBoxLayout()
         ctrl_bar.setSpacing(8)
-        for act in ["🎤 Mic: ON", "📹 Camera: ON", "🖥️ Share Screen", "⏺ Record Call", "📞 End Call"]:
+        for act in ["🎤 Microphone", "📹 Camera", "🖥️ Share Screen", "⏺ Record Call", "📞 End Call"]:
             b = QPushButton(act)
             b.setStyleSheet("background: #1e293b; color: #cbd5e1; font-weight: bold; font-size: 7.5pt; border-radius: 4px; padding: 6px 10px;")
+            b.setEnabled(False)
+            b.setToolTip("Unavailable: no meeting provider/session is connected.")
             ctrl_bar.addWidget(b)
         ctrl_bar.addStretch()
         meet_lay.addLayout(ctrl_bar)
@@ -1783,24 +1959,17 @@ class VideoMeetingsWebRtcWidget(QWidget):
 
         sched_lay.addWidget(QLabel("<b style='color: #38bdf8; font-size: 9.5pt;'>📅 Scheduled Executive Meetings</b>"))
 
-        table = QTableWidget(3, 3)
+        table = QTableWidget(0, 3)
         table.setHorizontalHeaderLabels(["Title", "Date / Time", "Status"])
         table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         table.setStyleSheet("background: #070b12; color: #cbd5e1; border: 1px solid #1e293b; font-size: 7.5pt;")
 
-        meetings = [
-            ("Stehouwer Publishing Q3 Strategy", "Today 02:00 PM", "🟢 IN PROGRESS"),
-            ("Notō Hospitality Enterprise Review", "Tomorrow 10:00 AM", "🟡 UPCOMING"),
-            ("Prestige Wash Fleet Scaling", "Friday 04:00 PM", "⚪ SCHEDULED"),
-        ]
-        for row, (t, dt, st) in enumerate(meetings):
-            table.setItem(row, 0, QTableWidgetItem(t))
-            table.setItem(row, 1, QTableWidgetItem(dt))
-            table.setItem(row, 2, QTableWidgetItem(st))
         sched_lay.addWidget(table)
 
         btn_new_meet = QPushButton("➕ Schedule New Meeting")
         btn_new_meet.setStyleSheet("background: #0284c7; color: #fff; font-weight: bold; border-radius: 4px; padding: 6px;")
+        btn_new_meet.setEnabled(False)
+        btn_new_meet.setToolTip("Unavailable: calendar/meeting provider is not connected.")
         sched_lay.addWidget(btn_new_meet)
         sched_lay.addStretch()
 
@@ -1823,7 +1992,16 @@ class UniversalOmniStudioNativeView(QWidget):
         self.bus = bus
         self._is_streaming = False
         self._is_recording = False
+        self._coordinator_status = {}
+        self._stream_request_pending = False
+        self._status_inflight = False
+        self._broadcast_closed = False
         self._build_ui()
+        self._coordinator_timer=QTimer(self)
+        self._coordinator_timer.setInterval(1000)
+        self._coordinator_timer.timeout.connect(self._refresh_broadcast_status)
+        self._coordinator_timer.start()
+        self._refresh_broadcast_status()
 
     def _build_ui(self) -> None:
         root_lay = QVBoxLayout(self)
@@ -1856,7 +2034,7 @@ class UniversalOmniStudioNativeView(QWidget):
         # Mode Buttons
         self.mode_buttons: Dict[str, QPushButton] = {}
         modes = [
-            ("broadcast", "📡 Broadcast Studio (OBS)"),
+            ("broadcast", "📡 Broadcast Studio"),
             ("daw", "🎵 Music DAW & VST3 Studio"),
             ("neural", "🎙️ Neural Voice & Audio AI"),
             ("video", "📹 Video Meetings & WebRTC"),
@@ -1881,11 +2059,11 @@ class UniversalOmniStudioNativeView(QWidget):
         tb_lay.addStretch()
 
         # Telemetry Badges
-        b1 = QLabel("RTX 4090 DUAL NVENC: 0.3ms")
+        b1 = QLabel("NVENC latency: not measured")
         b1.setStyleSheet("background: rgba(0, 240, 255, 0.15); color: #00f0ff; border: 1px solid #00f0ff; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; font-weight: bold;")
-        b2 = QLabel("OBS WS 4455: READY")
+        b2 = self.lbl_preview_status = QLabel("Preview: waiting")
         b2.setStyleSheet("background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid #a855f7; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; font-weight: bold;")
-        b3 = QLabel("MMCSS PRO AUDIO: P15")
+        b3 = QLabel("Audio priority: not checked")
         b3.setStyleSheet("background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #059669; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; font-weight: bold;")
 
         tb_lay.addWidget(b1)
@@ -1919,25 +2097,25 @@ class UniversalOmniStudioNativeView(QWidget):
         ar_lay.addWidget(self.btn_october7)
 
         # Master Stream Toggle Button
-        self.btn_stream = QPushButton("🔴 Start Hardware NVENC Broadcast")
+        self.btn_stream = QPushButton("Start broadcast")
         self.btn_stream.setStyleSheet(
             "background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #dc2626, stop:1 #ef4444); "
             "color: #ffffff; font-weight: bold; font-size: 8.5pt; border-radius: 4px; padding: 6px 12px;"
         )
+        self.btn_stream.setToolTip("Shared coordinator: fixed 720p30 H.264 output and silent audio. Platform ingest is verified separately.")
         self.btn_stream.clicked.connect(self._toggle_stream)
         ar_lay.addWidget(self.btn_stream)
 
         # Record Toggle Button
-        self.btn_record = QPushButton("⏺ Record Master (NVENC MKV)")
+        self.btn_record = QPushButton("Local archive accompanies broadcast")
         self.btn_record.setStyleSheet("background: #1e293b; color: #f87171; border: 1px solid #f87171; font-weight: bold; font-size: 8pt; border-radius: 4px; padding: 6px 10px;")
         self.btn_record.clicked.connect(self._toggle_record)
         ar_lay.addWidget(self.btn_record)
 
-        # OBS Studio Core Launcher
-        self.btn_obs = QPushButton("🎬 Launch OBS Studio Core (Port 4455)")
-        self.btn_obs.setStyleSheet("background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; font-weight: bold; font-size: 8pt; border-radius: 4px; padding: 6px 10px;")
-        self.btn_obs.clicked.connect(self._launch_obs)
-        ar_lay.addWidget(self.btn_obs)
+        self.chk_program_preview = QCheckBox("Program preview")
+        self.chk_program_preview.setChecked(True)
+        self.chk_program_preview.setToolTip("Read-only local program playback (delayed). This does not start, stop or change the broadcast.")
+        ar_lay.addWidget(self.chk_program_preview)
 
         # Unreal Engine WebRTC Bridge
         btn_ue = QPushButton("🎮 Unreal Engine 5 Signaling (Port 8888)")
@@ -1953,12 +2131,16 @@ class UniversalOmniStudioNativeView(QWidget):
         self.btn_orientation.clicked.connect(self._toggle_orientation)
         ar_lay.addWidget(self.btn_orientation)
 
-        for btn in [self.btn_october7, self.btn_stream, self.btn_record, self.btn_obs, btn_ue, self.btn_orientation]:
+        for btn in [self.btn_october7, self.btn_stream, self.btn_record, btn_ue, self.btn_orientation]:
             btn.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
             btn.setMinimumWidth(btn.fontMetrics().horizontalAdvance(btn.text()) + 26)
 
         act_scroll.setWidget(act_row)
         root_lay.addWidget(act_scroll)
+        self.lbl_broadcast_status=QLabel('Coordinator status not checked. Output: 1280×720 · 30 FPS · H.264 · 4500 kb/s. Silent audio.')
+        self.lbl_broadcast_status.setWordWrap(True)
+        self.lbl_broadcast_status.setStyleSheet('color:#cbd5e1; padding:6px 12px; background:#0d121d;')
+        root_lay.addWidget(self.lbl_broadcast_status)
 
         # ── MASTER CONTENT STACK (BROADCAST / NEURAL / VIDEO) ──
         self.master_stack = QStackedWidget()
@@ -1993,9 +2175,11 @@ class UniversalOmniStudioNativeView(QWidget):
         pb_lay.setContentsMargins(4, 2, 4, 2)
         pb_lay.setSpacing(6)
 
-        # Studio Mode A/B Button
-        self.btn_studio_mode = QPushButton("🎛️ Studio Mode: OFF")
+        # This prominent control shares the real decoder intent with the checkbox.
+        self.btn_studio_mode = QPushButton("Program preview: ON")
         self.btn_studio_mode.setCheckable(True)
+        self.btn_studio_mode.setChecked(True)
+        self.btn_studio_mode.setToolTip("Read-only delayed program monitor. This does not change or restart the broadcast.")
         self.btn_studio_mode.setStyleSheet(
             "QPushButton { background: #111827; color: #94a3b8; font-size: 7.2pt; font-weight: bold; border: 1px solid #334155; border-radius: 3px; padding: 2px 7px; }"
             "QPushButton:checked { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }"
@@ -2089,6 +2273,13 @@ class UniversalOmniStudioNativeView(QWidget):
         cp_lay.addWidget(prev_scroll)
 
         self.canvas = LiveBroadcastCanvas()
+        self.canvas.set_coordinator_preview_unavailable()
+        self._program_preview = NativeBroadcastPreview(self)
+        self._program_preview.hide()
+        self._program_preview.frame_ready.connect(self.canvas.set_program_preview_image)
+        self._program_preview.cleared.connect(self.canvas.clear_program_preview)
+        self._program_preview.state_changed.connect(self._apply_preview_status)
+        self.chk_program_preview.toggled.connect(self._on_program_preview_toggled)
         cp_lay.addWidget(self.canvas, 1)
 
         top_split.addWidget(canvas_panel)
@@ -2109,14 +2300,23 @@ class UniversalOmniStudioNativeView(QWidget):
         # COL 1: GAME DISCOVERY HOOK
         self.game_discovery = ActiveGameDiscoveryWidget(bus=self.bus)
         self.game_discovery.game_selected.connect(self._on_game_selected)
+        self.btn_apply_source=QPushButton('Apply source')
+        self.btn_apply_source.clicked.connect(self._apply_source_selection)
+        self.game_discovery.layout().addWidget(self.btn_apply_source)
+        self.game_discovery.source_draft_changed.connect(self._source_draft_changed)
         bot_grid.addWidget(self.game_discovery, 0, 0)
 
         # COL 2: ADVANCED AUDIO MIXER
         self.audio_mixer = AdvancedAudioMixerWidget()
+        self.audio_mixer.setEnabled(False)
+        self.lbl_silent_audio=QLabel('Silent audio · microphone unrequested')
+        self.audio_mixer.layout().insertWidget(0,self.lbl_silent_audio)
         bot_grid.addWidget(self.audio_mixer, 0, 1)
 
         # COL 3: MULTI-RTMP DISPATCH
         self.rtmp_settings = MultiRtmpSettingsWidget()
+        self.rtmp_settings.use_coordinator_profile()
+        self.combo_fps.blockSignals(True);self.combo_fps.clear();self.combo_fps.addItem('30 FPS');self.combo_fps.setEnabled(False);self.combo_fps.blockSignals(False)
         self.rtmp_settings.platform_selected.connect(self._on_platform_preset_selected)
         bot_grid.addWidget(self.rtmp_settings, 0, 2)
 
@@ -2141,15 +2341,8 @@ class UniversalOmniStudioNativeView(QWidget):
         self.txt_telemetry.setReadOnly(True)
         self.txt_telemetry.setFont(QFont("Consolas", 8))
         self.txt_telemetry.setStyleSheet("background: #05080f; color: #38bdf8; border: 1px solid #1e293b; border-radius: 4px; padding: 6px;")
-        self.txt_telemetry.setPlainText(
-            f"[{time.strftime('%H:%M:%S')}] Stehouwer Publishing Broadcast Topology Initialized.\n"
-            f"[{time.strftime('%H:%M:%S')}] NVENC Streamer: Port 8088 online (RTX 4090 Dual 8th Gen NVENC Ready, 0.3ms latency)\n"
-            f"[{time.strftime('%H:%M:%S')}] Broadcast Daemon: Port 8005 online (aibs_broadcast_daemon.py)\n"
-            f"[{time.strftime('%H:%M:%S')}] OBS WebSocket: Port 4455 protocol ready\n"
-            f"[{time.strftime('%H:%M:%S')}] Low-Latency Audio: MMCSS Pro Audio Priority 15 bound (<2.8ms WASAPI Exclusive)\n"
-            f"[{time.strftime('%H:%M:%S')}] DAW Integration: October 7 Vocal DAW & Neural Voice Bridge Ready\n"
-            f"[{time.strftime('%H:%M:%S')}] Game Hook Engine: Ready to auto-capture DirectX 11 / DXGI foreground applications."
-        )
+        self.txt_telemetry.document().setMaximumBlockCount(2000)
+        self.txt_telemetry.setPlainText('Native broadcast controls initialized. Program preview is read-only and delayed; remote ingest remains unverified.')
         lc_lay.addWidget(self.txt_telemetry)
         log_split.addWidget(log_card)
 
@@ -2205,32 +2398,28 @@ class UniversalOmniStudioNativeView(QWidget):
             self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🖥️ Canvas switched to 16:9 Landscape (YouTube/Twitch).")
 
     def _on_game_selected(self, game_title: str, hwnd: int = 0) -> None:
-        self.canvas.set_target_window(hwnd, game_title)
-        mode_desc = f"Window HWND {hwnd}" if hwnd > 0 else "Auto-Foreground Hook"
-        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎮 Window-Specific Capture attached to: {game_title} ({mode_desc}) • Zero desktop DC contention.")
+        self._selected_capture_hwnd = hwnd
+        self._selected_capture_title = game_title
+        discovery=getattr(self,'game_discovery',None)
+        self._selected_capture_pid=getattr(discovery,'_window_pid_by_handle',{}).get(hwnd)
+        self.canvas.set_target_window(0)
+        self.canvas.set_desktop_capture_enabled(False)
+        self.txt_telemetry.append('Window source draft selected. Press Apply source to request the exact verified window. Program preview follows accepted coordinator output; source draft has not been applied.')
 
     def _on_scene_switched(self, scene: str) -> None:
         self.canvas.set_active_source(scene)
-        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎬 Switched OBS & Kernel Scene: '{scene}'")
-        # Dispatch to kernel
-        for port, path in [(8088, "/api/kernel/scene/switch"), (8005, "/api/scene/switch")]:
-            try:
-                req = urllib.request.Request(
-                    f"http://127.0.0.1:{port}{path}",
-                    data=json.dumps({"scene_id": scene, "scene": scene, "target": "program"}).encode("utf-8"),
-                    headers={"Content-Type": "application/json"},
-                )
-                urllib.request.urlopen(req, timeout=0.5)
-            except Exception:
-                pass
+        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎬 Local preview scene selected: '{scene}'")
+        # Scene drafts are local preview state. Runtime source intent goes only
+        # through the shared coordinator and its explicit Apply source action.
 
     def _on_source_toggled(self, source_name: str, enabled: bool) -> None:
         state = "ENABLED" if enabled else "DISABLED"
         self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎛️ Layer '{source_name}' {state}.")
         s_lower = source_name.lower()
-        if "game" in s_lower:
-            self.canvas.set_game_capture_enabled(enabled)
-        elif "sony" in s_lower or "cam" in s_lower:
+        primary=next((s for s in self.scenes_sources.sources_list if s.get('enabled') is True and s.get('type') in {'game','window','screen','desktop'}),None)
+        self.canvas.set_game_capture_enabled(False)
+        self.canvas.set_desktop_capture_enabled(False)
+        if "sony" in s_lower or "cam" in s_lower:
             self.canvas.set_pip_camera_enabled(enabled)
         elif "daw" in s_lower or "audio" in s_lower or "stems" in s_lower:
             self.canvas.set_audio_hud_enabled(enabled)
@@ -2242,73 +2431,192 @@ class UniversalOmniStudioNativeView(QWidget):
         win = self.window()
         if hasattr(win, "jump_to_tab"):
             win.jump_to_tab("music_daw")
-        self.txt_telemetry.append(f"\n[{time.strftime('%H:%M:%S')}] 🎙️ Switched to October 7 Vocal Studio Native DAW (WASAPI Exclusive <2.8ms).")
+        self.txt_telemetry.append(f"\n[{time.strftime('%H:%M:%S')}] 🎙️ Switched to October 7 Vocal Studio Native DAW; audio latency not measured.")
+
+    def _stream_payload(self) -> dict:
+        targets=[key for key,checkbox in self.rtmp_settings.dest_checkboxes.items() if checkbox.isChecked()]
+        if not targets or any(key not in {'youtube','twitch','facebook','kick'} for key in targets):
+            raise ValueError('Choose configured Facebook, YouTube, Twitch, or Kick destinations. Website HLS accompanies the broadcast.')
+        mode,source=self.game_discovery.source_selection()
+        return {'source_mode':mode,'source':validate_source(mode,source),'targets':targets}
+
+    def _source_draft_changed(self) -> None:
+        if hasattr(self,'txt_telemetry'):
+            self.txt_telemetry.append('Source draft changed. Press Apply source; the coordinator keeps its current source until accepted.')
+
+    def _apply_source_selection(self) -> None:
+        if getattr(self,'_source_request_pending',False): return
+        try: mode,source=self.game_discovery.source_selection()
+        except ValueError:
+            self.txt_telemetry.append('Choose an exact window or explicit screen before applying the source draft.');return
+        if not self._coordinator_status.get('active'):
+            self.txt_telemetry.append('Source draft will be used when you start the broadcast.');return
+        self._source_request_pending=True
+        self._source_request_epoch=time.monotonic()
+        self.btn_apply_source.setEnabled(False)
+        def finish():
+            self._source_request_pending=False
+            self.btn_apply_source.setEnabled(True)
+        def complete(result):
+            if self._broadcast_closed: return
+            if result.get('status')=='pending':
+                self._pending_source_request=result.get('request_id')
+                self.txt_telemetry.append('Source change pending coordinator acknowledgement.')
+            else:
+                finish()
+                self.txt_telemetry.append('Source change held: coordinator upgrade or verified fresh status is required.')
+        def failed(_error=None):
+            if self._broadcast_closed: return
+            finish()
+            self.txt_telemetry.append('Source change unverified; the current source has not been confirmed changed.')
+        try: self.bus.submit(select_broadcast_source,mode,source,on_result=complete,on_error=failed)
+        except Exception: failed()
+
+    def _refresh_broadcast_status(self) -> None:
+        if self._status_inflight or self._broadcast_closed: return
+        self._status_inflight=True
+        def complete(result):
+            self._status_inflight=False
+            if not self._broadcast_closed: self._apply_broadcast_status(result)
+        def unavailable(_error=None): complete({'status':'status_unavailable','active':False,'can_start':False})
+        try: self.bus.submit(read_broadcast_status,on_result=complete,on_error=unavailable)
+        except Exception: unavailable()
+
+    def _apply_broadcast_status(self, state: dict) -> None:
+        self._coordinator_status=dict(state)
+        self._is_streaming=state.get('active') is True
+        self.btn_stream.setText('Stop broadcast' if self._is_streaming else 'Start broadcast')
+        if not self._stream_request_pending:
+            self.btn_stream.setEnabled(bool(state.get('can_stop') if self._is_streaming else state.get('can_start')))
+        status=state.get('status')
+        if status=='legacy_upgrade_required':
+            text='Existing broadcast detected. Coordinator upgrade required for source changes; Stop remains available.'
+        elif status=='status_stale': text='Coordinator status is stale. Source changes held; Stop remains available for the verified owner.'
+        elif self._is_streaming and state.get('capture_state')=='holding':
+            text='Holding black · no verified game frame. '+('Screen sharing is unsupported; automatic game following is disabled.' if state.get('source_mode')=='screen' else 'Waiting for the selected source.')
+        elif self._is_streaming and state.get('game_frame_verified') is True:
+            text='Coordinator capturing the selected source. Platform ingest remains unverified.'
+        elif self._is_streaming: text='Coordinator running; capture and platform ingest unverified.'
+        elif status in {'stopped','failed'}:
+            text='Broadcast stopped.' if status=='stopped' else 'Previous broadcast failed; a new explicit Start can retry.'
+        else: text='Coordinator status unavailable or owner unverified. Start and source changes held.'
+        self.lbl_broadcast_status.setText(text+' Output: 1280×720 · 30 FPS · H.264 · 4500 kb/s. Silent audio.')
+        self.canvas.set_streaming(False)
+        self.canvas.set_target_window(0)
+        self.canvas.set_desktop_capture_enabled(False)
+        self.canvas.active_source_title='Program preview shows the current coordinator output; source drafts are separate.'
+        preview = getattr(self, '_program_preview', None)
+        if preview is not None:
+            preview.set_coordinator_state(state)
+        pending=getattr(self,'_pending_source_request',None)
+        if pending and pending==state.get('last_command_id'):
+            command_status=state.get('command_status')
+            if command_status in {'applied','held','rejected'}:
+                self.txt_telemetry.append('Source intent '+command_status+' by coordinator. '+('Screen sharing remains held.' if state.get('holding_reason')=='MANUAL_SCREEN_UNSUPPORTED' else 'Frame verification is shown in coordinator status.'))
+                self._pending_source_request=None
+                self._source_request_pending=False
+                self.btn_apply_source.setEnabled(True)
+        if getattr(self,'_source_request_pending',False) and time.monotonic()-self._source_request_epoch>5:
+            self._source_request_pending=False
+            self.btn_apply_source.setEnabled(True)
+            self.txt_telemetry.append('Source acknowledgement timed out. Review actual coordinator status before applying another draft.')
 
     def _toggle_stream(self) -> None:
-        self._is_streaming = not self._is_streaming
-        self.canvas.set_streaming(self._is_streaming)
-        if self._is_streaming:
-            self.btn_stream.setText("⏹ Stop Hardware NVENC Broadcast")
-            self.btn_stream.setStyleSheet("background: #059669; color: #ffffff; font-weight: bold; font-size: 8.5pt; border-radius: 4px; padding: 6px 12px;")
-            self.txt_telemetry.append(
-                f"\n[{time.strftime('%H:%M:%S')}] 🔴 BROADCAST ACTIVE: Hardware NVENC stream started on Port 8088 @ 60 FPS.\n"
-                f"Codec: {self.rtmp_settings.combo_codec.currentText()} | Resolution: {self.rtmp_settings.combo_res.currentText()}\n"
-                "Multi-RTMP: Dispatched to active endpoints. Dropped frames: 0. Encoding latency: 0.31 ms."
-            )
-            # Dispatch to Port 8005/8088
-            for port, path in [(8088, "/api/kernel/stream/start"), (8005, "/stream/start")]:
-                try:
-                    req = urllib.request.Request(
-                        f"http://127.0.0.1:{port}{path}",
-                        data=json.dumps({"stream_key": "live_475849061", "fps": 60}).encode("utf-8"),
-                        headers={"Content-Type": "application/json"},
-                    )
-                    urllib.request.urlopen(req, timeout=1.0)
-                except Exception:
-                    pass
-        else:
-            self.btn_stream.setText("🔴 Start Hardware NVENC Broadcast")
-            self.btn_stream.setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #dc2626, stop:1 #ef4444); color: #ffffff; font-weight: bold; font-size: 8.5pt; border-radius: 4px; padding: 6px 12px;")
-            self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] ⏹ BROADCAST STOPPED: Clean stream teardown completed.")
-            for port, path in [(8088, "/api/kernel/stream/stop"), (8005, "/stream/stop")]:
-                try:
-                    req = urllib.request.Request(f"http://127.0.0.1:{port}{path}", data=b"{}", headers={"Content-Type": "application/json"})
-                    urllib.request.urlopen(req, timeout=1.0)
-                except Exception:
-                    pass
+        self._dispatch_broadcast('stream', not self._is_streaming)
+
+    def _dispatch_broadcast(self, kind: str, starting: bool) -> None:
+        button = self.btn_stream if kind == 'stream' else self.btn_record
+        if not button.isEnabled():
+            return
+        try:
+            payload = self._stream_payload() if kind == 'stream' and starting else {}
+        except ValueError as exc:
+            # Payload errors are fixed labels and never contain URLs/credentials.
+            self.txt_telemetry.append('Broadcast held: ' + str(exc))
+            return
+        except (TypeError, KeyError):
+            self.txt_telemetry.append('Broadcast held: saved settings are invalid. Review Setup Keys and capture selection.')
+            return
+        button.setEnabled(False)
+        if kind=='stream': self._stream_request_pending=True
+        self.txt_telemetry.append(f'{kind.title()} request pending; destination acceptance and media health are not verified.')
+
+        def unverified(_error=None, *, ambiguous=True):
+            if getattr(self,'_broadcast_closed',False): return
+            if kind=='stream': self._stream_request_pending=False
+            button.setEnabled(True)
+            # A lost start acknowledgement may hide an accepted command. Offer
+            # Stop rather than duplicating a potentially active start.
+            if starting and ambiguous:
+                if kind == 'stream': self._is_streaming = True
+                else: self._is_recording = True
+                button.setText('Stop / reconcile unverified ' + kind)
+            if kind == 'stream': self.canvas.set_streaming(False)
+            else: self.canvas.set_recording(False)
+            self.txt_telemetry.append(f'{kind.title()} state unverified: request failed or was rejected. Check the service before retrying.')
+
+        def complete(result):
+            if getattr(self,'_broadcast_closed',False): return
+            status = result.get('status') if isinstance(result, dict) else None
+            if kind=='stream' and status in {'starting','stopping','running_unverified','legacy_upgrade_required','status_stale','controller_present'}:
+                self._stream_request_pending=False
+                self._is_streaming=starting or result.get('active') is True
+                button.setEnabled(True)
+                button.setText('Stop / reconcile broadcast' if self._is_streaming else 'Start broadcast')
+                self.txt_telemetry.append('Coordinator request acknowledged; actual status will be reconciled. Platform ingest remains unverified.')
+                if hasattr(self,'_refresh_broadcast_status'): self._refresh_broadcast_status()
+                return
+            allowed = {'streaming'} if kind == 'stream' and starting else {'recording'} if starting else {'stopped','inactive'}
+            if not isinstance(status,str) or status.lower() not in allowed:
+                unverified(ambiguous=False)
+                return
+            button.setEnabled(True)
+            if kind=='stream': self._stream_request_pending=False
+            if kind == 'stream':
+                self._is_streaming = starting
+                self.canvas.set_streaming(starting)
+                button.setText('Stop Broadcast (daemon acknowledged)' if starting else 'Start Broadcast')
+            else:
+                self._is_recording = starting
+                self.canvas.set_recording(starting)
+                button.setText('Stop Recording (daemon acknowledged)' if starting else 'Record Master')
+            self.txt_telemetry.append(f'{kind.title()} {"start" if starting else "stop"} acknowledged by local service. Platform ingest and saved-file integrity are not verified.')
+        try:
+            self.bus.submit(send_broadcast_command,kind,starting,payload,on_result=complete,on_error=unverified)
+        except Exception:
+            unverified()
+
 
     def _toggle_record(self) -> None:
-        self._is_recording = not self._is_recording
-        self.canvas.set_recording(self._is_recording)
-        if self._is_recording:
-            self.btn_record.setText("⏹ Stop NVENC Recording")
-            self.btn_record.setStyleSheet("background: #b91c1c; color: #ffffff; font-weight: bold; font-size: 8pt; border-radius: 4px; padding: 6px 10px;")
-            self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] ⏺ MASTER RECORDING STARTED: Saving to 'C:\\AI-BS\\screenplay_projects\\recordings\\master_{int(time.time())}.mkv'.")
-        else:
-            self.btn_record.setText("⏺ Record Master (NVENC MKV)")
-            self.btn_record.setStyleSheet("background: #1e293b; color: #f87171; border: 1px solid #f87171; font-weight: bold; font-size: 8pt; border-radius: 4px; padding: 6px 10px;")
-            self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] ⏹ Master recording finalized and sealed.")
+        self.txt_telemetry.append('Local archive accompanies the broadcast automatically. This control does not start a second recorder; saved-file integrity remains unverified.')
 
-    def _launch_obs(self) -> None:
-        bat_path = r"C:\AI-BS\Launch_OBS_Core.bat"
-        if os.path.exists(bat_path):
-            try:
-                flags = subprocess.CREATE_NEW_PROCESS_GROUP if hasattr(subprocess, "CREATE_NEW_PROCESS_GROUP") else 0
-                subprocess.Popen([bat_path], cwd=os.path.dirname(bat_path), creationflags=flags)
-                self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎬 Launched portable OBS Core via {bat_path}.")
-            except Exception as e:
-                QMessageBox.warning(self, "OBS Launch Error", str(e))
-        else:
-            self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] Launch_OBS_Core.bat not found at {bat_path}.")
+
+    def _apply_preview_status(self, state: dict) -> None:
+        labels = {'waiting': 'Preview: waiting', 'buffering': 'Preview: buffering',
+                  'showing': 'Preview: delayed', 'held': 'Preview: held',
+                  'stale': 'Preview: stale', 'disabled': 'Preview: off',
+                  'unavailable': 'Preview: unavailable', 'closed': 'Preview: off'}
+        preview_state = state.get('state') if self.chk_program_preview.isChecked() else 'disabled'
+        self.lbl_preview_status.setText(labels.get(preview_state, 'Preview: unavailable'))
+        self.canvas.set_program_preview_status(preview_state)
+
+    def _on_program_preview_toggled(self, checked: bool) -> None:
+        previous = self.btn_studio_mode.blockSignals(True)
+        try:
+            self.btn_studio_mode.setChecked(checked)
+            self.btn_studio_mode.setText('Program preview: ON' if checked else 'Program preview: OFF')
+        finally:
+            self.btn_studio_mode.blockSignals(previous)
+        self._program_preview.set_preview_enabled(checked)
+        if not checked:
+            self.canvas.clear_program_preview()
+        self._apply_preview_status(self._program_preview.preview_status())
 
     def _launch_ue_signaling(self) -> None:
-        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎮 Unreal Engine 5.8 Pixel Streaming WebRTC Signaling active on Port 8888.")
+        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎮 Unreal signaling is not checked; this control has no connected launcher.")
 
     def _on_studio_mode_toggled(self, checked: bool) -> None:
-        self.canvas.set_studio_mode(checked)
-        self.btn_studio_mode.setText("🎛️ Studio Mode: ON" if checked else "🎛️ Studio Mode: OFF")
-        mode_str = "DUAL A/B (Preview Staging + Program Live)" if checked else "SINGLE MONITOR (Program Live)"
-        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎛️ Broadcast Output Mode switched to: {mode_str}.")
+        self.chk_program_preview.setChecked(checked)
 
     def _on_safe_areas_toggled(self, checked: bool) -> None:
         self.canvas.set_safe_areas_enabled(checked)
@@ -2349,10 +2657,11 @@ class UniversalOmniStudioNativeView(QWidget):
 
     def _open_stream_requirements_dialog(self) -> None:
         dlg = StreamRequirementsDialog(parent=self)
+        dlg.profile_applied.connect(self.rtmp_settings.load_saved_settings)
         if dlg.exec() == QDialog.DialogCode.Accepted:
-            applied = dlg.get_selected_platform_profile()
-            if applied and hasattr(self, "rtmp_settings"):
-                self.rtmp_settings.apply_platform_preset(applied)
+            self.rtmp_settings.load_saved_settings(dlg.cfg)
+            fps=str(dlg.cfg.get('encoder',{}).get('fps',60))+' FPS'
+            self.combo_fps.setCurrentText(fps)
 
     def _on_platform_preset_selected(self, platform_id: str, spec: dict) -> None:
         max_res = spec.get("max_resolution", "1920x1080")
@@ -2366,12 +2675,17 @@ class UniversalOmniStudioNativeView(QWidget):
             self.combo_aspect_preset.setCurrentText("16:9 Standard (1080p)")
 
         self.txt_telemetry.append(
-            f"[{time.strftime('%H:%M:%S')}] 🚀 Applied {platform_id} Stream Profile to NVENC: "
+            f"[{time.strftime('%H:%M:%S')}] Settings draft selected for {platform_id}: "
             f"{spec.get('rate_control', 'CBR')} @ {spec.get('max_video_bitrate_kbps', 6000)} kbps | GOP {spec.get('keyframe_interval_sec', 2.0)}s."
         )
 
     def shutdown(self) -> None:
+        preview = getattr(self, '_program_preview', None)
+        if preview is not None:
+            preview.shutdown()
         if hasattr(self, "canvas") and hasattr(self.canvas, "shutdown"):
+            self._broadcast_closed=True
+            if hasattr(self,'_coordinator_timer'): self._coordinator_timer.stop()
             self.canvas.shutdown()
         if hasattr(self, "rtmp_settings") and hasattr(self.rtmp_settings, "shutdown"):
             self.rtmp_settings.shutdown()

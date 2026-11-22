@@ -2,11 +2,13 @@ package gateway
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -43,6 +45,14 @@ func (g *Gateway) StartServer() {
 
 // Serve accepts a listener acquired before the engine starts any daemons.
 func (g *Gateway) Serve(listener net.Listener) {
+	log.Printf("[Gateway] Commercial Gateway listening on 127.0.0.1:%s", g.Port)
+	if err := http.Serve(listener, g.Handler()); err != nil {
+		log.Fatalf("[Gateway] Server failed: %v", err)
+	}
+}
+
+// Handler is the same route table used by Serve, without listener or daemon startup.
+func (g *Gateway) Handler() http.Handler {
 	mux := http.NewServeMux()
 
 	// Direct Go Routes (Instantly handled, no Python needed)
@@ -60,17 +70,23 @@ func (g *Gateway) Serve(listener net.Listener) {
 	// Proxy Route (Delegated to Python ML Worker)
 	mux.HandleFunc("/api/comfy/media", g.proxyComfyMediaHandler)
 
-	// Catch-all Proxy for Analytics, Admin, etc to Python FastApi on 8080
+	// Catch-all proxy to the configured Python FastAPI worker.
 	mux.HandleFunc("/api/", g.proxyToPythonBackend)
 	mux.HandleFunc("/v1/", g.proxyToPythonBackend)
 
 	// Wrap the entire multiplexer in the Active Defense Shield
-	securedMux := telemetry.ActiveDefenseShield(mux)
+	return telemetry.ActiveDefenseShield(mux)
+}
 
-	log.Printf("[Gateway] Commercial Gateway listening on 127.0.0.1:%s", g.Port)
-	if err := http.Serve(listener, securedMux); err != nil {
-		log.Fatalf("[Gateway] Server failed: %v", err)
+func (g *Gateway) pythonBackendURL() (*url.URL, error) {
+	if g.IPCBridge == nil {
+		return nil, fmt.Errorf("Python bridge is not configured")
 	}
+	port, err := strconv.Atoi(g.IPCBridge.PythonPort)
+	if err != nil || port < 1 || port > 65535 {
+		return nil, fmt.Errorf("invalid Python loopback port")
+	}
+	return &url.URL{Scheme: "http", Host: net.JoinHostPort("127.0.0.1", strconv.Itoa(port))}, nil
 }
 
 // healthHandler replaces the Python /api/health endpoint
@@ -128,9 +144,9 @@ func (g *Gateway) modelsHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-// proxyComfyMediaHandler delegates to Python/ComfyUI backend on port 8080
+// proxyComfyMediaHandler delegates to the configured Python/ComfyUI backend.
 func (g *Gateway) proxyComfyMediaHandler(w http.ResponseWriter, r *http.Request) {
-	targetURL, err := url.Parse("http://127.0.0.1:8080")
+	targetURL, err := g.pythonBackendURL()
 	if err != nil {
 		http.Error(w, "Failed to parse target URL", http.StatusInternalServerError)
 		return
@@ -206,9 +222,9 @@ func (g *Gateway) daemonControlHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "success", "message": "Action " + action + " executed for " + name})
 }
 
-// proxyToPythonBackend forwards unknown /api/ requests to the Python FastAPI server on 8080
+// proxyToPythonBackend forwards unknown API requests to the configured worker.
 func (g *Gateway) proxyToPythonBackend(w http.ResponseWriter, r *http.Request) {
-	targetURL, err := url.Parse("http://127.0.0.1:8080")
+	targetURL, err := g.pythonBackendURL()
 	if err != nil {
 		http.Error(w, "Failed to parse target URL", http.StatusInternalServerError)
 		return

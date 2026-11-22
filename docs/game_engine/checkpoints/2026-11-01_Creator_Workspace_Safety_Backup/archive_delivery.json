@@ -1,0 +1,14 @@
+{
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_creator_workspace_safety\\AI_BS_Current_Game_Source_WIP.zip",
+  "bytes": 3937312,
+  "sha256": "664c8fc0d2f3307679abd4118cbea9b5dc6f841e4dc7010e5bdf55e9f9cc5922",
+  "files": 406,
+  "crc": "passed",
+  "exact_byte_readback": "passed",
+  "python_ast_files": 107,
+  "free_bytes": {
+    "C": 125429149696,
+    "D": 184193118208,
+    "E": 146813599744
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "utc": "2026-10-25T21:26:04.893422+00:00",
+  "host_header_overrides_absent": true,
+  "configs": [
+    {
+      "config": "scoped",
+      "global_origin_request_present": false,
+      "global_http_host_header_override_present": false,
+      "publishing_rules": [
+        {
+          "hostname": "stehouwer-publishing.com",
+          "service": "http://127.0.0.1:80",
+          "rule_keys": [
+            "hostname",
+            "service"
+          ],
+          "origin_request_override_present": false
+        },
+        {
+          "hostname": "www.stehouwer-publishing.com",
+          "service": "http://127.0.0.1:80",
+          "rule_keys": [
+            "hostname",
+            "service"
+          ],
+          "origin_request_override_present": false
+        }
+      ]
+    },
+    {
+      "config": "user",
+      "global_origin_request_present": false,
+      "global_http_host_header_override_present": false,
+      "publishing_rules": [
+        {
+          "hostname": "stehouwer-publishing.com",
+          "service": "http://127.0.0.1:80",
+          "rule_keys": [
+            "hostname",
+            "service"
+          ],
+          "origin_request_override_present": false
+        },
+        {
+          "hostname": "www.stehouwer-publishing.com",
+          "service": "http://127.0.0.1:80",
+          "rule_keys": [
+            "hostname",
+            "service"
+          ],
+          "origin_request_override_present": false
+        }
+      ]
+    }
+  ]
+}

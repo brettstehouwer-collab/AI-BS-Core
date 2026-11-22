@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "bb0badc9730241d4a3c124cda7e6bf9b",
+  "plan_id": "36a7ed02370942cb811dcd270dc71f43",
+  "snapshot_sha256": "2d044f2987efdf5b1faa344411606a6502f1adc5f4a05206433df016cb495046",
+  "review_digest": "424d9d4154f5e236a87160be70a845e8ce54ac2b817861d3caac20df64de9cb9",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "81cfbafe595642bbb9037258395feb15",
+  "reviewed_plan_sha256": "e68b2f885adf5ffca7a5961941d589258a4eaa876d24c3eeb9e9d875590fbc93",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 35052,
+    "created": 1794664412.676453
+  },
+  "created_at_utc": "2026-11-14T13:53:34.597631+00:00",
+  "entry_sha256": "2cc405e239618e2d83037322ecbdd809b6c0eec0c5879813c8d3044b130aa263"
+}

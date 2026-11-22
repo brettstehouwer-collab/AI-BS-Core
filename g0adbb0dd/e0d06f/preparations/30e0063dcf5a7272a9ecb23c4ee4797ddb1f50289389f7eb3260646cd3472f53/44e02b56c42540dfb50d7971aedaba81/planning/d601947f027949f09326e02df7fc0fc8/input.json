@@ -1,0 +1,57 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "44e02b56c42540dfb50d7971aedaba81",
+  "plan_id": "d601947f027949f09326e02df7fc0fc8",
+  "snapshot_sha256": "e478504d7803b2cd16043c1d519bb23c57efb55839f2915c7a49a30201859355",
+  "review_digest": "99ad911f407d2f83327d08a28eb330b59a0d60fc8dbc9c2697ea5e7ecf0b8feb",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "466ba5c70927632f895ca9304b50499d68bef80006e360a0534899d8408470de",
+        "excerpt": "import unittest,time,subprocess,sys,pathlib\r\nclass Check(unittest.TestCase):\r\n def test_slow(self):\r\n  child=subprocess.Popen([sys.executable,\"-c\",\"import time; time.sleep(30)\"])\r\n  pathlib.Path(\"owned-child.pid\").write_text(str(child.pid))\r\n  time.sleep(8)\r\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/__init__.py",
+        "role": "dependency",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "excerpt": "",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "46edeae658f45f429a686cdb0c9fe48d1ac13db33f0e21d877ed36e59ad71541",
+  "worker": {
+    "pid": 34804,
+    "created": 1794771336.628209
+  },
+  "created_at_utc": "2026-11-15T19:35:41.352024+00:00",
+  "entry_sha256": "65e1105a5994a1f51f3fbb483a76183f7e8a76509ae6e7510e64385978163e10"
+}

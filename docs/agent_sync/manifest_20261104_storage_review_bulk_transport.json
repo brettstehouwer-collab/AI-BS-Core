@@ -1,0 +1,52 @@
+{
+  "id": "20261104_storage_review_bulk_transport",
+  "timestamp_utc": "2026-11-04T20:32:21.007919+00:00",
+  "status": "STORAGE_REVIEW_VERIFIED_BULK_TRANSPORT_READY_ENCRYPTED_BACKUP_PENDING",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree_snapshot": {
+    "utc": "2026-11-04T20:31:13.764863+00:00",
+    "exit": 0,
+    "status_rows": 113386,
+    "raw_evidence_local_only": "E:\\AI_BS_Resources\\Storage_Recovery\\2026-11-04\\phase2_project_review\\working_tree_after_storage_cleanup.txt",
+    "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "branch": "codex/audit-v532976-20261031",
+    "concurrent_work_active": true
+  },
+  "prior_logical_removal_offload_bytes": 112731378928,
+  "compression_saved_allocated_bytes": 16887353099,
+  "compression_verified_files": 15036,
+  "separate_diagnosed_canary_bytes": 38047744,
+  "net_git_compaction_savings_bytes": 0,
+  "own_generated_staging_bytes_rolled_back": 57060195031,
+  "original_git_objects_removed": 0,
+  "original_git_baseline_object_ids_retained": 226456,
+  "preexisting_missing_git_blob": "7c0108d1f85697edbaf87fcdfbec4508b2ea90f2",
+  "git_integrity_repair_attempted": false,
+  "c_free_bytes": 220024373248,
+  "backup_transport_folder": "https://drive.google.com/drive/folders/1waaZECrzSuTz3aYGRhxrY0MB6CryfD_W",
+  "bulk_transport_verified": true,
+  "full_C_cloud_backup_complete": false,
+  "E_music_cloud_backup_complete": false,
+  "personal_art_holds_preserved": true,
+  "new_application_source_changes_this_phase": [],
+  "changed_paths": [
+    "C:\\AI-BS\\docs\\CODEX_HANDOFF.md",
+    "C:\\AI-BS\\AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+    "docs/storage/AI_BS_PROJECT_CLEANUP_REVIEW_2026-11-04.txt"
+  ],
+  "evidence_sha256": {
+    "PROJECT_CLEANUP_REVIEW.txt": "c9c531b928fbb23bb6a4efb143f2cd2acc804b2da4f270dc334d1f5d70748aa9",
+    "phase2_final_summary.json": "cce4c6797dd7d54d1f291c8ad191418f6b969f6b47dbd17a7395dd2f950727f7",
+    "independent_cleanup_accounting_pre_git.json": "9ab763f55380ed16c4f22d84ecf61698e9c5c35ae109cd83a580d6127a96af27",
+    "independent_compression_review.json": "a8630c1b87fbea2d1b7ac4eef76e6a633ccbc807707112334f34baa51e3d6786",
+    "independent_bmp_compression_review.json": "6469ed4891453d9d271a87478e78a7e9d2127892b9b34a57d13712de2c4fd4de",
+    "git_missing_link_original_source_diagnosis.json": "d48e92b4878d03f52cad2980a1efecda95a7e24bf15f7cc1a6aae77ddc6a4b90",
+    "git_tmp_objects_preservation_checkpoint.json": "34fa0a199f8906bc6f2387d79b2c7cce1e135a582044e1acb95be8bde6f378cd",
+    "git_owned_staging_cleanup_independent_review.json": "ef48d2d8fdd00becd53eba22ecba935569d841d3915758cc05512ff3dbcfd42e",
+    "bulk_transport_verified_receipt.json": "81fa48b2da57355352af80e1baea89fb71e4fb89fc9fd3e93c14dff0b1ab04f0",
+    "phase2_cloud_report_receipt.json": "7bd96d9171676e746f60a80a22680fa1e2925df67c43ac54cefacfcc1cc47bff",
+    "working_tree_after_storage_cleanup_summary.json": "0becd550d48227b8043eaadecaa10f4341a98a448e7af1aa1d506cdef2b07a67"
+  },
+  "next_step": "Review fresh-key/encrypted-restore runner; begin exact E audio backup, then qualified C snapshot file backup; no local source deletion."
+}

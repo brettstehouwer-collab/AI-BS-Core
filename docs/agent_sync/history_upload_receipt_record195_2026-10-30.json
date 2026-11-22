@@ -1,0 +1,78 @@
+{
+  "record": 195,
+  "version": "v5.329.74",
+  "status": "uploaded; names, sizes and destination verified by metadata readback",
+  "files": [
+    {
+      "id": "11QP6zswCSPhK4nhJYOQO2WPDqU6mKAVH",
+      "title": "NETWORK_SECURITY_HARDENING_2026-10-30.md",
+      "mime_type": null,
+      "size": "12078",
+      "url": "https://drive.google.com/file/d/11QP6zswCSPhK4nhJYOQO2WPDqU6mKAVH/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/11QP6zswCSPhK4nhJYOQO2WPDqU6mKAVH/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "1yppaC0EUTP-8fiulAwt7m3YPEAsLxl3g",
+      "title": "AI-BS_Network_Hardening_Record195_2026-10-30.zip",
+      "mime_type": null,
+      "size": "1345030",
+      "url": "https://drive.google.com/file/d/1yppaC0EUTP-8fiulAwt7m3YPEAsLxl3g/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1yppaC0EUTP-8fiulAwt7m3YPEAsLxl3g/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_",
+      "title": "2026-10-30_Codex_Engineering_Ledger.md",
+      "mime_type": null,
+      "size": "731486",
+      "url": "https://drive.google.com/file/d/1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    }
+  ],
+  "archive_files": 15,
+  "credentials_raw_traffic_and_source_backups_uploaded": false,
+  "hosting_deployed": true,
+  "exact_remote_file_matches": 8,
+  "python_tests_passed": 133,
+  "python_subtests_passed": 153,
+  "client_tests_passed": 39,
+  "anonymous_runtime_denials": 18,
+  "live_trading_enabled": false,
+  "network_payouts_and_untrusted_jobs": "held",
+  "provider_checksum_readback": "not exposed by connector; no cloud archive byte-equivalence claim"
+}

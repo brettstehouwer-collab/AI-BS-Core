@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "utc": "2026-11-11T15:38:45.718911+00:00",
+  "status": "PASS_SCOPED_RESPONSIVE_SOURCE_AND_HELD_PACKAGE",
+  "version": "5.329.143",
+  "summary": "Held Studio 5.329.143 fixes narrow-window navigation and chapter controls. Startup fits the available screen, navigation scrolls horizontally at full label width, command rows wrap, and authoring pages scroll without crushing the outliner. 19 focused tests (including 24 real-font layout cases) and 36 packaging tests passed. Canonical and relocated frozen author/reopen each passed 12 loaded layout cases, native editing/save/reopen and four viewport checks with zero graphics errors/warnings. Moved rendering changed 410479 pixels; initial/saved/reopened images matched exactly. Relocated hub and saved-player lifecycle passed. Normal 143 startup/navigation/scrolling/close were observed; no project was opened in that normal-shell check. Original 12 project files, 158 compiled engine source pins and 9 player artifacts remain unchanged. Installed 107 and shortcuts are untouched.",
+  "next_step": "Resume original creative/browser acceptance: read the current real-owner creative, recovery and mounted-RAG receipts; reconcile retained handshake/PATH failures before a new bounded run. Verify authenticated BS-Chat source retrieval, writer edit/save, fresh reopen and export on an owned synthetic fixture without inference, then qualify authorized derived manuscript outputs while preserving originals. Installed parity, human pacing, signing/clean-machine/hosted/full release and Nsight injection remain separate open gates.",
+  "previous_goal_turn": "PROGRESS",
+  "postflight": {
+    "status": "PASS_RESPONSIVE143_POSTFLIGHT",
+    "package_files": 427,
+    "package_bytes": 216063433,
+    "executable_sha256": "3913aec746e61b5698f3c60b11dc510a0101b8e8603c6da5b972772afe82f589",
+    "relocated_bundle_unchanged": true,
+    "original_source_files_unchanged": 12,
+    "engine_source_pins": 158,
+    "player_artifacts": 9,
+    "loaded_layout_cases_per_phase": 6,
+    "moved_pixels": 410479,
+    "initial_saved_reopened_bmp_exact": true,
+    "normal_mainwindow_exit_code": 0,
+    "normal_shell_polls_local_status": true,
+    "normal_project_opened": false,
+    "controlled_native_authoring_and_player_qualified": true,
+    "all_ten_plus_six_complete": false
+  },
+  "source_layout_matrix": "backups/responsive143_source_v01/layout-matrix.json",
+  "source_checks": {
+    "focused_tests_passed": 19,
+    "layout_cases_inside_one_test": 24,
+    "builder_tests_passed": 36
+  },
+  "normal_ui": {
+    "pid": 37384,
+    "window_id": 13765128,
+    "normal_exit0": true,
+    "project_opened": false,
+    "observed": "Whole startup frame fits the display; main navigation overflow and chapter vertical scrolling expose readable actions."
+  },
+  "preserved_failures": [
+    "Unregistered-font baseline retained but not a qualified before/after comparison",
+    "Two runtime-discovery tests initially expected direct page insertion; updated to verify the same actual view inside its new scroll wrapper"
+  ],
+  "limitations": [
+    "Normal shell may poll local status; it is not a zero-network test",
+    "Loaded edits and saved gameplay come from controlled AI-disabled tests, not the normal-shell observation",
+    "No ordinary gameplay movement/action durability, human pacing or full release claim",
+    "No blanket arbitrary-font/translation/tiny-display or clean-machine qualification"
+  ],
+  "source_changes": [
+    "native_studio/app.py",
+    "native_studio/window_geometry.py",
+    "native_studio/responsive_layout.py",
+    "native_studio/game_build_view.py",
+    "native_studio/game_engine/creator_view.py",
+    "native_studio/game_engine/content_view.py",
+    "native_studio/packaged_authoring_acceptance.py",
+    "engine/tests/test_window_geometry.py",
+    "engine/tests/test_creator_responsive_layout.py",
+    "engine/tests/test_game_build_runtime_discovery.py"
+  ],
+  "independent_review": "/root/rtx_asset_next_gate: no blocking flaw; source, controlled and normal-shell scopes remain distinct",
+  "backup": {
+    "local": {
+      "path": "D:\\AI-BS-Game-Resources\\RTX_Local_Checkpoints\\Responsive_Studio143_20261111T153845Z.zip",
+      "bytes": 128038512,
+      "sha256": "0005d5422f112d0a225271d229de7e42cc3f5db568a82c260b77108c076aed78",
+      "members": 583,
+      "all_member_hashes_verified": true,
+      "filesystem_restore_executed": false,
+      "scope": "Complete new relocated143 runtime/profiles, owned fixtures, source preimages and layout captures only"
+    },
+    "drive": {
+      "status": "VERIFIED_PRIVATE_SCOPED",
+      "receipt": "C:\\AI-BS\\backups\\responsive143_checkpoint_20261111T153845Z\\drive_verified.json",
+      "archive_id": "15O5jSKOF57uVMguMeuYaZqZqpXrasord",
+      "members": 83,
+      "complete_selected_files": 37,
+      "requires_previous_base": true
+    },
+    "whole_project_or_saved_data_cloud_backup": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "archive_path": "C:\\AI-BS\\backups\\checkpoint_20261101_m4_native_process\\AI_BS_M4_Native_Creator_Process_Source.zip",
+  "bytes": 3177977,
+  "sha256": "cc5e152e219278c0cbe238c773bca8ecf5406ded87afab2736cc9112ae7dd243",
+  "source_files": 379,
+  "crc_check": "passed",
+  "captured_file_byte_readback": "passed",
+  "manifest_checksum": "00e30ef9f854ab78bb28f134ad933046c24f73cf9dbb65f57de91749c6c3befe",
+  "disk_free_bytes": {
+    "C": 126072594432,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "google_drive_remaining_quota": "not exposed by connected tools",
+  "cloud_archive_id": "1oXPCk2HePy2cZudCBu2b82D0UtbUDJmH",
+  "cloud_parent_id": "1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc",
+  "cloud_exact_bytes_verified": true,
+  "cloud_parent_verified": true,
+  "cloud_verified_at": "2026-11-01T18:34:58.839884+00:00"
+}

@@ -1,0 +1,105 @@
+{
+  "handoff_id": "record215",
+  "timestamp_utc": "2026-11-01T03:53:56.515819+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next resumed session",
+  "status": "APPLIED_READY_NEXT_BROADCAST_PAUSED_BY_USER",
+  "base_commit": "d81e940ffcc657135dd7542a56601cdbc0c28fa9",
+  "branch": "codex/audit-v532976-20261031",
+  "working_tree": "Unrelated tracked and untracked work preserved and excluded; see local Git state.",
+  "files": [
+    {
+      "path": "backend/core/live_event_overlay.py",
+      "sha256": "7e93871fc1e5549126bb7bee2add7f119693e2513845eceb774308bafdfc2df8",
+      "bytes": 7303
+    },
+    {
+      "path": "backend/core/live_overlay_runtime.py",
+      "sha256": "66e74553687cc39caad44fe4caa334ff90c43d13d57e3d1527ed38feee6fb958",
+      "bytes": 10872
+    },
+    {
+      "path": "backend/core/broadcast_secondary.py",
+      "sha256": "c85068e4d565a6476dfd08a45e2ce09494d414ecf76f30eb404b1ca2a5218767",
+      "bytes": 26735
+    },
+    {
+      "path": "native_studio/broadcast_ipc.py",
+      "sha256": "533c272f472700db7af78c2d6d1be93b924634cf842f26b38630ce6246d54780",
+      "bytes": 9216
+    },
+    {
+      "path": "native_studio/live_overlay_control.py",
+      "sha256": "dea27f65b4570fb5ead71737b7d39e0d28537425f0270eadca245a64a8e00e2d",
+      "bytes": 2615
+    },
+    {
+      "path": "native_studio/live_overlay_panel.py",
+      "sha256": "0a28f9ff59cdfc7bf0478a56e42a5b7b5d000f17aa81b379451c1478fe3ba272",
+      "bytes": 5674
+    },
+    {
+      "path": "scripts/tests/test_live_overlay215.py",
+      "sha256": "e8989b0b59ed3a39f647fdeb46dd92782bf5ce34fca31ce7107d4bad971101d8",
+      "bytes": 2885
+    },
+    {
+      "path": "scripts/tests/test_live_overlay_control215.py",
+      "sha256": "a3514cfa9729228d38ce760b87f480a7943a5db452d27e5985b99730a52538e5",
+      "bytes": 1251
+    },
+    {
+      "path": "scripts/tests/test_live_overlay_capture215.py",
+      "sha256": "86360a5cffeb84cf392dc0b640223abeebe3d6c94982d718b6427bf24602b672",
+      "bytes": 2600
+    },
+    {
+      "path": "scripts/tests/test_live_overlay_coordinator215.py",
+      "sha256": "7a04ed47d3757677f3cda687bd9ddc488dde0da361860d53e86236936a22a579",
+      "bytes": 1097
+    },
+    {
+      "path": "scripts/tests/test_live_overlay_ipc215.py",
+      "sha256": "aedb0a26a80d32eb52aa5420b390903be9bf4242dfa1a61ef3196193c109fb61",
+      "bytes": 877
+    }
+  ],
+  "tracked_patch": "docs/audit/2026-10-30-complete/record215/tracked_changes215.patch",
+  "verification": {
+    "focused_tests": 109,
+    "subtests": 64,
+    "failures": 0,
+    "errors": 0,
+    "gui": "PASS",
+    "live_end_to_end": "UNVERIFIED",
+    "chat": "FAILED_DISABLED"
+  },
+  "crypto_pins_unchanged": {
+    "backend/core/crypto_execution_safety.py": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+    "backend/core/crypto_execution_controls.py": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+    "Crypto-Swarm/drip_ledger.json": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+    "backend/crypto_ledger.json": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd"
+  },
+  "live_trading_dispatch_enabled": false,
+  "applied_config": {
+    "version": 1,
+    "enabled": true,
+    "screen_events": true,
+    "chat_enabled": false,
+    "channel": "brettstehouwer"
+  },
+  "broadcast_status_observed": {
+    "status": "stopped",
+    "process_running": false,
+    "controller_pid": 44076,
+    "encoder_pid": null
+  },
+  "architecture_decision": "Optional reactions wrap existing owned game capture; no second capture, no input hooks, no OBS or broadcast restart.",
+  "incomplete": [
+    "Live end-to-end reactions",
+    "Authenticated chat/polls",
+    "Record214 audio and bitrate integration"
+  ],
+  "next_step": "After explicit resume: user starts broadcast, opens native controls, verifies a manual hype event in preview and platform output.",
+  "drive_parent_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+}

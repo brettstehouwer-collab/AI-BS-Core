@@ -1,0 +1,11 @@
+﻿{
+    "Arguments":  [
+                      "showvminfo",
+                      "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                      "--machinereadable"
+                  ],
+    "PID":  62424,
+    "ExitCode":  0,
+    "TimedOut":  false,
+    "TimestampUTC":  "2026-10-23T22:48:43.8225543Z"
+}

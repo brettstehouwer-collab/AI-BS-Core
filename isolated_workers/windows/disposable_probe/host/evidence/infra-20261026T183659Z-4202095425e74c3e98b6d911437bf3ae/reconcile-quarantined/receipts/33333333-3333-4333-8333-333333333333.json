@@ -1,0 +1,1 @@
+{"body":{"attempt_id":"33333333-3333-4333-8333-333333333333","domain":"AI-BS/host-fixed-probe-receipt/v1","profile_sha256":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","state":"QUARANTINED","worker_reported":{"worker_observed":{"accepted_snapshot_restored":true}}},"hmac_sha256":"df8b451cbb0306201296e6d35378bf55b130d8dcd0e7b862148ca29d01d77860"}

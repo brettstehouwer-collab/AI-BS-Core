@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from "react";
 import { NOCO_DUE_DILIGENCE_QUESTIONS } from './nocoDueDiligenceData.js';
 
 // NoCo Acquisition Master Condition Engine Formula
-export const evaluateNoCoProperty = (parcel) => {
-  const acreage = parseFloat(parcel.acres) || 1;
-  const price = parseFloat(parcel.price) || 0;
+/** @param {{"acres": string | number, "price": number, "acousticTopographyScore": number, "waterRightsScore": number, "zoningFlexibilityScore": number, "industrialShieldScore": number, "address": string}} parcel */
+export const evaluateNoCoProperty = ( parcel) => {
+  const acreage = parseFloat(String(parcel.acres)) || 1;
+  const price = parseFloat(String(parcel.price)) || 0;
   
   // Acreage Fit (15%): Sweet spot 10-25 ac (100 pts), 5-9.9 ac (75 pts), <5 or >40 ac (40 pts)
   const acreageScore = acreage >= 10 && acreage <= 25 ? 100 : (acreage >= 5 && acreage <= 40 ? 75 : 40);
@@ -12,10 +13,10 @@ export const evaluateNoCoProperty = (parcel) => {
   // Price Score (10%): <= $30,000/ac (100 pts), <= $50,000/ac (80 pts), > $50,000/ac (50 pts)
   const priceScore = pricePerAcre <= 30000 ? 100 : (pricePerAcre <= 50000 ? 80 : 50);
   
-  const acousticScore = parseFloat(parcel.acousticTopographyScore) || 75;
-  const waterScore = parseFloat(parcel.waterRightsScore) || 75;
-  const zoningScore = parseFloat(parcel.zoningFlexibilityScore) || 75;
-  const shieldScore = parseFloat(parcel.industrialShieldScore) || 75;
+  const acousticScore = parseFloat(String(parcel.acousticTopographyScore)) || 75;
+  const waterScore = parseFloat(String(parcel.waterRightsScore)) || 75;
+  const zoningScore = parseFloat(String(parcel.zoningFlexibilityScore)) || 75;
+  const shieldScore = parseFloat(String(parcel.industrialShieldScore)) || 75;
 
   const compositeScore = (
     acreageScore * 0.15 +
@@ -45,7 +46,7 @@ export default function NocoPropertiesTracker() {
   const [activeSection, setActiveSection] = useState('candidates'); // 'candidates' | 'questionnaire' | 'municipalities' | 'calculator' | 'live_search'
   const [searchFilter, setSearchFilter] = useState('');
   const [showDigestModal, setShowDigestModal] = useState(false);
-  const [snifferStatus, setSnifferStatus] = useState({
+  const [snifferStatus] = useState({
     active: true,
     interval: 3600,
     lastRun: new Date().toLocaleTimeString(),
@@ -269,7 +270,7 @@ export default function NocoPropertiesTracker() {
   const [auditSearchQuery, setAuditSearchQuery] = useState('');
   
   // Audits dictionary stored in localStorage: { [propertyId]: { [qId]: { assessment, realtorResponse, notes } } }
-  const [propertyAudits, setPropertyAudits] = useState(() => {
+  const [propertyAudits, setPropertyAudits] = useState(/** @returns {Record<string, Record<string, {assessment: string, realtorResponse?: string, notes: string}>>} */ () => {
     try {
       const saved = localStorage.getItem('noco_property_audits_v2');
       if (saved) return JSON.parse(saved);
@@ -310,8 +311,10 @@ export default function NocoPropertiesTracker() {
   // Current Property's Audit Responses
   const currentPropertyAudit = propertyAudits[selectedAuditPropertyId] || {};
 
-  const handleUpdateAuditQuestion = (qId, field, value) => {
-    setPropertyAudits(prev => {
+  /** @param {string} qId @param {string} field @param {unknown} value */
+const handleUpdateAuditQuestion = ( qId,  field,  value) => {
+    setPropertyAudits(
+prev => {
       const propData = prev[selectedAuditPropertyId] || {};
       const qData = propData[qId] || { assessment: 'Pending', realtorResponse: '', notes: '' };
       return {
@@ -329,7 +332,7 @@ export default function NocoPropertiesTracker() {
 
   // Categories in 112 Questionnaire
   const categoriesList = useMemo(() => {
-    const cats = [];
+    const cats = /** @type {string[]} */ ([]);
     NOCO_DUE_DILIGENCE_QUESTIONS.forEach(item => {
       if (!cats.includes(item.category)) cats.push(item.category);
     });
@@ -465,8 +468,8 @@ export default function NocoPropertiesTracker() {
       county: 'Evaluated Custom Parcel',
       region: 'Custom',
       tier: 'Evaluated Prospect',
-      acres: parseFloat(evalAcres),
-      price: parseFloat(evalPrice),
+      acres: parseFloat(String(evalAcres)),
+      price: parseFloat(String(evalPrice)),
       pricePerAcre: evalResult.pricePerAcre,
       acousticTopographyScore: evalAcoustic,
       waterRightsScore: evalWater,
@@ -494,7 +497,8 @@ export default function NocoPropertiesTracker() {
     });
   }, [candidateParcels, verdictFilter, searchFilter]);
 
-  const getVerdictColor = (verdict) => {
+  /** @param {string} verdict */
+const getVerdictColor = ( verdict) => {
     if (verdict.includes('PRIME')) return '#10b981';
     if (verdict.includes('FEASIBLE')) return '#f59e0b';
     return '#ef4444';

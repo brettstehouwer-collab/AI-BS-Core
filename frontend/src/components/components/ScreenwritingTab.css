@@ -375,3 +375,148 @@
   font-size: 0.75rem;
 }
 
+/* Desktop retains the existing ribbons as flex siblings. */
+.sw-tools-area { display: contents; }
+.sw-mobile-header, .sw-mobile-toolbar, .sw-mobile-footer { display: none; }
+
+/* A transformed tab ancestor would otherwise trap the fullscreen phone editor
+   during portrait/landscape transitions. Keep the fix scoped to this studio. */
+.tab-subinterface:has(.screenwriting-container[data-compact="true"][data-focus="true"]) {
+  animation: none !important;
+  transform: none !important;
+}
+.app-shell:has(.screenwriting-container[data-compact="true"][data-focus="true"]) .mobile-top-navbar,
+.app-shell:has(.screenwriting-container[data-compact="true"][data-focus="true"]) .mobile-bottom-nav-container {
+  display: none !important;
+}
+
+/* Compact mode follows usable viewport dimensions, including the keyboard. */
+.screenwriting-container[data-compact="true"] {
+  flex-wrap: nowrap !important;
+  gap: 0 !important;
+  min-width: 0;
+  min-height: 0 !important;
+  height: 100% !important;
+  position: relative;
+  box-sizing: border-box;
+}
+.screenwriting-container[data-compact="true"][data-focus="true"] {
+  position: fixed !important;
+  top: var(--studio-viewport-top, 0px) !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: var(--studio-viewport-height, 100dvh) !important;
+  max-height: var(--studio-viewport-height, 100dvh) !important;
+  z-index: 1200;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px) !important;
+}
+.screenwriting-container[data-compact="true"] .sw-mobile-header,
+.screenwriting-container[data-compact="true"] .sw-mobile-toolbar,
+.screenwriting-container[data-compact="true"] .sw-mobile-footer {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-width: 0;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #111827;
+  border-bottom: 1px solid #334155;
+  box-sizing: border-box;
+}
+.screenwriting-container[data-compact="true"] .sw-mobile-header select {
+  flex: 1;
+  min-width: 0;
+  width: 0;
+  font-size: 16px;
+  background: #1f2937;
+  color: #facc15;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  min-height: 44px;
+}
+.screenwriting-container[data-compact="true"] .sw-mobile-save-state { font-size: 11px; max-width: 62px; }
+.screenwriting-container[data-compact="true"] button,
+.screenwriting-container[data-compact="true"] select {
+  min-height: 44px;
+  touch-action: manipulation;
+}
+.screenwriting-container[data-compact="true"] .sw-mobile-toolbar button { flex: 1; min-width: 0; }
+.screenwriting-container[data-compact="true"] .sw-mobile-header button,
+.screenwriting-container[data-compact="true"] .sw-mobile-toolbar button,
+.screenwriting-container[data-compact="true"] .sw-mobile-footer button,
+.sw-mobile-panel-close {
+  border: 1px solid #475569;
+  border-radius: 6px;
+  background: #1e293b;
+  color: #f1f5f9;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.screenwriting-container[data-compact="true"] .sw-mobile-header .sw-save-btn { background: #4ade80; color: #052e16; }
+.screenwriting-container[data-compact="true"] .sw-mobile-toolbar button[aria-pressed="true"],
+.screenwriting-container[data-compact="true"] button[aria-expanded="true"] { background: #1d4ed8; color: white; }
+.screenwriting-container[data-compact="true"] .sw-mobile-footer { justify-content: space-between; font-size: 12px; }
+.screenwriting-container[data-compact="true"] .sw-tools-area,
+.screenwriting-container[data-compact="true"] .sw-bottom-panel { display: none !important; }
+.screenwriting-container[data-compact="true"][data-mobile-panel="tools"] .sw-tools-area,
+.screenwriting-container[data-compact="true"][data-mobile-panel="stats"] .sw-bottom-panel,
+.screenwriting-container[data-compact="true"] .sw-left-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  position: absolute;
+  z-index: 1300;
+  inset: calc(env(safe-area-inset-top, 0px) + 104px) 8px calc(env(safe-area-inset-bottom, 0px) + 56px) 8px;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 100%;
+  max-height: none;
+  overflow: auto !important;
+  padding: 12px !important;
+  gap: 8px;
+  background: #111827;
+  border: 1px solid #64748b;
+  border-radius: 10px;
+  box-shadow: 0 12px 40px #000b;
+  box-sizing: border-box;
+}
+.screenwriting-container[data-compact="true"] .sw-tools-area > div,
+.screenwriting-container[data-compact="true"] .sw-tools-area > div > div,
+.screenwriting-container[data-compact="true"] .sw-bottom-panel > div { flex-wrap: wrap !important; min-width: 0; max-width: 100%; gap: 6px !important; }
+.screenwriting-container[data-compact="true"] .sw-tools-area input,
+.screenwriting-container[data-compact="true"] .sw-tools-area select,
+.screenwriting-container[data-compact="true"] .sw-left-panel input { font-size: 16px !important; max-width: 100%; box-sizing: border-box; }
+.screenwriting-container[data-compact="true"] .sw-tools-area div { min-width: 0; max-width: 100%; box-sizing: border-box; flex-wrap: wrap !important; }
+.screenwriting-container[data-compact="true"] .sw-tools-area button { max-width: 100%; font-size: 14px !important; white-space: normal; }
+.screenwriting-container[data-compact="true"] .sw-consolidated-header { position: static !important; padding: 4px !important; }
+.screenwriting-container[data-compact="true"] .sw-workspace { flex: 1 1 0% !important; height: auto !important; min-height: 0 !important; }
+.screenwriting-container[data-compact="true"] .sw-central-area { width: 100% !important; min-width: 0; }
+.screenwriting-container[data-compact="true"] .sw-editor-container .sw-paginated-container { padding: 8px 0 !important; overscroll-behavior: contain; }
+.screenwriting-container[data-compact="true"] .sw-editor-container .screenplay-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 260px !important;
+  padding: 20px 16px !important;
+  margin: 0 0 16px !important;
+  transform: none !important;
+  font-size: 16px !important;
+}
+.screenwriting-container[data-compact="true"] [data-block-type] {
+  font-size: 16px !important;
+  line-height: 1.55 !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  scroll-margin-block: 20px;
+}
+.screenwriting-container[data-compact="true"] [data-block-type="Character"] { margin-left: 24% !important; max-width: 76% !important; }
+.screenwriting-container[data-compact="true"] [data-block-type="Dialogue"],
+.screenwriting-container[data-compact="true"] [data-block-type="Parenthetical"] { margin-left: 10% !important; max-width: 90% !important; }
+.screenwriting-container[data-compact="true"] [data-block-type="Transition"] { text-align: right; }
+.screenwriting-container[data-compact="true"] .sw-gutter-badge { display: none; }
+
+
+.screenwriting-container[data-compact="true"] > details,
+.screenwriting-container[data-compact="true"] > [role="alert"],
+.screenwriting-container[data-compact="true"] > [role="status"] { max-height: min(160px, 30dvh); overflow: auto; flex: 0 0 auto; }

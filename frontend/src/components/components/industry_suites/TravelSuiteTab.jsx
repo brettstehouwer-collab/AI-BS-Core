@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { Plane, Activity as StatusIcon, Server as ServerIcon, Clock as ClockIcon, Database as DatabaseIcon } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+/** @param {{backendUrl: string}} props */
+/** @param {{"backendUrl": string}} props */
 export default function TravelSuiteTab({ backendUrl }) {
-  const [data, setData] = useState({ status: 'loading', metrics: [] });
-  const [lastUpdated, setLastUpdated] = useState(null);
+  const [data, setData] = useState(/** @type {{status: string, module?: string, metrics: Array<{timestamp: string, name: string, value: number, status: string}>}} */ ({ status: 'loading', metrics: [] }));
+  const [lastUpdated, setLastUpdated] = useState(/** @type {string | null} */ (null));
 
   useEffect(() => {
     const wsUrl = backendUrl.replace('http', 'ws') + '/ws/telemetry/travel';
@@ -84,7 +86,8 @@ export default function TravelSuiteTab({ backendUrl }) {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data.metrics}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="timestamp" stroke="#94a3b8" tickFormatter={(t) => t ? t.split(' ')[1] : ''} />
+                <XAxis dataKey="timestamp" stroke="#94a3b8" tickFormatter={
+( t) => t ? t.split(' ')[1] : ''} />
                 <YAxis stroke="#94a3b8" />
                 <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#475569' }} />
                 <Legend />

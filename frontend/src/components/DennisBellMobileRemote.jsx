@@ -6,9 +6,16 @@ import {
   REC_DEBUT_FEATURED_VIDEOS, 
   REC_DEBUT_VERIFICATION_MATRIX 
 } from './recDebutAssets.js';
-import { RECENT_ATHLETES } from './recdebutData.js';
 
-export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onSwitchToDesktop }) {
+export default function DennisBellMobileRemote({ 
+  backendUrl: propBackendUrl, 
+  athletes: propAthletes,
+  excludedCoaches: propCoaches,
+  campaigns: propCampaigns,
+  quotaStatus: propQuota,
+  telemetryStats: propStats,
+  onSwitchToDesktop 
+}) {
   // Edge endpoint default - works seamlessly on Galaxy S25 Ultra via Cloudflare tunnel
   const defaultApiUrl = typeof window !== 'undefined' && (
     window.location.hostname !== 'localhost' || 
@@ -168,7 +175,7 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
   const fetchReplies = async () => {
     setLoadingReplies(true);
     try {
-      const res = await fetch(`${backendUrl}/api/v1/recdebut/replies/sync`, { method: 'POST' });
+      const res = await fetch(`${backendUrl}/api/v1/recdebut/sms/sync-replies`, { method: 'POST' });
       if (res.ok) {
         const data = await res.json();
         if (data.replies) {
@@ -395,7 +402,7 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
       const openEvents = (engagementEvents || []).filter(e => e.event_type === 'OPEN');
       if (openEvents.length > 0) return openEvents;
     }
-    return athletes && athletes.length > 0 ? athletes : (RECENT_ATHLETES || []);
+    return Array.isArray(athletes) ? athletes : [];
   };
 
   const handleNativeBatchHandoff = () => {
@@ -523,16 +530,7 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
         rate_limit_seconds: 3.0
       };
 
-      const res = await fetch(`${backendUrl}/api/v1/recdebut/broadcast/single_test`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      setLastActionResponse({
-        success: res.ok,
-        message: data.detail || data.message || (res.ok ? "Test dispatched successfully!" : "Failed to dispatch.")
-      });
+      setLastActionResponse({ success: false, message: 'Not connected: no backend route for this action yet (campaign sends are on hold, audit 2026-11-22).' });
     } catch (err) {
       setLastActionResponse({ success: false, message: `Network error: ${err.message}` });
     } finally {
@@ -545,24 +543,7 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
     if (!safetyArmed) return;
     setActionLoading(true);
     try {
-      const res = await fetch(`${backendUrl}/api/v1/recdebut/broadcast/start`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          batch_size: 300,
-          rate_limit_seconds: 3.0,
-          custom_script: messageText,
-          sender_name: "Dennis Bell (Former NY Knicks #4)",
-          channel: "sms"
-        })
-      });
-      const data = await res.json();
-      setLastActionResponse({
-        success: res.ok,
-        message: data.detail || data.message || "Core 300 Batch successfully launched."
-      });
-      setIsBroadcasting(true);
-      setSafetyArmed(false);
+      setLastActionResponse({ success: false, message: 'Not connected: no backend route for this action yet (campaign sends are on hold, audit 2026-11-22).' });
     } catch (err) {
       setLastActionResponse({ success: false, message: `Launch error: ${err.message}` });
     } finally {
@@ -573,7 +554,7 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
   // Pause / Stop Broadcast
   const handlePauseBatch = async () => {
     try {
-      await fetch(`${backendUrl}/api/v1/recdebut/broadcast/pause`, { method: 'POST' });
+      await fetch(`${backendUrl}/api/v1/recdebut/broadcast/cancel`, { method: 'POST' });
       setIsBroadcasting(false);
     } catch (e) {
       // silent
@@ -582,7 +563,7 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
 
   const handleStopBatch = async () => {
     try {
-      await fetch(`${backendUrl}/api/v1/recdebut/broadcast/stop`, { method: 'POST' });
+      await fetch(`${backendUrl}/api/v1/recdebut/broadcast/cancel`, { method: 'POST' });
       setIsBroadcasting(false);
     } catch (e) {
       // silent
@@ -592,7 +573,10 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
   // ══════════════════════════════════════════════════════════════════════════
   // TAB 2: ROSTERS & INGESTION STATE
   // ══════════════════════════════════════════════════════════════════════════
-  const [athletes, setAthletes] = useState(RECENT_ATHLETES || []);
+  const [athletes, setAthletes] = useState(() => propAthletes || []);
+  useEffect(() => {
+    setAthletes(Array.isArray(propAthletes) ? propAthletes : []);
+  }, [propAthletes]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSport, setSelectedSport] = useState('All');
   const [selectedClass, setSelectedClass] = useState('All');
@@ -606,25 +590,19 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
   const [coachSearch, setCoachSearch] = useState('');
   const [selectedDivision, setSelectedDivision] = useState('All');
 
-  // Load coaches on mount
+  const [coachesError, setCoachesError] = useState('');
+  // The coach directory is distinct from the excluded-coach list supplied by the parent.
   useEffect(() => {
+    let active = true;
     fetch(`${backendUrl}/api/recdebut/coaches`)
-      .then(r => r.json())
-      .then(d => {
-        if (d && d.coaches && d.coaches.length > 0) setCoaches(d.coaches);
+      .then(async response => {
+        if (!response.ok) throw new Error(`Coach directory unavailable (HTTP ${response.status}).`);
+        const data = await response.json();
+        if (!Array.isArray(data.coaches)) throw new Error('Invalid coach directory response.');
+        if (active) { setCoaches(data.coaches); setCoachesError(''); }
       })
-      .catch(() => {
-        // Fallback default coaches
-        setCoaches([
-          { id: 1, college_name: "Tennessee State", division: "D1", conference: "OVC", state: "TN", coach_name: "Ed Pipes", coach_title: "Head Coach", coach_phone: "+1-615-963-5000", coach_email: "epipes@tnstate.edu" },
-          { id: 2, college_name: "Gonzaga University", division: "D1", conference: "WCC", state: "WA", coach_name: "Mark Few", coach_title: "Head Coach", coach_phone: "+1-509-313-4202", coach_email: "mfew@gonzaga.edu" },
-          { id: 3, college_name: "UNC Wilmington", division: "D1", conference: "CAA", state: "NC", coach_name: "Takayo Siddle", coach_title: "Head Coach", coach_phone: "+1-910-962-3232", coach_email: "recruiting@uncw.edu" },
-          { id: 4, college_name: "Grand Valley State", division: "D2", conference: "GLIAC", state: "MI", coach_name: "Cornell Mann", coach_title: "Head Coach", coach_phone: "+1-616-331-3259", coach_email: "mannc@gvsu.edu" },
-          { id: 5, college_name: "Calvin University", division: "D3", conference: "MIAA", state: "MI", coach_name: "Bill Sall", coach_title: "Head Coach", coach_phone: "+1-616-526-6288", coach_email: "bsall@calvin.edu" },
-          { id: 6, college_name: "Cornerstone University", division: "NAIA", conference: "WHAC", state: "MI", coach_name: "Jesse Campbell", coach_title: "Head Coach", coach_phone: "+1-616-222-1400", coach_email: "jesse.campbell@cornerstone.edu" },
-          { id: 7, college_name: "Michigan State University", division: "D1", conference: "Big Ten", state: "MI", coach_name: "Tom Izzo", coach_title: "Head Coach", coach_phone: "+1-517-355-1643", coach_email: "msuhoops@msu.edu" }
-        ]);
-      });
+      .catch(error => { if (active) { setCoaches([]); setCoachesError(error.message); } });
+    return () => { active = false; };
   }, [backendUrl]);
 
   const handleFileUpload = async (e) => {
@@ -722,6 +700,7 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
       paddingLeft: '14px',
       paddingRight: '14px'
     }}>
+      {coachesError && activeTab === 'coaches' && <p role="alert">{coachesError}</p>}
       {/* ── HEADER ── */}
       <header style={{
         backgroundColor: '#001326',

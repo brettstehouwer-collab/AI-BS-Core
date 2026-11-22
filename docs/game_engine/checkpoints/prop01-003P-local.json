@@ -1,0 +1,27 @@
+{
+  "checkpoint": "PROP01-003P",
+  "description": "Native AI-BS DX12 Prop01 rendering, offscreen creator acceptance, collision proxy enclosure repair, and regression qualification",
+  "timestamp": "2026-11-05T23:27:12Z",
+  "stage": "native_acceptance_and_chapter_creator_qualified",
+  "archive": {
+    "path": "D:\\AI-BS-Game-Resources\\Prop01_Checkpoints\\003P\\Prop01_003P_Native_Acceptance_Checkpoint.zip",
+    "bytes": 7761765,
+    "sha256": "e6b426ddd0ac17bfe548d70221b6fc6d79bfd4b822e0c5ec6049cca1a8e312d1",
+    "member_count": 67,
+    "restore_verified": true
+  },
+  "cloud_backup_verified": true,
+  "cloud_backup_destination": "https://drive.google.com/drive/folders/1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "goal_complete": false,
+  "sdk_version": "0.17.4",
+  "git_commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "git_branch": "codex/audit-v532976-20261031",
+  "key_findings": {
+    "collision_proxy_enclosure": "Discovered that v03 collision proxies protruded through Prop01 visual shell (+0.910m prisms vs +0.8887m recessed cap; 0.315m radius vs 0.276m waist; 0.670m LCP box vs 0.4449m chamfers; 0.085m PCB vs 0.071m bevel). Applied grouped ContentSetField enclosure edit preserving exact 4 UUIDs, enclosing proxies inside 3D shell, passing Jolt character step-on and octagonal casing block.",
+    "visual_handedness_mirroring": "Forensically verified that Blender previews (Prop01_top.png, Prop01_quarter.png) read unmirrored from left to right, but exporting right-handed Blender (x,z,-y) into DirectX 12 left-handed world reflects silkscreen text horizontally across an axis. Documented transparently as a non-blocking visual caveat for future art re-cooks.",
+    "material_model_scope": "AIBSurf2 (opaque-albedo-emission-v2) binds mipmapped sRGB albedo + tint/emission; normal maps and metallic/roughness PBR textures remain outside AIBSurf2 shader scope.",
+    "creator_workflow": "Verified outliner selection, native DX12 offscreen viewport preview & Win32 click-pick via aibs_creator_viewport.exe --self-test (811,278 pixels, 0 debug errors), asset adoption & placement of repeated capacitor, deletion/Undo/Redo, hero movement/Undo/Redo/restoration, acknowledged saving, and clean separate-process reopen in fresh ContentView with 0 orphaned rows and exact parameter persistence."
+  },
+  "cloud_receipt": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\prop01-003P-drive.json",
+  "drive_folder_url": "https://drive.google.com/drive/folders/1k-H6GZQZIo-JSwduAFOe6jK-3R35rmDl"
+}

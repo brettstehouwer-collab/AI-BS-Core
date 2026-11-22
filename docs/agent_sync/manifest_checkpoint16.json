@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "handoff_id": "checkpoint16",
+  "timestamp_utc": "2026-11-02T12:01:21.657328+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next verified continuation",
+  "git": {
+    "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "branch": "codex/audit-v532976-20261031",
+    "working_tree": "Existing dirty and untracked tree preserved; scoped Git status and exact source diff captured during archive seal",
+    "full_worktree_status": {
+      "local_only_path": "D:\\AI-BS-Game-Resources\\Backups\\Checkpoint16_Postseal_Preimages\\full_working_tree_status.local.txt",
+      "sha256": "1909f58cf4576332b718d40d6ec91acd77618c15b21faf028a2f648a26269b68",
+      "lines": 95535,
+      "all_untracked_included": true,
+      "contents_cloud_archived": false
+    }
+  },
+  "status": "VERIFIED_SOURCE_SLICE_GOAL_ACTIVE",
+  "verification_report": "engine/out/warm_beginning/opening_integration_verification.json",
+  "verification_report_sha256": "464c3cc72d54f6b9b17a5e2783e10bee44cbc1cc15fc0f9411f0356d3d897d25",
+  "runtime_source_sha256": "d945bd0d806c5bfdace4efbe9db9ca2b2ecca57d2969fd327e17aef306ef739e",
+  "modified_source_paths": [
+    "engine/games/first_boot_content.cpp",
+    "engine/games/content_authoring.cpp",
+    "engine/include/aibs/opening_inspections.hpp",
+    "engine/games/opening_inspections.cpp",
+    "engine/tests/opening_content_tests.cpp",
+    "engine/include/aibs/warm_opening.hpp",
+    "engine/games/warm_opening.cpp",
+    "engine/apps/warm_opening_project.cpp",
+    "engine/tests/warm_opening_tests.cpp",
+    "engine/tests/verify_warm_opening_native.py",
+    "engine/CMakeLists.txt",
+    "engine/apps/content_host.cpp",
+    "engine/apps/durable_world.cpp",
+    "engine/apps/opening_inspection_panel.inl",
+    "engine/apps/opening_native_proof.inl",
+    "engine/apps/opening_runtime.inl",
+    "engine/cmake/NativeCapabilities.json.in",
+    "engine/tests/opening_inspection_tests.cpp",
+    "native_studio/game_engine/content_commands.py",
+    "native_studio/game_engine/content_view.py",
+    "native_studio/game_engine/content_jobs.py",
+    "native_studio/game_engine/content_proposals.py",
+    "native_studio/game_engine/content_ai.py",
+    "native_studio/game_engine/content_preview.py",
+    "native_studio/game_engine/content_play.py",
+    "native_studio/game_engine/opening_fields.py",
+    "engine/tests/test_opening_creator.py",
+    "engine/tests/test_opening_reader_compatibility.py",
+    "engine/tests/test_opening_creator_native.py",
+    "engine/examples/sdk_consumer/CMakeLists.txt",
+    "engine/examples/sdk_consumer/main.cpp"
+  ],
+  "source_manifest": "Checkpoint16 embedded metadata/manifest.json after seal",
+  "completed_scope": "SDK0.13 opening source/creator/mechanical native acceptance checkpoint; not completed Warm Beginning goal or packaged game delivery",
+  "tests": {
+    "Release": {
+      "native_tests": 105,
+      "installed_sdk_consumers": 2,
+      "native_dressed_opening_checks": 465,
+      "native_owner_tests": 2,
+      "player_sha256": "917f1b217d9a169ac39f5563790cf06dd29c8232a849c1502ce647ba3b313b2a",
+      "factory_sha256": "5b29d712536d4a2d8c282104b9ebf6e117635d7fa4fb70ab018f6092a36e4dea",
+      "creator_host_sha256": "c2367bb54d5a7668be3c9eef615cb2694496d56595269950d919e48104f76a8a"
+    },
+    "Debug": {
+      "native_tests": 105,
+      "installed_sdk_consumers": 2,
+      "native_dressed_opening_checks": 465,
+      "native_owner_tests": 2,
+      "player_sha256": "0a042000c74dc9e8eb060e47a0b57330927b4dc2c86ed5530fde4b2a714e7807",
+      "factory_sha256": "dc3e2ddf738e9d8b26f6f113aab5c83bc38c1993eb5c508f10dad77adc7450df",
+      "creator_host_sha256": "12b1cb1bdbb46e982afe19783eee4d0f14fa7d888da6243e51b27422042854d1"
+    }
+  },
+  "remaining": {
+    "all_seven_stations_actual_tour": "Staged next; current mechanical proof reads controller only",
+    "initial_camera_presentation": "Current native frame faces a flat nook wall; validated authored initial target framing is being staged",
+    "adam_likeness": "v05 chapter model and v06 private study unapproved; v07 art refinement still active",
+    "original_recording_and_captions": "Full original44100Hz stereo conversion retained; captions still DRAFT_REQUIRES_LISTENING_REVIEW, not shipped or played by these opening proofs",
+    "human_opening_pacing": "8–12minute first-play target unmeasured; synthetic route ticks are not elapsed playtime",
+    "performance": "1080p60/process memory measurement not yet performed; current mechanical captures are960x640",
+    "packaged_opening": "Current source/SDK0.13 not frozen/deployed as a new Studio release; installed launcher remains repaired Studio98/SDK0.11",
+    "walkthrough_recording": "Renderer-owned recorder and actual native tour are being staged; no completed walkthrough video"
+  },
+  "next_executable_task": "Finish staged initial-view/all7-stop tour/real-time1080p metrics and renderer-owned recording; finish Adam likeness and checked original captions; then package/restart/launcher/walkthrough/final Drive verification",
+  "backup": {
+    "status": "drive_full_roundtrip_verified",
+    "url": "https://drive.google.com/file/d/1Cw-sOI-pSihxkz5CG3Uil8aCLsiJyhLC/view?usp=drivesdk",
+    "archive_sha256": "7771e446ab750b7862135647ac7427b98415938f64d52b8bc3c23753a74bc199",
+    "receipt": "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint16-drive.json",
+    "post_seal_annotation_at": "2026-11-02T12:12:15.289939+00:00"
+  },
+  "originals_preserved": true,
+  "full_goal_complete": false
+}

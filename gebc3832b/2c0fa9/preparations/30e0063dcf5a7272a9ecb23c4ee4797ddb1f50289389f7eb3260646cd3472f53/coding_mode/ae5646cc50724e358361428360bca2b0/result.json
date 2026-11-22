@@ -1,0 +1,40 @@
+{
+  "kind": "trusted_local_result",
+  "input_sha256": "0f846dc00173f7074bb1f21fe7c84b6b4bad075e69c63ca7f9445dc7f5c2e1ad",
+  "state": "FAILED",
+  "checks": [
+    {
+      "check_id": "python",
+      "returncode": 0,
+      "error": null,
+      "execution_time_ms": 94,
+      "stdout": "",
+      "stderr": ".\r\n----------------------------------------------------------------------\r\nRan 1 test in 0.000s\r\n\r\nOK\r\n",
+      "preview_truncated": false,
+      "log_file": "check_logs\\python.json",
+      "log_sha256": "d68eff1a7bb6d7d42621ba0fb316d8e9831f2794a962462120b5b7dda3c323cd"
+    }
+  ],
+  "static_checks": [
+    {
+      "path": "src/app.py",
+      "kind": "syntax",
+      "status": "passed"
+    }
+  ],
+  "started_at": 1794666076.7460983,
+  "worker": null,
+  "resource_limits": {
+    "cpu_percent": 20,
+    "job_memory_bytes": 536870912,
+    "below_normal_priority": true
+  },
+  "npm_policy": "Selected script may use a shell; pre/post lifecycle hooks disabled; no installation requested.",
+  "error": "Checks changed selected source, tests or dependencies",
+  "changed_inputs": [
+    "tests/test_app.py"
+  ],
+  "finished_at": 1794666076.8689036,
+  "runtime_seal": "3be5b7f714777c401c2535e37a74c98432835e2d5b20ed9bddb97d3242cbe533",
+  "entry_sha256": "23210618ef1bc41fe1a571a507b9d86c2369cd8cbb0d6424e78b18138ff8f8c1"
+}

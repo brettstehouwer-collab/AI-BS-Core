@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-25T21:37:24.175517+00:00",
+  "status": 200,
+  "content_encoding": null,
+  "expected_bytes": 1509,
+  "observed_bytes": 1876,
+  "expected_sha256": "efa51df9c46d5506358cb04fe54976d1a8124d562973a19a2ddd25a478639b10",
+  "observed_sha256": "bbe5750e0b4f170a86a81e52df8cc31cb2f15507544472f32acec9689b90c672",
+  "expected_script_sources": [
+    "/assets/index-NQ4u1ogD.js"
+  ],
+  "observed_script_sources": [
+    "/assets/index-NQ4u1ogD.js",
+    "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"
+  ],
+  "expected_title": [
+    "Stehouwer Publishing L.L.C."
+  ],
+  "observed_title": [
+    "Stehouwer Publishing L.L.C."
+  ],
+  "differences": [
+    {
+      "kind": "replace",
+      "expected_span": [
+        1494,
+        1509
+      ],
+      "received_span": [
+        1494,
+        1876
+      ],
+      "expected_fragment": "/body>\n</html>\n",
+      "received_fragment": "script type=\"module\" src=\"https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092\" integrity=\"sha512-UKNk8GbxkABxKcXY"
+    }
+  ],
+  "expected_module_marker_present": true
+}

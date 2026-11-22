@@ -1,0 +1,60 @@
+{
+  "at": "2026-11-03T15:25:17.134662+00:00",
+  "classification": "progress: both installed-player route resumes verified; canonical current-content walkthrough implemented and strict-build verified but runtime FAILED, not deployed",
+  "previous_goal_turn": "Progress: two real-wall-clock private Workshop routes, current source entry and authenticated34A/34B/35A backups; prior observer failures retained.",
+  "goal_complete": false,
+  "resume": {
+    "repair": {
+      "status": "passed_installed_player_resume_of_completed_route_slot",
+      "actual_exit_code": 0,
+      "before_after_durable_tables_sha256": "f2fb2c551fb9baa6ff0ca55435ce180688f6985959faed5517d6cac67c3f4d8c",
+      "all_owned_processes_joined": true,
+      "scope": "Installed102player resumes source-fixture-earned Workshop outcomes; not packaged full-route input or human pacing proof"
+    },
+    "bypass": {
+      "status": "passed_installed_player_resume_of_completed_route_slot",
+      "actual_exit_code": 0,
+      "before_after_durable_tables_sha256": "52be66572743c9e0cfe7e5267df38fe8d0862fef552087a82c6acbd776bc55c4",
+      "all_owned_processes_joined": true,
+      "scope": "Installed102player resumes source-fixture-earned Workshop outcomes; not packaged full-route input or human pacing proof"
+    }
+  },
+  "walkthrough_candidate": "FAILED runtime2times; latest source has additional observation only; final build passes",
+  "first_four_read_panels": [
+    "controller",
+    "truck",
+    "diagnostic",
+    "bypass"
+  ],
+  "original_legacy_tour_body_unchanged": true,
+  "source_sha256": {
+    "engine/apps/opening_tour_runtime.inl": "8ff79c9333bafad3eab5a25e279ed7d266554d16e572b10dea7702c4a15b2033",
+    "engine/apps/workshop_tour_runtime.inl": "1ca8c9932206192b5b7205f119e976a6aa558fce6a1318a9ba851724167489fc"
+  },
+  "installed": "Studio102/SDK0.16.3 unchanged",
+  "next_step": "Use the newly compiled diagnostic to locate the blocked walk precisely in a fresh owned slot; never teleport, reset old saves or credit a failed route. Then complete both current canonical walkthroughs and record them before full performance/pacing/package acceptance.",
+  "space_free_bytes": {
+    "C": 68345835520,
+    "D": 86801117184,
+    "E": 146813599744
+  },
+  "backup36A": {
+    "status": "verified_authenticated_raw_restore_all_members",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\36A_Installed_Restarts_And_Walkthrough_WIP.zip",
+    "bytes": 706659,
+    "sha256": "cda04c0946d74097abf939fd365c92b4c4ae24da7b72112610a956bbbda5e03f",
+    "members": 103,
+    "goal_complete": false,
+    "at": "2026-11-03T15:26:20.250802+00:00",
+    "file_id": "1xUqaGannSOgOdyQDzm-KJ4si65GKg-VT",
+    "folder_id": "1pigkuApsEF0fPxfgy_hiI6W0q2GsUUMQ",
+    "url": "https://drive.google.com/file/d/1xUqaGannSOgOdyQDzm-KJ4si65GKg-VT/view?usp=drivesdk",
+    "all_member_sizes_hashes_crc_and_exact_set_verified": true,
+    "product_runtime_acceptance": "Both installed resumes pass; current walkthrough candidate runtime failed twice and is unfinished"
+  },
+  "space_free_bytes_closeout": {
+    "C": 68345081856,
+    "D": 86799691776,
+    "E": 146813599744
+  }
+}

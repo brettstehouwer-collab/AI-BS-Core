@@ -1,0 +1,76 @@
+{
+  "handoff_id": "audit212_213",
+  "utc": "2026-11-01T01:47:08.296203+00:00",
+  "outgoing_agent": "Codex",
+  "receiving_agent": "Next engineering session",
+  "repository_commit_before_closeout": "d321b96219427d998dd8c97c214967a5f3f2a8e3",
+  "branch": "codex/audit-v532976-20261031",
+  "source_manifest_checksum": "452f1839f237e27f99d6fa6572b49c2fd95523e7d6218f2926f2accb2460b121",
+  "modified_paths": [
+    "October7_VocalStudio_DAW/source/app_native.py",
+    "October7_VocalStudio_DAW/source/build_windows_app.py",
+    "October7_VocalStudio_DAW/source/Install_October7_DAW.bat",
+    "October7_VocalStudio_DAW/source/Install_Wizard.ps1",
+    "October7_VocalStudio_DAW/source/native_version_info.txt",
+    "October7_VocalStudio_DAW/source/october7_core.py",
+    "October7_VocalStudio_DAW/source/October7_VocalStudio_Native.spec",
+    "October7_VocalStudio_DAW/source/requirements-native.hashes.txt",
+    "October7_VocalStudio_DAW/source/requirements-native.lock.txt",
+    "October7_VocalStudio_DAW/source/server.js",
+    "October7_VocalStudio_DAW/source/setup_installer.py",
+    "October7_VocalStudio_DAW/source/VOICECOACH PROGRAM.html",
+    "October7_VocalStudio_DAW/.gitignore",
+    "October7_VocalStudio_DAW/PROJECT_GUIDE.md",
+    "October7_VocalStudio_DAW/setup_installer.py",
+    "October7_VocalStudio_DAW/Install_Wizard.ps1",
+    "October7_VocalStudio_DAW/Install_October7_DAW.bat",
+    "October7_VocalStudio_DAW/Uninstall_October7_DAW.bat",
+    "AI-BS.code-workspace",
+    "AI-BS_Sovereign.code-workspace",
+    "native_studio/broadcast_secondary_control.py",
+    "scripts/core_boot.py",
+    "scripts/tests/october7_browser212.test.cjs",
+    "scripts/tests/test_october7_build212.py",
+    "scripts/tests/test_october7_installer212.py",
+    "scripts/tests/test_october7_legacy_security212.py",
+    "scripts/tests/test_october7_native212.py",
+    "scripts/tests/test_broadcast_reboot_recovery213.py"
+  ],
+  "patch": "docs/audit/2026-10-30-complete/record212/source_changes212_213.patch",
+  "completed": [
+    "Project integration and independent verified recovery",
+    "Native audio/session/startup repairs",
+    "Safe installers and legacy boundary/browser repairs",
+    "Isolated native build and frozen-source verification",
+    "Core health check and reboot broadcast recovery"
+  ],
+  "verification": {
+    "pytest": {
+      "tests": 149,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 9.793,
+      "junit_entries_include_subtests": true,
+      "pytest_cases": 131,
+      "pytest_subtests": 18
+    },
+    "pytest_summary": "131 passed, 18 subtests passed in 9.82 seconds",
+    "browser_node_tests": 7,
+    "browser_node_failures": 0
+  },
+  "incomplete": [
+    "Native candidate was not launched or hardware/audio/VST tested",
+    "Candidate is unsigned; original installed binaries remain unchanged",
+    "Recovery UI, full power-loss durability, real coaching analyzer and complete effects/cue controls remain open",
+    "Legacy browser take persistence/count-in/timeline and AI artifact verification remain open",
+    "Broadcast game frame decoded locally; remote platform acceptance and current app physical display not observed"
+  ],
+  "cloud": {
+    "status": "LOCAL_ONLY_PER_USER",
+    "uploads_attempted_after_user_deferral": false,
+    "future_only_folder": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+  },
+  "next_step": "User can open the rebuilt candidate without enabling audio; explicit device acceptance is separate. Check restored live Studio preview; retain all originals.",
+  "hidden_reasoning_transferred": false
+}

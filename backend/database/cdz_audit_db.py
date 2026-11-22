@@ -2,6 +2,11 @@
 AI-BS CDZ Cryptographic Audit Ledger Database Module
 Manages SQLite persistence for CDZ zero-trust audit chains in C:/AI-BS/database/aibs_master.db.
 Supports SHA-256 verification, idempotent block ingestion, domain isolation metrics, and multi-tenant schema isolation.
+
+Host callers may explicitly pass store=runtime.stores["cdz_audit"] after their
+own activation/backup. Calls are synchronous and must run outside the GUI/event
+loop and outside a store writer callback. Omitted store preserves legacy access;
+shared-store errors never fall back to DB_PATH. No import activates a store.
 """
 
 import os
@@ -11,6 +16,7 @@ import sqlite3
 import hashlib
 import logging
 from datetime import datetime, timezone
+from contextlib import contextmanager
 from typing import Dict, List, Any, Optional, Tuple
 
 logger = logging.getLogger("ai_bs.cdz_audit_db")
@@ -25,9 +31,44 @@ def get_db_connection() -> sqlite3.Connection:
     return conn
 
 
-def init_cdz_schema() -> None:
+def _validate_store(store):
+    # An explicit host supplies its already-activated, named audit store.
+    # Never activate implicitly or fall back after a shared-store failure.
+    if store is not None and getattr(store, "name", None) != "cdz_audit":
+        raise ValueError("CDZ requires the named cdz_audit store")
+
+
+def _write(callback, store=None):
+    _validate_store(store)
+    if store is not None:
+        return store.submit(lambda conn, event: callback(conn)).future.result()
+    conn = get_db_connection()
+    try:
+        with conn:
+            return callback(conn)
+    finally:
+        conn.close()
+
+
+@contextmanager
+def _reader(store=None):
+    _validate_store(store)
+    if store is not None:
+        with store.reader() as conn:
+            conn.row_factory = sqlite3.Row
+            yield conn
+    else:
+        conn = get_db_connection()
+        try:
+            with conn:
+                yield conn
+        finally:
+            conn.close()
+
+
+def init_cdz_schema(*, store=None) -> None:
     """Initializes the CDZ audit ledger tables and indexes in aibs_master.db."""
-    with get_db_connection() as conn:
+    def initialize(conn):
         conn.execute("""
             CREATE TABLE IF NOT EXISTS cdz_audit_ledger (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -74,21 +115,27 @@ def init_cdz_schema() -> None:
                 INSERT INTO cdz_ledger_metadata (id, head_hash, genesis_hash, total_blocks, is_valid, last_scanned_at)
                 VALUES (1, '0000000000000000', '0000000000000000', 0, 1, ?)
             """, (time.time(),))
-        conn.commit()
+
+    _write(initialize, store)
 
 
-def ingest_ledger_file(file_path: str, client_id: str = "stehouwer_publishing") -> Tuple[int, int, bool]:
+def ingest_ledger_file(file_path: str, client_id: str = "stehouwer_publishing", *,
+                       store=None, raise_on_read_error: bool = False) -> Tuple[int, int, bool]:
     """
     Ingests an audit ledger JSON file into aibs_master.db.
-    Returns: (new_blocks_count, total_blocks_count, is_valid)
+    Returns: (new_blocks_count, total_blocks_count, is_valid).
+    Watchers may request read/parse exceptions to distinguish a retryable file
+    error from a successfully ingested ledger that reports failed integrity.
     """
-    if not os.path.exists(file_path):
+    if not raise_on_read_error and not os.path.exists(file_path):
         return 0, 0, False
 
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
     except Exception as e:
+        if raise_on_read_error:
+            raise
         logger.error(f"Failed to read ledger JSON {file_path}: {e}")
         return 0, 0, False
 
@@ -97,10 +144,10 @@ def ingest_ledger_file(file_path: str, client_id: str = "stehouwer_publishing") 
     integrity = data.get("integrity", {})
     now_time = time.time()
 
-    init_cdz_schema()
+    init_cdz_schema(store=store)
 
-    new_blocks = 0
-    with get_db_connection() as conn:
+    def ingest(conn):
+        new_blocks = 0
         for r in records:
             b_idx = r.get("index")
             ts = r.get("timestamp", now_time)
@@ -142,15 +189,16 @@ def ingest_ledger_file(file_path: str, client_id: str = "stehouwer_publishing") 
             SET head_hash = ?, genesis_hash = ?, total_blocks = ?, is_valid = ?, last_scanned_at = ?, last_source_file = ?, client_id = ?
             WHERE id = 1
         """, (head_hash, genesis_hash, total_blocks, 1 if is_valid else 0, now_time, file_path, client_id))
-        conn.commit()
 
-    return new_blocks, total_blocks, is_valid
+        return new_blocks, total_blocks, is_valid
+
+    return _write(ingest, store)
 
 
-def get_cdz_summary(client_id: str = "stehouwer_publishing") -> Dict[str, Any]:
+def get_cdz_summary(client_id: str = "stehouwer_publishing", *, store=None) -> Dict[str, Any]:
     """Returns real-time CDZ audit chain KPIs, domain breakdowns, and verification status."""
-    init_cdz_schema()
-    with get_db_connection() as conn:
+    init_cdz_schema(store=store)
+    with _reader(store) as conn:
         meta = conn.execute("SELECT * FROM cdz_ledger_metadata WHERE id = 1").fetchone()
         
         domains = conn.execute("""
@@ -200,10 +248,11 @@ def get_cdz_blocks(
     search: Optional[str] = None,
     limit: int = 50,
     offset: int = 0,
-    client_id: str = "stehouwer_publishing"
+    client_id: str = "stehouwer_publishing",
+    *, store=None
 ) -> Dict[str, Any]:
     """Returns paginated and filtered CDZ ledger blocks."""
-    init_cdz_schema()
+    init_cdz_schema(store=store)
     query = "SELECT * FROM cdz_audit_ledger WHERE client_id = ?"
     params: List[Any] = [client_id]
 
@@ -221,7 +270,7 @@ def get_cdz_blocks(
         params.extend([s, s, s, s])
 
     count_query = query.replace("SELECT *", "SELECT COUNT(*)")
-    with get_db_connection() as conn:
+    with _reader(store) as conn:
         total = conn.execute(count_query, params).fetchone()[0]
 
         query += " ORDER BY block_index DESC LIMIT ? OFFSET ?"

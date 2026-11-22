@@ -1,0 +1,59 @@
+diff --git a/native_studio/app.py b/native_studio/app.py
+index 4d9ddb69..8963f399 100644
+--- a/native_studio/app.py
++++ b/native_studio/app.py
+@@ -89,6 +89,17 @@ if not getattr(sys, 'frozen', False):
+ from native_studio.runtime_policy import configure_frozen_dependencies
+ configure_frozen_dependencies()
+ 
++# Release acceptance intentionally bypasses MainWindow, daemon management,
++# samplers and the broad application-view import graph. It is opt-in only.
++if __name__ == '__main__' and '--asset-release-smoke' in sys.argv:
++    from native_studio.asset_release_smoke import asset_release_smoke_main
++    sys.exit(asset_release_smoke_main(sys.argv[1:]))
++
++if __name__ == '__main__' and any(flag in sys.argv for flag in
++        ('--game-build-smoke', '--creator-release-smoke')):
++    from native_studio.game_release_smoke import release_smoke_main
++    sys.exit(release_smoke_main(sys.argv[1:]))
++
+ from PyQt6.QtCore import Qt, QTimer
+ from PyQt6.QtGui import QColor, QFont, QPainter, QPixmap, QLinearGradient
+ from PyQt6.QtWidgets import (
+@@ -989,6 +1000,9 @@ class MainWindow(QMainWindow):
+             view = NocoVisionNativeView(self.bus)
+         elif key in ("unified_crypto", "crypto_trader"):
+             view = CryptoSwarmNativeView(self.bus)
++        elif key == "game_build":
++            from native_studio.game_build_view import GameBuildNativeView
++            view = GameBuildNativeView(self.bus)
+         elif key == "gaming_lab":
+             view = GamingLabNativeView(self.bus)
+         elif key == "steam_gaming":
+@@ -1045,6 +1059,10 @@ class MainWindow(QMainWindow):
+         if getattr(self, '_sampler_close_pending', False):
+             event.ignore()
+             return
++        game_workspace = getattr(self, '_subviews_cache', {}).get('game_build')
++        if game_workspace is not None and not game_workspace.prepare_close(self.close):
++            event.ignore()
++            return
+         for part in (self.view_daw,):
+             try:
+                 part.shutdown()
+@@ -1085,6 +1103,15 @@ class MainWindow(QMainWindow):
+ 
+ 
+ def main() -> int:
++    if '--creator-release-smoke' in sys.argv:
++        from native_studio.game_release_smoke import release_smoke_main
++        return release_smoke_main(sys.argv[1:])
++    if "--game-build-smoke" in sys.argv:
++        from native_studio.game_release_smoke import run_game_release_smoke
++        index = sys.argv.index("--game-build-smoke")
++        if index + 1 >= len(sys.argv):
++            return 2
++        return run_game_release_smoke(Path(sys.argv[index + 1]))
+     if "--check-local-connection" in sys.argv:
+         from native_studio.local_connection import write_connection_diagnostic
+         return 0 if write_connection_diagnostic() else 2

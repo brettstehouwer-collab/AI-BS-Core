@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "67b35238556e4123b1abf6e803e58a41",
+  "plan_id": "b0387cf12acd4d0183956a8e43bbdd36",
+  "snapshot_sha256": "8111b686dd00edcb8a3fbaeee5e705af6487d3e03cc15161fef2fd793d2a63fd",
+  "review_digest": "af45d0e0ccefcc51202da31049cce0b8bae8b03cc5838b42cecfed32024e3842",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "a96022540fe64cf7a0cb3ee80d6d24d5",
+  "reviewed_plan_sha256": "1aeaa787c3ac095fe5bbf5e9583b39f2b3a2a2a3735343489001123f5d2da70a",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 43500,
+    "created": 1794779762.7431586
+  },
+  "created_at_utc": "2026-11-15T21:56:07.088404+00:00",
+  "entry_sha256": "a9dbdbfceacecc419a73624ddfbfb52598970d0554c533725595d402f91dbc37"
+}

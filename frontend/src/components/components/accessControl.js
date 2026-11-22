@@ -3,6 +3,7 @@
  * Controls role-based access to the 30+ tools and enables multi-tenant SaaS packaging.
  */
 
+/** @type {Record<string, {id: string, name: string, badge: string, color: string, description: string}>} */
 export const USER_TIERS = {
   ADMIN: {
     id: 'admin',
@@ -56,11 +57,13 @@ export const USER_TIERS = {
 };
 
 // Map each tab key to the tiers allowed to access it
+/** @type {Record<string, string[]>} */
 export const TAB_PERMISSIONS = {
   // --- Admin / Host Root Tools ---
   executive_cockpit: ['admin', 'enterprise_all_access'],
   central_gaming_hub: ['admin', 'enterprise_all_access', 'creator_media', 'screenwriting', 'hospitality', 'b2b_growth', 'free_demo'],
   steam_gaming: ['admin', 'enterprise_all_access', 'creator_media', 'screenwriting', 'hospitality', 'b2b_growth', 'free_demo'],
+  bs_game: ['admin', 'enterprise_all_access', 'creator_media', 'screenwriting', 'hospitality', 'b2b_growth', 'free_demo'],
   shared_cloud_drive: ['admin', 'enterprise_all_access'],
   power_washing: ['admin', 'enterprise_all_access', 'b2b_growth'],
   terminal: ['admin'],
@@ -168,56 +171,52 @@ export const ADMIN_UIDS = [
 /**
  * Determine a user's active tier based on auth profile, simulated tier, or local environment.
  */
+/** @param {{email?: string | null, uid?: string, emailVerified?: boolean, plan?: string, subscriptionTier?: string} | null | undefined} currentUser @param {string | null} [simulatedTier] */
 export const getUserTier = (currentUser, simulatedTier = null) => {
-  if (simulatedTier) {
-    return USER_TIERS[simulatedTier] || USER_TIERS.FREE_DEMO;
-  }
-
-  // Local admin override
-  if (typeof window !== 'undefined' && (
-    window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1' ||
-    window.location.protocol === 'file:'
-  )) {
-    // In local dev, check if admin chose a simulated preview tier in localStorage
-    const savedPreview = localStorage.getItem('aibs_preview_tier');
-    if (savedPreview && USER_TIERS[savedPreview]) {
-      return USER_TIERS[savedPreview];
-    }
-    return USER_TIERS.ADMIN;
-  }
-
-  if (!currentUser) {
-    return USER_TIERS.ENTERPRISE_ALL_ACCESS;
-  }
-
+  // These tiers control presentation only. Protected APIs independently authorize every request.
+  if (!currentUser) return USER_TIERS.FREE_DEMO;
   const email = (currentUser.email || '').toLowerCase().trim();
   const uid = currentUser.uid || '';
-  if (ADMIN_EMAILS.includes(email) || ADMIN_UIDS.includes(uid)) {
-    return USER_TIERS.ADMIN;
+  const isLocalHost = typeof window !== 'undefined' && (
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+  );
+  const isLocalDesktopAdmin = Boolean(
+    isLocalHost && (uid === 'local_admin_brett' || ADMIN_EMAILS.includes(email))
+  );
+  const isVerifiedFirebaseAdmin = Boolean(
+    currentUser.emailVerified && uid && (ADMIN_EMAILS.includes(email) || ADMIN_UIDS.includes(uid))
+  );
+  const isAdmin = isLocalDesktopAdmin || isVerifiedFirebaseAdmin;
+  if (isAdmin) {
+    if (!simulatedTier) return USER_TIERS.ADMIN;
+    const normalizedTier = String(simulatedTier).toUpperCase();
+    return USER_TIERS[normalizedTier] || USER_TIERS.ADMIN;
   }
 
   // Check custom user claims / subscription plan saved in profile
   const userPlan = (currentUser.plan || currentUser.subscriptionTier || '').toUpperCase();
-  if (USER_TIERS[userPlan]) {
+  if (currentUser.uid && currentUser.emailVerified && userPlan !== 'ADMIN' && USER_TIERS[userPlan]) {
     return USER_TIERS[userPlan];
   }
 
-  return USER_TIERS.ENTERPRISE_ALL_ACCESS;
+  return USER_TIERS.FREE_DEMO;
 };
 
 /**
  * Check if a tier has permission to view a specific tab.
  */
+/** @param {string} tierId @param {string} tabKey */
 export const canAccessTab = (tierId, tabKey) => {
-  if (tierId === 'admin' || tierId === 'enterprise_all_access') return true;
+  if (tierId === 'admin') return true;
   const allowedTiers = TAB_PERMISSIONS[tabKey] || [];
-  return allowedTiers.includes(tierId) || allowedTiers.includes('free_demo') || allowedTiers.includes('enterprise_all_access');
+  return allowedTiers.includes(tierId);
 };
 
 /**
  * Filter the master navigation hubs and subTabs to only show items accessible to the active tier.
  */
+/** @param {typeof import("./navigationConfig").masterHubs} masterHubs @param {string} tierId */
 export const filterNavigationByTier = (masterHubs, tierId) => {
   if (tierId === 'admin') return masterHubs;
 

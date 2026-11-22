@@ -1,0 +1,20 @@
+{
+  "observed_utc": "2026-10-25T22:30:25.6840339Z",
+  "codex": [
+    {
+      "Id": 22512,
+      "PrivateMemorySize64": 13692928,
+      "WorkingSet64": 70819840,
+      "created_utc": "2026-10-25T22:14:03.2799639Z"
+    },
+    {
+      "Id": 30896,
+      "PrivateMemorySize64": 17517228032,
+      "WorkingSet64": 11664646144,
+      "created_utc": "2026-10-25T22:13:50.4026599Z"
+    }
+  ],
+  "commit_percent": 30.36991356243709,
+  "c_free_gib": 146.16587448120117,
+  "pagefile_bytes": 66193207296
+}

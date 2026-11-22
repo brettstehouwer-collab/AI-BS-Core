@@ -20,13 +20,37 @@
     ],
     "rewrites": [
       {
+        "source": "/chat",
+        "destination": "/bs-chat.html"
+      },
+      {
+        "source": "/chat/**",
+        "destination": "/bs-chat.html"
+      },
+      {
+        "source": "/driver",
+        "destination": "/driver/index.html"
+      },
+      {
+        "source": "/driver/**",
+        "destination": "/driver/index.html"
+      },
+      {
+        "source": "/personal",
+        "destination": "/personal/index.html"
+      },
+      {
+        "source": "/personal/**",
+        "destination": "/personal/index.html"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
     ],
     "headers": [
       {
-        "source": "**/*.@(js|css)",
+        "regex": "^.*\\.(?:js|css)$",
         "headers": [
           {
             "key": "Cache-Control",
@@ -35,7 +59,7 @@
         ]
       },
       {
-        "source": "**/*.@(png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|otf|eot|ico)",
+        "regex": "^.*\\.(?:png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|otf|eot|ico)$",
         "headers": [
           {
             "key": "Cache-Control",
@@ -44,7 +68,7 @@
         ]
       },
       {
-        "source": "**/*.@(html|json)",
+        "regex": "^.*\\.(?:html|json)$",
         "headers": [
           {
             "key": "Cache-Control",
@@ -69,7 +93,7 @@
         ]
       },
       {
-        "source": "/",
+        "regex": "^[/\\\\]$",
         "headers": [
           {
             "key": "Cache-Control",
@@ -91,6 +115,20 @@
             "key": "Referrer-Policy",
             "value": "strict-origin-when-cross-origin"
           }
+        ]
+      },
+      {
+        "regex": "^[/\\\\]driver[/\\\\]sw\\.js$",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+          { "key": "Service-Worker-Allowed", "value": "/driver/" }
+        ]
+      },
+      {
+        "regex": "^[/\\\\]personal[/\\\\]sw\\.js$",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+          { "key": "Service-Worker-Allowed", "value": "/personal/" }
         ]
       }
     ]

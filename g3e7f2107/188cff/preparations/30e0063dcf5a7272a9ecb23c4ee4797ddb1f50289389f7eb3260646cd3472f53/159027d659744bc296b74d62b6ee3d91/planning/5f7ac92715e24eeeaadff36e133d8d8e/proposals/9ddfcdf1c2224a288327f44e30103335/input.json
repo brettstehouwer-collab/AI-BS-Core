@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "159027d659744bc296b74d62b6ee3d91",
+  "plan_id": "5f7ac92715e24eeeaadff36e133d8d8e",
+  "snapshot_sha256": "dabad4a8de90c5e0e0586287508ddf148cc7cc1134f85b92f17ca9cf8baf938a",
+  "review_digest": "775da55ff88b38427ba7d76d135f7251b20a4b501a823250f506d30c9b471973",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "9ddfcdf1c2224a288327f44e30103335",
+  "reviewed_plan_sha256": "a601d0e7add52d65ed53813d5719a0718646ed9832c2784c31d58bb8a44d12f1",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 46028,
+    "created": 1794782629.4762163
+  },
+  "created_at_utc": "2026-11-15T22:43:52.457799+00:00",
+  "entry_sha256": "2e07ed7098262e2c1028db5bfc274ce94881dc5c6e61729b44f34b99dc11cdb5"
+}

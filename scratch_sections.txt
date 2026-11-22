@@ -1,0 +1,333 @@
+=== SLASH COMMANDS (1570-1750) ===
+1571:   },
+1572:   {
+1573:     cmd: '/symbol',
+1574:     title: 'Fast Symbol Lookup Engine',
+1575:     desc: 'Inspect functions, classes, API routes, React components, and database schemas.',
+1576:     category: '⚡ Shadow Coder',
+1577:     zeroArg: false,
+1578:     badge: 'Codebase Index',
+1579:     template: '/symbol ',
+1580:     example: '/symbol <name>'
+1581:   },
+1582: 
+1583:   // 🧹 Chat & System Utilities
+1584:   {
+1585:     cmd: '/status',
+1586:     title: 'Ecosystem Port Topology & Health',
+1587:     desc: 'Inspect all 18 collision-free ports, GPU thermals, and VRAM memory levels.',
+1588:     category: '🧹 Utilities',
+1589:     zeroArg: true,
+1590:     badge: '18 Ports',
+1591:     example: '/status'
+1592:   },
+1593:   {
+1594:     cmd: '/health',
+1595:     aliases: ['/doctor'],
+1596:     title: 'Matrix Doctor Diagnostic Audit',
+1597:     desc: 'Run end-to-end ecosystem health checks and diagnose subsystem anomalies.',
+1598:     category: '🧹 Utilities',
+1599:     zeroArg: true,
+1600:     badge: 'Diagnostics',
+1601:     example: '/health'
+1602:   },
+1603:   {
+1604:     cmd: '/clear',
+1605:     title: 'Save to Memory & Clear Session',
+1606:     desc: 'Ingest active dialogue into Master Memory Bank (ChromaDB + SQLite) and reset view.',
+1607:     category: '🧹 Utilities',
+1608:     zeroArg: true,
+1609:     badge: 'Memory Sync',
+1610:     example: '/clear'
+1611:   },
+1612:   {
+1613:     cmd: '/help',
+1614:     aliases: ['/commands'],
+1615:     title: 'Slash Commands Directory & Guide',
+1616:     desc: 'Display full categorized directory of all available slash commands and fast options.',
+1617:     category: '🧹 Utilities',
+1618:     zeroArg: true,
+1619:     badge: 'Cheat Sheet',
+1620:     example: '/help'
+1621:   }
+1622: ];
+1623: 
+1624: export default function ChatTab({ isNested = false }) {
+1625:   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
+1626:   const chatMessages = useAppStore(state => state.chatMessages);
+1627:   const setChatMessages = useAppStore(state => state.setChatMessages);
+1628:   const footerInput = useAppStore(state => state.footerInput);
+1629:   const setFooterInput = useAppStore(state => state.setFooterInput);
+1630:   const messageFeedRef = useAppStore(state => state.messageFeedRef);
+1631:   const selectedModel = useAppStore(state => state.selectedModel);
+1632: 
+1633:   const [isLoading, setIsLoading] = useState(false);
+1634:   const [isListening, setIsListening] = useState(false);
+1635:   const [autoSpeak, setAutoSpeak] = useState(false);
+1636:   const [errorPopup, setErrorPopup] = useState(null);
+1637:   const [showTips, setShowTips] = useState(false);
+1638:   const [starterCategory, setStarterCategory] = useState('All');
+1639:   const [copiedChatUrl, setCopiedChatUrl] = useState(false);
+1640:   const [showCommandsDropdown, setShowCommandsDropdown] = useState(false);
+1641:   const [commandSearchQuery, setCommandSearchQuery] = useState('');
+1642:   const [selectedCommandCategory, setSelectedCommandCategory] = useState('All');
+1643:   const commandsDropdownRef = useRef(null);
+1644:   const chatInputRef = useRef(null);
+1645: 
+1646:   // File Upload State (GPT Style)
+1647:   const [attachments, setAttachments] = useState([]);
+1648:   const [isUploadingFile, setIsUploadingFile] = useState(false);
+1649:   const fileInputRef = useRef(null);
+1650: 
+1651:   const [activeTools, setActiveTools] = useState({});
+1652:   const [isGovernanceOpen, setIsGovernanceOpen] = useState(false);
+1653:   const [isStressTestOpen, setIsStressTestOpen] = useState(false);
+1654:   const [isArtifactsModalOpen, setIsArtifactsModalOpen] = useState(false);
+1655:   const [stressResult, setStressResult] = useState(null);
+1656:   const [isRunningStress, setIsRunningStress] = useState(false);
+1657:   const [stressTier, setStressTier] = useState('4k');
+1658: 
+1659:   const handleRunStressTest = async (tier) => {
+1660:     setIsRunningStress(true);
+1661:     setStressResult(null);
+1662:     try {
+1663:       const res = await fetch(`${BACKEND_URL}/v1/chat/stress-test`, {
+1664:         method: 'POST',
+1665:         headers: { 'Content-Type': 'application/json' },
+1666:         body: JSON.stringify({ target_tier: tier || stressTier })
+1667:       });
+1668:       const data = await res.json();
+1669:       setStressResult(data);
+1670:     } catch (err) {
+1671:       setStressResult({ status: 'error', message: err.message || 'Stress test request failed' });
+1672:     } finally {
+1673:       setIsRunningStress(false);
+1674:     }
+1675:   };
+1676: 
+1677:   const [isSavingMemory, setIsSavingMemory] = useState(false);
+1678:   const [memoryToast, setMemoryToast] = useState('');
+1679: 
+1680:   const handleSaveToMemoryAndClear = async () => {
+1681:     if (!chatMessages || chatMessages.length === 0) {
+1682:       setMemoryToast('Chat is already empty');
+1683:       setTimeout(() => setMemoryToast(''), 2500);
+1684:       return;
+1685:     }
+1686: 
+1687:     setIsSavingMemory(true);
+1688:     setMemoryToast('🧠 Ingesting conversation into Master Memory...');
+1689: 
+1690:     try {
+1691:       const payload = {
+1692:         messages: chatMessages.map(m => ({
+1693:           role: m.role,
+1694:           content: m.content,
+1695:           model: m.model || selectedModel,
+1696:           timestamp: m.timestamp || Date.now()
+1697:         })),
+1698:         session_title: `Desktop IDE Chat Session (${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`,
+1699:         source: 'desktop_ide_chat'
+1700:       };
+1701: 
+1702:       const candidateBases = [
+1703:         BACKEND_URL,
+1704:         'https://api.brettstehouwer.live',
+1705:         'http://localhost:8080',
+1706:         'http://127.0.0.1:8080'
+1707:       ].filter((u, i, arr) => u && arr.indexOf(u) === i);
+1708: 
+1709:       let saved = false;
+1710:       for (const base of candidateBases) {
+1711:         try {
+1712:           const res = await fetch(`${base}/api/memory/ingest-chat`, {
+1713:             method: 'POST',
+1714:             headers: {
+1715:               'Content-Type': 'application/json',
+1716:               'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+1717:               'X-Client-ID': 'stehouwer_publishing'
+1718:             },
+1719:             body: JSON.stringify(payload),
+1720:             signal: AbortSignal.timeout ? AbortSignal.timeout(10000) : undefined
+1721:           });
+1722:           if (res && res.ok) {
+1723:             saved = true;
+1724:             break;
+1725:           }
+1726:         } catch (e) {
+1727:           console.warn(`Memory ingest attempt on ${base} failed:`, e);
+1728:         }
+1729:       }
+1730: 
+1731:       setChatMessages([]);
+1732:       if (saved) {
+1733:         setMemoryToast('💾 Ingested to Master Memory & Cleared!');
+1734:       } else {
+1735:         setMemoryToast('💾 Cleared chat');
+1736:       }
+1737:     } catch (err) {
+1738:       console.warn('Memory ingest error:', err);
+1739:       setChatMessages([]);
+1740:       setMemoryToast('💾 Cleared chat');
+1741:     } finally {
+1742:       setIsSavingMemory(false);
+1743:       setTimeout(() => setMemoryToast(''), 3500);
+1744:     }
+1745:   };
+1746: 
+1747:   const [activeContexts, setActiveContexts] = useState({
+1748:     file: false,
+1749:     terminal: false,
+1750:     codebase: false,
+
+=== QUICK ACTION CONTROLS & INPUT AREA (2670-2820) ===
+2671:                 if (newArr.length > 0 && newArr[newArr.length - 1].role === 'assistant') {
+2672:                   newArr[newArr.length - 1].content = assistantMessage;
+2673:                 }
+2674:                 return newArr;
+2675:               });
+2676:             }
+2677: 
+2678:             if (assistantMessage.trim().length > 0) {
+2679:               streamingSucceeded = true;
+2680:               if (autoSpeak) {
+2681:                 speakText(assistantMessage);
+2682:               }
+2683:             }
+2684:           }
+2685:         } catch (streamErr) {
+2686:           console.warn('Streaming failed, engaging fallback endpoint...', streamErr);
+2687:           if (assistantMessage.trim().length > 0) {
+2688:             streamingSucceeded = true;
+2689:           } else {
+2690:             // Pop the empty placeholder if no tokens received
+2691:             setChatMessages(prev => {
+2692:               if (prev.length > 0 && prev[prev.length - 1].content === '') {
+2693:                 return prev.slice(0, -1);
+2694:               }
+2695:               return prev;
+2696:             });
+2697:           }
+2698:         }
+2699:       }
+2700: 
+2701:       if (!streamingSucceeded) {
+2702:         // --- NON-STREAMING ENGINE OR FAILOVER RECOVERY ---
+2703:         const endpoint = isPlanMode ? '/v1/ide/plan' : '/api/chat';
+2704:         
+2705:         const payloadBody = JSON.stringify({
+2706:           messages: updatedHistory.map(m => ({ role: m.role, content: m.content })),
+2707:           model: targetModel,
+2708:           prompt: isPlanMode ? rawText : undefined,
+2709:           active_file: isPlanMode ? 'C:\\AI-BS\\backend\\AI_BS_Backend.py' : undefined,
+2710:           context_flags: isPlanMode ? activeContexts : undefined,
+2711:           target_device: targetDevice
+2712:         });
+2713: 
+2714:         let res = await fetch(`${BACKEND_URL}${endpoint}`, {
+2715:           method: 'POST',
+2716:           headers: reqHeaders,
+2717:           body: payloadBody,
+2718:         }).catch(() => null);
+2719: 
+2720:         if (!res || !res.ok) {
+2721:           res = await fetch(`${BACKEND_URL}/v1/chat/completions`, {
+2722:             method: 'POST',
+2723:             headers: reqHeaders,
+2724:             body: payloadBody,
+2725:           }).catch(() => null);
+2726:         }
+2727: 
+2728:         // Secondary fallback to FastAPI directly on 8080 if Go Gateway on 8000 dropped
+2729:         if (!res || !res.ok) {
+2730:           const directFastApiUrl = BACKEND_URL.includes(':8000') ? BACKEND_URL.replace(':8000', ':8080') : 'http://127.0.0.1:8080';
+2731:           res = await fetch(`${directFastApiUrl}${endpoint}`, {
+2732:             method: 'POST',
+2733:             headers: reqHeaders,
+2734:             body: payloadBody,
+2735:           }).catch(() => null);
+2736:         }
+2737: 
+2738:         if (!res || !res.ok) {
+2739:           throw new Error(`Server returned HTTP ${res ? res.status : 'Connection Offline'}`);
+2740:         }
+2741: 
+2742:         const data = await res.json();
+2743:         const rawContent = data.choices?.[0]?.message?.content || data.message || (typeof data.response === 'string' ? data.response : '');
+2744:         const botResponse = rawContent.trim() !== '' ? rawContent : (isPlanMode ? 'Plan generated.' : `Online and operational (${targetModel}).`);
+2745:         const planData = isPlanMode ? (data.plan_id ? data : (data.planData || null)) : null;
+2746: 
+2747:         setChatMessages(prev => [
+2748:           ...prev,
+2749:           {
+2750:             role: 'assistant',
+2751:             content: botResponse,
+2752:             model: data.model || targetModel,
+2753:             execution_time_ms: data.execution_time_ms || 120,
+2754:             tool_trace: data.tool_trace || null,
+2755:             planData: planData
+2756:           }
+2757:         ]);
+2758: 
+2759:         if (autoSpeak) {
+2760:           speakText(botResponse);
+2761:         }
+2762:       }
+2763:     } catch (err) {
+2764:       console.error('Chat error:', err);
+2765:       setErrorPopup(err.message || 'Failed to reach AI-BS backend.');
+2766:       setChatMessages(prev => [
+2767:         ...prev,
+2768:         { role: 'assistant', content: `❌ **Error:** ${err.message}` }
+2769:       ]);
+2770:     } finally {
+2771:       setIsLoading(false);
+2772:     }
+2773:   };
+2774: 
+2775:   const toggleListening = () => {
+2776:     if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+2777:       setErrorPopup('Speech recognition is not supported in this browser.');
+2778:       return;
+2779:     }
+2780: 
+2781:     if (isListening) {
+2782:       recognitionRef.current?.stop();
+2783:       setIsListening(false);
+2784:       return;
+2785:     }
+2786: 
+2787:     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+2788:     const recognition = new SpeechRecognition();
+2789:     recognition.continuous = false;
+2790:     recognition.interimResults = false;
+2791:     recognition.lang = 'en-US';
+2792: 
+2793:     recognition.onstart = () => setIsListening(true);
+2794:     recognition.onresult = (event) => {
+2795:       const transcript = event.results[0][0].transcript;
+2796:       setFooterInput(prev => (prev ? `${prev} ${transcript}` : transcript));
+2797:       setIsListening(false);
+2798:     };
+2799:     recognition.onerror = (event) => {
+2800:       console.error('Speech recognition error:', event.error);
+2801:       setErrorPopup(`Speech error: ${event.error}`);
+2802:       setIsListening(false);
+2803:     };
+2804:     recognition.onend = () => setIsListening(false);
+2805: 
+2806:     recognitionRef.current = recognition;
+2807:     recognition.start();
+2808:   };
+2809: 
+2810:   const starterCategories = ['All', '👑 Oversight', '⚔️ Swarm', '🎨 Creative', '🎹 Studio', '🗄️ Intelligence'];
+2811: 
+2812:   const starterCards = [
+2813:     // 👑 Master Hub Oversight Parent & Storage Matrix
+2814:     {
+2815:       category: "👑 Oversight",
+2816:       title: "👑 Master Hub 43-Module Oversight",
+2817:       desc: "Live parent governor supervising all 43 modules, 20 daemons, and 6 operational domains.",
+2818:       prompt: "/monitor"
+2819:     },
+2820:     {

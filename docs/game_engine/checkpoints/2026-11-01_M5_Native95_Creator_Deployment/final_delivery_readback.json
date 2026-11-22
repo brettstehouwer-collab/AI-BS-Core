@@ -1,0 +1,343 @@
+{
+  "scope": "Remote metadata size/parent readback matched against local files; remote hash/account quota unavailable",
+  "files": [
+    {
+      "id": "1qEIFW7MKFMmF_at999Ozj5TP1YE5FZl4",
+      "file_uri": "C:/AI-BS/docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+      "metadata": {
+        "id": "1qEIFW7MKFMmF_at999Ozj5TP1YE5FZl4",
+        "title": "AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+        "mime_type": null,
+        "size": "159820",
+        "url": "https://drive.google.com/file/d/1qEIFW7MKFMmF_at999Ozj5TP1YE5FZl4/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1qEIFW7MKFMmF_at999Ozj5TP1YE5FZl4/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1JBOo9VVgU-K322a3g7yYDNrqLu22b5iT"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1JBOo9VVgU-K322a3g7yYDNrqLu22b5iT"
+      ],
+      "local_sha256": "a5ff266e021d4807bd585d225986afbf5c7ba05cb1d208b612eed46cb5e314a0"
+    },
+    {
+      "id": "1ghuAx18GJEg0u-gF-NmusHPnaVHdeILK",
+      "file_uri": "C:/AI-BS/engine/BUILD_STATUS.md",
+      "metadata": {
+        "id": "1ghuAx18GJEg0u-gF-NmusHPnaVHdeILK",
+        "title": "Custom_Engine_Foundation_BUILD_STATUS.md",
+        "mime_type": null,
+        "size": "75123",
+        "url": "https://drive.google.com/file/d/1ghuAx18GJEg0u-gF-NmusHPnaVHdeILK/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1ghuAx18GJEg0u-gF-NmusHPnaVHdeILK/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1ezdyPbgnc_i5cRlDSa6Ji9sVdq0hcYuy"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1ezdyPbgnc_i5cRlDSa6Ji9sVdq0hcYuy"
+      ],
+      "local_sha256": "85294c6161c673d0abdf88e0496665a96375b6658b1da3ad562ee27b208f3fc2"
+    },
+    {
+      "id": "1w6FXe5oW6To3yW-tzTvJA5wdJFyVD-Nl",
+      "file_uri": "C:/AI-BS/engine/milestone_queue.json",
+      "metadata": {
+        "id": "1w6FXe5oW6To3yW-tzTvJA5wdJFyVD-Nl",
+        "title": "milestone_queue.json",
+        "mime_type": null,
+        "size": "34681",
+        "url": "https://drive.google.com/file/d/1w6FXe5oW6To3yW-tzTvJA5wdJFyVD-Nl/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1w6FXe5oW6To3yW-tzTvJA5wdJFyVD-Nl/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1ezdyPbgnc_i5cRlDSa6Ji9sVdq0hcYuy"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1ezdyPbgnc_i5cRlDSa6Ji9sVdq0hcYuy"
+      ],
+      "local_sha256": "4a678174fd4fb5ed11ecfcb7ccfa4806ae5d20e4e2357388a0d13e8a62662c69"
+    },
+    {
+      "id": "1vaer0e322M_kbgM3ceWzm73u-tGZ8wcs",
+      "file_uri": "C:/AI-BS/docs/game_engine/checkpoints/INDEX.md",
+      "metadata": {
+        "id": "1vaer0e322M_kbgM3ceWzm73u-tGZ8wcs",
+        "title": "CHECKPOINT_INDEX.md",
+        "mime_type": null,
+        "size": "10425",
+        "url": "https://drive.google.com/file/d/1vaer0e322M_kbgM3ceWzm73u-tGZ8wcs/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1vaer0e322M_kbgM3ceWzm73u-tGZ8wcs/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1KOSg1J46caKoLSuKkvFQp1wGfwmt99Fz"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1KOSg1J46caKoLSuKkvFQp1wGfwmt99Fz"
+      ],
+      "local_sha256": "0cc41571871f44c6c03146d7dc94d8e95f55956a12e668a3ea41c76f30236830"
+    },
+    {
+      "id": "1FBhTnefNTzJR2Qb85NAQDTFW1xP6GLkX",
+      "file_uri": "C:/AI-BS/docs/game_engine/PROJECT_INDEX.md",
+      "metadata": {
+        "id": "1FBhTnefNTzJR2Qb85NAQDTFW1xP6GLkX",
+        "title": "PROJECT_INDEX.md",
+        "mime_type": null,
+        "size": "6754",
+        "url": "https://drive.google.com/file/d/1FBhTnefNTzJR2Qb85NAQDTFW1xP6GLkX/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1FBhTnefNTzJR2Qb85NAQDTFW1xP6GLkX/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m"
+      ],
+      "local_sha256": "7954efe8cb0ce08c39f54653de258a2f27dcb577d74c8182785a8901c3269193"
+    },
+    {
+      "id": "1SR8cPjo6Ake0lsNEbx5sajBcwHlQ8Cy1",
+      "file_uri": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M4_Native_Creator_Process/CURRENT_STATE.md",
+      "metadata": {
+        "id": "1SR8cPjo6Ake0lsNEbx5sajBcwHlQ8Cy1",
+        "title": "CURRENT_STATE.md",
+        "mime_type": null,
+        "size": "12391",
+        "url": "https://drive.google.com/file/d/1SR8cPjo6Ake0lsNEbx5sajBcwHlQ8Cy1/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1SR8cPjo6Ake0lsNEbx5sajBcwHlQ8Cy1/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc"
+      ],
+      "local_sha256": "84147ac1b679c2ddcefd19a9c5e6d9e6ef79028af300a19aaab94686ab400387"
+    },
+    {
+      "id": "1YwVG4c128_kNhp4qiZulMnE5iTH_TkRU",
+      "file_uri": "C:/AI-BS/docs/agent_sync/manifest_m5_native95_creator_deployment_20261101.json",
+      "metadata": {
+        "id": "1YwVG4c128_kNhp4qiZulMnE5iTH_TkRU",
+        "title": "manifest_m5_native95_creator_deployment_20261101.json",
+        "mime_type": null,
+        "size": "367779",
+        "url": "https://drive.google.com/file/d/1YwVG4c128_kNhp4qiZulMnE5iTH_TkRU/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1YwVG4c128_kNhp4qiZulMnE5iTH_TkRU/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+      ],
+      "local_sha256": "08e5ad82e3167aee28bca06b3db8ae955ebc601b665ecb3b8bad8e3136e6de95"
+    },
+    {
+      "file_uri": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M5_Native95_Creator_Deployment/drive_verification.json",
+      "id": "1WAdaUs8pCAboEInA_nLPJghxmWg5QLPM",
+      "metadata": {
+        "id": "1WAdaUs8pCAboEInA_nLPJghxmWg5QLPM",
+        "title": "drive_verification.json",
+        "mime_type": null,
+        "size": "7491",
+        "url": "https://drive.google.com/file/d/1WAdaUs8pCAboEInA_nLPJghxmWg5QLPM/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1WAdaUs8pCAboEInA_nLPJghxmWg5QLPM/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+      ],
+      "local_sha256": "4252276308c9e92bc0b0ba760bea7951ddb10d27109ab2fd8abe43331debd546"
+    },
+    {
+      "file_uri": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M5_Native95_Creator_Deployment/independent_archive_verification.json",
+      "id": "1ijF7HdhjE6d8qEcJpFhl2eJOahwJzkWs",
+      "metadata": {
+        "id": "1ijF7HdhjE6d8qEcJpFhl2eJOahwJzkWs",
+        "title": "independent_archive_verification.json",
+        "mime_type": null,
+        "size": "2611",
+        "url": "https://drive.google.com/file/d/1ijF7HdhjE6d8qEcJpFhl2eJOahwJzkWs/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1ijF7HdhjE6d8qEcJpFhl2eJOahwJzkWs/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+      ],
+      "local_sha256": "763f50b8130bdf2eff5d520630463099602df0b7b40786133b90e6187397a499"
+    },
+    {
+      "file_uri": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M5_Native95_Creator_Deployment/storage_observation.json",
+      "id": "1xn9zjqmN5lYwg8_vekgi8xgrm8FMbdMD",
+      "metadata": {
+        "id": "1xn9zjqmN5lYwg8_vekgi8xgrm8FMbdMD",
+        "title": "storage_observation.json",
+        "mime_type": null,
+        "size": "384",
+        "url": "https://drive.google.com/file/d/1xn9zjqmN5lYwg8_vekgi8xgrm8FMbdMD/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1xn9zjqmN5lYwg8_vekgi8xgrm8FMbdMD/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+      ],
+      "local_sha256": "2867ed7c81adaa656a0245df2e8d1053393da0212d07d5eb7b2f3d618086e5cf"
+    },
+    {
+      "file_uri": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M5_Native95_Creator_Deployment/FINAL_DELIVERY.md",
+      "id": "1RWXK17FJK1LWIv8Dv6pyuKBvdxdVtk5d",
+      "metadata": {
+        "id": "1RWXK17FJK1LWIv8Dv6pyuKBvdxdVtk5d",
+        "title": "FINAL_DELIVERY.md",
+        "mime_type": null,
+        "size": "1224",
+        "url": "https://drive.google.com/file/d/1RWXK17FJK1LWIv8Dv6pyuKBvdxdVtk5d/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1RWXK17FJK1LWIv8Dv6pyuKBvdxdVtk5d/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+      ],
+      "local_sha256": "be4bad7c8b3ed060a57005124d9c4133f424e2342b826d9691bc57cb014371f8"
+    },
+    {
+      "file_uri": "C:/AI-BS/engine/out/finalize_native95_creator.py",
+      "id": "1QL4Az9eBaZMTmIYMGiZc3Z85mAb05sIs",
+      "metadata": {
+        "id": "1QL4Az9eBaZMTmIYMGiZc3Z85mAb05sIs",
+        "title": "finalize_native95_creator.py",
+        "mime_type": null,
+        "size": "4558",
+        "url": "https://drive.google.com/file/d/1QL4Az9eBaZMTmIYMGiZc3Z85mAb05sIs/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1QL4Az9eBaZMTmIYMGiZc3Z85mAb05sIs/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "expected_parents": [
+        "1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj"
+      ],
+      "local_sha256": "e633a418a347765e4311ea724693942f355335bbf21239a1b898697fab26d96e"
+    }
+  ],
+  "status": "passed",
+  "verified_file_count": 12
+}

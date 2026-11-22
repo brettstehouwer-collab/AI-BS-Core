@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { theme } from '../styles/theme';
 
 export const DarkPolishedConcrete = ({ glossLevel = 92 }) => {
@@ -95,6 +95,7 @@ export const Textured3DGeometricWallPanels = ({ pattern = 'Hexagonal Prism' }) =
   );
 };
 
+/** @param {{opacityPercent?:number,onOpacityChange?:(value:number)=>void}} props */
 export const SmartTintingGlass = ({ opacityPercent = 75, onOpacityChange }) => {
   return (
     <div style={{

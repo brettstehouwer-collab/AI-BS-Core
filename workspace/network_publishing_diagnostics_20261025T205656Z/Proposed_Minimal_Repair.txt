@@ -1,0 +1,39 @@
+MINIMAL RESTORATION PROPOSAL — baseline plan; subsequent operator authorization received
+Operator now requested bringing stehouwer-publishing.com online. Execution evidence must be separate under restoration/. This diagnostic proposal does not claim execution.
+
+1 Content/resource gate
+Recheck C:free before copies; small explicitallowlist only. No installs/builds/largebackups/deletion. Exclude ledger,invoices,privateDBs/manuscripts/logs/credentials/indexingsecrets and unreviewedtracking. Do not activate whole dist merely because it exists. Preserve originals.
+Prospective fresh publicroot: C:/StehouwerPublishing.com/restoration_staging/20261025T205656Z_proposed/public. Choose newuniquepath if occupied.
+Privacy-reviewed entry/assets only; no fabricated missingbook/media assets.
+
+2 One owned loopback origin
+Create separate scopednginx.static.conf/pid/errorlog under newrestorationprefix. Use verifiedWinGetinstalledexecutable, explicitprefix/config.
+Listen127.0.0.1:80 and[::1]:80 only; intendedhyphenatedroot/www; serve reviewedstaticroot.
+Initially omit legacybroadAPI/HLSproxies. Keep originalnginx.conf/Pythonfallback intact.
+Beforestart recheck80owner; halt onunexpectedlistener. Validateconfig underrepairauthorization; start exactlyoneownedorigin withPID/exe/creation/owner evidence.
+Do not launch Pythonfallback unchanged on0.0.0.0 or bothorigins.
+Bounded localHost-headerstaticroot200/branding test; noJS/analytics/forms/adminroutes.
+
+3 Safe tunnel convergence
+Identify actualregisteredtunnel/connectors through existingapprovedmetadata. Neveropen/exporttokens/credentialJSON. UnknownSYSTEMmembership must be understood beforetouchingit.
+Candidatefiles: userconfig.yml; api-tunnel-scoped.yml; pairedCONFIG_SHA in C:/AI-BS/scripts/core_boot.py. Preserve beforecopies/hashes/startupselection; do notcopybroaduserconfig over scopedpolicy.
+Add intendedpublishingroot/www->127.0.0.1:80 beforeterminal404 in scopedAPIconfig; keep API/sse,/messages404 and APIremainder8000. Align correspondingparticipatingconnectorpolicy whilepreservingunrelatedhostnames.
+Restart only exactowned affectedconnectors oneatatime underapprovedplan, retaining workingAPIpath during eachstep. Scheduledtaskautorestart must be coordinated; no blankettaskkill/tunnelrecreation.
+If membership/access/identity is missing, stopthatbranch and reportblocker.
+No householdadapter/ICS/DHCP/NAT/firewall/router/bridgechanges. NonhyphenatedDNS requires separate ownership/intendedname decision.
+
+4 Impact/baseline/rollback
+Expected: intendedstaticwebsiteavailable through existingedge withprivatecontentexcluded andAI-BSAPIpreserved.
+Risks: APIinterruption/configadmissiondrift/unreviewedassets/unknownSYSTEMconnector/lowspace.
+Triggers: unexpectedlistener, nonloopbackbind, privateexposure, wrongcontent/route, lostAPI, unknownidentity, admissionfailure, unsafeworkingdiskbudget.
+Stop onlynewownedorigin byexactPID/executable/creation. Preserve staging/failures/logs.
+Restore only approvedchangedconfigs/admission/startup fromverifiedbeforecopies; preserve originals/evidence. Return affectedownedconnector topriorconfig, verifyAPI andloopback. No reset/clean/deletion/adapterreset/globalflush/reboot.
+
+5 Acceptance
+LocalHostroot expected200, intendedbranding, ownedloopbacklistener.
+Afterchanges oneplannedrawTLSrequest perintendedpublichost expected200 or approvedredirect; no TLSbypass/automaticredirectfollowing.
+Verify actualconsistentingress/registeredconnectorhealth; no unintendedcatch-all404.
+Check ledger/invoice/credential paths notpublished. Staticavailability is notfullAPI/mediaacceptance.
+The useridentified http://localhost:5173/?tab=beta as webtrafficmonitor. Source-review backingroutes beforeuse; retain aggregate status only, no rawvisitorrecords or automaticcapture/scans.
+No livehandoff/architecturalledgerappend under originalbrief; use the draftunless separatelyauthorized.
+

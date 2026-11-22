@@ -1,0 +1,12 @@
+{
+  "schema_version":1,
+  "asset_id":"89e133bc-979e-4ed0-9dba-ae69fce559b2",
+  "name":"Workshop capacitor",
+  "source":{"sha256":"0d43ee345e818dab8e7aa17701fd116fbbe6b1fccc2fdbeebe5134c480d6d109","bytes":75428},
+  "materials":{"sha256":"b38907ebb7f6af0c9fd40781a2dd1233198fd761aecbd8fe4102f6c681ccbd64","bytes":77},
+  "license":{"sha256":"0cb45a2e11180ca02e8153b5f5751d077a943a68a1ff141ac9267c395d84d171","bytes":122},
+  "license_review":"Supplied declaration copied verbatim; ownership/permission not inferred",
+  "importer":{"name":"aibs-obj","format_version":1},
+  "options":{"units":"meters","up_axis":"+Y","axis_conversion":"none","material_model":"opaque-base-color-emission-v1","external_material_libraries":"ignored-explicit-material-table-only"},
+  "cooked":{"file":"d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd.aibmesh","sha256":"d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd","bytes":50054}
+}

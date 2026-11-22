@@ -1,0 +1,62 @@
+{
+  "owner": "local_admin",
+  "request_id": "d1247ce90aaa4f5eab974da12499765b",
+  "plan_id": "fe476fb845d541519126f1f4b0331498",
+  "snapshot_sha256": "8dae3e07ceb66339773ac494a91a987811f2a134550f05f76fc919d005d8b7b2",
+  "review_digest": "ca1bbda13220d3004c83442459ac0da4697203ba30cde8c8151ca7ade805f0b7",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "6491bd98340549af9d4d9dbe4ec30b18",
+  "reviewed_plan_sha256": "610982e3fb68a7d07b92be71cee1558fe6f664541d7c7b2513a6d75ba268c360",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests.",
+    "reviewed_plan": {
+      "summary": "Synthetic fixture: change value from1 to42.",
+      "steps": [
+        {
+          "path": "app.py",
+          "change": "Replace value = 1 with value = 42; preserve tests."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "test_app.py",
+        "role": "verification",
+        "sha256": "3c6ae47571decf8cef4bb28322f712c74ca0bf0bd0c41bcf88b847d1eb5dae3c",
+        "content": "import unittest\nfrom app import value\n\nclass ValueTests(unittest.TestCase):\n    def test_value(self):\n        self.assertEqual(value, 42)\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "value",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "f10fe66a6224a6c5c12ecc55458e0fbab103a47eac2ad429bb85104a933767fe",
+  "worker": {
+    "pid": 21120,
+    "created": 1794696568.530988
+  },
+  "created_at_utc": "2026-11-14T22:52:44.879414+00:00",
+  "entry_sha256": "1df4aa0415de5b24b49961892bda222bced82c66cb802e28547009793b32e0a6"
+}

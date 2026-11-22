@@ -1,0 +1,151 @@
+{
+  "record": 209,
+  "utc": "2026-10-31T21:06:07.151872+00:00",
+  "local_time": "2026-10-31T17:06:07.151872-04:00",
+  "version": "5.329.85",
+  "source_commit": "f53f6e0745beba2c4c7fc7fa2700c2ea973a2d89",
+  "branch": "codex/audit-v532976-20261031",
+  "status": "VERIFIED_SOURCE_BUILD_INSTALL_OFFLINE_TESTS_AND_EXISTING_GAME_OUTPUT_CLOUD_RECORDS_CLOSED_GUI_RENDER_UNVERIFIED",
+  "source_paths_committed": 57,
+  "document_paths_in_source_commit": 18,
+  "tests": {
+    "guarded_native": 352,
+    "native_failures": 0,
+    "native_errors": 0,
+    "native_guard_denials": 0,
+    "javascript": 35,
+    "typescript_no_emit_exit": 0
+  },
+  "runtime": {
+    "auto_game_attached": true,
+    "verified_game_frames": true,
+    "existing_program_output_decoded_frames": 197,
+    "decode_seconds": 7.188,
+    "first_frame_visually_reviewed": "FORTNITE_LOBBY_GAME_WINDOW_NOT_DESKTOP_OR_BLACK",
+    "changing_frames": true,
+    "actual_installed_gui_rendering": "UNVERIFIED",
+    "preview_checkbox": "OFF_LAST_OBSERVED_USER_MAY_ENABLE",
+    "screen_control": "STOPPED_NO_FURTHER_RETRIES",
+    "no_additional_capture_or_broadcast_control_for_game_verification": true,
+    "audio": "GENERATED_SILENCE_NO_AUDIO_OUTPUT",
+    "microphone": "UNREQUESTED",
+    "live_trading": "DISABLED",
+    "port8007_listener": false,
+    "four_crypto_ledger_hashes": "UNCHANGED"
+  },
+  "cloud": {
+    "folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "folder_url": "https://drive.google.com/drive/folders/1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "main_files": [
+      {
+        "id": "1j4S6moTIwF1SVTal5jgn4wCvP1IEtqMF",
+        "path": "C:/AI-BS/docs/audit/2026-10-30-complete/NATIVE_PROGRAM_PREVIEW_AND_OBS_RETIREMENT_v5.329.85_RECORD209.md",
+        "bytes": 17431,
+        "sha256": "70876e521930b52bd836bb3e05d45f1758734db0ec4c703ff6588ae719504da3",
+        "same_folder": true,
+        "raw_download_matches": true
+      },
+      {
+        "id": "1Hd-XhLyYJdV6egV0DnyucjnIxFc8j_wV",
+        "path": "C:/AI-BS/docs/audit/2026-10-30-complete/INCIDENT_AND_USAGE_REVIEW_RECORD209.md",
+        "bytes": 7817,
+        "sha256": "76cdc4c0096f49a97bce14651b39fece2bf120e9ee2472ebadbae113201d2fac",
+        "same_folder": true,
+        "raw_download_matches": true
+      },
+      {
+        "id": "1r8VqC1ugtmnP7GL0DWmWjTgyxhBkxoBZ",
+        "path": "C:/AI-BS/backups/record209_close_work/AI-BS_Record209_v5.329.85_sanitized_evidence.zip",
+        "bytes": 480779,
+        "sha256": "483f42d156b305c309b58cb9698443112354e2faed7ece0fac0bc695ae4f15f3",
+        "same_folder": true,
+        "raw_download_matches": true
+      },
+      {
+        "id": "1VGe9mg1UaWIaQHAvegGMpcc74fszcrME",
+        "path": "C:/AI-BS/docs/agent_sync/manifest_record209_v532985.json",
+        "bytes": 17920,
+        "sha256": "c68c692bf06dcc7c2b693bb450adac9e56872c1a3760398cbdd6f445a99d3328",
+        "same_folder": true,
+        "raw_download_matches": true
+      }
+    ],
+    "game_decode_files": [
+      {
+        "id": "1wxn7avQ4dwOPz5W7-GBobNTOYOPWbowM",
+        "path": "C:/AI-BS/backups/native_preview_v85_20261031_record209/runtime/http_qt_game_probe/receipt.json",
+        "bytes": 4181,
+        "sha256": "fe78c539274e740267785565f7c8f891e18b6de12bfeaca4364638db6cf968c3",
+        "same_folder": true,
+        "raw_download_matches": true
+      },
+      {
+        "id": "1BZOUrD1kU01ABBmUSIUWloBMRh6urZpc",
+        "path": "C:/AI-BS/backups/native_preview_v85_20261031_record209/runtime/http_qt_game_probe/first_decoded_frame.png",
+        "bytes": 933608,
+        "sha256": "361cc19641b7b3ec52082f51ab5d4a3e6b6c3acff748a531625268b23c7b90a8",
+        "same_folder": true,
+        "raw_download_matches": true
+      }
+    ],
+    "game_attachment": {
+      "record": 209,
+      "utc": "2026-10-31T21:04:20.718969+00:00",
+      "kind": "supplemental actual user game-launch auto-attachment receipt upload",
+      "local_file": "game_launch_readonly209.json",
+      "drive_id": "1Qpy5WL577mV7qbZo4nWyZKEHU2c2tvt0",
+      "drive_url": "https://drive.google.com/file/d/1Qpy5WL577mV7qbZo4nWyZKEHU2c2tvt0/view?usp=drivesdk",
+      "drive_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+      "drive_name": "AI-BS_Record209_Game_AutoAttachment_20261031T210347Z.json",
+      "metadata_size_bytes": 2408,
+      "local_sha256": "4aeea5c8b044bd38369cac60944c84e1c68f88662df85a5b171c40231e686596",
+      "raw_download_bytes": 2408,
+      "raw_download_sha256": "4aeea5c8b044bd38369cac60944c84e1c68f88662df85a5b171c40231e686596",
+      "parent_verified": true,
+      "size_verified": true,
+      "download_hash_verified": true,
+      "other_uploads": false,
+      "source_runtime_modified": false
+    },
+    "index": {
+      "id": "1X9sAttJoM6KtOBXcAh7IS3XZLPZVPOS8",
+      "bytes": 26465,
+      "sha256": "79dce599418035cdac5400e66f9e5702d410785103252b0c37349c40716bb469",
+      "same_folder": true,
+      "raw_download_matches": true,
+      "all_previous_history_preserved": true
+    },
+    "all_assets_same_folder": true,
+    "all_recorded_asset_downloads_hash_match": true,
+    "index_history_preserved": true,
+    "source_binary_key_preimages_uploaded": false,
+    "closing_receipt_upload": "Separate metadata-verified upload follows this frozen local record."
+  },
+  "usage_review": {
+    "report": "docs/audit/2026-10-30-complete/INCIDENT_AND_USAGE_REVIEW_RECORD209.md",
+    "support_submission": "NOT_SUBMITTED",
+    "refund_or_credit": "NOT_PROMISED",
+    "first_retained_scope_utc": "2026-10-31T20:04:07.843000+00:00",
+    "closing_record_utc": "2026-10-31T21:06:07.151872+00:00",
+    "elapsed_observation_window_seconds": 3719.309,
+    "elapsed_window_is_not_active_model_or_billable_usage": true,
+    "measured_corrective_build_seconds": 149.821,
+    "exact_task_tokens": null,
+    "exact_task_cost": null,
+    "account_usage_snapshot_is_shared_not_task_attributable": true,
+    "no_confirmed_OpenAI_backend_outage": true
+  },
+  "preservation": {
+    "all9_original_ledger_prefixes": "VERIFIED",
+    "old_versions": "PRESERVED",
+    "unrelated_dirty_and_untracked_files": "PRESERVED",
+    "corrected_private_C_source_manifest_sha256": "6dc8eb542ff3d90228685beecb021f98828df7b470d8168d7ee3b76e5a83d00e",
+    "encrypted_full_recovery_upload": "BLOCKED_EXISTING_E_KEY_HARDWARE_OR_CUSTODY_FAILURE_NO_RETRIES_OR_SUBSTITUTE_KEY"
+  },
+  "limits": [
+    "No final installed-GUI preview ON/render certification.",
+    "No Firebase deployment or hosting parity certification this turn.",
+    "No remote RTMP platform dashboard acceptance this turn.",
+    "No key rotation or clean-history claim; two embedded web defaults removed."
+  ]
+}

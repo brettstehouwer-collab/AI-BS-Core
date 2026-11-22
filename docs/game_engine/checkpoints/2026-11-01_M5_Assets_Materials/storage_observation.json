@@ -1,0 +1,12 @@
+{
+  "utc": "2026-11-02T00:06:53.327613+00:00",
+  "free_bytes": {
+    "C": 110233477120,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_quota": "not exposed",
+  "model_download": false,
+  "cleanup": false,
+  "note": "Local space is distinct from Google Drive quota; upload does not free local disk"
+}

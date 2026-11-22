@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "created_at": "2026-11-02T05:47:27.014150+00:00",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\08_Indexed_Character_And_Articulated_Guide.zip",
+  "bytes": 6581867,
+  "sha256": "1750f4fda95ed8ce8d13ab3f30653b1382d114bfd752c78e27074768b7b16000",
+  "files": 778,
+  "uncompressed_selected_bytes": 355145565,
+  "source_manifest_sha256": "40c3cb4428cc91bd0abed74729ea058eb589cd7138575885cd272b41879a919e",
+  "runtime_source_sha256": "1973b9531e7687715b3f3f7e11ce4bb1157850fdf143895df692cf6b07fb1bca",
+  "scope": "Incremental08 complete selected native engine/creator source, public SDK examples, project-owned art masters including the editable capacitor, and exact current indexed-character/native-companion/installed-SDK/creator evidence. Original family media, credentials/environment files, dependency/build trees, retired binaries and older bulk test outputs are excluded. Checkpoints06/07 remain separate retained backups. This is a temporary articulated guide checkpoint, not Adam likeness or the completed8\u201312minute opening.",
+  "local_verification": "All ZIP CRCs, manifest/git-status bytes, per-file lengths/SHA and current complete selected file bytes matched",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "source_changes": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_Warm_Beginning_Workshop\\checkpoint08-source-changes.json",
+  "source_patch": "C:\\AI-BS\\docs\\agent_sync\\checkpoint08_source_changes.patch",
+  "free_bytes": {
+    "C": 83457671168,
+    "D": 181101932544,
+    "E": 146813599744
+  },
+  "post_seal_receipts": [
+    "checkpoint08-local.json",
+    "checkpoint08-drive.json"
+  ],
+  "cloud_verification": "Not performed by this helper; authenticated upload/retrieval/byte verification required separately"
+}

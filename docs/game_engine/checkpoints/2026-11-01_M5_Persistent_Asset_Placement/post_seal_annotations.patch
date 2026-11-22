@@ -1,0 +1,70 @@
+--- sealed/engine/BUILD_STATUS.md
++++ delivery/engine/BUILD_STATUS.md
+@@ -369,3 +369,6 @@
+ 
+ Studio 5.329.97 / SDK 0.10 delivers persistent visual motherboard-part placement in Chapter creator: project-owned immutable mesh/license/provenance packs, native Preview/Apply, typed transforms, Undo/Redo, Save and restart. Separate frozen create/reopen processes preserved every field and saved byte; actual native viewport/picking/isolated Play passed. Debug and Release each passed 59 tests; both installed SDK consumers passed; 183 Python/Qt and 68 packaging tests passed. All five existing launchers were backed up and now open97. S5BP is complete; S5B textures/lighting and the wider M5 alpha remain in progress. Studio96/95, SDK0.9/0.8, public87, original memoir/photos, real saves and separate Unreal remain preserved.
+ Evidence: engine/out/persistent_placement_verification.json. Guide: engine/PERSISTENT_PLACEMENT.md. Drive: https://drive.google.com/drive/folders/12tZrIZmt1mQtyd3Tt_OeAAE-gJoWTG5k
++
++
++Revision 0.24 delivery: Studio97 / SDK0.10 persistent visual placement verified; 59 native tests each Debug/Release, one installed SDK consumer each, 183 Python/Qt and 68 packaging tests passed. Five existing launchers point to97; prior releases/SDKs retained. Cumulative selected full source/design/evidence: 3838 files, 36316275-byte ZIP, SHA256 73266e93c91e75a7e756b1a326759efcfd09de3c63084ca528547b7a9c95af5d. Independent CRC/all-file SHA/current-byte/aggregate/branch/commit checks passed before these seven delivery annotations. Drive upload size and parent readback passed; remote byte hash/account quota unavailable. C: 96.06 GiB free; no cleanup/model downloads. M5 and S5B remain in progress. Checkpoint: https://drive.google.com/drive/folders/12tZrIZmt1mQtyd3Tt_OeAAE-gJoWTG5k
+--- sealed/engine/milestone_queue.json
++++ delivery/engine/milestone_queue.json
+@@ -917,8 +917,8 @@
+       "persistent_placement": "VERIFIED native save/restart, exact project packs, frozen97 viewport/Play and five launchers",
+       "persistent_placement_evidence": "engine/out/persistent_placement_verification.json"
+     },
+-    "last_verified_checkpoint": "https://drive.google.com/drive/folders/1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q",
++    "last_verified_checkpoint": "https://drive.google.com/drive/folders/12tZrIZmt1mQtyd3Tt_OeAAE-gJoWTG5k",
+     "current_focus": "S5BP complete: persistent visual placements deployed; S5B texture/material/lighting work remains",
+-    "backup_status": "VERIFIED2541 selectedfiles/25551025-byte fullselectedsourcearchive; independentCRC/SHA/currentbytes/branch/commit; Drive size/parent verified; seven annotations outside seal"
++    "backup_status": "VERIFIED 3838 selected source/evidence files; independent CRC/SHA/current bytes/branch/commit; Drive size/parent readback; seven post-seal annotations tracked externally"
+   }
+ }
+--- sealed/docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md
++++ delivery/docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md
+@@ -1093,3 +1093,6 @@
+ Limits: Imported instances affect visuals and editor picking; imported collision, snapping, sockets and construction costs are later work. Current materials are opaque base color/emission; UVs, textures, PBR, authored lights/shadows, LOD and skeletal animation remain planned. AIBD1 remains readable and byte compatible; applying a placement creates AIBD2. Older engines cannot edit the new content. The authored project owns all four immutable dependency files. Back up the whole project; automatic pack garbage collection and cloud player-save sync are absent. Current chapter limits: 64 instances, 32 unique references, 64 MiB pack closure, bounded decoded geometry and one million composed vertices. Packaged creator regression uses a deterministic HTTP fixture; actual Qwen inference remains separately evidenced in version95. No new model inference/download occurred. The full personal First Boot alpha, audio/settings/RTX awakening, combat/equipment, larger-world streaming, vehicles and companion remain incomplete. Unsigned Windows PC release; compiled distributions/model weights/private originals/real saves/separate Unreal are excluded from the source backup. Drive remote byte hash/account quota are unavailable.
+ 
+ Evidence: engine/out/persistent_placement_verification.json. Guides: engine/PERSISTENT_PLACEMENT.md and engine/CREATOR_QUICKSTART.md. Coverage review: docs/game_engine/game_system_coverage_review.md. Checkpoint: https://drive.google.com/drive/folders/12tZrIZmt1mQtyd3Tt_OeAAE-gJoWTG5k
++
++
++Revision 0.24 delivery: Studio97 / SDK0.10 persistent visual placement verified; 59 native tests each Debug/Release, one installed SDK consumer each, 183 Python/Qt and 68 packaging tests passed. Five existing launchers point to97; prior releases/SDKs retained. Cumulative selected full source/design/evidence: 3838 files, 36316275-byte ZIP, SHA256 73266e93c91e75a7e756b1a326759efcfd09de3c63084ca528547b7a9c95af5d. Independent CRC/all-file SHA/current-byte/aggregate/branch/commit checks passed before these seven delivery annotations. Drive upload size and parent readback passed; remote byte hash/account quota unavailable. C: 96.06 GiB free; no cleanup/model downloads. M5 and S5B remain in progress. Checkpoint: https://drive.google.com/drive/folders/12tZrIZmt1mQtyd3Tt_OeAAE-gJoWTG5k
+--- sealed/docs/game_engine/PROJECT_INDEX.md
++++ delivery/docs/game_engine/PROJECT_INDEX.md
+@@ -54,3 +54,6 @@
+ 
+ 
+ Revision0.23 delivery: [Assets and Materials checkpoint](https://drive.google.com/drive/folders/1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q). 2,541 complete selected source/design/evidence files,25,551,025-byte ZIP,SHA256 `b9d27852e72918a6637fd4c69bbd51a252d10fdafb2c975c83d309ad490ed469`. Independent allCRC/lengths/perfile+aggregateSHA/currentselectedbytes/branch/commit verified before finalannotations. Drive size/parent readback passed; remotehash/accountquota unavailable. Studio96/SDK0.9 delivered:55native tests eachDebug+Release,1SDKconsumer each,167PythonQt,51packaging and22independentreleasechecks; actualfrozenAssets cook/inspect/nativeGPU/close andcreator regressions passed. Reference4788triangles/8opaque-emissivematerials; visualonly. Persistentchapterbindings,texturemaps/PBR/lighting/shadows andfullpersonalalpha remainplanned/inprogress. Studio95/SDK0.8/public87/originalsources/separateUnreal retained. C:102.66GiB free; no cleanup/modeldownload. SealedZIPprecedes finaldeliveryannotations listed in externalmanifest.
++
++
++Revision 0.24 delivery: Studio97 / SDK0.10 persistent visual placement verified; 59 native tests each Debug/Release, one installed SDK consumer each, 183 Python/Qt and 68 packaging tests passed. Five existing launchers point to97; prior releases/SDKs retained. Cumulative selected full source/design/evidence: 3838 files, 36316275-byte ZIP, SHA256 73266e93c91e75a7e756b1a326759efcfd09de3c63084ca528547b7a9c95af5d. Independent CRC/all-file SHA/current-byte/aggregate/branch/commit checks passed before these seven delivery annotations. Drive upload size and parent readback passed; remote byte hash/account quota unavailable. C: 96.06 GiB free; no cleanup/model downloads. M5 and S5B remain in progress. Checkpoint: https://drive.google.com/drive/folders/12tZrIZmt1mQtyd3Tt_OeAAE-gJoWTG5k
+--- sealed/docs/game_engine/checkpoints/INDEX.md
++++ delivery/docs/game_engine/checkpoints/INDEX.md
+@@ -37,3 +37,6 @@
+ Revision0.23 delivery: [Assets and Materials checkpoint](https://drive.google.com/drive/folders/1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q). 2,541 complete selected source/design/evidence files,25,551,025-byte ZIP,SHA256 `b9d27852e72918a6637fd4c69bbd51a252d10fdafb2c975c83d309ad490ed469`. Independent allCRC/lengths/perfile+aggregateSHA/currentselectedbytes/branch/commit verified before finalannotations. Drive size/parent readback passed; remotehash/accountquota unavailable. Studio96/SDK0.9 delivered:55native tests eachDebug+Release,1SDKconsumer each,167PythonQt,51packaging and22independentreleasechecks; actualfrozenAssets cook/inspect/nativeGPU/close andcreator regressions passed. Reference4788triangles/8opaque-emissivematerials; visualonly. Persistentchapterbindings,texturemaps/PBR/lighting/shadows andfullpersonalalpha remainplanned/inprogress. Studio95/SDK0.8/public87/originalsources/separateUnreal retained. C:102.66GiB free; no cleanup/modeldownload. SealedZIPprecedes finaldeliveryannotations listed in externalmanifest.
+ 
+ - [2026-11-01 M5 Persistent Asset Placement](https://drive.google.com/drive/folders/12tZrIZmt1mQtyd3Tt_OeAAE-gJoWTG5k): Studio97/SDK0.10 persistent visual instances, exact project dependencies, two-process restart and five launcher updates; broader alpha continues.
++
++
++Revision 0.24 delivery: Studio97 / SDK0.10 persistent visual placement verified; 59 native tests each Debug/Release, one installed SDK consumer each, 183 Python/Qt and 68 packaging tests passed. Five existing launchers point to97; prior releases/SDKs retained. Cumulative selected full source/design/evidence: 3838 files, 36316275-byte ZIP, SHA256 73266e93c91e75a7e756b1a326759efcfd09de3c63084ca528547b7a9c95af5d. Independent CRC/all-file SHA/current-byte/aggregate/branch/commit checks passed before these seven delivery annotations. Drive upload size and parent readback passed; remote byte hash/account quota unavailable. C: 96.06 GiB free; no cleanup/model downloads. M5 and S5B remain in progress. Checkpoint: https://drive.google.com/drive/folders/12tZrIZmt1mQtyd3Tt_OeAAE-gJoWTG5k
+--- sealed/docs/game_engine/checkpoints/2026-11-01_M4_Native_Creator_Process/CURRENT_STATE.md
++++ delivery/docs/game_engine/checkpoints/2026-11-01_M4_Native_Creator_Process/CURRENT_STATE.md
+@@ -1,4 +1,6 @@
+ # Current M4 source state
++
++LATEST DELIVERY — Revision 0.24 delivery: Studio97 / SDK0.10 persistent visual placement verified; 59 native tests each Debug/Release, one installed SDK consumer each, 183 Python/Qt and 68 packaging tests passed. Five existing launchers point to97; prior releases/SDKs retained. Cumulative selected full source/design/evidence: 3838 files, 36316275-byte ZIP, SHA256 73266e93c91e75a7e756b1a326759efcfd09de3c63084ca528547b7a9c95af5d. Independent CRC/all-file SHA/current-byte/aggregate/branch/commit checks passed before these seven delivery annotations. Drive upload size and parent readback passed; remote byte hash/account quota unavailable. C: 96.06 GiB free; no cleanup/model downloads. M5 and S5B remain in progress. Checkpoint: https://drive.google.com/drive/folders/12tZrIZmt1mQtyd3Tt_OeAAE-gJoWTG5k
+ 
+ LATEST — Revision 0.24: Studio 5.329.97 / SDK 0.10 delivers persistent visual motherboard-part placement in Chapter creator: project-owned immutable mesh/license/provenance packs, native Preview/Apply, typed transforms, Undo/Redo, Save and restart. Separate frozen create/reopen processes preserved every field and saved byte; actual native viewport/picking/isolated Play passed. Debug and Release each passed 59 tests; both installed SDK consumers passed; 183 Python/Qt and 68 packaging tests passed. All five existing launchers were backed up and now open97. S5BP is complete; S5B textures/lighting and the wider M5 alpha remain in progress. Studio96/95, SDK0.9/0.8, public87, original memoir/photos, real saves and separate Unreal remain preserved.
+ Guides: engine/PERSISTENT_PLACEMENT.md and engine/CREATOR_QUICKSTART.md. Checkpoint: https://drive.google.com/drive/folders/12tZrIZmt1mQtyd3Tt_OeAAE-gJoWTG5k
+--- sealed/docs/game_engine/checkpoints/2026-11-01_M5_Persistent_Asset_Placement/storage_observation.json
++++ delivery/docs/game_engine/checkpoints/2026-11-01_M5_Persistent_Asset_Placement/storage_observation.json
+@@ -1,7 +1,7 @@
+ {
+-  "utc": "2026-11-02T00:59:57.929194+00:00",
++  "utc": "2026-11-02T01:07:59.612727+00:00",
+   "free_bytes": {
+-    "C": 106668040192,
++    "C": 103142768640,
+     "D": 184193118208,
+     "E": 146813599744
+   },

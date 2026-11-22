@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "checkpoint": "PROP01-002P",
+  "recorded_utc": "2026-11-05T18:33:35Z",
+  "reconciled_utc": "2026-11-05T19:45:00Z",
+  "archive": "D:/AI-BS-Game-Resources/Prop01_Checkpoints/002P/Prop01_002P_Implementation_Complete.zip",
+  "bytes": 127593569,
+  "sha256": "c36fac2640d9af5a8af29b97ca89835d9000f1b1743b54e2a4171db673be5ffe",
+  "members": 225,
+  "sealed_archive_unchanged": true,
+  "all_local_members_verified": true,
+  "local_copy_verification_path": "D:/AI-BS-Game-Resources/Prop01_Checkpoints/002P/Prop01_002P_Restored.zip",
+  "restored_archive_sha256_matches": true,
+  "all_restored_members_crc_length_sha256_verified": true,
+  "exclusion_audit_passed": true,
+  "reconciliation_report": "C:/AI-BS/docs/game_engine/PROP01_002P_RECONCILIATION.md",
+  "reconciliation_supplement": {
+    "archive": "D:/AI-BS-Game-Resources/Prop01_Checkpoints/002P/Prop01_002P_Reconciliation_Supplement.zip",
+    "bytes": 20835638,
+    "sha256": "9c36cc8f173ad3565d846523587272f198ae0d15eb2f528c0dee781ee6350b2d",
+    "members": 19,
+    "all_members_verified": true,
+    "exclusion_audit_passed": true
+  },
+  "cloud_backup_verified": true,
+  "cloud_backup_status": "blocked_pending_drive_auth",
+  "drive_auth_diagnostic": "D:/AI-BS-Game-Resources/Prop01_Checkpoints/002P/drive_auth_diagnostic.json",
+  "target_workshop_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "scope": "Reconciled Prop01 Unreal 5.8.1 V03 prototype qualification + preserved native CPU 001P baseline. Sealed archive preserved unchanged; reconciliation corrections and omitted offline Blender Cycles 470k/shadow artifacts packaged in Prop01_002P_Reconciliation_Supplement.zip.",
+  "excluded": [
+    "original family media",
+    "real user saves",
+    "credentials",
+    "private Git state",
+    "Master-ledger data",
+    "build caches"
+  ],
+  "verified": [
+    "Unreal 5.8.1 V03 FBX import at import_uniform_scale=1.0 with remove_degenerates=False and reflected hidden property (13,500/13,500 triangles, single UV0, 1.36x1.36x0.91 cm FBX bounds, error 1.057e-7 cm)",
+    "Actor scaling preserved: hero actor scale 99.99999018 (136.0x136.0x91.0 cm) and 4 repeated actors scale 44.11764273 (60.0x60.0x40.15 cm), 5 NoCollision visual actors + 10 BlockAll box proxies",
+    "Unreal editor cold-restart map reload persistence (DetailedFirstBoot_Prop01.umap) and 130/130 original P23 Content hashes unchanged",
+    "cast_dynamic_shadow=False applied to 83 large actors (radius > 1000 cm), clearing 29 PIE MapCheck pre-shadow warnings",
+    "4 automated offscreen Unreal PIE sessions (189/189 checks in 143.094 s; persistent_gameplay=false) and 7 static 1920x1080 Unreal PNG screenshots (not video, not native AI-BS)",
+    "Offline Blender 5.2.3 LTS Cycles rendered 3x 1920x1080 stills of 474,898-triangle scan and exported Prop01_Hero_470k_Cleaned.fbx (included in supplement)",
+    "V01/V02 failures, retained V03 attempt 1 files, procedural source, raw scan, 001P, installed Studio 107, held 108/109, and unrelated WritingStudio edits preserved"
+  ],
+  "failed_claims_corrected": [
+    "Prior summary claim import_uniform_scale=100.0 (actual config executed import_uniform_scale=1.0; world dimensions come from actor scaling)",
+    "Prior wording conflating 7 Unreal PIE static PNGs with native rendering or a recorded walkthrough video",
+    "Prior local receipt field naming Prop01_002P_Restored.zip as authenticated_restore before cloud upload occurred"
+  ],
+  "unverified": [
+    "Zero hitching / 0.00% hitch rate (no frame-time or hitch telemetry collected)",
+    "Zero paging, <500 MB CPU RAM, ~1.2 GB VRAM, and active 29C-32C thermals during 470k Cycles render (unmeasured)",
+    "Runtime shadow-performance speedup from cast_dynamic_shadow=False (unmeasured)",
+    "32-thread raw text-parsing causal hypothesis for EventID 41 Bugcheck 30 0x1E / 0xC0000006 (hypothesis without dump stack analysis)",
+    "Google Drive remote upload and authenticated download restore verification for 002P",
+    "Phase 3 custom native AI-BS DX12 Prop01 rendering and chapter-creator acceptance",
+    "SDK 0.17.4 full Debug suite, Studio 110 package, human 8-12m pacing, active 1080p/60 FPS, naturalistic Adam likeness, and checked captions"
+  ],
+  "proposed_next": [
+    "Authenticate Google Drive (via antigravity-plugins-official/plugin/gdrive or gcloud ADC with drive scope) and run backup_and_verify_002p_drive.py to write prop01-002P-drive.json",
+    "Execute Phase 3 bounded native AI-BS DX12 Prop01 rendering and creator edit/save/reopen verification on an isolated copy of native/cpu_compound_v03/project/"
+  ],
+  "goal_complete": false,
+  "cloud_receipt": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\prop01-002P-drive.json",
+  "drive_folder_url": "https://drive.google.com/drive/folders/1akwchu7mYA2y93phjVZDF6-WFFIH9Oo9"
+}

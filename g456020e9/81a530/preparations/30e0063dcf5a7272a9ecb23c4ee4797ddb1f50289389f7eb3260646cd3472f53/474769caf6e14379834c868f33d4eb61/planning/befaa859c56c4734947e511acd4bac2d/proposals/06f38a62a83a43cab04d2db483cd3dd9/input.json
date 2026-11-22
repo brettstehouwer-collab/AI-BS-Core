@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "474769caf6e14379834c868f33d4eb61",
+  "plan_id": "befaa859c56c4734947e511acd4bac2d",
+  "snapshot_sha256": "5cecd95c8d3daa5e726d9762c227c02fe5034a4c4b9969e0335246a9ae6a1942",
+  "review_digest": "9b8492614bde0f7c0ea57f24f5ecb85209ec62f10e050ae1adc2f4a60cff8adb",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "06f38a62a83a43cab04d2db483cd3dd9",
+  "reviewed_plan_sha256": "daa120db63b7d060bb8e7aae50f2ea8c13f29ad034aec20f689948f0bef2a701",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 43500,
+    "created": 1794779762.7431586
+  },
+  "created_at_utc": "2026-11-15T21:56:04.495670+00:00",
+  "entry_sha256": "b9b83d5b18617bdb5c8aa2802629e72fe11aaad11b240f868cb995929229f527"
+}

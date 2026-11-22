@@ -1,0 +1,137 @@
+{
+  "at": "2026-11-03T23:28:04.232462+00:00",
+  "checkpoint": "P60_v20_recovery_study",
+  "git_head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "source_master_sha256": "0defc05843a923c048e241d073436460e79f691b18785542c51562e6f939c167",
+  "new_master_sha256": "391da44618d7492fe522160d8f5ada5b44f89d8899d30508ad7d69f6bcb31476",
+  "verification": {
+    "at": "2026-11-03T23:28:04.232462+00:00",
+    "status": "passed_v20_recovery_rig_nonhair_export_animation_clearance_native_and16views",
+    "master_sha256": "391da44618d7492fe522160d8f5ada5b44f89d8899d30508ad7d69f6bcb31476",
+    "nonhair_export_primitives_exact": 13,
+    "export_primitives": [
+      {
+        "material": "Skin - diffuse reference-fit paint",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "Podium-inspired cream sepia print",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "Provisional charcoal trousers",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "Podium-inspired teal undershirt",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "Cream collar and cuffs",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "Provisional dark shoe upper",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "Shoe sole",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "V12 natural warm sclera",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "V12 authored brown iris",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "V12 pupil",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "V12 authored short dark hair",
+        "changed_attributes": [
+          "POSITION",
+          "NORMAL",
+          "TEXCOORD_0",
+          "COLOR_0",
+          "JOINTS_0",
+          "WEIGHTS_0"
+        ],
+        "indices_exact": false
+      },
+      {
+        "material": "V12 authored brow beard fibres",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "Adam RIGHT wrist - pale silicone Pray for Kids band",
+        "changed_attributes": [],
+        "indices_exact": true
+      },
+      {
+        "material": "Pray for Kids authored dark green inscription",
+        "changed_attributes": [],
+        "indices_exact": true
+      }
+    ],
+    "native_pixel_comparisons": [
+      {
+        "view": "front",
+        "changed_pixels_over2": 25076,
+        "v19_sha256": "a200581112ce2eb257fd22d0de8906b5473a5960f58b0b3df0870c61545c331e",
+        "v20_sha256": "2c9d7a73d948d0c7d8e2474298ca720746f218b775d86d472a44c84f91cd108e"
+      },
+      {
+        "view": "quarter",
+        "changed_pixels_over2": 20292,
+        "v19_sha256": "165272daaf2757c08a165ba3d1cbc7e9ae40bef985f296aaf7b81c8578b93a82",
+        "v20_sha256": "81cb9dc5d8c88fc1cf9aeb5ae0e6a959ad4f8c3b4fc3ffbe9bfc2921c22d7209"
+      },
+      {
+        "view": "profile",
+        "changed_pixels_over2": 17807,
+        "v19_sha256": "8038f33b3719ef12163154a5553703a18e7a193ed22e92520325438576ca23d5",
+        "v20_sha256": "aa196219b73015d96634860fea04d4c9ee63653076c6de4e7998f6b6a008ed08"
+      },
+      {
+        "view": "full",
+        "changed_pixels_over2": 635,
+        "v19_sha256": "471d3ccac9a0c4a3eda89519155670a76a84d03408eb266358224c9a18726aca",
+        "v20_sha256": "2895f3621ccd875b990bb4bd5e989d7d0356491b584d75a0d4a5d744c9bcdcb6"
+      },
+      {
+        "view": "right-wrist",
+        "changed_pixels_over2": 0,
+        "v19_sha256": "4bbad1f649919ba1e66e634e8dfc1d4bb6dc26dfa0a46756ba2213a11f5493d3",
+        "v20_sha256": "4bbad1f649919ba1e66e634e8dfc1d4bb6dc26dfa0a46756ba2213a11f5493d3"
+      }
+    ],
+    "cap_clearance_source_frames": 224,
+    "cap_clearance_samples": 688352,
+    "minimum_signed_cap_skin_gap_m": 0.0011837917452339752,
+    "render_views": 16,
+    "installed105_2301files_exact": true,
+    "parent_v19_preserved": true,
+    "v20_installed": false,
+    "likeness_approved": false,
+    "goal_complete": false
+  },
+  "next_step": "Back up separate v20master/export/16views and recovery/native evidence. Review hair feedback when supplied; continue skin/material/fabric and overall face likeness work without replacing current105/v18. Current105human gameplay review/captions/pacing/performance and final acceptance remain incomplete.",
+  "failed_history_retained": "P59two failed builds/59A; no failed check relabeled. P60fix proved first with isolated fixture.",
+  "goal_complete": false
+}

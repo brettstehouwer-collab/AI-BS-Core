@@ -1,0 +1,17 @@
+setUpClass (__main__.WorkerSourcePolicyTests) ... ERROR
+
+======================================================================
+ERROR: setUpClass (__main__.WorkerSourcePolicyTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\AI-BS\workspace\test_authorized_worker_launch.py", line 13, in setUpClass
+    spec.loader.exec_module(cls.subject)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1132, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1190, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\AI-BS\\workspace\\authorized_worker_readonly_launch.py'
+
+----------------------------------------------------------------------
+Ran 0 tests in 0.000s
+
+FAILED (errors=1)

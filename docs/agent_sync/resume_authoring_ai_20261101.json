@@ -1,0 +1,25 @@
+{
+  "utc": "2026-11-01T22:24:25.272528+00:00",
+  "source_files_checked": 1409,
+  "unexpected_changes": [],
+  "missing": [],
+  "expected_delivery_annotations": [
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "docs/game_engine/PROJECT_INDEX.md",
+    "docs/game_engine/checkpoints/INDEX.md",
+    "engine/BUILD_STATUS.md",
+    "engine/milestone_queue.json"
+  ],
+  "archive_sha256": "adab653b8d5eb897f840cf8b610faade535b58447d4f499ec0e6d613837c3739",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "resume_status": "ACTIVE_USER_RESUMED_AFTER_RESTART",
+  "previous_goal_turn": "progress:restartcheckpoint/Drivebackuppreservedandgoalpausedonrequest",
+  "native_resume_smoke": "4pinnedjobtests+5actualtypedclienttests passed",
+  "free_bytes": {
+    "C": 117873733632,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "next_step": "Live localAIauthoring throughpinnedjobs/nativePreview/explicitApply"
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
 const TheatricalTeleprompter = () => {
     const [scriptLines, setScriptLines] = useState([
@@ -7,7 +7,7 @@ const TheatricalTeleprompter = () => {
         "Live Stream Feed Synced: YouTube (xZ9FOZ2g878)",
     ]);
     const [shoutoutStatus, setShoutoutStatus] = useState('');
-    const scrollRef = useRef(null);
+    const scrollRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
     useEffect(() => {
         if (scrollRef.current) {

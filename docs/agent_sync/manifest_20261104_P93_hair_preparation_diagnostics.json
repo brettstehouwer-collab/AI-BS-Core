@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-04T19:07:38.757752+00:00",
+  "status": "diagnosed_and_corrected_preparation_not_executed",
+  "first_failure": "Legacy bake asserted uncorrected UV seam faces >0, but retained v27 cap already has corrected wrap UVs. No model was saved.",
+  "second_failure": "PowerShell/Python inline JSON quoting broke diagnostic preparation. Unchanged Blender script then rejected its existing output directory. No model was saved.",
+  "preserved_failed_source": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\P93_hair_study_failed1.py",
+  "failed_source_sha256": "f33008ace0fba9b842ac4f59f80af3a26cf0c7db1ad031480321f3c4f84b351d",
+  "resolution": "Use a standalone Python preparation script, explicit corrected-parent zero-seam contract and fresh R2 output. Source ASTs parse. No further Blender execution this turn.",
+  "canonical_model_changed": false,
+  "installed_model_changed": false,
+  "cloud_upload_attempted": false,
+  "goal_complete": false,
+  "next_step": "Review corrected-parent UV contract and fresh R2 output, then one new controlled bake; inspect geometry/report before export/native checks. Preserve both failed preparations and do not rerun the legacy seam recipe."
+}

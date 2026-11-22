@@ -1,0 +1,293 @@
+{
+  "actor": "/root/postboot_runtime",
+  "observed_utc": "2026-10-25T22:24:39.432271+00:00",
+  "boot_utc": "2026-10-25T22:12:53.432271+00:00",
+  "user": "footb",
+  "scope": "read-only process/config/listener inspection; no service activation or mutation",
+  "listeners": [
+    {
+      "port": 80,
+      "ip": "127.0.0.1",
+      "pid": 26640,
+      "loopback": true,
+      "process": {
+        "pid": 26640,
+        "created_epoch": 1792966407.6779563,
+        "created_utc": "2026-10-25T22:13:27.677956+00:00",
+        "exe": "C:\\Users\\footb\\AppData\\Local\\Microsoft\\WinGet\\Packages\\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\\nginx-1.31.3\\nginx.exe",
+        "owner": "AI-BS\\footb"
+      }
+    },
+    {
+      "port": 80,
+      "ip": "::1",
+      "pid": 26640,
+      "loopback": true,
+      "process": {
+        "pid": 26640,
+        "created_epoch": 1792966407.6779563,
+        "created_utc": "2026-10-25T22:13:27.677956+00:00",
+        "exe": "C:\\Users\\footb\\AppData\\Local\\Microsoft\\WinGet\\Packages\\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\\nginx-1.31.3\\nginx.exe",
+        "owner": "AI-BS\\footb"
+      }
+    },
+    {
+      "port": 5173,
+      "ip": "127.0.0.1",
+      "pid": 35992,
+      "loopback": true,
+      "process": {
+        "pid": 35992,
+        "created_epoch": 1792966433.4406276,
+        "created_utc": "2026-10-25T22:13:53.440628+00:00",
+        "exe": "C:\\Program Files\\nodejs\\node.exe",
+        "owner": "AI-BS\\footb"
+      }
+    },
+    {
+      "port": 8000,
+      "ip": "127.0.0.1",
+      "pid": 35916,
+      "loopback": true,
+      "process": {
+        "pid": 35916,
+        "created_epoch": 1792966433.420372,
+        "created_utc": "2026-10-25T22:13:53.420372+00:00",
+        "exe": "C:\\AI-BS\\go-core\\aibs_engine.exe",
+        "owner": "AI-BS\\footb"
+      }
+    },
+    {
+      "port": 8080,
+      "ip": "127.0.0.1",
+      "pid": 35908,
+      "loopback": true,
+      "process": {
+        "pid": 35908,
+        "created_epoch": 1792966433.4099433,
+        "created_utc": "2026-10-25T22:13:53.409943+00:00",
+        "exe": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "owner": "AI-BS\\footb"
+      }
+    },
+    {
+      "port": 11434,
+      "ip": "127.0.0.1",
+      "pid": 35964,
+      "loopback": true,
+      "process": {
+        "pid": 35964,
+        "created_epoch": 1792966433.4333894,
+        "created_utc": "2026-10-25T22:13:53.433389+00:00",
+        "exe": "C:\\Users\\footb\\AppData\\Local\\Programs\\Ollama\\ollama.exe",
+        "owner": "AI-BS\\footb"
+      }
+    },
+    {
+      "port": 20241,
+      "ip": "127.0.0.1",
+      "pid": 6180,
+      "loopback": true,
+      "process": {
+        "pid": 6180,
+        "created_epoch": 1792966386.027733,
+        "created_utc": "2026-10-25T22:13:06.027733+00:00",
+        "exe": "C:\\Program Files (x86)\\cloudflared\\cloudflared.exe",
+        "owner": "NT AUTHORITY\\SYSTEM"
+      }
+    },
+    {
+      "port": 20242,
+      "ip": "127.0.0.1",
+      "pid": 14092,
+      "loopback": true,
+      "process": {
+        "pid": 14092,
+        "created_epoch": 1792966388.068972,
+        "created_utc": "2026-10-25T22:13:08.068972+00:00",
+        "exe": "C:\\Program Files (x86)\\cloudflared\\cloudflared.exe",
+        "owner": "AI-BS\\footb"
+      }
+    },
+    {
+      "port": 20243,
+      "ip": "127.0.0.1",
+      "pid": 36028,
+      "loopback": true,
+      "process": {
+        "pid": 36028,
+        "created_epoch": 1792966433.4477189,
+        "created_utc": "2026-10-25T22:13:53.447719+00:00",
+        "exe": "C:\\Program Files (x86)\\cloudflared\\cloudflared.exe",
+        "owner": "AI-BS\\footb"
+      }
+    }
+  ],
+  "core": {
+    "backend": {
+      "port": 8080,
+      "present": true,
+      "admitted": true,
+      "pid": 35908,
+      "created_epoch": 1792966433.4099433,
+      "created_utc": "2026-10-25T22:13:53.409943+00:00",
+      "exe": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "owner": "AI-BS\\footb",
+      "six_false_controls": {
+        "AI_BS_RECDEBUT_OUTBOUND_ENABLED": true,
+        "AI_BS_RECDEBUT_INBOUND_POLLING_ENABLED": true,
+        "AI_BS_DISCORD_NOTIFICATIONS_ENABLED": true,
+        "AI_BS_BACKEND_MANAGE_DAEMONS": true,
+        "AI_BS_BACKEND_BACKGROUND_ENABLED": true,
+        "AI_BS_ALLOW_DESTRUCTIVE_ACTIONS": true
+      }
+    },
+    "gateway": {
+      "port": 8000,
+      "present": true,
+      "admitted": true,
+      "pid": 35916,
+      "created_epoch": 1792966433.420372,
+      "created_utc": "2026-10-25T22:13:53.420372+00:00",
+      "exe": "C:\\AI-BS\\go-core\\aibs_engine.exe",
+      "owner": "AI-BS\\footb",
+      "binary_sha_matches_reviewed": true,
+      "six_false_controls": {
+        "AI_BS_RECDEBUT_OUTBOUND_ENABLED": true,
+        "AI_BS_RECDEBUT_INBOUND_POLLING_ENABLED": true,
+        "AI_BS_DISCORD_NOTIFICATIONS_ENABLED": true,
+        "AI_BS_BACKEND_MANAGE_DAEMONS": true,
+        "AI_BS_BACKEND_BACKGROUND_ENABLED": true,
+        "AI_BS_ALLOW_DESTRUCTIVE_ACTIONS": true
+      }
+    },
+    "ollama": {
+      "port": 11434,
+      "present": true,
+      "admitted": true,
+      "pid": 35964,
+      "created_epoch": 1792966433.4333894,
+      "created_utc": "2026-10-25T22:13:53.433389+00:00",
+      "exe": "C:\\Users\\footb\\AppData\\Local\\Programs\\Ollama\\ollama.exe",
+      "owner": "AI-BS\\footb"
+    },
+    "frontend": {
+      "port": 5173,
+      "present": true,
+      "admitted": true,
+      "pid": 35992,
+      "created_epoch": 1792966433.4406276,
+      "created_utc": "2026-10-25T22:13:53.440628+00:00",
+      "exe": "C:\\Program Files\\nodejs\\node.exe",
+      "owner": "AI-BS\\footb"
+    },
+    "api_connector": {
+      "port": 20243,
+      "present": true,
+      "admitted": true,
+      "pid": 36028,
+      "created_epoch": 1792966433.4477189,
+      "created_utc": "2026-10-25T22:13:53.447719+00:00",
+      "exe": "C:\\Program Files (x86)\\cloudflared\\cloudflared.exe",
+      "owner": "AI-BS\\footb",
+      "binary_sha_matches_reviewed": true
+    }
+  },
+  "connectors": [
+    {
+      "pid": 6180,
+      "created_epoch": 1792966386.027733,
+      "created_utc": "2026-10-25T22:13:06.027733+00:00",
+      "exe": "C:\\Program Files (x86)\\cloudflared\\cloudflared.exe",
+      "owner": "NT AUTHORITY\\SYSTEM",
+      "kind": "other_connector_args_not_retained",
+      "token_argument_present": false,
+      "metric_listeners": [
+        {
+          "port": 20241,
+          "ip": "127.0.0.1"
+        }
+      ]
+    },
+    {
+      "pid": 14092,
+      "created_epoch": 1792966388.068972,
+      "created_utc": "2026-10-25T22:13:08.068972+00:00",
+      "exe": "C:\\Program Files (x86)\\cloudflared\\cloudflared.exe",
+      "owner": "AI-BS\\footb",
+      "kind": "publishing_user_config",
+      "selected_config_sha256": "c93822c6b211ca39fe12553692188b1c160f78ab93f23cea24cc0c6842f57b3c",
+      "token_argument_present": false,
+      "metric_listeners": [
+        {
+          "port": 20242,
+          "ip": "127.0.0.1"
+        }
+      ]
+    },
+    {
+      "pid": 36028,
+      "created_epoch": 1792966433.4477189,
+      "created_utc": "2026-10-25T22:13:53.447719+00:00",
+      "exe": "C:\\Program Files (x86)\\cloudflared\\cloudflared.exe",
+      "owner": "AI-BS\\footb",
+      "kind": "scoped_api_config",
+      "selected_config_sha256": "30bc88a23551fe7eb55e83c33c39b3b5b6b83c15944f0189ba05984856dc0b36",
+      "token_argument_present": false,
+      "metric_listeners": [
+        {
+          "port": 20243,
+          "ip": "127.0.0.1"
+        }
+      ]
+    }
+  ],
+  "nginx": [
+    {
+      "pid": 14176,
+      "created_epoch": 1792966388.075791,
+      "created_utc": "2026-10-25T22:13:08.075791+00:00",
+      "exe": "C:\\Users\\footb\\AppData\\Local\\Microsoft\\WinGet\\Packages\\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\\nginx-1.31.3\\nginx.exe",
+      "owner": "AI-BS\\footb",
+      "reviewed_exe_matches": true,
+      "parent_pid": 3288,
+      "explicit_reviewed_config": true,
+      "explicit_reviewed_prefix": true
+    },
+    {
+      "pid": 26640,
+      "created_epoch": 1792966407.6779563,
+      "created_utc": "2026-10-25T22:13:27.677956+00:00",
+      "exe": "C:\\Users\\footb\\AppData\\Local\\Microsoft\\WinGet\\Packages\\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\\nginx-1.31.3\\nginx.exe",
+      "owner": "AI-BS\\footb",
+      "reviewed_exe_matches": true,
+      "parent_pid": 14176,
+      "explicit_reviewed_config": true,
+      "explicit_reviewed_prefix": true
+    }
+  ],
+  "configs": {
+    "scripts/core_boot.py": {
+      "sha256": "9ccbed9820d7afdb2f62ad930d32c002170bf0fc7e7c50cd540eb7c7a0f8fc65",
+      "matches_record99": true
+    },
+    "saved_data/core_runtime/api-tunnel-scoped.yml": {
+      "sha256": "30bc88a23551fe7eb55e83c33c39b3b5b6b83c15944f0189ba05984856dc0b36",
+      "matches_record99": true
+    },
+    "user_cloudflared_config": {
+      "sha256": "c93822c6b211ca39fe12553692188b1c160f78ab93f23cea24cc0c6842f57b3c",
+      "matches_record99": true
+    }
+  },
+  "errors": [],
+  "paired_core_pin_matches": true,
+  "origin_config": {
+    "sha256": "fcf8f8e919e2fe02e1797f555845f584f6c8782d1487ce1c82f6e891211dc1a9",
+    "loopback_listen_directives": 2,
+    "access_log_off": true
+  },
+  "core_loopback_only": true,
+  "unreal_8888_off": true,
+  "finished_utc": "2026-10-25T22:24:39.517398+00:00"
+}

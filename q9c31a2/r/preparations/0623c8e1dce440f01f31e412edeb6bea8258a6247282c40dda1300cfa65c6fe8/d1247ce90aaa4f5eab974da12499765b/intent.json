@@ -1,0 +1,79 @@
+{
+  "kind": "project_preparation",
+  "request_id": "d1247ce90aaa4f5eab974da12499765b",
+  "owner": "local_admin",
+  "plan": {
+    "request_id": "d1247ce90aaa4f5eab974da12499765b",
+    "repository_id": "ai-bs",
+    "objective": "Change value from1 to42; preserve all tests.",
+    "files": [
+      {
+        "relative_path": "app.py",
+        "role": "editable"
+      },
+      {
+        "relative_path": "test_app.py",
+        "role": "verification"
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "value",
+        "profile": "python_unittest",
+        "targets": [
+          "test_app"
+        ]
+      }
+    ],
+    "limits": {
+      "check_seconds": 15,
+      "total_seconds": 15,
+      "output_bytes": 65536
+    }
+  },
+  "plan_sha256": "880789e5c1409c9efc0c6ab5eabb04040d96d88f37fbbe80a5fbc662b53043d8",
+  "repository_policy_sha256": "8cfc8359f3b13482d764893940d227663f07105d4a1c1a5d6d4049742c178802",
+  "snapshot": {
+    "schema_version": 1,
+    "state": "SNAPSHOT_ONLY",
+    "authorized": false,
+    "executed": false,
+    "commit": "3b4c637c14f39dbcc834883b9ec1221245bacea9",
+    "files": [
+      {
+        "relative_path": "app.py",
+        "role": "editable",
+        "length": 10,
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886"
+      },
+      {
+        "relative_path": "test_app.py",
+        "role": "verification",
+        "length": 138,
+        "sha256": "3c6ae47571decf8cef4bb28322f712c74ca0bf0bd0c41bcf88b847d1eb5dae3c"
+      }
+    ],
+    "byte_count": 148,
+    "captured_at_utc": "2026-11-14T22:52:44.783663+00:00",
+    "snapshot_sha256": "8dae3e07ceb66339773ac494a91a987811f2a134550f05f76fc919d005d8b7b2"
+  },
+  "checks": [
+    {
+      "check_id": "value",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "test_app"
+      ]
+    }
+  ],
+  "review_digest": "ca1bbda13220d3004c83442459ac0da4697203ba30cde8c8151ca7ade805f0b7",
+  "state": "PREPARING",
+  "worker": {
+    "pid": 21120,
+    "created": 1794696568.530988
+  },
+  "created_at_utc": "2026-11-14T22:52:44.783663+00:00",
+  "entry_sha256": "57d95d6530c0b02a7d984552ff563b6c68dfc704c6d30afd5c56a545fa3b89bb"
+}

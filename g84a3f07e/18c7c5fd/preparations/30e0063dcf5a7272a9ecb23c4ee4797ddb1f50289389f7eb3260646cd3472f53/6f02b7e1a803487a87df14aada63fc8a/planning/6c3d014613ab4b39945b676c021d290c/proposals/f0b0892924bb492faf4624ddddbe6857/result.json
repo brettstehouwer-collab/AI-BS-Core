@@ -1,0 +1,10 @@
+{
+  "state": "CANCELLED",
+  "input_sha256": "a64c0e2948e8610bb1c21b297da381b3f4c3c1d1ac2ae71911f556d8fa6db1e4",
+  "proposal": null,
+  "model_output": null,
+  "error_code": "cancel_requested",
+  "elapsed_seconds": null,
+  "finished_at_utc": "2026-11-14T14:20:56.790766+00:00",
+  "entry_sha256": "1391a7bd34f7c1a1a127d47671456fe6f8f79628b682cdc189f0965c685c7c91"
+}

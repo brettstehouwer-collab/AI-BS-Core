@@ -1,0 +1,89 @@
+{
+  "kind": "project_preparation",
+  "request_id": "2c99af5f10e54c479edbca6ebd01ea40",
+  "owner": "firebase:fixture:alice",
+  "plan": {
+    "request_id": "2c99af5f10e54c479edbca6ebd01ea40",
+    "repository_id": "ai-bs",
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "files": [
+      {
+        "relative_path": "src/app.py",
+        "role": "editable"
+      },
+      {
+        "relative_path": "tests/test_app.py",
+        "role": "verification"
+      },
+      {
+        "relative_path": "tests/__init__.py",
+        "role": "dependency"
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "profile": "python_unittest",
+        "targets": [
+          "tests.test_app"
+        ]
+      }
+    ],
+    "limits": {
+      "check_seconds": 30,
+      "total_seconds": 180,
+      "output_bytes": 262144
+    }
+  },
+  "plan_sha256": "f9747c79483202ed0b8f8805ec6c1349d112b55237368f2f62d9356c5318ba73",
+  "repository_policy_sha256": "52ce74e0b5ca2b52e717ff3a864e6fb08c247ddcc2e19ed0e07e40a4541d1f87",
+  "snapshot": {
+    "schema_version": 1,
+    "state": "SNAPSHOT_ONLY",
+    "authorized": false,
+    "executed": false,
+    "commit": "848e056101939eae4feedef972c5297471fd84b3",
+    "files": [
+      {
+        "relative_path": "src/app.py",
+        "role": "editable",
+        "length": 10,
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886"
+      },
+      {
+        "relative_path": "tests/test_app.py",
+        "role": "verification",
+        "length": 144,
+        "sha256": "9f70b36f029addc92c78901796a906f8ed8b74cdb05b22e7c5c4e08727f7ff56"
+      },
+      {
+        "relative_path": "tests/__init__.py",
+        "role": "dependency",
+        "length": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "byte_count": 154,
+    "captured_at_utc": "2026-11-15T22:43:56.159747+00:00",
+    "snapshot_sha256": "1991ebb029da9c1d4c96c3a3b1ff7b51875bcd3c24d5e18c1fcb3ab190f5e690"
+  },
+  "checks": [
+    {
+      "check_id": "python",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "tests.test_app"
+      ]
+    }
+  ],
+  "review_digest": "8ece4d8e51c882ef2bee0d9475d8f37d01535fa484454d83297693271fc2cc63",
+  "state": "PREPARING",
+  "worker": {
+    "pid": 12784,
+    "created": 1794782635.3494687
+  },
+  "created_at_utc": "2026-11-15T22:43:56.160747+00:00",
+  "entry_sha256": "18211a53c94e51fc3c9b271adf43b30d4c411470229c2c82d57dd2e912e407bd"
+}

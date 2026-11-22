@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-04T00:12:57.825641+00:00",
+  "git_head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "source": {
+    "engine/src/character_import.cpp": {
+      "bytes": 48275,
+      "sha256": "906231049fbadd8cac2dcf37d29edefc415f02efaeca1e7c4537e2d77fca6ce1"
+    },
+    "engine/include/aibs/character_import.hpp": {
+      "bytes": 1722,
+      "sha256": "b203bcefae56bd929602c79ded31465dfae82d0ea07efa893a5c6b549e561fb1"
+    },
+    "engine/tests/character_import_tests.cpp": {
+      "bytes": 14258,
+      "sha256": "2a90ce285137c57a57f1c0c6fe744b3cbfe34cdcdc363be089813a44c3924264"
+    },
+    "engine/CMakeLists.txt": {
+      "bytes": 63192,
+      "sha256": "49c0d5fde8d4be350e4ebd716b24c777038662b8ad496b3e38202dbcd5140147"
+    },
+    "engine/tests/character_surface_review.cpp": {
+      "bytes": 5809,
+      "sha256": "cd07688cdd445782e9305dcd2f7335d80705c5b8cf7be900452b36743fdbeb14"
+    }
+  },
+  "verification": "D:\\AI-BS-Game-Resources\\P63\\CharacterSurfaceImport\\verification.json",
+  "next_step": "Complete full0170 source regressions, qualify separately installed SDK consumers and source-native opening with new asset support, then package/restart checks. Continue personal likeness and human/caption acceptance without claiming completion.",
+  "goal_complete": false
+}

@@ -1,0 +1,42 @@
+{
+  "kind": "coding_mode_execution_input",
+  "owner": "local_admin",
+  "payload": {
+    "execution_id": "f1c6f5e05d40465e975f4ef9044b7872",
+    "request_id": "d1247ce90aaa4f5eab974da12499765b",
+    "plan_id": "fe476fb845d541519126f1f4b0331498",
+    "proposal_id": "6491bd98340549af9d4d9dbe4ec30b18",
+    "execution_backend": "trusted_host",
+    "trusted_local_ack": true
+  },
+  "proposal_sha256": "44415b5a05581f587ac2e23d824c1739e2290e7e09ad5eae8c0995368546e717",
+  "files": [
+    {
+      "relative_path": "app.py",
+      "role": "editable",
+      "length": 11,
+      "sha256": "88f92d58d9706e16b293aacf471dd930213780b70cbf773d31c716c3e1e84682"
+    },
+    {
+      "relative_path": "test_app.py",
+      "role": "verification",
+      "length": 138,
+      "sha256": "3c6ae47571decf8cef4bb28322f712c74ca0bf0bd0c41bcf88b847d1eb5dae3c"
+    }
+  ],
+  "checks": [
+    {
+      "check_id": "value",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "test_app"
+      ],
+      "status": "not_run"
+    }
+  ],
+  "review_diff": "--- a/app.py\n+++ b/app.py\n@@ -1 +1 @@\n-value = 1\n+value = 42\n",
+  "created_at_utc": "2026-11-14T22:52:44.927982+00:00",
+  "entry_sha256": "8efcc6e445c3cab4b4eaac9fbfcaddc5e20ce550f0a8944e03f3ea17ace53ae9"
+}

@@ -1,0 +1,483 @@
+{
+  "summary": {
+    "status": "PASSED",
+    "total_tests": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "duration_seconds": 80.445,
+    "exit_code": 0,
+    "filter_tier": "4",
+    "filter_feature": null,
+    "timestamp": "2026-11-12T02:47:45.746876+00:00"
+  },
+  "tier_breakdown": {
+    "tier1": {
+      "tier_num": "1",
+      "name": "Tier 1: Feature Coverage (\u22655/feature)",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 0,
+      "status": "EMPTY"
+    },
+    "tier2": {
+      "tier_num": "2",
+      "name": "Tier 2: Boundary & Corner Cases (\u22655/feature)",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 0,
+      "status": "EMPTY"
+    },
+    "tier3": {
+      "tier_num": "3",
+      "name": "Tier 3: Pairwise Cross-Feature Integration",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 0,
+      "status": "EMPTY"
+    },
+    "tier4": {
+      "tier_num": "4",
+      "name": "Tier 4: Real-World Workload Scenarios",
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 80.412,
+      "status": "PASSED"
+    }
+  },
+  "feature_coverage": [
+    {
+      "feature_id": 1,
+      "code": "F01",
+      "name": "Sheltered Hub Stations (3)",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 2,
+      "code": "F02",
+      "name": "Spatial Trigger Zones (7)",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 3,
+      "code": "F03",
+      "name": "Adam Blend Tree Animations",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 4,
+      "code": "F04",
+      "name": "Native DX12 Viewport Session",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 5,
+      "code": "F05",
+      "name": "Legacy DirectX 8/9/10 Fallbacks",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 6,
+      "code": "F06",
+      "name": "Engine Graphics Configuration",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 7,
+      "code": "F07",
+      "name": "Local ML Training Pipeline",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 8,
+      "code": "F08",
+      "name": "Distributed Training Driver",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 9,
+      "code": "F09",
+      "name": "Dataproc Serverless Template",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 10,
+      "code": "F10",
+      "name": "Dataproc Batch Deployment Script",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 11,
+      "code": "F11",
+      "name": "Synced Drive Assets 177 Files",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 12,
+      "code": "F12",
+      "name": "ChromaDB Vector Ingestion",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 13,
+      "code": "F13",
+      "name": "Microservice Vector Retrieval",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 14,
+      "code": "F14",
+      "name": "Chapter Creator & Native Studio Audit",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 15,
+      "code": "F15",
+      "name": "FastAPI Master Engine Audit",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 16,
+      "code": "F16",
+      "name": "ComfyUI RTX 4090 Bridge Audit",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 17,
+      "code": "F17",
+      "name": "Vite Frontend Build & Dev Audit",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 18,
+      "code": "F18",
+      "name": "Opaque-Box E2E Test Suite",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    }
+  ],
+  "test_cases": [
+    {
+      "name": "test_s01_chapter1_stations_and_spatial_containment_walkthrough",
+      "classname": "tier4_scenarios.test_s01_authoring_to_viewport_e2e.TestS01AuthoringToViewportE2E",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.005,
+      "message": null
+    },
+    {
+      "name": "test_s01_dx12_native_viewport_projection_execution",
+      "classname": "tier4_scenarios.test_s01_authoring_to_viewport_e2e.TestS01AuthoringToViewportE2E",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.498,
+      "message": null
+    },
+    {
+      "name": "test_s02_graphics_fallback_chain_and_translation_bridges",
+      "classname": "tier4_scenarios.test_s02_legacy_dx_fallback_recovery.TestS02LegacyDXFallbackRecovery",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        4,
+        5,
+        6,
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_s02_native_viewport_survives_fallback_configuration",
+      "classname": "tier4_scenarios.test_s02_legacy_dx_fallback_recovery.TestS02LegacyDXFallbackRecovery",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        4,
+        5,
+        6,
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.464,
+      "message": null
+    },
+    {
+      "name": "test_s03_local_ml_training_artifacts_and_metrics",
+      "classname": "tier4_scenarios.test_s03_distributed_ml_dataproc_lifecycle.TestS03DistributedMLDataprocLifecycle",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        7,
+        8,
+        9,
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_s03_dataproc_session_template_and_deployment_validation",
+      "classname": "tier4_scenarios.test_s03_distributed_ml_dataproc_lifecycle.TestS03DistributedMLDataprocLifecycle",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        7,
+        8,
+        9,
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.094,
+      "message": null
+    },
+    {
+      "name": "test_s04_assets_inventory_and_category_completeness",
+      "classname": "tier4_scenarios.test_s04_cloud_assets_vectorization_search.TestS04CloudAssetsVectorizationSearch",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        11,
+        12,
+        13,
+        15
+      ],
+      "outcome": "passed",
+      "duration": 0.012,
+      "message": null
+    },
+    {
+      "name": "test_s04_semantic_search_and_metadata_retrieval_lifecycle",
+      "classname": "tier4_scenarios.test_s04_cloud_assets_vectorization_search.TestS04CloudAssetsVectorizationSearch",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        11,
+        12,
+        13,
+        15
+      ],
+      "outcome": "passed",
+      "duration": 8.483,
+      "message": null
+    },
+    {
+      "name": "test_s05_studio_notes_to_generative_prompt_dispatch",
+      "classname": "tier4_scenarios.test_s05_cognitive_studio_comfyui_generation.TestS05CognitiveStudioComfyUIGeneration",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        1,
+        13,
+        15,
+        16
+      ],
+      "outcome": "passed",
+      "duration": 8.61,
+      "message": null
+    },
+    {
+      "name": "test_s06_execute_m5_master_audit_script",
+      "classname": "tier4_scenarios.test_s06_full_stack_subsystem_audit.TestS06FullStackSubsystemAudit",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        14,
+        15,
+        16,
+        17
+      ],
+      "outcome": "passed",
+      "duration": 38.265,
+      "message": null
+    },
+    {
+      "name": "test_s06_direct_endpoint_matrix_verification",
+      "classname": "tier4_scenarios.test_s06_full_stack_subsystem_audit.TestS06FullStackSubsystemAudit",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        14,
+        15,
+        16,
+        17
+      ],
+      "outcome": "passed",
+      "duration": 8.129,
+      "message": null
+    },
+    {
+      "name": "test_s07_drive_assets_vector_retrieval_and_viewport_entity_mapping",
+      "classname": "tier4_scenarios.test_s07_multimodal_drive_assets_viewport.TestS07MultimodalDriveAssetsViewport",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        1,
+        4,
+        11,
+        12,
+        13
+      ],
+      "outcome": "passed",
+      "duration": 2.7,
+      "message": null
+    },
+    {
+      "name": "test_s08_backend_resilience_under_missing_external_credentials",
+      "classname": "tier4_scenarios.test_s08_disaster_recovery_graceful_fallback.TestS08DisasterRecoveryGracefulFallback",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        5,
+        8,
+        12,
+        15
+      ],
+      "outcome": "passed",
+      "duration": 2.051,
+      "message": null
+    },
+    {
+      "name": "test_s08_distributed_driver_local_execution_without_gcp_dataproc",
+      "classname": "tier4_scenarios.test_s08_disaster_recovery_graceful_fallback.TestS08DisasterRecoveryGracefulFallback",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        5,
+        8,
+        12,
+        15
+      ],
+      "outcome": "passed",
+      "duration": 0.094,
+      "message": null
+    },
+    {
+      "name": "test_s08_graphics_warp_fallback_availability",
+      "classname": "tier4_scenarios.test_s08_disaster_recovery_graceful_fallback.TestS08DisasterRecoveryGracefulFallback",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        5,
+        8,
+        12,
+        15
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_s09_execute_runner_with_json_and_xml_reporting",
+      "classname": "tier4_scenarios.test_s09_test_suite_telemetry_export.TestS09TestSuiteTelemetryExport",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        14,
+        15,
+        17,
+        18
+      ],
+      "outcome": "passed",
+      "duration": 11.006,
+      "message": null
+    }
+  ]
+}

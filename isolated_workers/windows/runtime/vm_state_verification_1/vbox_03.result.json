@@ -1,0 +1,11 @@
+﻿{
+    "Arguments":  [
+                      "modifynvram",
+                      "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                      "listvars"
+                  ],
+    "PID":  264808,
+    "ExitCode":  0,
+    "TimedOut":  false,
+    "TimestampUTC":  "2026-10-23T21:52:47.1946614Z"
+}

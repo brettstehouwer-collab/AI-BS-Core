@@ -1,0 +1,44 @@
+{
+  "at": "2026-11-04T21:34:18.822722+00:00",
+  "status": "verified_v33_local_painted_band_correction_backed_up",
+  "model": "E:\\AI_BS_Resources\\FirstBoot\\P102\\AdamNeckColorStudy\\master\\adam-character-v33-neck-color-study.blend",
+  "model_sha256": "94f5f67fd6fd44dd97c467f7c77ef5a00496e4a86337f51c79aea2b9444ad14e",
+  "comparison": "E:\\AI_BS_Resources\\FirstBoot\\P102\\AdamNeckColorStudy\\master\\matched-neck-color-review.png",
+  "evidence": "E:\\AI_BS_Resources\\FirstBoot\\P102\\AdamNeckColorStudy\\qualification.json",
+  "backup_receipt": "docs/game_engine/checkpoints/102A-drive.json",
+  "native_source_changed": false,
+  "installed_release_or_private_review_default_changed": false,
+  "real_saves_or_original_family_media_changed": false,
+  "painted_band_absent_in_matched_front_quarter_views": true,
+  "all_neck_artifacts_resolved": false,
+  "likeness_approved": false,
+  "monitor_status": "available",
+  "monitor_sha256": "f4b3efb57627bbdb141caf33de8146503290b5f5ab5c6ab2a1efc6a0841d634b",
+  "free_GiB": {
+    "C": 200.42,
+    "D": 24.21,
+    "E": 39.34
+  },
+  "goal_complete": false,
+  "next_step": "Reconcile current Studio packaging/source ownership, then prepare a separate next AI-BS preview candidate combining published0172 and qualified v33 draft. Preserve107, old masters, review worlds and all real saves. Complete current candidate regression/launch checks before any launcher update; human pacing/current1080p60, checked captions and final likeness acceptance remain open.",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "private_worktree_snapshot": "E:\\AI_BS_Resources\\FirstBoot\\P102\\AdamNeckColorStudy\\private-git-status.txt",
+  "private_worktree_sha256": "d2d085d4942c123c67f4c46b7d20e302c9206a9e85914254a1d75b7f196966c9",
+  "private_git_uploaded": false,
+  "historical_scope_read": [
+    "P101 current game index/handoff",
+    "P95 explicit emissive diagnostic and portrait source",
+    "v31/v32 source/export contracts and actual color/material corners",
+    "P82 package107/spec entrypoints located only; full future packaging review pending"
+  ],
+  "changed_paths": [
+    "docs/CODEX_HANDOFF.md",
+    "docs/game_engine/PROJECT_INDEX.md",
+    "docs/game_engine/WARM_BEGINNING_ACCEPTANCE_AUDIT.md",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "docs/game_engine/ADAM_CHARACTER_REFERENCE_NOTES.md",
+    "docs/game_engine/checkpoints/102A-drive.json",
+    "engine/out/warm_beginning/monitor_summary.json"
+  ]
+}

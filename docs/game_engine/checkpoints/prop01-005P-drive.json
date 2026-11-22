@@ -1,0 +1,21 @@
+{
+  "checkpoint": "005P",
+  "description": "Native Motherboard Play Verified: 1,630 Walking Ticks, Bypass & Repair Routes, Durable Rev 19 & GPU Captures",
+  "timestamp": "2026-11-06T00:40:19Z",
+  "drive_folder_id": "1bSLlqS96WCqWrw6Tt6019ZEoVr2e7czD",
+  "drive_parent_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "drive_file_id": "1MnHqSTp0vU83_z7PVHzr8eLG7cDsUqSM",
+  "archive_name": "Prop01_005P_Motherboard_Play_Checkpoint.zip",
+  "byte_count": 460319,
+  "sha256": "fd4902035566196c10d21f0a6f752e79fb994e29663e15edadb1d4afc819e5c7",
+  "member_count": 14,
+  "restore_verified": true,
+  "crc_errors": 0,
+  "walking_ticks": 1630,
+  "durable_revision": 19,
+  "bypass_route": true,
+  "repair_route": true,
+  "debug_errors": 0,
+  "debug_warnings": 0,
+  "goal_complete": false
+}

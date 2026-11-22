@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "6648d159ab074c98984d0e201a7cdffa",
+  "plan_id": "59c1b1be036d4b04856482b6bb4a90a4",
+  "snapshot_sha256": "7c0d18d9166764034895c9bc87c9bb20dba4baaee71b01145ab3fdfc3ff98783",
+  "review_digest": "a4f90d0923b7024f9d28a4c1f3ad1ceb036d81d2857b752c70145bdc662ede4e",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "51a6dadb88854155b81af64f91881f20",
+  "reviewed_plan_sha256": "6e676f74f335604b5473ab08190368dce645546d005bd9ccb7036bb8af09fceb",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "203570af44fafe55a952f7421ec38a929c0a02ca49a4c058897b04a6562f1fc5",
+        "content": "value = 1\nlabel = \"old\"\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "79928e0b8ec7724695f28bff48860d7cc166c48809fc6df3c17e93d291f27c76",
+  "worker": {
+    "pid": 59156,
+    "created": 1794718679.0745277
+  },
+  "created_at_utc": "2026-11-15T04:58:01.628026+00:00",
+  "entry_sha256": "95e4f8456e878df9674e4c264e196b480a59bfffc7c1e541334dd1f76b57cb9f"
+}

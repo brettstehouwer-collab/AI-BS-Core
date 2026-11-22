@@ -1,0 +1,14 @@
+{
+  "schema_version":2,
+  "asset_id":"bc21f729-839f-4642-8ae2-4c1b1842a7ae",
+  "name":"Adam v18 right-wrist Pray for Kids study - unapproved",
+  "source":{"sha256":"8e15b79c9c93b5373acbcbc80fabcb3565aa4a85aa4696bce0a86bdd749acd73","bytes":13649444},
+  "resources":[],
+  "source_manifest":{"format":"AIBS_GLTF_SOURCE 1","sha256":"d148e284f710f7e4a6fd7b708764e688d6e203f5fbe7570004533b0ee0940e65"},
+  "license":{"sha256":"ee7098920911780b39ae07b6b6665f0d70710d9db23644515f6f137af33dda74","bytes":1144},
+  "license_review":"Supplied UTF-8 declaration copied verbatim; ownership/permission not inferred",
+  "importer":{"name":"aibs-gltf-character","format_version":2,"cgltf_version":"1.15","commit":"360db1a95480fe102ae9c69b27c5d101167ff5ba","header_sha256":"e378a21c084bf1f288bb799de827bb26906efb024255f1ecf1705ea13f11c6ec","license":"MIT","license_notice":"Full cgltf MIT notice is distributed with the engine dependency and installed SDK licenses"},
+  "options":{"units":"meters","up_axis":"+Y","forward_axis":"+Z","axis_conversion":"right-handed glTF to left-handed engine by X reflection","bind_shape":"coherent joint-bind times inverse-bind; skinned mesh-node transform is ignored","bake_rate":30,"clips":[{"source_animation":0,"name":"idle","looping":true},{"source_animation":1,"name":"walk","looping":true},{"source_animation":2,"name":"catchup","looping":true},{"source_animation":3,"name":"guidance","looping":false}],"source_skin_to_cooked":[0,1,2,5,8,13,9,14,18,20,10,15,19,21,3,6,11,16,4,7,12,17],"baked_intervals_seconds":[0.033333331346511841,0.033333333333333333,0.033333331346511841,0.033333331346511841],"interpolation":"LINEAR TRS baked uniformly including endpoints; per-channel clamping","opaque_alpha":"source alpha ignored and set to255 before linear-light sRGB mip generation; hologram opacity belongs to runtime instance","external_resources":"exact explicit URI map only; no filesystem or network fallback","weight_policy":"at most four influences; bounded float/UNORM quantization normalization only"},
+  "import_memory":{"parser_peak_bytes":596906,"engine_owned_live_upper_bound_bytes":75990506,"scope":"private parser and conservative engine-owned accounting; not WIC, driver or whole-process memory"},
+  "cooked":{"file":"2b407b9512f66d24737f6b1c4a6f9d1fb8562530c11d783981d5dd5c90c5a0d4.aibchar","sha256":"2b407b9512f66d24737f6b1c4a6f9d1fb8562530c11d783981d5dd5c90c5a0d4","bytes":19800396,"decoded_bytes":19801116}
+}

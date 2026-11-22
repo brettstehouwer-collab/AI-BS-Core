@@ -1,0 +1,60 @@
+{
+  "checkpoint": "PROP01-003P",
+  "generated_at": "2026-11-05T23:25:00Z",
+  "status": "locally_verified",
+  "cloud_backup_verified": false,
+  "cloud_backup_destination": "https://drive.google.com/drive/folders/1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "cloud_backup_pending_for": "codex",
+  "git_branch": "codex/audit-v532976-20261031",
+  "git_commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "sdk_version": "0.17.4",
+  "archive": {
+    "local_path": "D:\\AI-BS-Game-Resources\\Prop01_Checkpoints\\003P\\Prop01_003P_Native_Acceptance_Checkpoint.zip",
+    "bytes": 7761765,
+    "sha256": "e6b426ddd0ac17bfe548d70221b6fc6d79bfd4b822e0c5ec6049cca1a8e312d1",
+    "member_count": 67,
+    "restore_verified": true
+  },
+  "receipt_path": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\prop01-003P-local.json",
+  "master_record_reference": "C:\\AI-BS\\docs\\AI_BS_Program_and_Game_Complete_Development_Record_2026-11-05.md",
+  "phase_outcomes": {
+    "phase_3A_dx12_gpu": {
+      "status": "passed",
+      "configurations_tested": 16,
+      "adapter": "NVIDIA GeForce RTX 4090",
+      "resolution": [1600, 900],
+      "feature_level": "12.2",
+      "d3d12_debug_errors": 0,
+      "d3d12_debug_warnings": 0,
+      "material_model": "AIBSurf2 opaque-albedo-emission-v2",
+      "albedo_srgb_verified": true,
+      "authored_lights_verified": true,
+      "directional_shadow_verified": true,
+      "collision_proxy_enclosure_repaired": true,
+      "jolt_physics_capsule_walk_verified": true,
+      "two_process_restart_verified": true,
+      "silkscreen_horizontal_mirroring_caveat_documented": true
+    },
+    "phase_3B_creator_acceptance": {
+      "status": "passed",
+      "outliner_selection_verified": true,
+      "viewport_selftest_pick_verified": true,
+      "repeated_asset_pack_adoption_and_placement_verified": true,
+      "deletion_undo_redo_verified": true,
+      "hero_movement_undo_redo_restoration_verified": true,
+      "save_and_aibd3_export_verified": true,
+      "separate_process_reopen_verified": true,
+      "unrelated_rows_preserved_without_corruption": true,
+      "jolt_physics_collision_walk_reopen_verified": true,
+      "reopen_pixel_diff_contextual": 0,
+      "reopen_pixel_diff_closeup": 0
+    },
+    "phase_3C_focused_regressions": {
+      "status": "passed",
+      "test_warm_build_monitor": "14/14 passed",
+      "test_creator_viewport": "4/4 passed",
+      "test_content_view": "9/9 passed",
+      "native_reopen_verification": "passed"
+    }
+  }
+}

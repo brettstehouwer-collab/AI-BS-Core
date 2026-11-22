@@ -1,0 +1,60 @@
+{
+  "utc": "2026-10-25T21:45:10.2693103Z",
+  "eastern": "2026-10-25T17:45:10.2743309-04:00",
+  "target": {
+    "pid": 33936,
+    "start": "2026-10-25T05:47:46.5943813Z",
+    "exe": "C:\\Users\\footb\\AppData\\Local\\OpenAI\\Codex\\bin\\2993767bd1dfb009\\codex.exe",
+    "private_commit_bytes": 145376296960,
+    "working_set_bytes": 18530672640
+  },
+  "memory": {
+    "CommittedBytes": 203190345728,
+    "CommitLimit": 205738504192,
+    "AvailableBytes": 10338451456,
+    "PagesInputPersec": 7,
+    "PageReadsPersec": 3
+  },
+  "pagefiles": [
+    {
+      "Name": "C:\\pagefile.sys",
+      "AllocatedBaseSize": 133080,
+      "CurrentUsage": 51376,
+      "PeakUsage": 54210
+    }
+  ],
+  "pagefile_settings": [
+    {
+      "Name": "C:\\pagefile.sys",
+      "InitialSize": 0,
+      "MaximumSize": 0
+    }
+  ],
+  "all_drives_automatic": false,
+  "physical": {
+    "TotalVisibleMemorySize": 64641804,
+    "FreePhysicalMemory": 10071424
+  },
+  "drives": [
+    {
+      "DeviceID": "C:",
+      "Size": 1796861837312,
+      "FreeSpace": 43280969728
+    },
+    {
+      "DeviceID": "D:",
+      "Size": 510770802688,
+      "FreeSpace": 60686950400
+    },
+    {
+      "DeviceID": "E:",
+      "Size": 899427594240,
+      "FreeSpace": 115395764224
+    },
+    {
+      "DeviceID": "F:",
+      "Size": 79990812672,
+      "FreeSpace": 65971441664
+    }
+  ]
+}

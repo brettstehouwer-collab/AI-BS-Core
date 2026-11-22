@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "verified_at": "2026-11-01T14:53:28.707557+00:00",
+  "pause_archive": {
+    "id": "1aX2JU3seIxg2Wz01allY-wwb-xj2Ndzc",
+    "drive_bytes": 2346274,
+    "local_bytes": 2346274,
+    "parent_id": "1I3zl6KvXvyWl9PA77CNVY-riMO7UBQ8U",
+    "local_sha256": "c874787744b100c04b6d21f73e63035a941a83e5257b9a1c2b3a49e9ed7c6635",
+    "remote_checksum": "not exposed by connector; no claim of remote cryptographic hash comparison"
+  },
+  "pause_folder_files": 6,
+  "m3_actual_image_folder_files": 5,
+  "local_zip_crc_and_byte_readback": "passed",
+  "local_credential_scan": {
+    "files": 272,
+    "markers": 0
+  },
+  "all_agents_stopped": true,
+  "no_live_builds": true,
+  "goal_pause_tool": "next after final Drive sync"
+}

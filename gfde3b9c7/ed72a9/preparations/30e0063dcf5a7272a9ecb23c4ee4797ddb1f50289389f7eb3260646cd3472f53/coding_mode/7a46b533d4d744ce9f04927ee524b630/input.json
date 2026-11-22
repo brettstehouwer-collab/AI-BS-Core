@@ -1,0 +1,53 @@
+{
+  "kind": "coding_mode_execution_input",
+  "owner": "firebase:fixture:alice",
+  "payload": {
+    "execution_id": "7a46b533d4d744ce9f04927ee524b630",
+    "request_id": "58c350db683e469085aa55242cfd535c",
+    "plan_id": "61b4752198814f7595ce8619ac54b499",
+    "proposal_id": "c38a6513eb89423ab976cb56b4ffb5ce",
+    "execution_backend": "trusted_host",
+    "trusted_local_ack": true
+  },
+  "proposal_sha256": "c4b0550b846d0d4df427370cb6bd00b7aadf696e092984257a3067979cc11cc3",
+  "files": [
+    {
+      "relative_path": "src/app.js",
+      "role": "editable",
+      "length": 18,
+      "sha256": "b31b59a228ebb473ed1b57cd3f7b2a72dc859b8a7fae9795738575722da5182d"
+    },
+    {
+      "relative_path": "tests/app.test.cjs",
+      "role": "verification",
+      "length": 142,
+      "sha256": "65de91e27330ad94491c6723465667e99ac3a02e59787368acfc76225ddf3f14"
+    },
+    {
+      "relative_path": "package.json",
+      "role": "dependency",
+      "length": 145,
+      "sha256": "dcecf8cc830ac548798645cc1d7ed17b6c1c9063c7d2b7b19af8fc0220c77230"
+    },
+    {
+      "relative_path": "package-lock.json",
+      "role": "dependency",
+      "length": 21,
+      "sha256": "2086223f909ecaf4b063cfc7e8187ab73e8e8a24ec7029d54e0403dee55a3265"
+    }
+  ],
+  "checks": [
+    {
+      "check_id": "npm",
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "status": "not_run"
+    }
+  ],
+  "review_diff": "--- a/src/app.js\n+++ b/src/app.js\n@@ -1 +1 @@\n-const value = 1;\n+const value = 42;\n",
+  "created_at_utc": "2026-11-15T22:43:57.446715+00:00",
+  "entry_sha256": "cc8e8b85505d4b861f96dbef27365e44d8e05a412d052971c3ac4c68f8797cae"
+}

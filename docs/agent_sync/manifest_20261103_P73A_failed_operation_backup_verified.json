@@ -1,0 +1,35 @@
+{
+  "at": "2026-11-04T02:31:44.659981+00:00",
+  "status": "FAILED_OPERATION_WITH_VERIFIED_BACKUP",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "shared_dirty_checkout_preserved": true,
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\73A_Failed_Neck_Fairing_Diagnostics.zip",
+    "bytes": 194550,
+    "sha256": "e1871fa7ca9e75623d35ac3c1a9450b1634e67d074d0f2eaee3e86448eb3fcf0",
+    "members": 40,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "product_status": "FAILED_TWO_STRIKE_HALT",
+    "at": "2026-11-04T02:31:06.938188+00:00",
+    "drive_folder_id": "1bhMppSaX79kkOV55vXimjfsloNbeGn5-",
+    "drive_file_id": "1tjqon3W2oer3oIQvHu_fMUyFSFZ78etX",
+    "all_members_verified": true,
+    "goal_complete": false
+  },
+  "receipt_drive_id": "1RCgklcBqd0Bm84rH-ysyEqtYC2O1vOuN",
+  "verification": "D:\\AI-BS-Game-Resources\\P73\\Adam_NeckSurfaceStudy\\verification.json",
+  "project_files": {
+    "C:\\AI-BS\\docs\\game_engine\\AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "d0563c48b83e3a368514f153a3da1f952cb2f794fa84030247a85a849695651c",
+    "C:\\AI-BS\\engine\\out\\warm_beginning\\monitor_summary.json": "2c6fab5e781caf9037235f7d252a0e80f80e550ea8b364dded210351f6a95fa7",
+    "C:\\AI-BS\\docs\\game_engine\\ADAM_NECK_SURFACE_DIAGNOSTIC.md": "9e79aca3046f1508f4683cde4015a1ec904579bbbb360ad307ceded06a28fc00"
+  },
+  "all_owned_processes_joined": true,
+  "new_model_saved": false,
+  "installed106_unchanged": true,
+  "latest_verified_art": "v24c/72A, separate and unapproved",
+  "goal_complete": false,
+  "next_step": "Do not repeat the failed smoothing operations. Review a repair with explicit cumulative displacement/triangle constraints or local retopology before another neck build. Independent hair/clothing work and prepared user-started opening review remain available. Caption review, human pacing/performance and final package acceptance remain required.",
+  "blocker": "Neck fairing requires cumulative displacement and triangle constraints together; do not repeat either failed recipe. Overall goal not blocked because independent unfinished work remains."
+}

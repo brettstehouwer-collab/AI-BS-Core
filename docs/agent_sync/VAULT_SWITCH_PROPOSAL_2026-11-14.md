@@ -1,0 +1,7 @@
+# A4 consumer switch/rollback proposal checkpoint
+
+The concrete Markdown and JSON proposal records current reader precedence, import-time loading, scanner writer risks, missing consumer inventory, private immutable generations, one selector, no fallback from invalid configured selection, exact format disposition, first-adoption interruption and adapter/legacy rollback. Unknown formats and stale generations reject conversion; original non-token bytes, duplicates and precedence remain intact.
+
+Links/existing consumer paths and structured JSON were checked; the proposed adapter is absent. These are document checks, not implementation/runtime qualification. No consumer source, key, private file, live selection, activation state or application version changed. Existing private preservation and recognized recovery remain separately evidenced.
+
+Proposal: docs/architecture/VAULT_CONSUMER_SWITCH_PROPOSAL_2026-11-14.md and its JSON companion. Next source-only opt-in reader/admission adapter with synthetic bounded checks, without consumer hookup, real key generation or live selection. Parent operator review is still required before actual credential/consumer changes and is not requested before prerequisites pass. Goal ACTIVE/incomplete. Source remains156. Engineering archive has only non-executable proposal/report/checkpoint documents; private preservation material and the older restricted canary are excluded.

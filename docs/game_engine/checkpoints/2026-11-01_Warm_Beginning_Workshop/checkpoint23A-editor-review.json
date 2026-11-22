@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "published_at": "2026-11-02T18:40:07.791079+00:00",
+  "status": "passed_scoped_separate_editor_acceptance",
+  "engine": "Unreal Engine 5.8.1",
+  "separate_from_custom_engine": true,
+  "project": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Project\\BS_Unreal_Demo.uproject",
+  "map": "/Game/BSUnrealDetailed/Maps/DetailedFirstBoot",
+  "checks": {
+    "rules": 47,
+    "trail": 14,
+    "physical": 50,
+    "physical_ticks": 2889,
+    "assembled_map": 151,
+    "assembled_map_PIE_sessions": 3,
+    "assembled_map_elapsed_seconds": 85.329,
+    "new_visual_actors": 237,
+    "initial_total_actors": 577,
+    "materials": 19,
+    "official_animation_numeric": 25334,
+    "animation_sample_frames": 224,
+    "animation_joint_samples": 4928
+  },
+  "final_actor_count": 578,
+  "animation_unit_fix": {
+    "mechanism": "official Unreal animation import_uniform_scale100 matching measured mesh-reference root scale",
+    "quaternion_max_angular_degrees": 0.001,
+    "quaternion_max_normalized_sign_aligned_component_difference": 2e-06,
+    "translations_nonroot_scales_times_sample_cardinality_preserved": true
+  },
+  "visible_avatar_restart_verified": true,
+  "all_four_clips_fk_verified": true,
+  "verification_path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\detailed-review-final-verification.json",
+  "verification_sha256": "637082edb023a06445241f66ba1773d7a467e39ae2c2c4b9a036c0ec267ebbf6",
+  "evidence_files": [
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\final-scene-restart-verification.json",
+      "sha256": "b912bff6362cfc9552376d053c1a025e4e72222130919608ae105465cb4457ca",
+      "bytes": 1176
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\adam-commandlet-e9f3ff35fc6e\\receipt.json",
+      "sha256": "c5e78ff6ec824b0a65703e87a59d373b888882e725ed4a76a14bfab5f9190b1d",
+      "bytes": 5218
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\official-four-AN-numeric-9338fe6852ba\\numeric-oracle.json",
+      "sha256": "36415f972d1c3fc4159e00d4280296b4130995895cd68dbc9b606d9c6a3e36d2",
+      "bytes": 4794699
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\detailed-playable-verification.json",
+      "sha256": "1513c87d81f9bb560cbe0bf98b85a4246dff03fd36c8de8f36085ef317539a8f",
+      "bytes": 103180
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\detailed-render-final-soft-face-verification.json",
+      "sha256": "96d447c4a0dd8eb33160b5379af6351e6fdf78cf1f8f609bb9ca8168bce25155",
+      "bytes": 1041
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\Unreal_Final_01_motherboard_overview.png",
+      "sha256": "7f573017b9f9be5fac519aa803e696f5b5d471ad53a642aed8cb88688a26e0b3",
+      "bytes": 941306
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\Unreal_Final_04_fault_station.png",
+      "sha256": "c4905ba5fd63a75576447d9503c6ccb85449347fec1b1c09be266072847571ac",
+      "bytes": 1531251
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\Unreal_Final_05_bypass_workbench.png",
+      "sha256": "803b0909bb637874959a9be84e860e90ef45df08e8383c2f929ed79f58747c6d",
+      "bytes": 1373124
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\Unreal_Final_06_shelter_workbench.png",
+      "sha256": "dd482e4fb2d4bb66afdfba5dcd8f53e09ccb5e9355a76f7e49d4491d09d9884d",
+      "bytes": 1470667
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\Unreal_Final_07_Pencil_Room.png",
+      "sha256": "17a33f1beab853050104d2bb196df004a2a91fc4c3592740692a62d93b41c6b9",
+      "bytes": 1405411
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\Unreal_FinalSoftFill_Adam_v09_face.png",
+      "sha256": "b07c5f7b816698e064970eef46ca02d65ea6650600664134529477d66d92222f",
+      "bytes": 1655846
+    }
+  ],
+  "likeness_approved": false,
+  "prepared_bind_root_fallback_built_or_executed": false,
+  "full_game_or_native_engine_feature_parity_claimed": false,
+  "archive_status": "pending_local_seal_and_verified_authenticated_roundtrip",
+  "goal_complete": false,
+  "backup_receipt_is_separate": true
+}

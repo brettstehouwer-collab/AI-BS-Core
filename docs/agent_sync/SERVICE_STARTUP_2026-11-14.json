@@ -1,0 +1,244 @@
+{
+  "utc": "2026-11-14T16:09:13.118279+00:00",
+  "status": "PARTIAL_READINESS_WITH_EXPLICIT_HOLDS",
+  "profile": "14 bounded HTTP checks; no workflow/inference acceptance",
+  "check_count": 14,
+  "assertions_passed": 14,
+  "ready_endpoints": 13,
+  "checks": [
+    {
+      "service": "nginx",
+      "url": "http://127.0.0.1/",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "node_held",
+      "url": "http://127.0.0.1:3001/",
+      "expected_status": 503,
+      "status": 503,
+      "assertion_passed": true,
+      "ready": false
+    },
+    {
+      "service": "studio_frontend",
+      "url": "http://localhost:5173/?tab=ide",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "broadcast_ui",
+      "url": "http://127.0.0.1:5174/",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "go_gateway",
+      "url": "http://127.0.0.1:8000/health",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "chroma",
+      "url": "http://127.0.0.1:8002/api/v2/heartbeat",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "broadcast_control",
+      "url": "http://127.0.0.1:8005/health",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "social_idle",
+      "url": "http://127.0.0.1:8006/status",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "shm_gateway",
+      "url": "http://127.0.0.1:8010/health",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "backend",
+      "url": "http://127.0.0.1:8080/health",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "gemini_mcp_protected",
+      "url": "http://127.0.0.1:8099/openapi.json",
+      "expected_status": 403,
+      "status": 403,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "comfyui",
+      "url": "http://127.0.0.1:8189/system_stats",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "ollama",
+      "url": "http://127.0.0.1:11434/api/version",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    },
+    {
+      "service": "public_api",
+      "url": "https://api.brettstehouwer.live/health",
+      "expected_status": 200,
+      "status": 200,
+      "assertion_passed": true,
+      "ready": true
+    }
+  ],
+  "listeners": [
+    {
+      "port": 8002,
+      "address": "127.0.0.1",
+      "pid": 15132
+    },
+    {
+      "port": 80,
+      "address": "127.0.0.1",
+      "pid": 19196
+    },
+    {
+      "port": 8000,
+      "address": "127.0.0.1",
+      "pid": 12800
+    },
+    {
+      "port": 8099,
+      "address": "127.0.0.1",
+      "pid": 4940
+    },
+    {
+      "port": 80,
+      "address": "127.0.0.1",
+      "pid": 17804
+    },
+    {
+      "port": 80,
+      "address": "::1",
+      "pid": 19196
+    },
+    {
+      "port": 5173,
+      "address": "127.0.0.1",
+      "pid": 23184
+    },
+    {
+      "port": 80,
+      "address": "::1",
+      "pid": 17804
+    },
+    {
+      "port": 8005,
+      "address": "127.0.0.1",
+      "pid": 22160
+    },
+    {
+      "port": 8080,
+      "address": "127.0.0.1",
+      "pid": 12820
+    },
+    {
+      "port": 11434,
+      "address": "0.0.0.0",
+      "pid": 27120
+    },
+    {
+      "port": 3001,
+      "address": "127.0.0.1",
+      "pid": 24884
+    },
+    {
+      "port": 11434,
+      "address": "::",
+      "pid": 27120
+    },
+    {
+      "port": 5174,
+      "address": "127.0.0.1",
+      "pid": 30140
+    },
+    {
+      "port": 4455,
+      "address": "127.0.0.1",
+      "pid": 22160
+    },
+    {
+      "port": 8006,
+      "address": "127.0.0.1",
+      "pid": 7004
+    },
+    {
+      "port": 8010,
+      "address": "127.0.0.1",
+      "pid": 16080
+    },
+    {
+      "port": 8189,
+      "address": "127.0.0.1",
+      "pid": 5172
+    }
+  ],
+  "business_authorized": true,
+  "business_state": {
+    "broadcast": "control service only; streaming false at startup",
+    "social": "idle; no configured Twitch token/channel",
+    "minerwatch": "read-only telemetry monitor; no mining/plotting started",
+    "recdebut": "existing hard review hold preserved",
+    "live_financial_trading": "not started"
+  },
+  "node_3001": "HTTP503 is an existing intentional hold; required local owner token absent",
+  "chroma": {
+    "canonical_store": "E:/AI_BS_Resources/ChromaDB",
+    "repair": "FTS5 rebuild only; exclusive transaction and FULL durability",
+    "preserved_documents": 15633,
+    "preserved_vector_files": 302,
+    "ordinary_tables_unchanged_after_start": "17/18",
+    "expected_change": "one acquire_write TRUE startup lock row; prior rows preserved",
+    "integrity": "PASS",
+    "schema_migrations": "validate only",
+    "evidence": "backups/services_start_20261114_v01/optional_chroma_live/interpreted-acceptance.json",
+    "full_original_and_shadow_snapshots_retained_locally": true
+  },
+  "preservation": {
+    "private_store_or_log_upload": false,
+    "credentials_changed": false,
+    "models_generated": false,
+    "recipients_dispatched": false,
+    "existing_services_restarted": false
+  },
+  "goal_status": "ACTIVE",
+  "all_services_accepted": false
+}

@@ -1,0 +1,21 @@
+# Handoff Template
+
+- **Task:** `<short task name>`
+- **Component:** `<backend | frontend | go-core | etc.>`
+- **Assigned Role:** `<implementer | reviewer | verifier>`
+- **Starting Commit:** `<sha>`
+- **Result Commit:** `<sha or uncommitted>`
+- **Branch or Worktree:** `<branch name / worktree path>`
+- **Goal:** `<1-2 sentence objective>`
+- **Scope:** `<in-scope files/modules and explicit exclusions>`
+- **Changes Made:**
+  - `<file path>: <summary of change>`
+- **Checks Actually Run and Their Results:**
+  - `<exact command>`: `<pass/fail + key output>`
+- **Remaining Uncertainties:**
+  - `<open questions, untested paths, or environment caveats>`
+- **Reviewer Findings:**
+  - `<findings or "None">`
+- **Next Action:**
+  - `<concrete next step>`
+- **Deployment Status:** `<not deployed | staged | live on port X>`

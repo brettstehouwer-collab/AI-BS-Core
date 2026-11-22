@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from 'react';
+/** @typedef {{filename: string, subfolder?: string, type?: string, width?: number, height?: number}} ComfyOutput */
+/** @typedef {{id: string, name: string, description?: string, media_type: string, ready: boolean}} ComfyTemplate */
+/** @typedef {{id: string, name: string, category: string, cfg?: number, steps?: number, prompt_prefix?: string}} ComfyStyle */
+import AuthenticatedChatMedia from '/src/components/AuthenticatedChatMedia.jsx';
+import { useState, useEffect, useRef } from 'react';
 import './ComfyWorkspaceTab.css';
 import ComfyStation from './ComfyStation';
 
@@ -11,7 +15,15 @@ const STEPS = [
   { id: 6, label: 'Review & Render' }
 ];
 
+/** @type {Record<string, Record<string, {width: number, height: number, label: string}>>} */
 const RESOLUTION_PRESETS = {
+  'NATIVE': {
+    '16:9': {width:832,height:480,label:'832 × 480 (native video)'},
+    '9:16': {width:480,height:832,label:'480 × 832 (native portrait video)'},
+    '1:1': {width:624,height:624,label:'624 × 624 (native square video)'},
+    '21:9': {width:960,height:416,label:'960 × 416 (native wide video)'},
+    '4:3': {width:720,height:544,label:'720 × 544 (native video)'}
+  },
   '4K': {
     '16:9': { width: 3840, height: 2160, label: '3840 × 2160 (4K UHD Cinema)' },
     '1:1': { width: 4096, height: 4096, label: '4096 × 4096 (4K Square Master)' },
@@ -35,12 +47,17 @@ const RESOLUTION_PRESETS = {
   }
 };
 
+/** @param {{backendUrl?: string}} props */
 export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000' }) {
+  const pollTimer = useRef(/** @type {ReturnType<typeof setInterval> | null} */ (null));
+  useEffect(() => () => { if (pollTimer.current !== null) clearInterval(pollTimer.current); }, []);
+  /** @param {ComfyOutput} item */
+const isImageFile = item => /\.(?:png|jpe?g|webp)$/i.test(item?.filename || '');
   const [workspaceMode, setWorkspaceMode] = useState('wizard'); // 'wizard' | 'station'
   const [currentStep, setCurrentStep] = useState(1);
-  const [capabilities, setCapabilities] = useState(null);
-  const [styles, setStyles] = useState([]);
-  const [gallery, setGallery] = useState([]);
+  const [capabilities, setCapabilities] = useState(/** @type {{online: boolean | null, authRequired?: boolean, templates: ComfyTemplate[]} | null} */ (null));
+  const [styles, setStyles] = useState(/** @type {ComfyStyle[]} */ ([]));
+  const [gallery, setGallery] = useState(/** @type {ComfyOutput[]} */ ([]));
   
   // Selection State
   const [mediaType, setMediaType] = useState('image'); // image, video, upscale
@@ -54,19 +71,19 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
   // Technical Parameters - Sovereign 4K Default Mandate
   const [targetResolution, setTargetResolution] = useState('4K'); // 4K, 8K, 16K
   const [aspectRatio, setAspectRatio] = useState('16:9'); // 16:9, 1:1, 9:16, 21:9, 4:3
-  const [width, setWidth] = useState(3840);
-  const [height, setHeight] = useState(2160);
-  const [steps, setSteps] = useState(25);
-  const [cfg, setCfg] = useState(7.5);
+  const [width, setWidth] = useState(/** @type {number | string} */ (3840));
+  const [height, setHeight] = useState(/** @type {number | string} */ (2160));
+  const [steps, setSteps] = useState(/** @type {number | string} */ (25));
+  const [cfg, setCfg] = useState(/** @type {number | string} */ (7.5));
   const [samplerName, setSamplerName] = useState('euler_ancestral');
   const [scheduler, setScheduler] = useState('karras');
-  const [seed, setSeed] = useState(-1);
-  const [upscaleDenoise, setUpscaleDenoise] = useState(0.15);
+  const [seed] = useState(-1);
+  const [upscaleDenoise, setUpscaleDenoise] = useState(/** @type {number | string} */ (0.15));
 
   // Execution State
   const [isRendering, setIsRendering] = useState(false);
   const [statusMessage, setStatusMessage] = useState('Ready');
-  const [latestOutput, setLatestOutput] = useState(null);
+  const [latestOutput, setLatestOutput] = useState(/** @type {ComfyOutput | null} */ (null));
 
   // Fetch capabilities & styles on mount
   useEffect(() => {
@@ -81,11 +98,12 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
     try {
       const res = await fetch(`${backendUrl}/api/comfyui/workspace/capabilities`);
       if (res.ok) {
-        const data = await res.json();
-        setCapabilities(data);
+        const data = await res.json();setCapabilities(data);
+      } else {
+        setCapabilities({online:null,authRequired:res.status===401||res.status===403,templates:[]});
       }
     } catch (err) {
-      console.error('Capabilities error:', err);
+      setCapabilities({online:null,templates:[]});
     }
   };
 
@@ -107,9 +125,7 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
       if (res.ok) {
         const data = await res.json();
         setGallery(data);
-        if (data.length > 0 && !latestOutput) {
-          setLatestOutput(data[0]);
-        }
+        if (data.length > 0) setLatestOutput(current => current || data[0]);
       }
     } catch (err) {
       console.error('Gallery error:', err);
@@ -127,7 +143,8 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
     }
   };
 
-  const handleSelectTier = (tier, aspect = aspectRatio) => {
+  /** @param {string} tier @param {string} [aspect] */
+const handleSelectTier = (tier, aspect = aspectRatio) => {
     setTargetResolution(tier);
     setAspectRatio(aspect);
     const preset = RESOLUTION_PRESETS[tier]?.[aspect] || RESOLUTION_PRESETS['4K']['16:9'];
@@ -136,7 +153,8 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
     setStatusMessage(`Target Output Set: ${tier} (${preset.width}×${preset.height}) [${aspect}]`);
   };
 
-  const handleSelectAspect = (aspect) => {
+  /** @param {string} aspect */
+const handleSelectAspect = (aspect) => {
     setAspectRatio(aspect);
     const preset = RESOLUTION_PRESETS[targetResolution]?.[aspect] || RESOLUTION_PRESETS[targetResolution]['16:9'];
     setWidth(preset.width);
@@ -145,12 +163,19 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
   };
 
   const handleRun = async () => {
+    if (isRendering) return;
+    const template = capabilities?.templates?.find(item => item.id === selectedTemplate);
+    if (!capabilities?.online || !template?.ready) {
+      setStatusMessage(capabilities?.authRequired ? 'Sign in to check this workflow.' : 'Selected workflow is unavailable. Check the render engine, installed models and nodes before rendering.');
+      return;
+    }
     setIsRendering(true);
     setStatusMessage('Compiling graph and queueing to ComfyUI...');
 
     let effectiveRefImage = referenceImage;
     if ((mediaType === 'upscale' || (mediaType === 'video' && selectedTemplate === 'ltx_i2v')) && !effectiveRefImage && gallery.length > 0) {
-      effectiveRefImage = gallery[0].filename;
+      const image = gallery.find(isImageFile);
+      effectiveRefImage = image?.filename || '';
       setReferenceImage(effectiveRefImage);
     }
 
@@ -171,7 +196,7 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
         sampler_name: samplerName,
         scheduler: scheduler,
         seed: Number(seed),
-        reference_image: effectiveRefImage,
+        reference_image: selectedTemplate === 'wan_video' ? undefined : effectiveRefImage,
         upscale_denoise: Number(upscaleDenoise)
       };
 
@@ -192,40 +217,46 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
       // Poll history for completion
       pollCompletion(data.prompt_id);
     } catch (err) {
-      setStatusMessage(`Error: ${err.message}`);
+      setStatusMessage(`Error: ${errorMessage(err)}`);
       setIsRendering(false);
     }
   };
 
-  const pollCompletion = (promptId) => {
+  /** @param {string} promptId */
+const pollCompletion = (promptId) => {
+    pollTimer.current !== null && clearInterval(pollTimer.current);
     const timer = setInterval(async () => {
       try {
         const res = await fetch(`${backendUrl}/api/comfyui/status/${promptId}`);
-        if (res.ok) {
-          const statusData = await res.json();
-          if (statusData.status === 'completed' && statusData.outputs && statusData.outputs.length > 0) {
-            clearInterval(timer);
-            setIsRendering(false);
-            setStatusMessage('Generation completed successfully!');
-            fetchGallery();
-            setLatestOutput(statusData.outputs[0]);
+        if (!res.ok) throw new Error(`Status unavailable (HTTP ${res.status}).`);
+        const statusData = await res.json();
+        if (statusData.status === 'error' || statusData.status === 'failed') throw new Error('Render failed.');
+        if (statusData.status === 'completed') {
+          clearInterval(timer);
+          setIsRendering(false);
+          if (!statusData.outputs?.length) {
+            setStatusMessage(`Job ${promptId} completed without a media output.`);return;
           }
+          setStatusMessage('Generation completed successfully!');
+          setLatestOutput(statusData.outputs[0]);fetchGallery();
         }
-      } catch (e) {
-        console.error(e);
+      } catch (error) {
+        clearInterval(timer);setIsRendering(false);
+        setStatusMessage(`${errorMessage(error)} Job ${promptId} is retained; inspect it before submitting again.`);
       }
     }, 2000);
+    pollTimer.current=timer;
   };
 
   const handleTriggerGridBlueprint = async () => {
-    if (gallery.length < 1) {
+    if (!gallery.some(isImageFile)) {
       setStatusMessage('Error: Need at least 1 image in output/gallery to create 2x2 grid');
       return;
     }
     try {
       setIsRendering(true);
       setStatusMessage('Stitching recent renders into 2x2 Image Grid...');
-      const imagesToGrid = gallery.slice(0, 4).map(g => g.filename);
+      const imagesToGrid = gallery.filter(isImageFile).slice(0, 4).map(g => g.filename);
       const res = await fetch(`${backendUrl}/api/comfyui/workspace/blueprints/grid`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -236,13 +267,13 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
       setStatusMessage(`Grid Blueprint Queued (ID: ${data.prompt_id.slice(0, 8)}...).`);
       pollCompletion(data.prompt_id);
     } catch (err) {
-      setStatusMessage(`Blueprint Error: ${err.message}`);
+      setStatusMessage(`Blueprint Error: ${errorMessage(err)}`);
       setIsRendering(false);
     }
   };
 
   const handleTriggerFeatherBlueprint = async () => {
-    const targetImage = referenceImage || (gallery.length > 0 ? gallery[0].filename : null);
+    const targetImage = referenceImage || (gallery.length > 0 ? gallery.find(isImageFile)?.filename : null);
     if (!targetImage) {
       setStatusMessage('Error: Specify an image or generate one first to feather mask');
       return;
@@ -260,7 +291,7 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
       setStatusMessage(`Mask Feather Queued (ID: ${data.prompt_id.slice(0, 8)}...).`);
       pollCompletion(data.prompt_id);
     } catch (err) {
-      setStatusMessage(`Blueprint Error: ${err.message}`);
+      setStatusMessage(`Blueprint Error: ${errorMessage(err)}`);
       setIsRendering(false);
     }
   };
@@ -280,8 +311,10 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
     }
   };
 
-  const getMediaUrl = (filename) => {
-    return `${backendUrl}/api/comfyui/view?filename=${encodeURIComponent(filename)}`;
+  /** @param {ComfyOutput | string} item */
+const getMediaUrl = (item) => {
+    const file = typeof item === 'string' ? {filename:item} : item;
+    return `${backendUrl}/api/comfy/media?${new URLSearchParams({filename:file.filename,subfolder:file.subfolder || '',type:file.type === 'input' ? 'input' : 'output'})}`;
   };
 
   return (
@@ -326,12 +359,12 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
               cursor: 'pointer'
             }}
           >
-            ⚡ Interactive Workstation (1,365 Nodes)
+            ⚡ Interactive Workstation
           </button>
         </div>
 
         <div className={`comfy-gpu-badge ${capabilities?.online ? '' : 'offline'}`}>
-          <span>{capabilities?.online ? '● RTX 4090 ONLINE (Port 8189)' : '○ ComfyUI Offline'}</span>
+          <span>{capabilities?.online ? '● Render engine online' : capabilities?.authRequired ? 'Sign in to check render availability' : capabilities?.online === false ? '○ Render engine offline' : 'Render availability not verified'}</span>
           <button className="btn-free-vram" onClick={handleFreeVram} title="Flush GPU VRAM">
             Flush VRAM
           </button>
@@ -371,7 +404,8 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
               <div className="cards-grid">
                 <div
                   className={`selectable-card ${mediaType === 'image' ? 'selected' : ''}`}
-                  onClick={() => { setMediaType('image'); setSelectedTemplate('sdxl_txt2img'); }}
+                  role="button" tabIndex={0} onKeyDown={e => {if(e.key === 'Enter' || e.key === ' '){e.preventDefault();e.currentTarget.click();}}}
+                  onClick={() => { setMediaType('image'); setSelectedTemplate('sdxl_txt2img'); handleSelectTier('4K'); }}
                 >
                   <h4>🖼️ Still Image</h4>
                   <p>Text-to-Image high fidelity generation via SDXL or SD 1.5.</p>
@@ -379,15 +413,17 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
 
                 <div
                   className={`selectable-card ${mediaType === 'video' ? 'selected' : ''}`}
-                  onClick={() => { setMediaType('video'); setSelectedTemplate('wan_video'); }}
+                  role="button" tabIndex={0} onKeyDown={e => {if(e.key === 'Enter' || e.key === ' '){e.preventDefault();e.currentTarget.click();}}}
+                  onClick={() => { setMediaType('video'); setSelectedTemplate('wan_video'); handleSelectTier('NATIVE'); setSteps(8); setCfg(6.0); }}
                 >
-                  <h4>🎬 Ultra-HD Video Motion</h4>
-                  <p>Cinematic motion synthesis via Wan2.1 (T2V/I2V) & LTX-Video 2B with 4K/8K/16K scaling.</p>
+                  <h4>🎬 Video motion</h4>
+                  <p>Wan text-to-video and LTX image-to-video at native dimensions. High-resolution upscaling is configured separately.</p>
                 </div>
 
                 <div
                   className={`selectable-card ${mediaType === 'upscale' ? 'selected' : ''}`}
-                  onClick={() => { setMediaType('upscale'); setSelectedTemplate('two_stage_upscale'); }}
+                  role="button" tabIndex={0} onKeyDown={e => {if(e.key === 'Enter' || e.key === ' '){e.preventDefault();e.currentTarget.click();}}}
+                  onClick={() => { setMediaType('upscale'); setSelectedTemplate('two_stage_upscale'); handleSelectTier('4K'); }}
                 >
                   <h4>🔍 4K / 8K / 16K Ultra-Refinery</h4>
                   <p>2-Stage spatial GAN model upscaling + tiled micro-texture injection scaled to 4K/8K/16K.</p>
@@ -401,7 +437,7 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
             <div>
               <h3>Step 2: Select Computational Workflow</h3>
               <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
-                Only verified, fully-executable node topologies for {mediaType} are shown.
+                Availability reflects installed nodes and models. A ready engine still needs successful render verification.
               </p>
 
               <div className="cards-grid">
@@ -425,13 +461,12 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
                           setSamplerName('euler_ancestral');
                           setScheduler('karras');
                         } else if (tmpl.id === 'wan_video') {
-                          setSteps(25);
-                          setCfg(6.0);
-                          setStatusMessage('Loaded Wan2.1 Unified Studio parameters (81 frames @ 16fps, 4K/8K/16K Ultra-HD scaling)');
+                          handleSelectTier('NATIVE'); setSteps(8); setCfg(6.0);
+                          setStatusMessage('Wan2.1 text-to-video: 49 frames at 16fps, native dimensions.');
                         } else if (tmpl.id === 'ltx_i2v') {
                           setSteps(25);
                           setCfg(3.0);
-                          setStatusMessage('Loaded LTX-Video 2B parameters (97 frames @ 24fps, 4K/8K/16K Ultra-HD scaling)');
+                          handleSelectTier('NATIVE'); setStatusMessage('LTX image-to-video at native dimensions.');
                         }
                       }}
                     >
@@ -468,7 +503,7 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
                     <h4>{sty.name}</h4>
                     <p style={{ fontSize: '0.75rem' }}>Category: {sty.category}</p>
                     <p style={{ marginTop: '6px', fontStyle: 'italic', fontSize: '0.75rem' }}>
-                      "{sty.prompt_prefix.slice(0, 45)}..."
+                      "{(sty.prompt_prefix || "").slice(0, 45)}..."
                     </p>
                   </div>
                 ))}
@@ -507,21 +542,21 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
                 placeholder="Visual anchor injected across all clips (e.g. house number 246 on brick porch, orange jumpsuit, stadium floodlights)..."
               />
 
-              {(mediaType === 'video' || mediaType === 'upscale') && (
+              {(mediaType === 'upscale' || (mediaType === 'video' && selectedTemplate !== 'wan_video')) && (
                 <div style={{ marginTop: '14px', padding: '12px', background: 'rgba(30, 41, 59, 0.5)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                     <label className="input-label" style={{ margin: 0 }}>Reference Anchor Image (For Upscaling / Video)</label>
-                    {gallery.length > 0 && (
+                    {gallery.some(isImageFile) && (
                       <button
                         type="button"
                         className="comfy-btn secondary-btn"
                         style={{ fontSize: '0.72rem', padding: '4px 8px' }}
                         onClick={() => {
-                          setReferenceImage(gallery[0].filename);
-                          setStatusMessage(`Selected latest render: ${gallery[0].filename}`);
+                          setReferenceImage(gallery.find(isImageFile)?.filename || '');
+                          setStatusMessage(`Selected latest render: ${gallery.find(isImageFile)?.filename}`);
                         }}
                       >
-                        ✨ Use Latest Render ({gallery[0].filename.slice(0, 18)}...)
+                        ✨ Use Latest Render ({gallery.find(isImageFile)?.filename.slice(0, 18)}...)
                       </button>
                     )}
                   </div>
@@ -541,11 +576,11 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
                       )}
                     </div>
                   )}
-                  {gallery.length > 0 && (
+                  {gallery.some(isImageFile) && (
                     <div style={{ marginTop: '10px' }}>
                       <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Click any render below to use as anchor:</span>
                       <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginTop: '6px', paddingBottom: '4px' }}>
-                        {gallery.slice(0, 8).map((item) => (
+                        {gallery.filter(isImageFile).slice(0, 8).map((item) => (
                           <div
                             key={item.filename}
                             onClick={() => {
@@ -562,11 +597,9 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
                               background: '#0f172a'
                             }}
                           >
-                            <img
-                              src={getMediaUrl(item.filename)}
-                              alt={item.filename}
-                              style={{ width: '76px', height: '54px', objectFit: 'cover' }}
-                            />
+                            <div style={{width:76,height:54,overflow:'hidden'}}>
+                              <AuthenticatedChatMedia src={getMediaUrl(item)} backendUrl={backendUrl} alt={item.filename} lazy previewOnly />
+                            </div>
                             <div style={{ fontSize: '0.62rem', padding: '2px 4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#cbd5e1' }}>
                               {item.filename}
                             </div>
@@ -642,7 +675,7 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                   <span style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#60a5fa' }}>
-                    🛡️ Sovereign Ultra-HD Output Mandate
+                    Output dimensions
                   </span>
                   <span style={{
                     fontSize: '0.75rem',
@@ -652,14 +685,14 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
                     borderRadius: '4px',
                     border: '1px solid rgba(56, 189, 248, 0.3)'
                   }}>
-                    {targetResolution} Resolution Locked
+                    {targetResolution} output
                   </span>
                 </div>
 
                 <div style={{ marginBottom: '12px' }}>
                   <label className="input-label" style={{ marginBottom: '6px', display: 'block' }}>Output Resolution Tier</label>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-                    {['4K', '8K', '16K'].map((tier) => (
+                    {(mediaType === 'video' ? ['NATIVE', '4K', '8K', '16K'] : ['4K', '8K', '16K']).map((tier) => (
                       <button
                         key={tier}
                         type="button"
@@ -670,8 +703,11 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
                           background: targetResolution === tier ? 'linear-gradient(135deg, #2563eb, #1d4ed8)' : 'rgba(30, 41, 59, 0.6)',
                           borderColor: targetResolution === tier ? '#60a5fa' : 'rgba(255,255,255,0.1)'
                         }}
+                        disabled={mediaType === 'video' && tier !== 'NATIVE'}
+                        title={mediaType === 'video' && tier !== 'NATIVE' ? 'High-resolution video upscaling still needs acceptance.' : undefined}
                         onClick={() => handleSelectTier(tier)}
                       >
+                        {tier === 'NATIVE' && 'Native video'}
                         {tier === '4K' && '🌟 4K Ultra-HD'}
                         {tier === '8K' && '🔥 8K Cinema Master'}
                         {tier === '16K' && '⚡ 16K Large-Format'}
@@ -784,9 +820,9 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
                 <p><strong>Modality:</strong> {mediaType.toUpperCase()}</p>
                 <p><strong>Workflow:</strong> {selectedTemplate}</p>
                 <p><strong>Style:</strong> {selectedStyle}</p>
-                <p><strong>Target Output:</strong> <span style={{ color: '#38bdf8', fontWeight: 'bold' }}>{targetResolution} Ultra-HD ({width} × {height} px)</span></p>
+                <p><strong>Target Output:</strong> <span style={{ color: '#38bdf8', fontWeight: 'bold' }}>{targetResolution} ({width} × {height} px)</span></p>
                 <p><strong>Aspect Framing:</strong> {aspectRatio}</p>
-                <p><strong>Neural Pipeline:</strong> Base Latent Generation → 4x-UltraSharp Detail Pass → Precision Lanczos Resampling</p>
+                <p><strong>Neural Pipeline:</strong> {mediaType === 'video' ? 'Native video diffusion → H.264 MP4' : mediaType === 'upscale' ? 'Model upscaling → tiled refinement → resize' : 'Image diffusion → requested output sizing'}</p>
                 <p><strong>Steps / CFG:</strong> {steps} steps | CFG {cfg}</p>
                 <p><strong>Effective Prompt:</strong> {sceneDna ? `${sceneDna} ` : ''}{prompt}</p>
                 {(mediaType === 'upscale' || mediaType === 'video') && (
@@ -794,21 +830,21 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
                     <p>
                       <strong>Reference Anchor:</strong>{' '}
                       <span style={{ color: referenceImage ? '#38bdf8' : '#34d399' }}>
-                        {referenceImage || (gallery.length > 0 ? `Auto: ${gallery[0].filename}` : 'None specified')}
+                        {selectedTemplate === 'wan_video' ? 'Not used for text-to-video' : referenceImage || (gallery.find(isImageFile) ? `Auto: ${gallery.find(isImageFile)?.filename}` : 'None specified')}
                       </span>
                     </p>
-                    {(!referenceImage && gallery.length > 0) && (
+                    {(!referenceImage && selectedTemplate !== 'wan_video' && gallery.some(isImageFile)) && (
                       <div style={{ marginTop: '8px' }}>
                         <button
                           type="button"
                           className="comfy-btn secondary-btn"
                           style={{ fontSize: '0.75rem', padding: '6px 12px' }}
                           onClick={() => {
-                            setReferenceImage(gallery[0].filename);
-                            setStatusMessage(`Selected latest render: ${gallery[0].filename}`);
+                            setReferenceImage(gallery.find(isImageFile)?.filename || '');
+                            setStatusMessage(`Selected latest render: ${gallery.find(isImageFile)?.filename}`);
                           }}
                         >
-                          ✨ Lock Latest Render as Anchor ({gallery[0].filename})
+                          ✨ Lock Latest Render as Anchor ({gallery.find(isImageFile)?.filename})
                         </button>
                       </div>
                     )}
@@ -855,24 +891,12 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
         {/* Right Preview & Gallery Panel */}
         <div className="comfy-preview-panel">
           <div>
-            <h4 style={{ margin: '0 0 10px 0' }}>Latest Render Output</h4>
+            <h4 style={{ margin: '0 0 10px 0' }}>Latest completed output</h4>
             <div className="preview-stage">
               {latestOutput ? (
-                latestOutput.type === 'video' || latestOutput.filename?.endsWith('.mp4') ? (
-                  <video
-                    src={getMediaUrl(latestOutput.filename)}
-                    controls
-                    autoPlay
-                    loop
-                    className="media-render"
-                  />
-                ) : (
-                  <img
-                    src={getMediaUrl(latestOutput.filename)}
-                    alt="Latest Output"
-                    className="media-render"
-                  />
-                )
+                <AuthenticatedChatMedia
+                  src={`${backendUrl}/api/comfy/media?${new URLSearchParams({filename:latestOutput.filename,subfolder:latestOutput.subfolder || '',type:latestOutput.type === 'input' ? 'input' : 'output'})}`}
+                  backendUrl={backendUrl} alt="Latest generated output" />
               ) : (
                 <div style={{ color: '#64748b', textAlign: 'center' }}>
                   <p style={{ fontSize: '2rem', margin: 0 }}>🎨</p>
@@ -886,10 +910,12 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
             <h4 style={{ margin: '0 0 10px 0' }}>Vault Media Gallery</h4>
             <div className="gallery-grid">
               {gallery.map((item, idx) => {
-                const fn = item.filename?.toUpperCase() || '';
-                const is16K = fn.includes('16K') || item.size_bytes > 50000000;
-                const is8K = fn.includes('8K') || item.size_bytes > 20000000;
-                const is4K = fn.includes('4K') || item.size_bytes > 8000000;
+                const measuredWidth = Number(item.width) || 0;
+                const measuredHeight = Number(item.height) || 0;
+                const measuredEdge = Math.max(measuredWidth, measuredHeight);
+                const is16K = measuredEdge >= 15360;
+                const is8K = measuredEdge >= 7680;
+                const is4K = measuredEdge >= 3840;
                 const badge = is16K ? '16K' : is8K ? '8K' : is4K ? '4K' : null;
                 return (
                   <div key={idx} onClick={() => setLatestOutput(item)} style={{ position: 'relative' }}>
@@ -910,18 +936,8 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
                         {badge}
                       </span>
                     )}
-                    {item.filename?.endsWith('.mp4') ? (
-                      <video
-                        src={getMediaUrl(item.filename)}
-                        className="gallery-thumb"
-                      />
-                    ) : (
-                      <img
-                        src={getMediaUrl(item.filename)}
-                        alt={item.filename}
-                        className="gallery-thumb"
-                      />
-                    )}
+                    <AuthenticatedChatMedia src={getMediaUrl(item)} backendUrl={backendUrl}
+                      alt={item.filename} lazy previewOnly />
                   </div>
                 );
               })}
@@ -933,4 +949,10 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
       )}
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

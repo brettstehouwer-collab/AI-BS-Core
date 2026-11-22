@@ -1,0 +1,49 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "c68e2ccd664c4984860eb72e8a13f7e5",
+  "plan_id": "0fa91a6e86874da089dc089ba9c653a3",
+  "snapshot_sha256": "8cf88e14ebe4f3d699e75fabb32ae9c5c80c5c64e43dd780225e877e177eb20a",
+  "review_digest": "36ba5361f3e166f79acfe2bbed4712cad0e41fdc3bd10d53295ccf62badf7583",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.js",
+        "role": "editable",
+        "sha256": "8de5c07db8deb3b75dedd9b5bc999669936cea181ae0033c27c4e2071a6e434d",
+        "excerpt": "const value = 1;\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/app.test.mjs",
+        "role": "verification",
+        "sha256": "a5b6378e1ebf283f4593174939bffc09435f9f5359df6fa5d1e51ba3811a3f2a",
+        "excerpt": "// selected test, never run\n",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "node",
+        "argv": [
+          "node",
+          "--test",
+          "tests/app.test.mjs"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.js"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "43b9ec455beb64faccd967aabe4a9a1adabc048501a3fef4dc3a281521b74676",
+  "worker": {
+    "pid": 39148,
+    "created": 1794665372.484454
+  },
+  "created_at_utc": "2026-11-14T14:09:36.477351+00:00",
+  "entry_sha256": "4102a20cddecca7af0f8393ec3522e4cfead3095561068f33e337a5ee2ed5e64"
+}

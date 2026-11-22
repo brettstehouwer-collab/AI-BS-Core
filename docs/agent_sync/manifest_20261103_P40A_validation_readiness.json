@@ -1,0 +1,70 @@
+{
+  "at": "2026-11-03T17:19:36.120852+00:00",
+  "classification": "progress: additive renderer validation mode, actual GPU parity, specific profiling diagnostics and regression evidence",
+  "goal_complete": false,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "source": {
+    "status": "passed_scoped_source_checks",
+    "files": [
+      {
+        "path": "engine/include/aibs/render.hpp",
+        "bytes": 6837,
+        "sha256": "d44cb33b8db910f9eb5452dcd8e84ba424994a554ad52f5cfa527f4be6590ba6",
+        "preimage_sha256": "04d6489aad6591b9e0c40ea3e9803903ae0bda50a98e92d6015424720c724bee"
+      },
+      {
+        "path": "engine/src/render_dx12.cpp",
+        "bytes": 54169,
+        "sha256": "b7dea9bfe5260dcab16cc9cfaa826e4277b9b023f74857d20bb2021662024cc0",
+        "preimage_sha256": "07006fd81448d3c52ba8a170688567952b1cb55ed12fc8f2ff5a3a2e2aeb69af"
+      },
+      {
+        "path": "engine/apps/durable_world.cpp",
+        "bytes": 143918,
+        "sha256": "036fa220624dc83b6141e5d5a2f1a33acf78b648835d0e63d9ac4f7ca992b213",
+        "preimage_sha256": "8788989a4504375f230f92764ac325351836258a20952dbbc269ce8960afe846"
+      },
+      {
+        "path": "engine/apps/performance_runtime.inl",
+        "bytes": 9782,
+        "sha256": "545aedb77c3ba68d9c04667e7dcae164d1718f558f736bf09d0c730430db981c",
+        "preimage_sha256": "73161d0cfa096a5142b4e005674d8a3a7992d668b3dd40134e9aa7dcc857ae27"
+      },
+      {
+        "path": "engine/CMakeLists.txt",
+        "bytes": 60783,
+        "sha256": "7d0ce47174bc2db2e6b16bbc9acd1c00fa65ccbea350b7d0812bc83e58d824bc",
+        "preimage_sha256": "c16f6f8ce1c5560e9a0a45b73bd71b0c6917a772987cddb7abbc08798656caa3"
+      },
+      {
+        "path": "engine/tests/render_validation_native.cpp",
+        "bytes": 2681,
+        "sha256": "5c6920afde76b7f60c098731e4a5ab6fc555c700f3bc8bdc9bf4f456e2119489",
+        "preimage_sha256": null
+      }
+    ],
+    "strong_credential_patterns_found": false,
+    "typescript_python_syntax": "not_applicable_no_runtime_Python_or_TypeScript_changed",
+    "cpp_syntax": "Actual fresh Debug/Release compiler outputs retained separately",
+    "scope": "Selected source only, not repository-wide audit or security certification"
+  },
+  "verified_evidence": [
+    "cpu-release-short-verification.json",
+    "cpu-debug-verification.json",
+    "validation-release-verification.json",
+    "validation-debug-verification.json",
+    "native-original-release-verification.json",
+    "readiness-hidden-verification.json"
+  ],
+  "native_debug_original": "running: exec session84956 retains the same live owned Job; do not restart on observation timeout",
+  "installed_studio102_sha256": "88fe97dacf257b10557a8b16d0b42517d1ad59374c242cc00145ea31144a03d7",
+  "binary_cloud_restore": "unverified: prior Drive block retained; source-only backup is deliberate scope, not overriding classification",
+  "next_step": "Finish the same live original-native Debug job; then complete SDK0.16.4 candidate/consumer verification and source-independent Studio packaging. Add clear user-started profiling readiness UX before requesting another active sample. Preserve8\u201312minute human pacing, likeness, captions, original recordings and final backup gates.",
+  "storage_GiB": {
+    "C": 63.57,
+    "D": 71.08,
+    "E": 136.73
+  },
+  "backup_status": "local archive preparation; Drive upload/restoration not yet verified"
+}

@@ -1,11 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import { theme } from '../../styles/theme';
-import { 
-  LayoutGrid, Layers, Film, Video, Plus, Music2, Scissors, 
-  MoveHorizontal, VolumeX, Trash2, Edit3, Paintbrush, ZoomIn, 
-  ZoomOut, Sparkles, MoreVertical, Sliders, Check,
-  UploadCloud, Play, Square, HardDrive, RefreshCw
-} from 'lucide-react';
+import { LayoutGrid, Layers, Film, Video, Plus, Music2, Scissors, MoveHorizontal, VolumeX, Trash2, Edit3, Paintbrush, ZoomIn, ZoomOut, Sparkles, Sliders, UploadCloud, Play, Square } from "lucide-react";
 import { useDawStore } from './dawStore';
 import EdisonAudioEditorModal from './EdisonAudioEditorModal';
 import SlicexChopperModal from './SlicexChopperModal';
@@ -29,18 +24,18 @@ export default function Playlist() {
   const [isStemExtracting, setIsStemExtracting] = useState(false);
   const [stemProgress, setStemProgress] = useState(0);
   const [stemStatusMsg, setStemStatusMsg] = useState('Demucs v4 CUDA Engine Ready on RTX 4090');
-  const [auditioningClipId, setAuditioningClipId] = useState(null);
-  const stemFileInputRef = useRef(null);
-  const auditionAudioRef = useRef(null);
+  const [auditioningClipId, setAuditioningClipId] = useState(/** @type {string | null | undefined} */ (null));
+  const stemFileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
+  const auditionAudioRef = useRef(/** @type {HTMLAudioElement | null} */ (null));
   const activePatternId = useDawStore(state => state.activePatternId);
   const isPlaying = useDawStore(state => state.isPlaying);
   const currentBar = useDawStore(state => state.currentBar);
   const currentStep = useDawStore(state => state.currentStep);
-  const playMode = useDawStore(state => state.playMode);
+  void (useDawStore(state => state.playMode));
   const setActiveView = useDawStore(state => state.setActiveView);
 
   const [totalBars, setTotalBars] = useState(32);
-  const [videoTracks, setVideoTracks] = useState(DEFAULT_VIDEO_TRACKS);
+  const [videoTracks] = useState(DEFAULT_VIDEO_TRACKS);
   
   // Arrangement Tools: 'draw' (P), 'paint' (B), 'slice' (C), 'slip' (S), 'mute' (T), 'delete' (D)
   const [activeTool, setActiveTool] = useState('draw');
@@ -48,20 +43,21 @@ export default function Playlist() {
   const [zoomScale, setZoomScale] = useState(64); // pixels per bar (default 64px)
 
   // Modals & Active Clip State
-  const [activeEditingClip, setActiveEditingClip] = useState(null);
+  const [activeEditingClip, setActiveEditingClip] = useState(/** @type {import("/types/wave").EditableClip | null} */ (null));
   const [showEdisonModal, setShowEdisonModal] = useState(false);
   const [showSlicexModal, setShowSlicexModal] = useState(false);
   const [showClipSettingsModal, setShowClipSettingsModal] = useState(false);
-  const [clipMenuOpenId, setClipMenuOpenId] = useState(null);
+  const [clipMenuOpenId, setClipMenuOpenId] = useState(/** @type {string | null | undefined} */ (null));
 
   // Dragging & Slipping State
-  const [draggingClipInfo, setDraggingClipInfo] = useState(null);
-  const [hoverSliceBar, setHoverSliceBar] = useState(null);
+  const [] = useState(/** @type {{trackId: import("/types/daw").TrackId; clipId?: string; initialBar: number; initialX: number} | null} */ (null));
+  const [] = useState(/** @type {number | null} */ (null));
 
   // Keyboard Shortcuts (P, B, C, S, T, D, Ctrl+E)
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    /** @param {KeyboardEvent} e */
+  const handleKeyDown = (e) => {
+      if (e.target instanceof HTMLElement && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
       
       const key = e.key.toLowerCase();
       if (e.ctrlKey && key === 'e') {
@@ -92,6 +88,7 @@ export default function Playlist() {
   }, [playlistTracks]);
 
   // Click on Track Lane with Draw / Paint tool to add pattern clip
+  /** @param {import("/types/daw").TrackId} trackId @param {import("react").MouseEvent} e */
   const handleLaneClick = (trackId, e) => {
     if (activeTool !== 'draw' && activeTool !== 'paint') return;
     const rect = e.currentTarget.getBoundingClientRect();
@@ -114,6 +111,7 @@ export default function Playlist() {
   };
 
   // Slicing Tool Click: Splits clip into two pieces at exact slice point
+  /** @param {import("/types/daw").TrackId} trackId @param {import("/types/daw").PlaylistClip} clip @param {import("react").MouseEvent} e */
   const handleClipClick = (trackId, clip, e) => {
     e.stopPropagation();
 
@@ -167,19 +165,22 @@ export default function Playlist() {
     }
 
     if (activeTool === 'draw' || activeTool === 'paint') {
-      setActiveEditingClip(clip);
+      setActiveEditingClip(clip ?? null);
     }
   };
 
   // Double Click: Open Channel / Clip Settings
+  /** @param {import("/types/daw").PlaylistClip} clip @param {import("react").MouseEvent} e */
   const handleClipDoubleClick = (clip, e) => {
     e.stopPropagation();
-    setActiveEditingClip(clip);
+    setActiveEditingClip(clip ?? null);
     setShowClipSettingsModal(true);
   };
 
   // Make Unique Action
+  /** @param {import("/types/wave").EditableClip | null | undefined} clipToClone */
   const handleMakeUnique = (clipToClone) => {
+    if (!clipToClone) return;
     setPlaylistTracks(prev => prev.map(t => ({
       ...t,
       clips: t.clips.map(c => {
@@ -198,14 +199,16 @@ export default function Playlist() {
   };
 
   // Update Clip from Modal
+  /** @param {import("/types/wave").EditableClip} updatedClip */
   const handleUpdateClip = (updatedClip) => {
     setPlaylistTracks(prev => prev.map(t => ({
       ...t,
-      clips: t.clips.map(c => c.id === updatedClip.id ? updatedClip : c)
+      clips: t.clips.map(c => c.id === updatedClip.id ? {...c, ...updatedClip} : c)
     })));
   };
 
   // Send edited audio from Edison back to playlist
+  /** @param {import("/types/wave").EditableClip} edisonClip */
   const handleEdisonSendToPlaylist = (edisonClip) => {
     const newClip = {
       id: `edison_${Date.now()}`,
@@ -222,6 +225,7 @@ export default function Playlist() {
   };
 
   // Dump Slices from Slicex
+  /** @param {import("/types/wave").Slice[]} slices @param {import("/types/wave").EditableClip | null | undefined} originClip */
   const handleDumpSlices = (slices, originClip) => {
     let currentOffset = 0;
     const dumpedClips = slices.map((s, idx) => {
@@ -250,9 +254,10 @@ export default function Playlist() {
   };
 
   // Audition clip audio directly from timeline
+  /** @param {import("/types/wave").EditableClip} clip */
   const handleAuditionClip = (clip) => {
     const url = clip.audioUrl || clip.url;
-    if (!url) return;
+    if (typeof url !== "string" || !url) return;
     if (auditioningClipId === clip.id) {
       if (auditionAudioRef.current) {
         auditionAudioRef.current.pause();
@@ -276,6 +281,7 @@ export default function Playlist() {
   };
 
   // Upload and isolate stems directly from the Arranger Playlist
+  /** @param {File} file */
   const handleUploadAndSeparateInArranger = async (file) => {
     if (!file) return;
     setIsStemExtracting(true);
@@ -305,6 +311,7 @@ export default function Playlist() {
         setStemStatusMsg(`✨ Separation Complete! All stems arranged into tracks for ${data.project_name || file.name}`);
         
         if (data.stems) {
+          /** @type {Record<string, string>} */
           const stemColors = {
             vocals: '#00f0ff',
             drums: '#10b981',
@@ -312,6 +319,7 @@ export default function Playlist() {
             other: '#a855f7',
             master_repaired: '#f43f5e'
           };
+          /** @type {Record<string, string>} */
           const stemLabels = {
             vocals: 'Vocals',
             drums: 'Drums',
@@ -335,7 +343,7 @@ export default function Playlist() {
       }
     } catch (err) {
       clearInterval(progressInterval);
-      setStemStatusMsg(`⚠️ Error connecting to Demucs backend: ${err.message}`);
+      setStemStatusMsg(`⚠️ Error connecting to Demucs backend: ${(err instanceof Error ? err.message : String(err))}`);
     } finally {
       setIsStemExtracting(false);
       setTimeout(() => {
@@ -358,6 +366,7 @@ export default function Playlist() {
   };
 
   // Timeline File Drop (Drag whole song or audio onto tracks)
+  /** @param {import("/types/daw").TrackId} trackId @param {import("react").DragEvent} e */
   const handleTimelineDrop = (trackId, e) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
@@ -390,7 +399,7 @@ export default function Playlist() {
         }
       }}
       onDragLeave={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) {
+        if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
           setIsDragOverArranger(false);
         }
       }}
@@ -451,7 +460,7 @@ export default function Playlist() {
       {/* Top Header & Pro Tools Toolbar */}
       <div style={{
         padding: '6px 12px',
-        borderBottom: `1px solid ${theme.colors.border}`,
+        borderBottom: `1px solid ${'#30363d'}`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -748,7 +757,7 @@ export default function Playlist() {
         {/* Left Track Headers */}
         <div style={{
           width: '140px',
-          borderRight: `1px solid ${theme.colors.border}`,
+          borderRight: `1px solid ${'#30363d'}`,
           background: '#0d1117',
           position: 'sticky',
           left: 0,
@@ -998,7 +1007,7 @@ export default function Playlist() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          setActiveEditingClip(clip);
+                          setActiveEditingClip(clip ?? null);
                           setShowClipSettingsModal(true);
                         }}
                         style={{ background: 'transparent', border: 'none', color: '#aaa', cursor: 'pointer', padding: '2px' }}
@@ -1039,7 +1048,7 @@ export default function Playlist() {
 
                         <button
                           onClick={() => {
-                            setActiveEditingClip(clip);
+                            setActiveEditingClip(clip ?? null);
                             setShowClipSettingsModal(true);
                             setClipMenuOpenId(null);
                           }}
@@ -1050,7 +1059,7 @@ export default function Playlist() {
 
                         <button
                           onClick={() => {
-                            setActiveEditingClip(clip);
+                            setActiveEditingClip(clip ?? null);
                             setShowEdisonModal(true);
                             setClipMenuOpenId(null);
                           }}
@@ -1061,7 +1070,7 @@ export default function Playlist() {
 
                         <button
                           onClick={() => {
-                            setActiveEditingClip(clip);
+                            setActiveEditingClip(clip ?? null);
                             setShowSlicexModal(true);
                             setClipMenuOpenId(null);
                           }}
@@ -1073,7 +1082,9 @@ export default function Playlist() {
                         {(clip.audioUrl || clip.url) && (
                           <button
                             onClick={() => {
-                              fetch(clip.audioUrl || clip.url)
+                              Promise.resolve().then(() => { const source = clip.audioUrl || clip.url;
+                                if (typeof source !== "string") throw new Error("Stem extraction requires an audio URL.");
+                                return fetch(source); })
                                 .then(res => res.blob())
                                 .then(blob => {
                                   const file = new File([blob], `${clip.title || 'audio'}.wav`, { type: 'audio/wav' });
@@ -1183,11 +1194,11 @@ export default function Playlist() {
           onUpdateClip={handleUpdateClip}
           onMakeUnique={handleMakeUnique}
           onOpenEdison={(clip) => {
-            setActiveEditingClip(clip);
+            setActiveEditingClip(clip ?? null);
             setShowEdisonModal(true);
           }}
           onOpenSlicex={(clip) => {
-            setActiveEditingClip(clip);
+            setActiveEditingClip(clip ?? null);
             setShowSlicexModal(true);
           }}
         />

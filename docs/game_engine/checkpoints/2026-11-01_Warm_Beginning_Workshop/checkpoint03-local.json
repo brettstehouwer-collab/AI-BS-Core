@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\03_Textured_Packs_And_Guide_Core.zip",
+  "bytes": 3217592,
+  "sha256": "68ccc401ed4c4a381c59c7c0282db650265cefaa0deb7ee55dafa53da0436f96",
+  "files": 525,
+  "source_manifest_sha256": "335c4b0012e2f19b3eac67fc738c0e4eb70aceba2c5a1b7b37d5098a46564b21",
+  "local_verification": "All ZIP CRCs, per-file lengths/SHA and current selected bytes match",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "free_bytes": {
+    "C": 93424816128,
+    "D": 184033345536,
+    "E": 146813599744
+  }
+}

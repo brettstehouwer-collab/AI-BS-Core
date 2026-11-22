@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "handoff_id": "checkpoint14",
+  "timestamp_utc": "2026-11-02T09:55:18.883755+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next verified continuation",
+  "git": {
+    "branch": "codex/audit-v532976-20261031",
+    "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "working_tree": "Dirty and untracked; complete source checkpoint preserves selected full files; no commit/reset/clean performed"
+  },
+  "status": "VERIFIED_SOURCE_SLICE_GOAL_ACTIVE",
+  "verification_report": "engine/out/warm_beginning/memory_audio_integration_verification.json",
+  "verification_report_sha256": "3053c65a013bc5f7086296b094ca0b7796d2b367d3a161fdfacce3658c881983",
+  "runtime_source_sha256": "09acd098a93d4ef309fc667092bad3d57518e75f0e7c19112ad3f7f78ae64ae5",
+  "completed_scope": "Checkpoint14 native SDK0.12 memory-audio pipeline, creator placement/assignment, playback controls and bounded content admission; plus private unapproved Adam studies. Not completion of full Warm Beginning opening.",
+  "remaining": [
+    "Integrate the new opening inspection/factory/panel namespace and both playable routes",
+    "Finish recognizable naturalistic Adam likeness and automatic restrained guidance gestures",
+    "Cook full optional original recording with listening-reviewed captions",
+    "Measure1080p60 Release frame times and process/GPU memory with optional inference off",
+    "Package current source/SDK and deploy verified launcher",
+    "Record full native walkthrough and verify final organized Drive backup"
+  ],
+  "tests": {
+    "Release": {
+      "native_tests": 102,
+      "native_status": "passed",
+      "installed_sdk_consumers": 2,
+      "sdk_status": "passed",
+      "real_qt_creator_restart_test": 1,
+      "creator_status": "passed",
+      "native_memory_control_checks": 32,
+      "memory_paused_frame": 882,
+      "memory_resumed_frame": 1323,
+      "gpu_debug_errors": 0,
+      "gpu_debug_warnings": 0,
+      "native_memory_report": "D:\\AI-BS-Game-Resources\\P12\\me4564088\\verification.json",
+      "gpu_budget_report": "D:\\AI-BS-Game-Resources\\P12\\content-gpu-budget-Release\\verification.json",
+      "gpu_budget_report_checks": 67,
+      "memory_creator_viewport_report": "D:\\AI-BS-Game-Resources\\P12\\vp-897a7eda\\verification.json",
+      "player_sha256": "c60473ed6406f56252cae5589a7af1e9b7e9981c313c0ff643202e0598acd93a",
+      "creator_host_sha256": "cfd03ba5334909457b37da15aeace0468e35ba2c26122e930f4363708dd5dc48",
+      "asset_cooker_sha256": "04446d5b63f6b2316323ac1ca6370c40cbf612e0f74f6d793b0d53df5a3c250c"
+    },
+    "Debug": {
+      "native_tests": 102,
+      "native_status": "passed",
+      "installed_sdk_consumers": 2,
+      "sdk_status": "passed",
+      "real_qt_creator_restart_test": 1,
+      "creator_status": "passed",
+      "native_memory_control_checks": 32,
+      "memory_paused_frame": 2205,
+      "memory_resumed_frame": 3087,
+      "gpu_debug_errors": 0,
+      "gpu_debug_warnings": 0,
+      "native_memory_report": "D:\\AI-BS-Game-Resources\\P12\\m65de3ebf\\verification.json",
+      "gpu_budget_report": "D:\\AI-BS-Game-Resources\\P12\\content-gpu-budget-Debug\\verification.json",
+      "gpu_budget_report_checks": 67,
+      "memory_creator_viewport_report": "D:\\AI-BS-Game-Resources\\P12\\vp-69b0c655\\verification.json",
+      "player_sha256": "5b747bc924436c31f0b153fb08913f6c046e8362458e0b361eb0c68d0be1695e",
+      "creator_host_sha256": "c49571d58e4cbe5887de2be30c92944ca87d8bff4bd8df5a8124575e6d29a54d",
+      "asset_cooker_sha256": "5aaa1f50f2d9e92441ab69282307741e4d870841ce7965a334e497977678fc61"
+    }
+  },
+  "next_executable_task": "Integrate typed opening inspections/factory/creator fields and native read/seat panel; assemble and playtest both routes with Adam v05",
+  "staged_opening_manifest": "C:/Users/footb/.codex/visualizations/2026/11/01/01a19491-7a5c-71e0-a6ba-0dc4a3f58f44/warm_opening_content/verification.json",
+  "backup": {
+    "status": "VERIFIED_AUTHENTICATED_FULL_RESTORE",
+    "checkpoint14_receipt": "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint14-drive.json",
+    "launcher_repair_receipt": "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint14B-drive.json",
+    "post_seal_annotation_at": "2026-11-02T10:43:03.737419+00:00"
+  },
+  "reasoned_decisions": [
+    "Retain shared immutable decoded closure; do not reload/copy original source per station",
+    "Use role-tagged audio_v2 rather than treating every non-character pack as a visual",
+    "Preflight exact GPU descriptors before stages that submit uploads/idle; verify actual staged allocation equality",
+    "Charge composed CPU capacity and legacy fallback white image; retain old public scene setters",
+    "Keep source/test/content/documentation fingerprints separate; preserve old releases and original family references"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "phase": "public_static_root_verification",
+  "utc": "2026-10-25T21:36:02.938427+00:00",
+  "checks": [
+    {
+      "utc": "2026-10-25T21:36:02.684085+00:00",
+      "host": "stehouwer-publishing.com",
+      "status": 200,
+      "bytes": 1876,
+      "sha256": "bbe5750e0b4f170a86a81e52df8cc31cb2f15507544472f32acec9689b90c672",
+      "hash_match": false,
+      "server": "cloudflare",
+      "content_type": "text/html",
+      "cache": "DYNAMIC",
+      "cf_ray": "a5045ab59cb8e7fe-ORD",
+      "redirect_observed": false,
+      "tls_verified": true,
+      "javascript_executed": false
+    },
+    {
+      "utc": "2026-10-25T21:36:02.938427+00:00",
+      "host": "www.stehouwer-publishing.com",
+      "status": 200,
+      "bytes": 1876,
+      "sha256": "bbe5750e0b4f170a86a81e52df8cc31cb2f15507544472f32acec9689b90c672",
+      "hash_match": false,
+      "server": "cloudflare",
+      "content_type": "text/html",
+      "cache": "DYNAMIC",
+      "cf_ray": "a5045ab75de7115b-ORD",
+      "redirect_observed": false,
+      "tls_verified": true,
+      "javascript_executed": false
+    }
+  ],
+  "all_pass": false
+}

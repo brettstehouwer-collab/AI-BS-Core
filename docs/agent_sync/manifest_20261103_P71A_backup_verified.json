@@ -1,0 +1,46 @@
+{
+  "at": "2026-11-04T02:09:46.008315+00:00",
+  "status": "VERIFIED",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "shared_dirty_checkout_preserved": true,
+  "git_status_local_only": "D:\\AI-BS-Game-Resources\\P71\\Adam_EyelidAndLipStudy\\local-worktree-status.txt",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\71A_Adam_v23_Eyelid_Lip_Study_And_Native_Views.zip",
+    "bytes": 22494248,
+    "sha256": "c5cd5724af5ce059ccd136ed9d03221aa9f342acd7fbe1992b24707c944f8206",
+    "members": 162,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-04T02:08:46.217750+00:00",
+    "drive_folder_id": "1Sujf-_sT8nWW8zACfA7cbFOZx0fEWVrR",
+    "drive_file_id": "1giQKkpu52xJrulI6vHjeS30VT60vFGG1",
+    "all_members_verified": true,
+    "goal_complete": false
+  },
+  "receipt_drive_id": "1KNg4sZDx8SMKztHUaNYL5g5lHIKTCPzm",
+  "verification": "D:\\AI-BS-Game-Resources\\P71\\Adam_EyelidAndLipStudy\\verification.json",
+  "gallery": "D:\\AI-BS-Game-Resources\\P71\\Adam_EyelidAndLipStudy\\Review-v2\\Adam_v23_Native_All_Sides.html",
+  "changed_project_files": {
+    "C:\\AI-BS\\docs\\game_engine\\AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "f726544c7c7d81bf1a3f0cbe34e63a211688c1b272719ea415a6eb89d78c7beb",
+    "C:\\AI-BS\\engine\\out\\warm_beginning\\monitor_summary.json": "b557a0f7e2c5ab9d24ec5e62cb4e60322e758b18b0c1634a8baf98af9d362c95",
+    "C:\\AI-BS\\docs\\game_engine\\ADAM_CHARACTER_REFERENCE_NOTES.md": "4530d05ba4baf63e43850039a2e0dd2a06dd54234f269da8a14a08439029cac4",
+    "C:\\AI-BS\\docs\\game_engine\\ADAM_V23_EYELID_LIP_STUDY.md": "983baeebd025070b6be2027b1ae8c9a1d03eceddcfed465f4d1cddfde9ea7d89"
+  },
+  "installed_studio": "5.329.106",
+  "installed_model": "v20",
+  "new_study": "v23, private and unapproved",
+  "all_owned_processes_joined": true,
+  "failures_retained": [
+    "Gallery first parent path error, corrected without changing assertions",
+    "Report wording corrected to avoid exact cheek/jaw claim; no geometry changed"
+  ],
+  "incomplete": [
+    "Naturalistic Adam skin/hair/clothing and personal likeness acceptance",
+    "Human8\u201312minute pacing and current active-play performance",
+    "Caption listening review deferred by user",
+    "Final packaged acceptance and verified final backup"
+  ],
+  "goal_complete": false,
+  "next_step": "Prioritize the prepared user-started Studio106 opening review when a session is available. Continue adult-reference skin/hair/clothing and overall likeness refinement in separate masters, considering pending personal contour feedback. Caption listening, human pacing/performance, final likeness and packaged acceptance remain required."
+}

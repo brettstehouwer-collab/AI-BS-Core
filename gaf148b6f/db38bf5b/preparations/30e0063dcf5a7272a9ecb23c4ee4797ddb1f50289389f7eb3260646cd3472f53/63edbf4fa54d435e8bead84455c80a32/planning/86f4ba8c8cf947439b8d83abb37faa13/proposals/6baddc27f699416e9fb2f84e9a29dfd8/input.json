@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "63edbf4fa54d435e8bead84455c80a32",
+  "plan_id": "86f4ba8c8cf947439b8d83abb37faa13",
+  "snapshot_sha256": "edaa1ffcb2975c01f4732c2d2af454c1eb211e5db24031e37dce4b899c9a100a",
+  "review_digest": "76982ff5f95cd9a63b9a2c176cd337d13fb8530e8051227a4a642d2e5f62ac83",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "6baddc27f699416e9fb2f84e9a29dfd8",
+  "reviewed_plan_sha256": "e3a50a94c7f032c97eb316dc403ba409697a5ad04e43512198db9fc82e5fb65a",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 40304,
+    "created": 1794782619.3812244
+  },
+  "created_at_utc": "2026-11-15T22:43:48.450075+00:00",
+  "entry_sha256": "d977783bca4d0ef2ec31060964b10947ecf5bcdabc011c41689130b00908ba88"
+}

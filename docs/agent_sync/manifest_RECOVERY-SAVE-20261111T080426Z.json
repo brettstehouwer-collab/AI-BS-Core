@@ -1,0 +1,340 @@
+{
+  "schema_version": 1,
+  "handoff_id": "RECOVERY-SAVE-20261111T080426Z",
+  "at": "2026-11-11T08:04:26.903774+00:00",
+  "goal": "ACTIVE_INCOMPLETE",
+  "outgoing_agent": "OpenAI Codex /root",
+  "receiving_agent": "Next executor, verification pending",
+  "repository": {
+    "branch": "codex/audit-v532976-20261031",
+    "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "dirty": true,
+    "status_scope": "Git status --short --untracked-files=normal, including collapsed untracked directories; full output kept local only. Restricted-directory warnings retained; no exhaustive untracked-file inventory claimed."
+  },
+  "complete_source_files": 63,
+  "modified_paths": [
+    "native_studio/screenplay_client.py",
+    "scripts/tests/test_native_creative_owned_workflow.py",
+    "scripts/tests/fixtures/native_creative_owned_child.py",
+    "native_studio/windows_profile.py",
+    "scripts/tests/test_native_windows_profile.py",
+    "scripts/tests/test_native_draft_explicit_recovery.py"
+  ],
+  "source_manifest_sha256": "197b8ed0677d30b7674909024ace702d6798d3eee5bd00b475a662f1844bbd14",
+  "base_required": "Selected complete source/progress overlay requiring an existing complete preserved base; no whole-project/PC/saved-data restore claim",
+  "files": {
+    "backend/security/native_creative_handoff.py": {
+      "bytes": 6441,
+      "sha256": "ffbd710a6af099a5da279d61b1d4584a1e0f594bce5fe2d59d7511f4da6f91a5"
+    },
+    "backend/security/native_creative_peer.py": {
+      "bytes": 5896,
+      "sha256": "ecc1ff24b07f7ed70f76100335f92993a8fef1e6d3c792c84664fd2f71615eaa"
+    },
+    "backend/security/native_creative_adapter.py": {
+      "bytes": 7498,
+      "sha256": "5582e6df43e2e54b389d632684e5f3327b21354340e5af868b37f4b9af5b8506"
+    },
+    "backend/security/native_creative_lifetime.py": {
+      "bytes": 9933,
+      "sha256": "af30620ce910bfc715eeafba3c606599e2169fe83e19884ee472c4c6e3ee870f"
+    },
+    "backend/security/native_creative_controller.py": {
+      "bytes": 22101,
+      "sha256": "66c77a5a901ba520b78f05ef94be67b5ef28360b71c48f44ca87f4a28d01a8aa"
+    },
+    "backend/security/firebase_auth.py": {
+      "bytes": 5573,
+      "sha256": "0a408ecf5a3af976325748b273974e44329df385879e02bacbd42daebd42dfd8"
+    },
+    "backend/routers/screenwriting_router.py": {
+      "bytes": 105520,
+      "sha256": "6afe927b2a8ae7ef6c7e9d9ff17a2034c3b364466de3b956d546f0c8adc8f5a9"
+    },
+    "native_studio/creative_session.py": {
+      "bytes": 9402,
+      "sha256": "e6cfb2d96b96dcf66d920b8131a4c7a8264be5f85f88f8a79910cd5f9a387183"
+    },
+    "native_studio/screenplay_client.py": {
+      "bytes": 30316,
+      "sha256": "1dbf0316e09a2fde7b18bc5257f936fdad50970d9279e26d27ceb1a72d88d428"
+    },
+    "native_studio/screenwriting_view.py": {
+      "bytes": 147768,
+      "sha256": "7debef11349f99db52685a8d3754571db514bd6f5ca5434db0a8c4489b9f8123"
+    },
+    "native_studio/native_creative_entry.py": {
+      "bytes": 3384,
+      "sha256": "1feba208222a5e4e75406b8e1d1ceca3fce6e02d3c8b268985efaac9b66e5eda"
+    },
+    "native_studio/app.py": {
+      "bytes": 53585,
+      "sha256": "92f4896ced3888fafb74ceb0271a42ccfea1527e2164bd676000d5d32e5849fe"
+    },
+    "native_studio/rich_screenplay_draft.py": {
+      "bytes": 14744,
+      "sha256": "768c98ebe212a19061388051dd35c7a55c91f70617bcf5c382f091dcdbfef9ac"
+    },
+    "native_studio/local_connection.py": {
+      "bytes": 11168,
+      "sha256": "166407a089f63f5e259e5376826c546b0d348fa7a953119ea7d1abc11565dea6"
+    },
+    "native_studio/engine.py": {
+      "bytes": 19933,
+      "sha256": "ce022003b06474133cda5a9a7f9a5b252b48fa91263d7d8034e27795293d96f1"
+    },
+    "native_studio/theme.py": {
+      "bytes": 8451,
+      "sha256": "19461f62e63eff93482f1affd56e7129a7a1bf273cd70a133a25273816a37492"
+    },
+    "native_studio/game_build_view.py": {
+      "bytes": 50588,
+      "sha256": "8f80e0b5679177cac53cee54540aacacf57edf3bf956412aa78bcf84d20ad216"
+    },
+    "frontend/src/utils/chatAuth.js": {
+      "bytes": 531,
+      "sha256": "09342bd2081591b0498fbde1dc99c723fc9a24ed500379ab23bbb1e65b749e1c"
+    },
+    "frontend/src/utils/nativeScreenplayHandoff.js": {
+      "bytes": 1574,
+      "sha256": "e516bc9a6e0d5dce33f3419eb805b9b9e6af58f8cf03572733ac1f421660a775"
+    },
+    "frontend/src/utils/screenplayHandoff.js": {
+      "bytes": 11929,
+      "sha256": "e1c9ca1ec31b25cfc967030c1b19fb98cd5bc9b9d5302aa4274e38bd4d79a695"
+    },
+    "frontend/src/utils/opencodeWorkers.js": {
+      "bytes": 4661,
+      "sha256": "3d2eb3ab042e337536ca352e9daaf240beb9822048f3de0cdd705b889c2283fd"
+    },
+    "frontend/src/components/ScreenwritingTab.jsx": {
+      "bytes": 221794,
+      "sha256": "0ae52d12c9e7c6a6e749b6c8a450bfe8cc6ca8413ecc55833a504e2ff63b11ca"
+    },
+    "frontend/components/ScreenwritingTab.jsx": {
+      "bytes": 221794,
+      "sha256": "0ae52d12c9e7c6a6e749b6c8a450bfe8cc6ca8413ecc55833a504e2ff63b11ca"
+    },
+    "frontend/src/components/components/ScreenwritingTab.jsx": {
+      "bytes": 221794,
+      "sha256": "0ae52d12c9e7c6a6e749b6c8a450bfe8cc6ca8413ecc55833a504e2ff63b11ca"
+    },
+    "frontend/components/components/ScreenwritingTab.jsx": {
+      "bytes": 221794,
+      "sha256": "0ae52d12c9e7c6a6e749b6c8a450bfe8cc6ca8413ecc55833a504e2ff63b11ca"
+    },
+    "frontend/src/components/LoginModal.jsx": {
+      "bytes": 8483,
+      "sha256": "2903ee080ef796d8c6c3c9f977273b9821460e53fe30d29cbb2739b7b7a49167"
+    },
+    "frontend/components/LoginModal.jsx": {
+      "bytes": 8483,
+      "sha256": "2903ee080ef796d8c6c3c9f977273b9821460e53fe30d29cbb2739b7b7a49167"
+    },
+    "frontend/src/components/components/LoginModal.jsx": {
+      "bytes": 8483,
+      "sha256": "2903ee080ef796d8c6c3c9f977273b9821460e53fe30d29cbb2739b7b7a49167"
+    },
+    "frontend/components/components/LoginModal.jsx": {
+      "bytes": 8483,
+      "sha256": "2903ee080ef796d8c6c3c9f977273b9821460e53fe30d29cbb2739b7b7a49167"
+    },
+    "docs/game_engine/RTX_ASSET_WORKFLOW.md": {
+      "bytes": 6397,
+      "sha256": "3bf95a3d129f5d31d519d99c054bbdeb89ced815f4948f56aae9f7755c6ce73a"
+    },
+    "runtime/devtools/Blender-AI-BS-RTX.cmd": {
+      "bytes": 456,
+      "sha256": "3a552f53f0dc216e1771eab483050e4da4f12913bbfd7af3bcb4d049fd01b7b6"
+    },
+    "runtime/devtools/Nsight-AI-BS.cmd": {
+      "bytes": 199,
+      "sha256": "8df9e86ac2beac54f0d88d6465a9172695eb8e0aef98b53e408ffc72b8bbe9ef"
+    },
+    "runtime/devtools/blender-rtx/configure_optix.py": {
+      "bytes": 2103,
+      "sha256": "beb6af51ea46affe987d99fc89c04865ea702d3d1edfe546311e67cf7af0db43"
+    },
+    "scripts/tests/test_native_screenplay_handoff.mjs": {
+      "bytes": 7146,
+      "sha256": "375bcac9c21459d96c39763f604b50adf95298554b228bf4bb0dab03e499e794"
+    },
+    "scripts/tests/test_screenplay_handoff.mjs": {
+      "bytes": 8187,
+      "sha256": "a4e1f5fda82388ebcc72aa58fa49e098a077cba06bbfc0d203d40353b72238b1"
+    },
+    "scripts/tests/test_conversation_memory_context.mjs": {
+      "bytes": 11593,
+      "sha256": "d2b1fc295928b1011ccb12e3148b1fbb10f91e22c1b7c44c699342ed61821dd2"
+    },
+    "scripts/tests/test_creative_verified_context.py": {
+      "bytes": 3792,
+      "sha256": "a4961b2eb17ce2805806017779badc51889eee47ad41fb052d9ce03fe767243e"
+    },
+    "scripts/tests/test_game_build_layout.py": {
+      "bytes": 11561,
+      "sha256": "f0f24c5b56ba7d328e427c1baa91f94b4a688ecc934289027cb16a0190b100e9"
+    },
+    "scripts/tests/fixtures/native_creative_owned_child.py": {
+      "bytes": 10087,
+      "sha256": "cd7aecb53fdc6e057ff57f5ad79feaf471e5c54a740f7ff6ec8b293cd52c1455"
+    },
+    "scripts/tests/test_native_creative_adapter.py": {
+      "bytes": 20853,
+      "sha256": "4fefaaf4391a8accd1210c1a8f5849eeab66e960ad2c25c2ffda81211c08dde6"
+    },
+    "scripts/tests/test_native_creative_bootstrap_entry.py": {
+      "bytes": 2245,
+      "sha256": "b7f057df8eed7ac47b6e0a22e390b15aeab2abd6c71eeb21edbd523585235e47"
+    },
+    "scripts/tests/test_native_creative_controller.py": {
+      "bytes": 24655,
+      "sha256": "d8b972e6be7c3c1db5d561a756e33611a02515cf24e3d3b67d27864264ec5318"
+    },
+    "scripts/tests/test_native_creative_disconnect_recovery.py": {
+      "bytes": 3093,
+      "sha256": "15b93b52269bf3943bad7f1cb2947b3c1901d3ea53ce3ff68dd7987382ef40fb"
+    },
+    "scripts/tests/test_native_creative_entry.py": {
+      "bytes": 2423,
+      "sha256": "e2ea818732b5fda277cf5897d4024a6720eac06398a0a9b3d08266fbc922149d"
+    },
+    "scripts/tests/test_native_creative_export_menu.py": {
+      "bytes": 1973,
+      "sha256": "70cb1fde21c7716777f0b9066a05d9f357bab9428f107fd67144889be055c339"
+    },
+    "scripts/tests/test_native_creative_handoff.py": {
+      "bytes": 5100,
+      "sha256": "6a45ba33b50e11990fe48afaf25f452373db65c9ee2d7582a6cb6a12098e7cee"
+    },
+    "scripts/tests/test_native_creative_launch_route.py": {
+      "bytes": 15928,
+      "sha256": "231a9eb8fd7accf69000a47f1ef33b853102c0574dcf49c8881b3958fbb8758e"
+    },
+    "scripts/tests/test_native_creative_lifetime.py": {
+      "bytes": 16764,
+      "sha256": "14f0d91bdb584220658a5242cf95c67e99c474d14a5d0524409d94b62ae29097"
+    },
+    "scripts/tests/test_native_creative_output_sinks.py": {
+      "bytes": 1502,
+      "sha256": "cb245cd6d873cb10c84bedc5aa489ccad86ad2d34ea2c880191ad6774b89ef24"
+    },
+    "scripts/tests/test_native_creative_owned_workflow.py": {
+      "bytes": 31860,
+      "sha256": "dcd65add2f82acb61e105ead0b3a150fc5bfc0d596e004e9a320855f6257184f"
+    },
+    "scripts/tests/test_native_creative_owner_dependency.py": {
+      "bytes": 3173,
+      "sha256": "9470d3ad73c3aea97afddaa60e4eee57f0f470c1e306dcd01504e6a7c8947c01"
+    },
+    "scripts/tests/test_native_creative_peer.py": {
+      "bytes": 7145,
+      "sha256": "6a8c7b635dd5ee5eba3abac274ba93e74ce02be01a69c5a3562249437fddbcca"
+    },
+    "scripts/tests/test_native_creative_pipe.py": {
+      "bytes": 3241,
+      "sha256": "11a93ad0acb7007410caaa4aaf2815b8ebea7a60215460321210462049fb7a6d"
+    },
+    "scripts/tests/test_native_creative_project_preflight.py": {
+      "bytes": 3971,
+      "sha256": "ba561335a24e0a18c1dbef76a6dacc821339b79f65ffc7a37e5fc39c8d52f1f0"
+    },
+    "scripts/tests/test_native_creative_redemption_contract.py": {
+      "bytes": 3393,
+      "sha256": "4d54fd056ebbddb0facf82fdbc16e163f07b1d645d716f39aa920efb730479cb"
+    },
+    "scripts/tests/test_native_creative_redemption_route.py": {
+      "bytes": 2918,
+      "sha256": "ce30f2c11d6d0f8dc6322a0007b17b1bfb08648d1b6f404f05e453dedc1aa9c0"
+    },
+    "scripts/tests/test_native_creative_router_auth.py": {
+      "bytes": 2906,
+      "sha256": "b5a5064cf0c6dccc363f2944910645b6a4d40bd6319989c669d8080c28c5041c"
+    },
+    "scripts/tests/test_native_creative_scoped_view.py": {
+      "bytes": 22550,
+      "sha256": "0b96eb46d6bec187d17560398e642da6c82b81795a900897a0650296b25cd444"
+    },
+    "scripts/tests/test_native_creative_session.py": {
+      "bytes": 5046,
+      "sha256": "e2071765310175f95df11cddba4b5a4f750f651399360ee30645e258d7acf01d"
+    },
+    "scripts/tests/test_native_creative_window.py": {
+      "bytes": 4711,
+      "sha256": "a2b254c81a61e28959bc06aee8f9250e3e12927f4308c20537a418bccd8f6c03"
+    },
+    "native_studio/windows_profile.py": {
+      "bytes": 4627,
+      "sha256": "58517026e7857c00cda845789b351ec712d8c700ea650c5362e25c0fbb4e93d2"
+    },
+    "scripts/tests/test_native_windows_profile.py": {
+      "bytes": 10603,
+      "sha256": "e97e0803fc0b71e8608c9f9cf887d2f1be2faf8225da98596cd7810ce94eb613"
+    },
+    "scripts/tests/test_native_draft_explicit_recovery.py": {
+      "bytes": 4746,
+      "sha256": "e7b83782455722a86e4684c3ea89eda420526eede00cbf7f762b4c8b5d03824b"
+    },
+    "evidence/explicit-recovery.json": {
+      "bytes": 2705,
+      "sha256": "9ef3971b4679dc4b727e80c3b113a98079ee9552ed4ffd09bebe20cb95fd9b2c"
+    },
+    "evidence/explicit-recovery.patch": {
+      "bytes": 6688,
+      "sha256": "6fedb328cbb16931c10d254ea49386dc1cfd018e9041e139d24cda0e799cbb84"
+    },
+    "evidence/profile-helper.json": {
+      "bytes": 6368,
+      "sha256": "b2307dafe0d9cd184a0ae7b339b8ef5c0de425f253d5089561b891acc1290ab3"
+    },
+    "evidence/profile-helper.patch": {
+      "bytes": 15713,
+      "sha256": "8f6ea6b69a6dd34bfa31dc515bd3b326fd1f4e1af03d009f5d46b3802f18bf6b"
+    },
+    "evidence/diagnostic-fixture.json": {
+      "bytes": 2741,
+      "sha256": "140e9d061faf17636662e3337a6ec32c4de41ab7f71af24bc3bf47f5114b536f"
+    },
+    "evidence/diagnostic-fixture.patch": {
+      "bytes": 25714,
+      "sha256": "5fe31fd81d6dd55c948edfd4935f9fcc1896a8b2f70657285d571234d46855dc"
+    },
+    "evidence/owned-first-partial.json": {
+      "bytes": 3943,
+      "sha256": "95b7b54b900d80955ba4970fb418a71c085592ad1e98a1649f8dd52a934e9eb5"
+    },
+    "evidence/owned-observed-partial.json": {
+      "bytes": 6741,
+      "sha256": "f161187961ca470f846cb3719165da499b2538dba02cec33f8d5c2e77c77d882"
+    },
+    "evidence/two-failure-halt.json": {
+      "bytes": 5531,
+      "sha256": "1cf068d42a61c6dc8990701b62fc198982032c68fb729d1b04d3b7d4768290a1"
+    },
+    "evidence/six-source-privacy.json": {
+      "bytes": 2457,
+      "sha256": "d3106e84d99f450555918667af3236eae2ed2df777431c1a7b2c4c8e4b9a71d2"
+    },
+    "evidence/game-reconciliation.json": {
+      "bytes": 14459,
+      "sha256": "5cef410935fb169a64c11aac66a99eb52273c63070820d4df42a5ea2168da74a"
+    },
+    "checkpoint.json": {
+      "bytes": 19064,
+      "sha256": "4f7a8bb150f52853d9af947106872325e51c3cb460561a4b7cfbe925493beb33"
+    },
+    "HANDOFF.md": {
+      "bytes": 2738,
+      "sha256": "14694d626a23a6892d12dc38a1491bf4cd36e119b4ea1c6b19f8f6491e018b09"
+    }
+  },
+  "exclusions": [
+    "Credentials and private profiles",
+    "Databases/game saves/claims",
+    "Manuscripts/original family media",
+    "Full private historical ledgers and original message history",
+    "Full Git inventory and unrelated My Drive folder metadata",
+    "Installed binaries, dependency distributions and old archive contents"
+  ],
+  "next": "Reconstruct the full pre-crash ten-goal work map from the supplied Drive folders and surviving local ledgers, recording exact read scope and gaps. Read the new game-reconciliation receipt: nested Prop01/110P pointers are newer than the stale Studio97 index, but ZIP contents are unreviewed. Preserve all current source/saves; do not restore old files over current work. Native owned workflow remains halted after two failures: classify fresh read403 with attributable evidence before a later bounded attempt. The Windows profile helper is tested but not integrated into default recovery or a production candidate."
+}

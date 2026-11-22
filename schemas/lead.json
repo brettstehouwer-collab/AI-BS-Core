@@ -1,0 +1,15 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LeadSchema",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "client_name": { "type": "string" },
+    "property_type": { "type": "string", "enum": ["residential", "commercial", "industrial"] },
+    "sq_ft": { "type": "number" },
+    "estimated_value": { "type": "number" },
+    "status": { "type": "string", "enum": ["new", "qualified", "quoted", "closed"] },
+    "timestamp": { "type": "number" }
+  },
+  "required": ["client_name", "sq_ft", "estimated_value"]
+}

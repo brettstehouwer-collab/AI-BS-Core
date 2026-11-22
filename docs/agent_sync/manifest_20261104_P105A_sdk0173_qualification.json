@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-04T22:36:39.560434+00:00",
+  "status": "passed_source_and_relocated_SDK_qualification_not_published",
+  "source_profiles": {
+    "Release": 128,
+    "Debug": 128
+  },
+  "relocated_consumer_profiles": {
+    "Release": 9,
+    "Debug": 9
+  },
+  "backup_receipt": "E:\\AI_BS_Resources\\FirstBoot\\P105\\SDK0173Qualification\\105A-drive.json",
+  "archive_sha256": "acd1ac863d2c199e4a86d4033f338062ef710dd28c4858118077b4b9cfb11b7a",
+  "free_GiB": {
+    "C": 287.55,
+    "D": 24.12,
+    "E": 91.12
+  },
+  "previous_goal_turn_classification": "verified_wait_on_live_session_32557",
+  "goal_complete": false,
+  "next_step": "Publish the qualified 0.17.3 SDK to fresh Release/Debug prefixes and a fresh runtime mirror; verify consumers from the published prefixes. Build a separate Studio 109 candidate with Adam v33. Repeat actual packaged repair/bypass routes, companion/reading/normal save-restart checks, inventory and backup before any launcher update. Preserve failed 108, installed 107, original family references and real saves. Final likeness, checked captions, human 8-12-minute pacing and current 1080p60 gameplay acceptance remain open.",
+  "scope_warning": "Pinned canonical Python imports are not physically isolated; no claim that every external toolchain/dependency byte is in this source archive.",
+  "launcher_releases_saves_originals_modified": false
+}

@@ -1,0 +1,2531 @@
+{
+  "disk_usage_gb": {
+    "total": 1673.52,
+    "used": 1509.95,
+    "free": 163.58
+  },
+  "top_level_directories": [],
+  "temp_and_scratch_dirs": [
+    {
+      "name": "New folder",
+      "note": "Empty/unnamed folder"
+    },
+    {
+      "name": "New folder (2)",
+      "note": "Empty/unnamed folder"
+    },
+    {
+      "name": "sandbox",
+      "file_count": 18738
+    },
+    {
+      "name": "sandbox_scratch",
+      "file_count": 178
+    },
+    {
+      "name": "scratch",
+      "file_count": 488
+    },
+    {
+      "name": "temp_unzip",
+      "file_count": 22
+    }
+  ],
+  "large_files_mb": [
+    {
+      "file": "AI_BS_Trainer_Setup.exe",
+      "size_mb": 96.98
+    },
+    {
+      "file": "Antigravity-x64.exe",
+      "size_mb": 129.23
+    },
+    {
+      "file": "cloudflared.exe",
+      "size_mb": 51.65
+    },
+    {
+      "file": "PLITCH_Setup_1662_2.21.0.exe",
+      "size_mb": 107.85
+    },
+    {
+      "file": "Streamlabs+Desktop+Setup+1.21.9-o1es4v5ynLqmDOp.exe",
+      "size_mb": 273.36
+    },
+    {
+      "file": "symbol_graph.json",
+      "size_mb": 240.67
+    },
+    {
+      "file": ".ollama\\blobs\\sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+      "size_mb": 7039.43
+    },
+    {
+      "file": ".ollama\\blobs\\sha256-675ad6e68101ca9413ec806855c452362f0213f2dfc5800996b086fdb8119842",
+      "size_mb": 167.0
+    },
+    {
+      "file": ".ollama\\blobs\\sha256-d4c8326ae1e57dfdde85d80d5f7c3983c9af106a18bda366b7f0dbe459a53ed1",
+      "size_mb": 22184.52
+    },
+    {
+      "file": ".ollama\\blobs\\sha256-d5d9145c1f3ee9adb2d68d7c6ecb00ae59538245427fc9d6255588a5c570f3ac",
+      "size_mb": 8145.11
+    },
+    {
+      "file": ".ollama\\blobs\\sha256-f5080623cde854a04d3ed2e3d59411d2b9d61766ef57ad6c36221eb63bb240df",
+      "size_mb": 8145.13
+    },
+    {
+      "file": ".ollama\\blobs\\sha256-f5ee307a2982106a6eb82b62b2c00b575c9072145a759ae4660378acda8dcf2d",
+      "size_mb": 22829.36
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-1278394b693672ac2799eadc9a83fd98259a6a88a40acfb1dcaa6c6fc895a606",
+      "size_mb": 7039.43
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-5c19f6282f4fc51cb114cb6c876d70ca2fc3b9cf0fbd0a018d9908f4fe1f63b3",
+      "size_mb": 24252.64
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-60e05f2100071479f596b964f89f510f057ce397ea22f2833a0cfe029bfc2463",
+      "size_mb": 4466.13
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-667b0c1932bc6ffc593ed1d03f895bf2dc8dc6df21db3042284a6f4416b06a29",
+      "size_mb": 4692.78
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-675ad6e68101ca9413ec806855c452362f0213f2dfc5800996b086fdb8119842",
+      "size_mb": 167.0
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-6a0746a1ec1aef3e7ec53868f220ff6e389f6f8ef87a01d77c96807de94ca2aa",
+      "size_mb": 4445.28
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-8e0609b8f0fe36530ac9966544e6cf780cfcda006fbe739eeab278aef89b3df7",
+      "size_mb": 17852.3
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-970aa74c0a90ef7482477cf803618e776e173c007bf957f635f1015bfcfef0e6",
+      "size_mb": 261.58
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-d4c8326ae1e57dfdde85d80d5f7c3983c9af106a18bda366b7f0dbe459a53ed1",
+      "size_mb": 22184.52
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-d5d9145c1f3ee9adb2d68d7c6ecb00ae59538245427fc9d6255588a5c570f3ac",
+      "size_mb": 8145.11
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-f2dc41fa964b42bfe34e9fb09c0acdcfbfd6e52f1332930b4eacc9d6ad1c6cd2",
+      "size_mb": 25218.57
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-f5080623cde854a04d3ed2e3d59411d2b9d61766ef57ad6c36221eb63bb240df",
+      "size_mb": 8145.13
+    },
+    {
+      "file": ".ollama\\models\\blobs\\sha256-f5ee307a2982106a6eb82b62b2c00b575c9072145a759ae4660378acda8dcf2d",
+      "size_mb": 22829.36
+    },
+    {
+      "file": "AI-BS-Models\\animatediff_models\\v3_sd15_mm.ckpt",
+      "size_mb": 1595.75
+    },
+    {
+      "file": "AI-BS-Models\\clip\\clip_l.safetensors",
+      "size_mb": 234.74
+    },
+    {
+      "file": "AI-BS-Models\\clip\\t5-v1_1-xxl-encoder-Q8_0.gguf",
+      "size_mb": 4827.1
+    },
+    {
+      "file": "AI-BS-Models\\clip\\t5xxl_fp16.safetensors",
+      "size_mb": 9334.41
+    },
+    {
+      "file": "AI-BS-Models\\clip\\umt5-xxl-enc-bf16.pth",
+      "size_mb": 10835.57
+    },
+    {
+      "file": "AI-BS-Models\\clip_vision\\sigclip_vision_patch14_384.safetensors",
+      "size_mb": 816.83
+    },
+    {
+      "file": "AI-BS-Models\\diffusion_models\\wan2.1_t2v_1.3b.safetensors",
+      "size_mb": 5413.12
+    },
+    {
+      "file": "AI-BS-Models\\style_models\\flux1-redux-dev.safetensors",
+      "size_mb": 123.08
+    },
+    {
+      "file": "AI-BS-Models\\unet\\flux1-dev-Q8_0.gguf",
+      "size_mb": 12119.56
+    },
+    {
+      "file": "AI-BS-Models\\unet\\ltx-video-2b-v0.9.1-q8_0.gguf",
+      "size_mb": 1952.08
+    },
+    {
+      "file": "AI-BS-Models\\vae\\Wan2.1_VAE.pth",
+      "size_mb": 484.09
+    },
+    {
+      "file": "assets\\media\\AI-BS TEST.mp4",
+      "size_mb": 313.87
+    },
+    {
+      "file": "assets\\media\\AIBSTEST2.mp4",
+      "size_mb": 225.09
+    },
+    {
+      "file": "assets\\media\\chia.mp4",
+      "size_mb": 55.28
+    },
+    {
+      "file": "assets\\media\\October 7.mp4",
+      "size_mb": 57.06
+    },
+    {
+      "file": "Audio Downloads\\October7rm.wav",
+      "size_mb": 59.13
+    },
+    {
+      "file": "backend\\cloudflared.exe",
+      "size_mb": 51.65
+    },
+    {
+      "file": "backend\\lexicon_vault.db",
+      "size_mb": 86.3
+    },
+    {
+      "file": "backend\\.venv\\Lib\\site-packages\\en_core_web_trf\\en_core_web_trf-3.8.0\\transformer\\model",
+      "size_mb": 474.3
+    },
+    {
+      "file": "backend\\.venv\\Lib\\site-packages\\playwright\\driver\\node.exe",
+      "size_mb": 88.25
+    },
+    {
+      "file": "backend\\.venv\\Lib\\site-packages\\torch\\lib\\torch_cpu.dll",
+      "size_mb": 290.95
+    },
+    {
+      "file": "backend\\build\\AI-BS\\AI-BS.pkg",
+      "size_mb": 392.99
+    },
+    {
+      "file": "backend\\build\\AI-BS\\PYZ-00.pyz",
+      "size_mb": 61.52
+    },
+    {
+      "file": "backend\\build\\AI-BS_Setup\\AI-BS_Setup.pkg",
+      "size_mb": 399.63
+    },
+    {
+      "file": "backend\\build\\brain_backend\\brain_backend.pkg",
+      "size_mb": 148.98
+    },
+    {
+      "file": "backend\\build\\brain_backend\\PYZ-00.pyz",
+      "size_mb": 99.15
+    },
+    {
+      "file": "backend\\dist\\AI-BS.exe",
+      "size_mb": 393.32
+    },
+    {
+      "file": "backend\\dist\\AI-BS_Setup.exe",
+      "size_mb": 399.96
+    },
+    {
+      "file": "backend\\dist\\brain_backend.exe",
+      "size_mb": 2992.9
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\brain_backend.exe",
+      "size_mb": 94.7
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\cv2\\cv2.pyd",
+      "size_mb": 107.67
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+      "size_mb": 83.58
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\llvmlite\\binding\\llvmlite.dll",
+      "size_mb": 114.79
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\chroma.sqlite3",
+      "size_mb": 502.02
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\torch\\lib\\torch_cpu.dll",
+      "size_mb": 293.52
+    },
+    {
+      "file": "backend\\logs\\crypto_trader_bot.log",
+      "size_mb": 100.2
+    },
+    {
+      "file": "backend\\muse_samples_cache\\1b87edfe7158_Timpani_staccato_F_A#2_RR5.opus.wav",
+      "size_mb": 1303.6
+    },
+    {
+      "file": "backend\\muse_samples_cache\\36d9d3e6c03c_Violin1Solo_slurred_legato_FF_B5_-12.opus.wav",
+      "size_mb": 2184.28
+    },
+    {
+      "file": "backend\\muse_samples_cache\\49e299c6152a_Rhodes_sustain_P_29_A1.opus.wav",
+      "size_mb": 147.81
+    },
+    {
+      "file": "backend\\muse_samples_cache\\4d51dc934294_Violins1_slurred_legato_FF_F5_+9.opus.wav",
+      "size_mb": 2204.44
+    },
+    {
+      "file": "backend\\muse_samples_cache\\a5b4a48905a3_Steinway_Mixed_mp_up_D#6.opus.wav",
+      "size_mb": 1039.02
+    },
+    {
+      "file": "backend\\muse_samples_cache\\acoustic nylon_0_430fc0a02253.wav",
+      "size_mb": 288.17
+    },
+    {
+      "file": "backend\\muse_samples_cache\\acoustic nylon_1_4ec77bbb377d.wav",
+      "size_mb": 412.66
+    },
+    {
+      "file": "backend\\muse_samples_cache\\acoustic nylon_2_85cf3ecf8c76.wav",
+      "size_mb": 175.84
+    },
+    {
+      "file": "backend\\muse_samples_cache\\acoustic steel picked_0_c2f89046b7cd.wav",
+      "size_mb": 367.51
+    },
+    {
+      "file": "backend\\muse_samples_cache\\acoustic steel picked_1_b4a0c72526f6.wav",
+      "size_mb": 707.55
+    },
+    {
+      "file": "backend\\muse_samples_cache\\acoustic steel picked_2_f8aaf1f173a9.wav",
+      "size_mb": 350.78
+    },
+    {
+      "file": "backend\\muse_samples_cache\\acoustic steel plucked_0_6690284a8ef0.wav",
+      "size_mb": 257.97
+    },
+    {
+      "file": "backend\\muse_samples_cache\\acoustic steel plucked_1_ff2d49173538.wav",
+      "size_mb": 505.31
+    },
+    {
+      "file": "backend\\muse_samples_cache\\acoustic steel plucked_2_71ff4c895463.wav",
+      "size_mb": 253.58
+    },
+    {
+      "file": "backend\\muse_samples_cache\\alto flute_0_3acc2988a90c.wav",
+      "size_mb": 112.41
+    },
+    {
+      "file": "backend\\muse_samples_cache\\alto flute_1_6341e0a5b2a3.wav",
+      "size_mb": 719.03
+    },
+    {
+      "file": "backend\\muse_samples_cache\\alto flute_2_71b419c83932.wav",
+      "size_mb": 360.89
+    },
+    {
+      "file": "backend\\muse_samples_cache\\alto saxophone_0_22463a64b1a9.wav",
+      "size_mb": 496.69
+    },
+    {
+      "file": "backend\\muse_samples_cache\\alto saxophone_1_4dba0bb21720.wav",
+      "size_mb": 990.29
+    },
+    {
+      "file": "backend\\muse_samples_cache\\alto saxophone_2_ea29e38fa6cc.wav",
+      "size_mb": 517.87
+    },
+    {
+      "file": "backend\\muse_samples_cache\\altos_0_e4475ee3251d.wav",
+      "size_mb": 468.2
+    },
+    {
+      "file": "backend\\muse_samples_cache\\altos_1_8a20124e1ee9.wav",
+      "size_mb": 751.01
+    },
+    {
+      "file": "backend\\muse_samples_cache\\altos_2_8571b61545eb.wav",
+      "size_mb": 333.05
+    },
+    {
+      "file": "backend\\muse_samples_cache\\b164cdbc7ebc_Harp_staccato_MP_F#6_RR1.opus.wav",
+      "size_mb": 394.48
+    },
+    {
+      "file": "backend\\muse_samples_cache\\b61503ddc615_Horn_slurred_legato_MF_G#2_-6.opus.wav",
+      "size_mb": 884.11
+    },
+    {
+      "file": "backend\\muse_samples_cache\\baritone saxophone_0_3c457be08d90.wav",
+      "size_mb": 190.22
+    },
+    {
+      "file": "backend\\muse_samples_cache\\baritone saxophone_1_455512c604a8.wav",
+      "size_mb": 716.74
+    },
+    {
+      "file": "backend\\muse_samples_cache\\baritone saxophone_2_280b302da273.wav",
+      "size_mb": 348.98
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bass clarinet_0_02de20d24373.wav",
+      "size_mb": 195.51
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bass clarinet_1_2325f00b0b95.wav",
+      "size_mb": 1163.33
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bass clarinet_2_2b6446c74aae.wav",
+      "size_mb": 561.78
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bass flute_0_7c23f3a5d43b.wav",
+      "size_mb": 102.82
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bass flute_1_a78380898aa6.wav",
+      "size_mb": 579.74
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bass flute_2_cb78884f66bb.wav",
+      "size_mb": 271.21
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bass trombone_0_3c3bc987a6a6.wav",
+      "size_mb": 427.01
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bass trombone_1_d3b3c8dc5c80.wav",
+      "size_mb": 847.29
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bass trombone_2_af7b85a7473f.wav",
+      "size_mb": 422.55
+    },
+    {
+      "file": "backend\\muse_samples_cache\\basses_0_b863b97c2b56.wav",
+      "size_mb": 569.28
+    },
+    {
+      "file": "backend\\muse_samples_cache\\basses_1_304b218f6438.wav",
+      "size_mb": 920.63
+    },
+    {
+      "file": "backend\\muse_samples_cache\\basses_2_bdeb68c27ac6.wav",
+      "size_mb": 409.18
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bassoon_0_2de4d3d312ad.wav",
+      "size_mb": 150.64
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bassoon_1_d16c9ef6b3fd.wav",
+      "size_mb": 764.46
+    },
+    {
+      "file": "backend\\muse_samples_cache\\bassoon_2_178014994bcc.wav",
+      "size_mb": 421.36
+    },
+    {
+      "file": "backend\\muse_samples_cache\\big kit_0_b0dbe8ede9d5.wav",
+      "size_mb": 463.65
+    },
+    {
+      "file": "backend\\muse_samples_cache\\big kit_1_ec7354208620.wav",
+      "size_mb": 520.21
+    },
+    {
+      "file": "backend\\muse_samples_cache\\big kit_2_4b2c064da921.wav",
+      "size_mb": 341.09
+    },
+    {
+      "file": "backend\\muse_samples_cache\\celesta_0_d1ef32e0a37c.wav",
+      "size_mb": 56.23
+    },
+    {
+      "file": "backend\\muse_samples_cache\\celesta_1_102b7c619457.wav",
+      "size_mb": 105.01
+    },
+    {
+      "file": "backend\\muse_samples_cache\\celesta_2_a4b9061c0aeb.wav",
+      "size_mb": 52.42
+    },
+    {
+      "file": "backend\\muse_samples_cache\\cello solo_0_cbaf312d1afe.wav",
+      "size_mb": 1188.23
+    },
+    {
+      "file": "backend\\muse_samples_cache\\cello solo_1_2980a5728dff.wav",
+      "size_mb": 2396.87
+    },
+    {
+      "file": "backend\\muse_samples_cache\\cello solo_2_bd87e8f5b8b1.wav",
+      "size_mb": 1066.44
+    },
+    {
+      "file": "backend\\muse_samples_cache\\cellos_0_f9fd4d126cf3.wav",
+      "size_mb": 1218.17
+    },
+    {
+      "file": "backend\\muse_samples_cache\\cellos_1_f3e47c33aff2.wav",
+      "size_mb": 2067.03
+    },
+    {
+      "file": "backend\\muse_samples_cache\\cellos_2_5bde256e686b.wav",
+      "size_mb": 781.46
+    },
+    {
+      "file": "backend\\muse_samples_cache\\cimbasso_0_b88306603a95.wav",
+      "size_mb": 481.47
+    },
+    {
+      "file": "backend\\muse_samples_cache\\cimbasso_1_5850aeb70025.wav",
+      "size_mb": 618.83
+    },
+    {
+      "file": "backend\\muse_samples_cache\\cimbasso_2_c54aa53aad8d.wav",
+      "size_mb": 258.42
+    },
+    {
+      "file": "backend\\muse_samples_cache\\clarinet in bb_0_ebafe5251751.wav",
+      "size_mb": 139.78
+    },
+    {
+      "file": "backend\\muse_samples_cache\\clarinet in bb_1_1af19377808e.wav",
+      "size_mb": 841.94
+    },
+    {
+      "file": "backend\\muse_samples_cache\\clarinet in bb_2_1b303972ebce.wav",
+      "size_mb": 484.31
+    },
+    {
+      "file": "backend\\muse_samples_cache\\clarinet in eb_0_08e9a81ea832.wav",
+      "size_mb": 224.13
+    },
+    {
+      "file": "backend\\muse_samples_cache\\clarinet in eb_1_c7dfc8b200bc.wav",
+      "size_mb": 880.71
+    },
+    {
+      "file": "backend\\muse_samples_cache\\clarinet in eb_2_8fdf2372373c.wav",
+      "size_mb": 495.78
+    },
+    {
+      "file": "backend\\muse_samples_cache\\concert combo_0_eb1cda360a5f.wav",
+      "size_mb": 476.88
+    },
+    {
+      "file": "backend\\muse_samples_cache\\concert combo_1_195cf77f8976.wav",
+      "size_mb": 586.02
+    },
+    {
+      "file": "backend\\muse_samples_cache\\concert combo_2_ac94a4fede4a.wav",
+      "size_mb": 529.3
+    },
+    {
+      "file": "backend\\muse_samples_cache\\contrabass flute_0_241649d8f994.wav",
+      "size_mb": 412.15
+    },
+    {
+      "file": "backend\\muse_samples_cache\\contrabass flute_1_e522a5cf94ba.wav",
+      "size_mb": 336.95
+    },
+    {
+      "file": "backend\\muse_samples_cache\\contrabass flute_2_eada086029a4.wav",
+      "size_mb": 232.15
+    },
+    {
+      "file": "backend\\muse_samples_cache\\contrabasses_0_54b76c43d0e2.wav",
+      "size_mb": 704.93
+    },
+    {
+      "file": "backend\\muse_samples_cache\\contrabasses_1_eba96f07c0a7.wav",
+      "size_mb": 1411.84
+    },
+    {
+      "file": "backend\\muse_samples_cache\\contrabasses_2_30816b98dbb7.wav",
+      "size_mb": 634.02
+    },
+    {
+      "file": "backend\\muse_samples_cache\\contrabassoon_0_d9c40c36d4dc.wav",
+      "size_mb": 521.03
+    },
+    {
+      "file": "backend\\muse_samples_cache\\contrabassoon_1_52531293015e.wav",
+      "size_mb": 635.17
+    },
+    {
+      "file": "backend\\muse_samples_cache\\contrabassoon_2_519f40929ba6.wav",
+      "size_mb": 270.29
+    },
+    {
+      "file": "backend\\muse_samples_cache\\dream piano_0_fdc9951ed845.wav",
+      "size_mb": 125.65
+    },
+    {
+      "file": "backend\\muse_samples_cache\\dream piano_1_49e299c6152a.wav",
+      "size_mb": 147.81
+    },
+    {
+      "file": "backend\\muse_samples_cache\\dream piano_2_fb511feebb22.wav",
+      "size_mb": 235.06
+    },
+    {
+      "file": "backend\\muse_samples_cache\\electric bass_0_0c3588793e7d.wav",
+      "size_mb": 242.68
+    },
+    {
+      "file": "backend\\muse_samples_cache\\electric bass_1_6ef13876a608.wav",
+      "size_mb": 461.2
+    },
+    {
+      "file": "backend\\muse_samples_cache\\electric bass_2_bdc954353689.wav",
+      "size_mb": 574.32
+    },
+    {
+      "file": "backend\\muse_samples_cache\\electric lp - clean_0_a6b6d02ae71a.wav",
+      "size_mb": 271.23
+    },
+    {
+      "file": "backend\\muse_samples_cache\\electric lp - clean_1_9a689f0b9b20.wav",
+      "size_mb": 460.5
+    },
+    {
+      "file": "backend\\muse_samples_cache\\electric lp - clean_2_462db9dfce18.wav",
+      "size_mb": 260.27
+    },
+    {
+      "file": "backend\\muse_samples_cache\\electric sc - clean_0_0970744c402f.wav",
+      "size_mb": 1317.13
+    },
+    {
+      "file": "backend\\muse_samples_cache\\electric sc - clean_1_fc8e143f23e8.wav",
+      "size_mb": 2047.44
+    },
+    {
+      "file": "backend\\muse_samples_cache\\electric sc - clean_2_3d3c2c45f993.wav",
+      "size_mb": 1181.37
+    },
+    {
+      "file": "backend\\muse_samples_cache\\english horn_0_04a8f8b0137c.wav",
+      "size_mb": 138.74
+    },
+    {
+      "file": "backend\\muse_samples_cache\\english horn_1_b914a59f7ea6.wav",
+      "size_mb": 669.96
+    },
+    {
+      "file": "backend\\muse_samples_cache\\english horn_2_33ae56569c30.wav",
+      "size_mb": 310.87
+    },
+    {
+      "file": "backend\\muse_samples_cache\\f3e47c33aff2_Cellos_slurred_legato_FF_G#4_-3.opus.wav",
+      "size_mb": 2067.03
+    },
+    {
+      "file": "backend\\muse_samples_cache\\field drum_1_483d52d419f9.wav",
+      "size_mb": 58.24
+    },
+    {
+      "file": "backend\\muse_samples_cache\\flute 1_0_542c03e0a739.wav",
+      "size_mb": 247.12
+    },
+    {
+      "file": "backend\\muse_samples_cache\\flute 1_1_b76fe78dd0b2.wav",
+      "size_mb": 924.06
+    },
+    {
+      "file": "backend\\muse_samples_cache\\flute 1_2_fea39f1743ea.wav",
+      "size_mb": 497.52
+    },
+    {
+      "file": "backend\\muse_samples_cache\\flute 2_0_d5a19adacc78.wav",
+      "size_mb": 100.57
+    },
+    {
+      "file": "backend\\muse_samples_cache\\flute 2_1_12332f40a9ff.wav",
+      "size_mb": 869.52
+    },
+    {
+      "file": "backend\\muse_samples_cache\\flute 2_2_c4536fbee2ce.wav",
+      "size_mb": 602.86
+    },
+    {
+      "file": "backend\\muse_samples_cache\\french horns a6_0_578701398d6e.wav",
+      "size_mb": 396.22
+    },
+    {
+      "file": "backend\\muse_samples_cache\\french horns a6_1_58c7c3768ba3.wav",
+      "size_mb": 474.0
+    },
+    {
+      "file": "backend\\muse_samples_cache\\french horns a6_2_becdca7a3360.wav",
+      "size_mb": 229.62
+    },
+    {
+      "file": "backend\\muse_samples_cache\\french horn_0_6b438cd863fe.wav",
+      "size_mb": 776.72
+    },
+    {
+      "file": "backend\\muse_samples_cache\\french horn_1_b61503ddc615.wav",
+      "size_mb": 884.11
+    },
+    {
+      "file": "backend\\muse_samples_cache\\french horn_2_2648ab897051.wav",
+      "size_mb": 370.85
+    },
+    {
+      "file": "backend\\muse_samples_cache\\glockenspiel_0_0758fdc2953d.wav",
+      "size_mb": 488.41
+    },
+    {
+      "file": "backend\\muse_samples_cache\\glockenspiel_1_80d05d05cc50.wav",
+      "size_mb": 971.41
+    },
+    {
+      "file": "backend\\muse_samples_cache\\glockenspiel_2_aaca767907f5.wav",
+      "size_mb": 559.84
+    },
+    {
+      "file": "backend\\muse_samples_cache\\gm kit_0_13ad7db8c266.wav",
+      "size_mb": 463.65
+    },
+    {
+      "file": "backend\\muse_samples_cache\\gm kit_1_fed0e6f13606.wav",
+      "size_mb": 520.21
+    },
+    {
+      "file": "backend\\muse_samples_cache\\gm kit_2_0b7a96c42347.wav",
+      "size_mb": 341.09
+    },
+    {
+      "file": "backend\\muse_samples_cache\\gong_0_05d8fd4f53fd.wav",
+      "size_mb": 62.64
+    },
+    {
+      "file": "backend\\muse_samples_cache\\gong_1_428b3df52f27.wav",
+      "size_mb": 100.08
+    },
+    {
+      "file": "backend\\muse_samples_cache\\harp_0_cac6c9be078e.wav",
+      "size_mb": 317.62
+    },
+    {
+      "file": "backend\\muse_samples_cache\\harp_1_b164cdbc7ebc.wav",
+      "size_mb": 394.48
+    },
+    {
+      "file": "backend\\muse_samples_cache\\harp_2_7d21bc1c4934.wav",
+      "size_mb": 553.45
+    },
+    {
+      "file": "backend\\muse_samples_cache\\marimba_0_94f487bc75a9.wav",
+      "size_mb": 170.38
+    },
+    {
+      "file": "backend\\muse_samples_cache\\marimba_1_8cdfc5daccee.wav",
+      "size_mb": 547.52
+    },
+    {
+      "file": "backend\\muse_samples_cache\\marimba_2_121a49fad9fc.wav",
+      "size_mb": 511.33
+    },
+    {
+      "file": "backend\\muse_samples_cache\\oboe_0_6379cc37cbb6.wav",
+      "size_mb": 97.99
+    },
+    {
+      "file": "backend\\muse_samples_cache\\oboe_1_1bb58fd74058.wav",
+      "size_mb": 876.54
+    },
+    {
+      "file": "backend\\muse_samples_cache\\oboe_2_75719e4fd10a.wav",
+      "size_mb": 299.03
+    },
+    {
+      "file": "backend\\muse_samples_cache\\piano_0_39b116cb84c1.wav",
+      "size_mb": 582.68
+    },
+    {
+      "file": "backend\\muse_samples_cache\\piano_1_a5b4a48905a3.wav",
+      "size_mb": 1039.02
+    },
+    {
+      "file": "backend\\muse_samples_cache\\piano_2_e4d5837578f5.wav",
+      "size_mb": 463.88
+    },
+    {
+      "file": "backend\\muse_samples_cache\\piccolo_0_892a65d57ff7.wav",
+      "size_mb": 69.93
+    },
+    {
+      "file": "backend\\muse_samples_cache\\piccolo_1_2546f1f911ef.wav",
+      "size_mb": 448.25
+    },
+    {
+      "file": "backend\\muse_samples_cache\\piccolo_2_f2b76ab05267.wav",
+      "size_mb": 264.83
+    },
+    {
+      "file": "backend\\muse_samples_cache\\snare_1_e1ced6e2a03c.wav",
+      "size_mb": 76.51
+    },
+    {
+      "file": "backend\\muse_samples_cache\\soft piano_0_8f3dbaf79db8.wav",
+      "size_mb": 92.08
+    },
+    {
+      "file": "backend\\muse_samples_cache\\soft piano_1_a9bad4051f31.wav",
+      "size_mb": 176.15
+    },
+    {
+      "file": "backend\\muse_samples_cache\\soft piano_2_27c9f6ef9d38.wav",
+      "size_mb": 88.07
+    },
+    {
+      "file": "backend\\muse_samples_cache\\soprano saxophone_0_6392b9823d7c.wav",
+      "size_mb": 386.26
+    },
+    {
+      "file": "backend\\muse_samples_cache\\soprano saxophone_1_83b8dbe9f0b6.wav",
+      "size_mb": 777.78
+    },
+    {
+      "file": "backend\\muse_samples_cache\\soprano saxophone_2_f200dcb9e119.wav",
+      "size_mb": 400.82
+    },
+    {
+      "file": "backend\\muse_samples_cache\\sopranos_0_c455370d8cd2.wav",
+      "size_mb": 468.9
+    },
+    {
+      "file": "backend\\muse_samples_cache\\sopranos_1_279069ebe172.wav",
+      "size_mb": 751.56
+    },
+    {
+      "file": "backend\\muse_samples_cache\\sopranos_2_58347dfa53c5.wav",
+      "size_mb": 332.47
+    },
+    {
+      "file": "backend\\muse_samples_cache\\suitcase piano_0_dfd86acffd5e.wav",
+      "size_mb": 81.27
+    },
+    {
+      "file": "backend\\muse_samples_cache\\suitcase piano_1_15bb939194e4.wav",
+      "size_mb": 155.32
+    },
+    {
+      "file": "backend\\muse_samples_cache\\suitcase piano_2_3454605736aa.wav",
+      "size_mb": 77.79
+    },
+    {
+      "file": "backend\\muse_samples_cache\\suspended cymbal_0_20e650dd9a79.wav",
+      "size_mb": 70.15
+    },
+    {
+      "file": "backend\\muse_samples_cache\\suspended cymbal_1_e04f3cf4258c.wav",
+      "size_mb": 127.89
+    },
+    {
+      "file": "backend\\muse_samples_cache\\suspended cymbal_2_33edd6b441fb.wav",
+      "size_mb": 66.18
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tam-tam_0_92bd47c67691.wav",
+      "size_mb": 55.29
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tam-tam_1_69c2459e1343.wav",
+      "size_mb": 83.89
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tenor saxophone_0_560aec8fd293.wav",
+      "size_mb": 182.52
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tenor saxophone_1_8f771a977460.wav",
+      "size_mb": 664.24
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tenor saxophone_2_3cb7f92618c8.wav",
+      "size_mb": 355.14
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tenors_0_e2be2885c79f.wav",
+      "size_mb": 516.39
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tenors_1_e41593dce5e5.wav",
+      "size_mb": 736.27
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tenors_2_a18bef74c618.wav",
+      "size_mb": 325.44
+    },
+    {
+      "file": "backend\\muse_samples_cache\\timpani_0_fa5c16d027a9.wav",
+      "size_mb": 352.26
+    },
+    {
+      "file": "backend\\muse_samples_cache\\timpani_1_1b87edfe7158.wav",
+      "size_mb": 1303.6
+    },
+    {
+      "file": "backend\\muse_samples_cache\\timpani_2_b1c8b9af8fea.wav",
+      "size_mb": 962.15
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trap kit_0_0dbf60567283.wav",
+      "size_mb": 463.65
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trap kit_1_d1e72bc4774f.wav",
+      "size_mb": 520.21
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trap kit_2_950dc59b471d.wav",
+      "size_mb": 341.09
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trombones a3_0_7ad2148070ff.wav",
+      "size_mb": 446.51
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trombones a3_1_e1b3db8c68cf.wav",
+      "size_mb": 521.9
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trombones a3_2_8fc85f897760.wav",
+      "size_mb": 204.14
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trombone_0_da28f5403df3.wav",
+      "size_mb": 396.13
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trombone_1_c7145e25936f.wav",
+      "size_mb": 786.99
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trombone_2_1a4533c64a2f.wav",
+      "size_mb": 395.17
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trumpets a4_0_007ec05c5f06.wav",
+      "size_mb": 546.9
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trumpets a4_1_e4eabdd2b2b8.wav",
+      "size_mb": 606.17
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trumpets a4_2_0b2511ccb251.wav",
+      "size_mb": 392.4
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trumpet_0_a62969fabf48.wav",
+      "size_mb": 521.59
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trumpet_1_dde3304bd513.wav",
+      "size_mb": 782.15
+    },
+    {
+      "file": "backend\\muse_samples_cache\\trumpet_2_e4e30c5094f3.wav",
+      "size_mb": 340.22
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tuba_0_f73f0307799a.wav",
+      "size_mb": 464.94
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tuba_1_6e6d96fbaaea.wav",
+      "size_mb": 512.14
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tuba_2_27fb44cb8c27.wav",
+      "size_mb": 256.94
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tubular bells_0_285db6f5d715.wav",
+      "size_mb": 95.88
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tubular bells_1_1b214ab02b35.wav",
+      "size_mb": 195.97
+    },
+    {
+      "file": "backend\\muse_samples_cache\\tubular bells_2_7cc5046f5267.wav",
+      "size_mb": 96.5
+    },
+    {
+      "file": "backend\\muse_samples_cache\\vibraphone_0_6d85b1f1a633.wav",
+      "size_mb": 93.87
+    },
+    {
+      "file": "backend\\muse_samples_cache\\vibraphone_1_236a31774657.wav",
+      "size_mb": 536.48
+    },
+    {
+      "file": "backend\\muse_samples_cache\\vibraphone_2_7770ad2070ef.wav",
+      "size_mb": 456.13
+    },
+    {
+      "file": "backend\\muse_samples_cache\\viola solo_0_a0903d127291.wav",
+      "size_mb": 872.17
+    },
+    {
+      "file": "backend\\muse_samples_cache\\viola solo_1_387189cd5a75.wav",
+      "size_mb": 1691.04
+    },
+    {
+      "file": "backend\\muse_samples_cache\\viola solo_2_1b1998bccd39.wav",
+      "size_mb": 865.16
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violas_0_627e42a25fd7.wav",
+      "size_mb": 928.79
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violas_1_5c1cb7ce1071.wav",
+      "size_mb": 1845.29
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violas_2_e18b34b0dfbc.wav",
+      "size_mb": 953.41
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violin 1 solo_0_9230b4d0b25a.wav",
+      "size_mb": 887.25
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violin 1 solo_1_36d9d3e6c03c.wav",
+      "size_mb": 2184.28
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violin 1 solo_2_25ad7da7af3f.wav",
+      "size_mb": 727.67
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violin 2 solo_0_78cabe6522ba.wav",
+      "size_mb": 1336.78
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violin 2 solo_1_527e45f2999f.wav",
+      "size_mb": 2163.92
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violin 2 solo_2_b13a88a5d3c2.wav",
+      "size_mb": 677.98
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violins 1_0_413bbb3779fd.wav",
+      "size_mb": 1260.1
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violins 1_1_4d51dc934294.wav",
+      "size_mb": 2204.44
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violins 1_2_9dc69520604c.wav",
+      "size_mb": 793.88
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violins 2_0_abedc7c00d88.wav",
+      "size_mb": 1070.04
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violins 2_1_1ccc1fb05e93.wav",
+      "size_mb": 2193.07
+    },
+    {
+      "file": "backend\\muse_samples_cache\\violins 2_2_6bf2d2b03056.wav",
+      "size_mb": 1108.72
+    },
+    {
+      "file": "backend\\muse_samples_cache\\xylophone_0_09adc9a4e9be.wav",
+      "size_mb": 115.4
+    },
+    {
+      "file": "backend\\muse_samples_cache\\xylophone_1_4584afead727.wav",
+      "size_mb": 332.03
+    },
+    {
+      "file": "backend\\muse_samples_cache\\xylophone_2_c63693d0695c.wav",
+      "size_mb": 223.56
+    },
+    {
+      "file": "backend\\sandbox\\uploads\\AI_BS_Global_Context.txt",
+      "size_mb": 141.45
+    },
+    {
+      "file": "backend\\sandbox\\uploads\\directory_structure.md",
+      "size_mb": 89.48
+    },
+    {
+      "file": "backend\\sandbox\\uploads\\October 7.mp4",
+      "size_mb": 57.06
+    },
+    {
+      "file": "backend\\sandbox\\uploads\\October7rm.wav",
+      "size_mb": 59.13
+    },
+    {
+      "file": "BroadcastStudioApp\\dist-electron\\AI-BS Broadcast Studio Setup 1.0.0.exe",
+      "size_mb": 1035.41
+    },
+    {
+      "file": "BroadcastStudioApp\\dist-electron\\BS-Studio Setup 5.151.0.exe",
+      "size_mb": 1035.27
+    },
+    {
+      "file": "BroadcastStudioApp\\dist-electron\\win-unpacked\\BS-Studio.exe",
+      "size_mb": 224.82
+    },
+    {
+      "file": "BroadcastStudioApp\\dist-electron\\win-unpacked\\resources\\app.asar",
+      "size_mb": 191.47
+    },
+    {
+      "file": "build\\brain_backend\\brain_backend.exe",
+      "size_mb": 94.7
+    },
+    {
+      "file": "build\\brain_backend\\brain_backend.pkg",
+      "size_mb": 94.37
+    },
+    {
+      "file": "build\\brain_backend\\PYZ-00.pyz",
+      "size_mb": 94.25
+    },
+    {
+      "file": "chroma_db\\chroma.sqlite3",
+      "size_mb": 125.25
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\input\\October 7.mp4",
+      "size_mb": 57.06
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\checkpoints\\sd_xl_base_1.0.safetensors",
+      "size_mb": 6616.67
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\checkpoints\\v1-5-pruned-emaonly-fp16.safetensors",
+      "size_mb": 2033.9
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\clip\\qwen_3_4b.safetensors",
+      "size_mb": 7672.29
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\clip\\umt5_xxl_fp16.safetensors",
+      "size_mb": 10839.84
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\clip\\umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "size_mb": 6423.86
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\clip_vision\\clip_vision_h.safetensors",
+      "size_mb": 1205.65
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\clip_vision\\sigclip_vision_patch14_384.safetensors",
+      "size_mb": 816.83
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\controlnet\\control-lora-depth-rank256.safetensors",
+      "size_mb": 738.57
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\controlnet\\flux_depth_controlnet.safetensors",
+      "size_mb": 3039.12
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\diffusion_models\\flux1-dev-fp8.safetensors",
+      "size_mb": 16447.57
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\diffusion_models\\wan2.1-t2v-1.3B.safetensors",
+      "size_mb": 1405.87
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\diffusion_models\\wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors",
+      "size_mb": 13632.53
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\diffusion_models\\wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors",
+      "size_mb": 13632.53
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\loras\\gemma-3-12b-it-abliterated_lora_rank64_bf16.safetensors",
+      "size_mb": 599.1
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\loras\\lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors",
+      "size_mb": 703.82
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\loras\\ltx-2.3-22b-ic-lora-ingredients-0.9.safetensors",
+      "size_mb": 1248.15
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\loras\\wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors",
+      "size_mb": 1170.14
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\loras\\wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors",
+      "size_mb": 1170.14
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\text_encoders\\umt5_xxl_fp16.safetensors",
+      "size_mb": 10839.84
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\text_encoders\\umt5_xxl_fp8_e4m3fn_scaled.corrupted",
+      "size_mb": 139.55
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\text_encoders\\umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "size_mb": 6423.86
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\unet\\gemma_3_12B_it_fp4_mixed.safetensors",
+      "size_mb": 9010.03
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\unet\\ltx-2.3-22b-distilled-fp8.safetensors",
+      "size_mb": 28163.8
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\unet\\seedvr2_3b_int8_convrot.safetensors",
+      "size_mb": 3298.05
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\unet\\wan2.2_dancer_14b_global_fp8_scaled.safetensors",
+      "size_mb": 17492.86
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\unet\\wan2.2_dancer_14b_local_fp8_scaled.safetensors",
+      "size_mb": 17492.86
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\unet\\z_image_turbo_bf16.safetensors",
+      "size_mb": 11739.6
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\upscale_models\\4x-UltraSharp.pth",
+      "size_mb": 63.86
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\upscale_models\\RealESRGAN_x4plus.safetensors",
+      "size_mb": 63.76
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\vae\\ae.safetensors",
+      "size_mb": 319.77
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\vae\\Wan2_1_VAE_bf16.safetensors",
+      "size_mb": 242.05
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\models\\vae\\wan_2.1_vae.safetensors",
+      "size_mb": 242.06
+    },
+    {
+      "file": "ComfyUI\\custom_nodes\\Dolphin3.0-Llama3.1-8B-Q8_0.gguf",
+      "size_mb": 8145.13
+    },
+    {
+      "file": "ComfyUI\\custom_nodes\\Hermes-3-Llama-3.1-8B.Q8_0.gguf",
+      "size_mb": 8145.11
+    },
+    {
+      "file": "ComfyUI\\custom_nodes\\Qwen2.5-32B-Instruct-abliterated.Q5_K_M.gguf",
+      "size_mb": 22184.52
+    },
+    {
+      "file": "ComfyUI\\custom_nodes\\ComfyUI-AnimateDiff-Evolved\\models\\v3_sd15_mm.ckpt",
+      "size_mb": 1595.75
+    },
+    {
+      "file": "ComfyUI\\models\\controlnet\\control_v11f1e_sd15_tile.pth",
+      "size_mb": 1378.28
+    },
+    {
+      "file": "ComfyUI\\models\\diffusion_models\\flux1-dev-fp8.safetensors",
+      "size_mb": 74.63
+    },
+    {
+      "file": "ComfyUI\\models\\LLM\\qwen3vl_4b_fp8_scaled.safetensors",
+      "size_mb": 4999.61
+    },
+    {
+      "file": "ComfyUI\\models\\upscale_models\\4x-UltraSharp.pth",
+      "size_mb": 63.86
+    },
+    {
+      "file": "ComfyUI\\models\\vae\\Wan2_1_VAE_bf16.safetensors",
+      "size_mb": 242.05
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\comfy_kitchen\\backends\\cuda\\_C.abi3.pyd",
+      "size_mb": 53.1
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\cv2\\cv2.pyd",
+      "size_mb": 107.67
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+      "size_mb": 83.58
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\onnxruntime\\capi\\onnxruntime_providers_cuda.dll",
+      "size_mb": 233.07
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\cublasLt64_13.dll",
+      "size_mb": 455.76
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\cudnn_adv64_9.dll",
+      "size_mb": 101.98
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\cudnn_engines_precompiled64_9.dll",
+      "size_mb": 197.23
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\cudnn_heuristic64_9.dll",
+      "size_mb": 56.19
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\cufft64_12.dll",
+      "size_mb": 271.16
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\curand64_10.dll",
+      "size_mb": 56.14
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\cusolver64_12.dll",
+      "size_mb": 120.56
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\cusolverMg64_12.dll",
+      "size_mb": 90.95
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\cusparse64_12.dll",
+      "size_mb": 143.36
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\nvJitLink_130_0.dll",
+      "size_mb": 84.13
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\nvrtc64_130_0.alt.dll",
+      "size_mb": 86.81
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\nvrtc64_130_0.dll",
+      "size_mb": 86.75
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\torch_cpu.dll",
+      "size_mb": 291.07
+    },
+    {
+      "file": "ComfyUI\\python_embeded\\Lib\\site-packages\\torch\\lib\\torch_cuda.dll",
+      "size_mb": 390.61
+    },
+    {
+      "file": "database\\audio_catalog.db",
+      "size_mb": 125.32
+    },
+    {
+      "file": "database\\height-to-hash",
+      "size_mb": 272.71
+    },
+    {
+      "file": "docs\\Adam Voice.mp4",
+      "size_mb": 77.97
+    },
+    {
+      "file": "docs\\Adam Voice_video.mp4",
+      "size_mb": 73.42
+    },
+    {
+      "file": "docs\\Audacity-4.0.0-beta2-x86_64.msi",
+      "size_mb": 83.63
+    },
+    {
+      "file": "docs\\Cymatics-DARKSKY-LayerCollection.zip",
+      "size_mb": 86.25
+    },
+    {
+      "file": "docs\\Cymatics-DARKSKY-MelodicOneShotCollection.zip",
+      "size_mb": 50.74
+    },
+    {
+      "file": "docs\\Cymatics-DARKSKY-MelodyCollection.zip",
+      "size_mb": 631.37
+    },
+    {
+      "file": "docs\\Cymatics-DARKSKY-VocalLoopCollection.zip",
+      "size_mb": 65.26
+    },
+    {
+      "file": "docs\\Cymatics-Daydream-1.0.0-Win-Installer.exe",
+      "size_mb": 747.84
+    },
+    {
+      "file": "docs\\Cymatics-Duality-VintageMelodies.zip",
+      "size_mb": 1019.03
+    },
+    {
+      "file": "docs\\CymaticsHubSetup (1).dmg",
+      "size_mb": 177.33
+    },
+    {
+      "file": "docs\\CymaticsHubSetup (1).exe",
+      "size_mb": 80.78
+    },
+    {
+      "file": "docs\\CymaticsHubSetup (2).exe",
+      "size_mb": 80.78
+    },
+    {
+      "file": "docs\\CymaticsHubSetup (3).exe",
+      "size_mb": 80.78
+    },
+    {
+      "file": "docs\\CymaticsHubSetup.dmg",
+      "size_mb": 177.33
+    },
+    {
+      "file": "docs\\CymaticsHubSetup.exe",
+      "size_mb": 80.78
+    },
+    {
+      "file": "docs\\drive-download-20260811T224950Z-1-001.zip",
+      "size_mb": 66.4
+    },
+    {
+      "file": "docs\\drive-download-20260820T180814Z-1-001.zip",
+      "size_mb": 66.4
+    },
+    {
+      "file": "docs\\flstudio_win64_26.1.5.5618.exe",
+      "size_mb": 1055.91
+    },
+    {
+      "file": "docs\\for LLM.zip",
+      "size_mb": 5269.02
+    },
+    {
+      "file": "docs\\gemini data.zip",
+      "size_mb": 5269.02
+    },
+    {
+      "file": "docs\\llmn knowlegd pt one of 4.zip",
+      "size_mb": 1749.41
+    },
+    {
+      "file": "docs\\October 7v2 (Add Vocal).wav",
+      "size_mb": 58.44
+    },
+    {
+      "file": "docs\\October 7v2.wav",
+      "size_mb": 58.58
+    },
+    {
+      "file": "docs\\part 4 lm.zip",
+      "size_mb": 255.77
+    },
+    {
+      "file": "docs\\pt 3 llmknldge.zip",
+      "size_mb": 1676.27
+    },
+    {
+      "file": "docs\\pt2;;mknldge.zip",
+      "size_mb": 1587.57
+    },
+    {
+      "file": "docs\\pt4llmknldge.zip",
+      "size_mb": 255.77
+    },
+    {
+      "file": "docs\\sigclip_vision_patch14_384.safetensors",
+      "size_mb": 816.83
+    },
+    {
+      "file": "docs\\The_Living_Venue_Initiative__Trojan_Horse_for_a_Self-Sustaining_Future.m4a",
+      "size_mb": 57.49
+    },
+    {
+      "file": "docs\\WhatsApp Chat with Sean My Brother Who Never Leaves (1).zip",
+      "size_mb": 1254.35
+    },
+    {
+      "file": "docs\\drive-download-20260820T180814Z-1-001\\The_Living_Venue_Initiative__Trojan_Horse_for_a_Self-Sustaining_Future.m4a",
+      "size_mb": 57.49
+    },
+    {
+      "file": "frontend\\android\\.gradle_home\\wrapper\\dists\\gradle-8.14.3-all\\10utluxaxniiv4wxiphsi49nj\\gradle-8.14.3\\lib\\kotlin-compiler-embeddable-2.0.21.jar",
+      "size_mb": 55.57
+    },
+    {
+      "file": "frontend\\android\\.gradle_tmp\\wrapper\\dists\\gradle-8.14.3-all\\10utluxaxniiv4wxiphsi49nj\\gradle-8.14.3\\lib\\kotlin-compiler-embeddable-2.0.21.jar",
+      "size_mb": 55.57
+    },
+    {
+      "file": "frontend\\android\\app\\build\\intermediates\\assets\\debug\\mergeDebugAssets\\public\\updates\\aibs_update_payload.zip",
+      "size_mb": 847.15
+    },
+    {
+      "file": "frontend\\android\\app\\build\\intermediates\\compressed_assets\\debug\\compressDebugAssets\\out\\assets\\public\\updates\\aibs_update_payload.zip.jar",
+      "size_mb": 847.01
+    },
+    {
+      "file": "frontend\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+      "size_mb": 908.14
+    },
+    {
+      "file": "frontend\\android\\app\\src\\main\\assets\\public\\updates\\aibs_update_payload.zip",
+      "size_mb": 847.15
+    },
+    {
+      "file": "frontend\\build-installer\\win-unpacked.tmp\\electron.exe",
+      "size_mb": 172.47
+    },
+    {
+      "file": "frontend\\build-output\\AI-BS 1.0.5.exe",
+      "size_mb": 336.18
+    },
+    {
+      "file": "frontend\\build-output\\AI-BS Setup 1.0.5.exe",
+      "size_mb": 336.41
+    },
+    {
+      "file": "frontend\\build-output\\win-unpacked\\AI-BS.exe",
+      "size_mb": 172.47
+    },
+    {
+      "file": "frontend\\build-output\\win-unpacked\\resources\\brain_backend\\brain_backend.exe",
+      "size_mb": 60.21
+    },
+    {
+      "file": "frontend\\build-output\\win-unpacked\\resources\\brain_backend\\_internal\\torch\\lib\\torch_cpu.dll",
+      "size_mb": 293.52
+    },
+    {
+      "file": "frontend\\desktop-build\\AI-BS Matrix Setup 1.0.5.exe",
+      "size_mb": 1053.94
+    },
+    {
+      "file": "frontend\\desktop-build\\AI-BS Sovereign Studio Setup 5.185.0.exe",
+      "size_mb": 1060.43
+    },
+    {
+      "file": "frontend\\desktop-build\\BS-Studio Setup 5.151.0.exe",
+      "size_mb": 1035.27
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\AI-BS Sovereign Studio.exe",
+      "size_mb": 172.67
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\app.asar",
+      "size_mb": 759.58
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\brain_backend.exe",
+      "size_mb": 94.7
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\cv2\\cv2.pyd",
+      "size_mb": 107.67
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+      "size_mb": 83.58
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\llvmlite\\binding\\llvmlite.dll",
+      "size_mb": 114.79
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\chroma.sqlite3",
+      "size_mb": 502.02
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\torch\\lib\\torch_cpu.dll",
+      "size_mb": 293.52
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked-old-2\\AI-BS Matrix.exe",
+      "size_mb": 172.47
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked-old-2\\resources\\app.asar",
+      "size_mb": 720.3
+    },
+    {
+      "file": "frontend\\dist\\updates\\aibs_update_payload.zip",
+      "size_mb": 847.15
+    },
+    {
+      "file": "frontend\\ios\\App\\App\\public\\AI-BS-Mobile.apk",
+      "size_mb": 1813.15
+    },
+    {
+      "file": "frontend\\ios\\App\\App\\public\\updates\\aibs_update_payload.zip",
+      "size_mb": 847.15
+    },
+    {
+      "file": "frontend\\public\\updates\\aibs_update_payload.zip",
+      "size_mb": 847.15
+    },
+    {
+      "file": "frontend\\release-build\\win-unpacked.tmp\\electron.exe",
+      "size_mb": 172.47
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Adam_s Echoes_ A Journey Through Trauma and Redemption.wav",
+      "size_mb": 135.26
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Architecture of the local AI-BS matrix.wav",
+      "size_mb": 81.66
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Battery Billions versus Sovereign Fiscal Trillions.wav",
+      "size_mb": 111.79
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Beyond Biohacking_ Crafting a Bespoke 21-Day Protocol for Trauma Recovery and Peak Performance.wav",
+      "size_mb": 90.5
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Echoes Within_ A Journey Through Psychosis, Trauma, and the Resilience of the Human Spirit.wav",
+      "size_mb": 158.85
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Echos Within_ Deconstructing Trauma, Psychosis, and the Path to Serenity 2.0.wav",
+      "size_mb": 96.6
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Flesh vs. Spirit_ Biblical Tools to Re-Desire Your Life and Win the War on Addiction.wav",
+      "size_mb": 64.52
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\From External Validation to Inner Solace_ The Power of Intrinsic Motivation.wav",
+      "size_mb": 68.15
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\From Fury to Faith_ Ancient Wisdom on Mastering Anger, Stopping the Beast, and Finding God_s Peace.wav",
+      "size_mb": 70.89
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\How Hyperfocus Causes Paralysis and Rot.wav",
+      "size_mb": 90.79
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\How Political Bias and Deficits Cost You.wav",
+      "size_mb": 61.0
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Local AI Spawning Its Own Agents.wav",
+      "size_mb": 96.41
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Mortgaging sandwiches for thousand dollar phones.wav",
+      "size_mb": 90.15
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\NEOP-01_ The Resilient Architect \u2013 Unpacking a Masterpiece of Trauma Adaptation.wav",
+      "size_mb": 145.11
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Securing Deep Attachment Against Fear of Loss.wav",
+      "size_mb": 87.86
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Sovereign AI-BS architecture on consumer hardware.wav",
+      "size_mb": 57.06
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Spiritual Amputation_ Why Heartbreak Feels Like a Physical Wound and the Ancient Path to Renewal.wav",
+      "size_mb": 106.02
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The $612 phone bill mystery.wav",
+      "size_mb": 94.47
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The 6-Week Neuroplastic Reset Explained.wav",
+      "size_mb": 84.6
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The Asymmetrical Protocol_ Maximizing Localized Revenue.mp4",
+      "size_mb": 53.64
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The Bad Side Upside Down_ Weebles, Jesus, Satan, and Teenage Rebellion in a Pop Culture Blender.wav",
+      "size_mb": 126.11
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The Bad Side Upside Down_ Where Jesus, Satan, and Teenagers Debate Stolen Snickers and Pop Culture in a Wobbling World.wav",
+      "size_mb": 137.31
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The Echoes Within_ An Autobiographical Novel.wav",
+      "size_mb": 129.87
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The Echos Within.wav",
+      "size_mb": 76.19
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The High-Performance Liquid Protocol_ A Masterclass in Extreme Personal Optimization and Meticulous Well-being.wav",
+      "size_mb": 87.68
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The Living Venue Initiative_ Trojan Horse for a Self-Sustaining Future.wav",
+      "size_mb": 85.75
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The Noble War_ Finding Security and Hope in the Daily Battle Against Sin.wav",
+      "size_mb": 77.94
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The physics of localized market monopolization.wav",
+      "size_mb": 119.89
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\The Raw Math of Sovereign Ledgers.wav",
+      "size_mb": 107.22
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Turning raw trauma into AI music.wav",
+      "size_mb": 59.02
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Walking Into Walls As Affirmative Action.wav",
+      "size_mb": 92.67
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\When Gossip Turns Toxic_ Unpacking Workplace Mobbing & Constructive Discharge at an Amazon Partner.wav",
+      "size_mb": 65.99
+    },
+    {
+      "file": "Gemini_Takeout_Dataparrent\\Why partisanship distorts the math of debt.wav",
+      "size_mb": 54.94
+    },
+    {
+      "file": "installer\\frontend_dist\\updates\\aibs_update_payload.zip",
+      "size_mb": 847.15
+    },
+    {
+      "file": "installer\\Output\\AI_BS_Studio_Setup_v5.185.0.exe",
+      "size_mb": 294.71
+    },
+    {
+      "file": "InstallerEXE's\\AI-BS Sovereign Studio Setup 5.185.0.exe",
+      "size_mb": 1060.43
+    },
+    {
+      "file": "InstallerEXE's\\AI_BS_Studio_Setup_v5.185.0.exe",
+      "size_mb": 294.71
+    },
+    {
+      "file": "InstallerEXE's\\ChiaSetup-2.7.3.exe",
+      "size_mb": 401.99
+    },
+    {
+      "file": "MASTER_KNOWLEDGE_VAULT\\05_Thinking_Processes_and_Handoffs\\AI_BS_Global_Context.txt",
+      "size_mb": 141.45
+    },
+    {
+      "file": "MASTER_KNOWLEDGE_VAULT\\05_Thinking_Processes_and_Handoffs\\AI_BS_Global_Context_Clean.txt",
+      "size_mb": 55.91
+    },
+    {
+      "file": "MASTER_KNOWLEDGE_VAULT\\05_Thinking_Processes_and_Handoffs\\AI_BS_NotebookLM_Master_Knowledge_Base.txt",
+      "size_mb": 141.48
+    },
+    {
+      "file": "miners\\Pearl-Wallet-Setup-2.0.5.exe",
+      "size_mb": 105.51
+    },
+    {
+      "file": "miners\\pearl_core_windows\\oyster.exe",
+      "size_mb": 57.58
+    },
+    {
+      "file": "models\\rembg\\models\\birefnet-general\\birefnet-general.onnx",
+      "size_mb": 927.61
+    },
+    {
+      "file": "MP4 medial screen recordings\\6 min video 204.mp4",
+      "size_mb": 186.11
+    },
+    {
+      "file": "MP4 medial screen recordings\\AI-BS image generator error.mp4",
+      "size_mb": 63.95
+    },
+    {
+      "file": "MP4 medial screen recordings\\AI_BS OVERVIEW.mp4",
+      "size_mb": 132.96
+    },
+    {
+      "file": "MP4 medial screen recordings\\Conversions book to pdf..mp4",
+      "size_mb": 387.54
+    },
+    {
+      "file": "MP4 medial screen recordings\\daw test.mp4",
+      "size_mb": 80.62
+    },
+    {
+      "file": "MP4 medial screen recordings\\guid.mp4",
+      "size_mb": 274.54
+    },
+    {
+      "file": "MP4 medial screen recordings\\mtd.mp4",
+      "size_mb": 2207.19
+    },
+    {
+      "file": "MP4 medial screen recordings\\publishing csm test.mp4",
+      "size_mb": 56.48
+    },
+    {
+      "file": "MP4 medial screen recordings\\Recording 2026-09-03 072846.mp4",
+      "size_mb": 83.85
+    },
+    {
+      "file": "MP4 medial screen recordings\\studio test run.mp4",
+      "size_mb": 62.01
+    },
+    {
+      "file": "MP4 medial screen recordings\\test 2.mp4",
+      "size_mb": 82.57
+    },
+    {
+      "file": "MP4 medial screen recordings\\test run.mp4",
+      "size_mb": 162.4
+    },
+    {
+      "file": "MP4 medial screen recordings\\Test stream.mp4",
+      "size_mb": 138.58
+    },
+    {
+      "file": "MP4 medial screen recordings\\test.mp4",
+      "size_mb": 114.47
+    },
+    {
+      "file": "MP4 medial screen recordings\\testblahh.mp4",
+      "size_mb": 199.11
+    },
+    {
+      "file": "MP4 medial screen recordings\\testttt.mp4",
+      "size_mb": 52.92
+    },
+    {
+      "file": "MP4 medial screen recordings\\tour.mp4",
+      "size_mb": 89.08
+    },
+    {
+      "file": "MP4 medial screen recordings\\tst3.mp4",
+      "size_mb": 63.95
+    },
+    {
+      "file": "music\\Architecture_of_the_local_AI-BS_matrix.m4a",
+      "size_mb": 54.75
+    },
+    {
+      "file": "obs-core\\obs-plugins\\64bit\\libcef.dll",
+      "size_mb": 204.09
+    },
+    {
+      "file": "Pictures\\Camera Roll\\WIN_20260823_13_55_50_Pro.mp4",
+      "size_mb": 1109.54
+    },
+    {
+      "file": "Pictures\\Camera Roll\\WIN_20260823_13_55_50_Pro.zip",
+      "size_mb": 1109.44
+    },
+    {
+      "file": "Pictures\\Camera Roll\\WIN_20260823_14_04_56_Pro.mp4",
+      "size_mb": 1112.88
+    },
+    {
+      "file": "Pictures\\Camera Roll\\WIN_20260823_14_10_58_Pro.mp4",
+      "size_mb": 1107.86
+    },
+    {
+      "file": "Pictures\\Camera Roll\\WIN_20260823_14_21_48_Pro.mp4",
+      "size_mb": 1057.85
+    },
+    {
+      "file": "Pictures\\Camera Roll\\WIN_20260823_14_43_52_Pro.mp4",
+      "size_mb": 1079.52
+    },
+    {
+      "file": "Pictures\\Camera Roll\\WIN_20260823_16_26_22_Pro.mp4",
+      "size_mb": 1080.96
+    },
+    {
+      "file": "Pictures\\Camera Roll\\WIN_20260823_16_55_01_Pro.mp4",
+      "size_mb": 73.86
+    },
+    {
+      "file": "PrestigeMobileWash\\release\\Prestige Mobile Wash 0.0.0.exe",
+      "size_mb": 116.64
+    },
+    {
+      "file": "PrestigeMobileWash\\release\\Prestige Mobile Wash Setup 0.0.0.exe",
+      "size_mb": 116.8
+    },
+    {
+      "file": "PrestigeMobileWash\\release\\win-unpacked\\Prestige Mobile Wash.exe",
+      "size_mb": 215.09
+    },
+    {
+      "file": "PrestigeMobileWash\\release\\win-unpacked\\resources\\app.asar",
+      "size_mb": 165.2
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T222602123230\\sandbox\\dry_run\\20260710T222602123230\\backend\\dist\\brain_backend\\_internal\\torch\\lib\\torch_cpu.dll",
+      "size_mb": 293.52
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T222602123230\\sandbox\\dry_run\\20260710T222602123230\\build\\brain_backend\\brain_backend.exe",
+      "size_mb": 60.21
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T222602123230\\sandbox\\dry_run\\20260710T222602123230\\build\\brain_backend\\brain_backend.pkg",
+      "size_mb": 59.88
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T222602123230\\sandbox\\dry_run\\20260710T222602123230\\build\\brain_backend\\PYZ-00.pyz",
+      "size_mb": 59.82
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T222602123230\\sandbox\\dry_run\\20260710T222602123230\\frontend\\build-output\\AI-BS Matrix 1.0.5.exe",
+      "size_mb": 336.18
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T222602123230\\sandbox\\dry_run\\20260710T222602123230\\frontend\\build-output\\AI-BS Matrix Setup 1.0.5.exe",
+      "size_mb": 336.4
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T222602123230\\sandbox\\dry_run\\20260710T222602123230\\frontend\\build-output\\win-unpacked\\AI-BS Matrix.exe",
+      "size_mb": 172.47
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T222602123230\\sandbox\\dry_run\\20260710T222602123230\\frontend\\build-output\\win-unpacked\\resources\\brain_backend\\brain_backend.exe",
+      "size_mb": 60.21
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T223749451507\\AI-BS TEST.mp4",
+      "size_mb": 313.87
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T223749451507\\AIBSTEST2.mp4",
+      "size_mb": 225.09
+    },
+    {
+      "file": "sandbox_scratch\\takeout_extract\\Takeout\\YouTube and YouTube Music\\history\\watch-history.html",
+      "size_mb": 53.86
+    },
+    {
+      "file": "saved_data\\backups\\backend_lexicon_vault_20260827_132949.db",
+      "size_mb": 86.3
+    },
+    {
+      "file": "saved_data\\backups\\lexicon_vault_20260827_132933.db",
+      "size_mb": 86.3
+    },
+    {
+      "file": "ScreenVideoSnipping\\Screen Recording 2026-09-10 154417.mp4",
+      "size_mb": 2207.19
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\MuldjordKit-SFZ+WAV-20201018.7z",
+      "size_mb": 222.73
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Neptunes Drumkit.zip",
+      "size_mb": 264.06
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\SalamanderGrandPianoV3+20161209_48khz24bit.tar.xz",
+      "size_mb": 1199.57
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\WIN_20260823_13_55_50_Pro.mp4",
+      "size_mb": 1109.54
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\WIN_20260823_14_04_56_Pro.mp4",
+      "size_mb": 1112.88
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\WIN_20260823_14_10_58_Pro.mp4",
+      "size_mb": 1107.86
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\WIN_20260823_14_21_48_Pro.mp4",
+      "size_mb": 1057.85
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\WIN_20260823_14_43_52_Pro.mp4",
+      "size_mb": 1079.52
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\WIN_20260823_16_26_22_Pro.mp4",
+      "size_mb": 1080.96
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Apocalypse - Launch Edition - Offer\\Wasteland - FX Samples\\Tonal Impacts\\Cymatics - FX Tonal Impact - Rift (G).wav",
+      "size_mb": 56.53
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics\\AppData_Roaming\\Cymatics Pandora\\Expansions\\01 Essentials\\Samples\\8h.PLUCK Bubblegum.ch1",
+      "size_mb": 63.83
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics\\AppData_Roaming\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\1u.Lead Distress Guitar.ch1",
+      "size_mb": 56.01
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics\\AppData_Roaming\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\1w.Lead New Toronto.ch1",
+      "size_mb": 51.57
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics\\AppData_Roaming\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\2a.Lead Weekend.ch1",
+      "size_mb": 55.85
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics\\AppData_Roaming\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\2b.Lead Weston Road.ch1",
+      "size_mb": 56.36
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics\\AppData_Roaming\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\2g.Pad Harbour Front.ch1",
+      "size_mb": 52.01
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics\\AppData_Roaming\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\2h.Pad Human Nature.ch1",
+      "size_mb": 66.74
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics\\ProgramData\\Cymatics HookLab\\Models\\kim-melband-vocals-q8_0.gguf",
+      "size_mb": 240.05
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics - 11 Year Anniversary Collection (STANDARD EDITION)\\Vocal Loops\\Acapellas\\Cymatics - Acapella - Pressure - 115 BPM E Min.wav",
+      "size_mb": 50.44
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics - 11 Year Anniversary Collection (STANDARD EDITION)\\Vocal Loops\\Acapellas\\Acapella Stems\\Goodbye - 90 BPM E Maj\\Cymatics - Goodbye - 90 BPM E Maj Lead 1 Dry.wav",
+      "size_mb": 102.29
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics - 11 Year Anniversary Collection (STANDARD EDITION)\\Vocal Loops\\Acapellas\\Acapella Stems\\Goodbye - 90 BPM E Maj\\Cymatics - Goodbye - 90 BPM E Maj Lead 2 Dry.wav",
+      "size_mb": 102.29
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics - 11 Year Anniversary Collection (STANDARD EDITION)\\Vocal Loops\\Acapellas\\Acapella Stems\\Just A Moment - 150 BPM Em\\Cymatics - Just A Moment - Harmony 150 BPM Emin.wav",
+      "size_mb": 56.78
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics - 11 Year Anniversary Collection (STANDARD EDITION)\\Vocal Loops\\Acapellas\\Acapella Stems\\Just A Moment - 150 BPM Em\\Cymatics - Just A Moment - Lead 150 BPM Emin.wav",
+      "size_mb": 56.78
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics - 11 Year Anniversary Collection (STANDARD EDITION)\\Vocal Loops\\Acapellas\\Acapella Stems\\Just A Moment - 150 BPM Em\\Cymatics - Just A Moment - Lead Layered 150 BPM Emin.wav",
+      "size_mb": 56.78
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics - DESTINY - Production Suite\\Vocal Loops\\Acapellas\\Cymatics - Look Alike Acapella - 146 BPM C Min.wav",
+      "size_mb": 54.55
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics - DESTINY - Production Suite\\Vocal Loops\\Acapellas\\Loop Stems\\Cymatics - Look Alike Acapella - 146 BPM C Min\\Cymatics - Look Alike Acapella - 146 BPM C Min Ad Libs.wav",
+      "size_mb": 54.55
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics - DESTINY - Production Suite\\Vocal Loops\\Acapellas\\Loop Stems\\Cymatics - Look Alike Acapella - 146 BPM C Min\\Cymatics - Look Alike Acapella - 146 BPM C Min Hook.wav",
+      "size_mb": 54.55
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics - DESTINY - Production Suite\\Vocal Loops\\Acapellas\\Loop Stems\\Cymatics - Look Alike Acapella - 146 BPM C Min\\Cymatics - Look Alike Acapella - 146 BPM C Min Lead.wav",
+      "size_mb": 54.55
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics - DESTINY - Production Suite\\Vocal Loops\\Acapellas\\Loop Stems\\Cymatics - Varsity Acapella - 120 BPM D# Min\\Cymatics - Varsity Acapella - 120 BPM D# Min Lead.wav",
+      "size_mb": 53.28
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics-PandoraExpansions\\Cymatics Pandora Expansions-1.bin",
+      "size_mb": 2001.07
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics-PandoraExpansions\\Cymatics Pandora Expansions-2.bin",
+      "size_mb": 2002.72
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\Cymatics-PandoraExpansions\\Cymatics Pandora Expansions-3.bin",
+      "size_mb": 754.61
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\VIBES - Premium Collection\\Cymatics - Lucid Vocal Samples\\Acapellas\\Cymatics - Acapella - Pressure - 115 BPM E Min.wav",
+      "size_mb": 50.44
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\VIBES - Premium Collection\\Cymatics - Lucid Vocal Samples\\Acapellas\\Stems\\Cymatics - Pressure - 115 BPM E Min\\Cymatics - Pressure - 115 BPM E Min Ad Libs Dry.wav",
+      "size_mb": 50.44
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\VIBES - Premium Collection\\Cymatics - Lucid Vocal Samples\\Acapellas\\Stems\\Cymatics - Pressure - 115 BPM E Min\\Cymatics - Pressure - 115 BPM E Min Harmonies Dry.wav",
+      "size_mb": 50.44
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\VIBES - Premium Collection\\Cymatics - Lucid Vocal Samples\\Acapellas\\Stems\\Cymatics - Pressure - 115 BPM E Min\\Cymatics - Pressure - 115 BPM E Min Harmonies Wet.wav",
+      "size_mb": 50.44
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\VIBES - Premium Collection\\Cymatics - Lucid Vocal Samples\\Acapellas\\Stems\\Cymatics - Pressure - 115 BPM E Min\\Cymatics - Pressure - 115 BPM E Min Low Vocals.wav",
+      "size_mb": 50.44
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\VIBES - Premium Collection\\Cymatics - Lucid Vocal Samples\\Acapellas\\Stems\\Cymatics - Pressure - 115 BPM E Min\\Cymatics - Pressure - 115 BPM E Min Main Dry.wav",
+      "size_mb": 50.44
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\VIBES - Premium Collection\\Cymatics - Lucid Vocal Samples\\Acapellas\\Stems\\Cymatics - Pressure - 115 BPM E Min\\Cymatics - Pressure - 115 BPM E Min Main Wet.wav",
+      "size_mb": 50.44
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sample_Packs\\VIBES - Premium Collection\\Cymatics - Lucid Vocal Samples\\Acapellas\\Stems\\Cymatics - Pressure - 115 BPM E Min\\Cymatics - Pressure - 115 BPM E Min Wet.wav",
+      "size_mb": 50.44
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_Sound_Banks\\Cymatics HookLab\\Models\\kim-melband-vocals-q8_0.gguf",
+      "size_mb": 240.05
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_User_Presets\\Cymatics Pandora\\Expansions\\01 Essentials\\Samples\\8h.PLUCK Bubblegum.ch1",
+      "size_mb": 63.83
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_User_Presets\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\1u.Lead Distress Guitar.ch1",
+      "size_mb": 56.01
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_User_Presets\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\1w.Lead New Toronto.ch1",
+      "size_mb": 51.57
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_User_Presets\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\2a.Lead Weekend.ch1",
+      "size_mb": 55.85
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_User_Presets\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\2b.Lead Weston Road.ch1",
+      "size_mb": 56.36
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_User_Presets\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\2g.Pad Harbour Front.ch1",
+      "size_mb": 52.01
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Cymatics_User_Presets\\Cymatics Pandora\\Expansions\\17 Phantom\\Samples\\2h.Pad Human Nature.ch1",
+      "size_mb": 66.74
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Brass\\Bass Trombone\\SFZ\\Bass Trombone.sts",
+      "size_mb": 150.64
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Brass\\Cimbasso\\SFZ\\Cimbasso.sts",
+      "size_mb": 220.81
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Brass\\French Horn\\SFZ\\French Horn.sts",
+      "size_mb": 220.18
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Brass\\French Horns a6\\SFZ\\French Horns a6.sts",
+      "size_mb": 184.25
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Brass\\Trombone\\SFZ\\Trombone.sts",
+      "size_mb": 140.46
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Brass\\Trombones a3\\SFZ\\Trombones a3.sts",
+      "size_mb": 197.97
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Brass\\Trumpet\\SFZ\\Trumpet.sts",
+      "size_mb": 161.72
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Brass\\Trumpets a4\\SFZ\\Trumpets a4.sts",
+      "size_mb": 229.01
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Brass\\Tuba\\SFZ\\Tuba.sts",
+      "size_mb": 199.66
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Choir\\Altos\\SFZ\\Altos.sts",
+      "size_mb": 140.74
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Choir\\Basses\\SFZ\\Basses.sts",
+      "size_mb": 172.22
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Choir\\Sopranos\\SFZ\\Sopranos.sts",
+      "size_mb": 140.79
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Choir\\Tenors\\SFZ\\Tenors.sts",
+      "size_mb": 145.66
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Guitars Vol 1\\Acoustic Nylon\\SFZ\\Acoustic Nylon.sts",
+      "size_mb": 107.54
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Guitars Vol 1\\Acoustic Steel Picked\\SFZ\\Acoustic Steel Picked.sts",
+      "size_mb": 128.83
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Guitars Vol 1\\Acoustic Steel Plucked\\SFZ\\Acoustic Steel Plucked.sts",
+      "size_mb": 90.63
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Guitars Vol 1\\Electric Bass\\SFZ\\Electric Bass.sts",
+      "size_mb": 106.23
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Guitars Vol 1\\Electric LP - Clean\\SFZ\\Electric LP - Clean.sts",
+      "size_mb": 116.36
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Guitars Vol 1\\Electric SC - Clean\\SFZ\\Electric SC - Clean.sts",
+      "size_mb": 388.01
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Handbells\\Handbells\\SFZ\\Handbells.sts",
+      "size_mb": 323.95
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Handbells\\Handchimes\\SFZ\\Handchimes.sts",
+      "size_mb": 67.85
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Harp\\Harp\\SFZ\\Harp.sts",
+      "size_mb": 157.66
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Keys\\Dream Piano\\SFZ\\Dream Piano.sts",
+      "size_mb": 67.35
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Keys\\Piano\\SFZ\\Piano.sts",
+      "size_mb": 189.51
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Percussion\\Big Kit\\SFZ\\Big Kit.sts",
+      "size_mb": 118.76
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Percussion\\Concert Combo\\SFZ\\Concert Combo.sts",
+      "size_mb": 148.68
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Percussion\\Glockenspiel\\SFZ\\Glockenspiel.sts",
+      "size_mb": 278.59
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Percussion\\GM Kit\\SFZ\\GM Kit.sts",
+      "size_mb": 118.76
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Percussion\\Marimba\\SFZ\\Marimba.sts",
+      "size_mb": 181.77
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Percussion\\Timpani\\SFZ\\Timpani.sts",
+      "size_mb": 359.29
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Percussion\\Trap Kit\\SFZ\\Trap Kit.sts",
+      "size_mb": 118.76
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Percussion\\Vibraphone\\SFZ\\Vibraphone.sts",
+      "size_mb": 96.13
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Percussion\\Xylophone\\SFZ\\Xylophone.sts",
+      "size_mb": 93.95
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Strings\\Cello Solo\\SFZ\\Cello Solo.sts",
+      "size_mb": 677.33
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Strings\\Cellos\\SFZ\\Cellos.sts",
+      "size_mb": 619.39
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Strings\\Contrabasses\\SFZ\\Contrabasses.sts",
+      "size_mb": 418.92
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Strings\\Viola Solo\\SFZ\\Viola Solo.sts",
+      "size_mb": 497.6
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Strings\\Violas\\SFZ\\Violas.sts",
+      "size_mb": 533.1
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Strings\\Violin 1 Solo\\SFZ\\Violin 1 Solo.sts",
+      "size_mb": 517.92
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Strings\\Violin 2 Solo\\SFZ\\Violin 2 Solo.sts",
+      "size_mb": 651.03
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Strings\\Violins 1\\SFZ\\Violins 1.sts",
+      "size_mb": 644.61
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Strings\\Violins 2\\SFZ\\Violins 2.sts",
+      "size_mb": 628.21
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Alto Flute\\SFZ\\Alto Flute.sts",
+      "size_mb": 285.4
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Alto Saxophone\\SFZ\\Alto Saxophone.sts",
+      "size_mb": 235.08
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Baritone Saxophone\\SFZ\\Baritone Saxophone.sts",
+      "size_mb": 294.45
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Bass Clarinet\\SFZ\\Bass Clarinet.sts",
+      "size_mb": 353.73
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Bass Flute\\SFZ\\Bass Flute.sts",
+      "size_mb": 186.66
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Bassoon\\SFZ\\Bassoon.sts",
+      "size_mb": 325.25
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Clarinet in Bb\\SFZ\\Clarinet in Bb.sts",
+      "size_mb": 348.74
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Clarinet in Eb\\SFZ\\Clarinet in Eb.sts",
+      "size_mb": 352.64
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Contrabass Flute\\SFZ\\Contrabass Flute.sts",
+      "size_mb": 127.5
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Contrabassoon\\SFZ\\Contrabassoon.sts",
+      "size_mb": 249.11
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\English Horn\\SFZ\\English Horn.sts",
+      "size_mb": 244.74
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Flute 1\\SFZ\\Flute 1.sts",
+      "size_mb": 367.98
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Flute 2\\SFZ\\Flute 2.sts",
+      "size_mb": 331.7
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Oboe\\SFZ\\Oboe.sts",
+      "size_mb": 198.34
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Piccolo\\SFZ\\Piccolo.sts",
+      "size_mb": 194.15
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Soprano Saxophone\\SFZ\\Soprano Saxophone.sts",
+      "size_mb": 141.73
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\Muse_Hub_Instruments\\Muse Woodwinds\\Tenor Saxophone\\SFZ\\Tenor Saxophone.sts",
+      "size_mb": 281.96
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\VST3_Plugins_Library\\Cymatics CRT.vst3\\Contents\\x86_64-win\\Cymatics CRT.vst3",
+      "size_mb": 62.19
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\VST3_Plugins_Library\\Cymatics HookLab.vst3\\Contents\\Resources\\hooklab_host\\libcef.dll",
+      "size_mb": 273.49
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\VST3_Plugins_Library\\Cymatics HookLab.vst3\\Contents\\x86_64-win\\Cymatics HookLab.vst3",
+      "size_mb": 53.98
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\VST3_Plugins_Library\\Cymatics Space.vst3\\Contents\\x86_64-win\\Cymatics Space.vst3",
+      "size_mb": 71.13
+    },
+    {
+      "file": "shared_cloud_drive\\4 media\\VST3_Plugins_Library\\Cymatics Vortex.vst3\\Contents\\x86_64-win\\Cymatics Vortex.vst3",
+      "size_mb": 79.63
+    },
+    {
+      "file": "stehouwer_vector_memory\\chroma.sqlite3",
+      "size_mb": 516.34
+    },
+    {
+      "file": "trainer_frontend\\dist\\win-unpacked\\trainer_frontend.exe",
+      "size_mb": 201.21
+    },
+    {
+      "file": "UnrealHub\\Intermediate\\CachedAssetRegistry\\CachedAssetRegistry_0_2C3DAC5046CF17A1E41CF49680B7DFC5.bin",
+      "size_mb": 119.88
+    },
+    {
+      "file": "Workflows for comfy ui\\Antigravity-x64.exe",
+      "size_mb": 132.93
+    },
+    {
+      "file": "Workflows for comfy ui\\Geniec367d60d27fe40d0be66cd822a42d675.mp4",
+      "size_mb": 57.25
+    },
+    {
+      "file": "_archive_v1\\Antigravity-x64.exe",
+      "size_mb": 129.23
+    },
+    {
+      "file": "_archive_v1\\build\\AI-BS\\AI-BS.pkg",
+      "size_mb": 75.13
+    },
+    {
+      "file": "_archive_v1\\dist\\AI-BS.exe",
+      "size_mb": 75.47
+    },
+    {
+      "file": "_archive_v1\\docs\\AI_BS_Codebase_For_Gemini.md",
+      "size_mb": 59.74
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\cache\\download\\github.com\\go-text\\typesetting-utils\\@v\\v0.0.0-20260223113751-2d88ac90dae3.zip",
+      "size_mb": 82.77
+    },
+    {
+      "file": "_archive_v1\\LOCKED_OS_QUARANTINE\\MatrixOS_Builder\\hiveos-0.6-229-stable-jammy@241231.img",
+      "size_mb": 7100.0
+    },
+    {
+      "file": "_archive_v1\\LOCKED_OS_QUARANTINE\\MatrixOS_Builder copy\\AI-BS.img",
+      "size_mb": 3004.0
+    },
+    {
+      "file": "_archive_v1\\Mining agent\\xmrig\\xmrig-cuda.dll",
+      "size_mb": 59.21
+    },
+    {
+      "file": "_archive_v1\\MP4 medial screen recordings\\07.15.2026.Start.test.mp4",
+      "size_mb": 69.06
+    },
+    {
+      "file": "_archive_v1\\MP4 medial screen recordings\\Recording 2026-07-15 150936.mp4",
+      "size_mb": 354.09
+    },
+    {
+      "file": "_archive_v1\\sandbox_scratch\\takeout_extract\\Takeout\\YouTube and YouTube Music\\history\\watch-history.html",
+      "size_mb": 53.86
+    }
+  ],
+  "unreferenced_root_scripts": [
+    "AI_BS_Swarm_Commander.py",
+    "AI_BS_Vector_Seeder.py",
+    "analyze_brains.py",
+    "archive_ledgers.py",
+    "archive_task.py",
+    "audit_workspace_legacy.py",
+    "BUD.py",
+    "check_chat_inputs.py",
+    "check_chat_inputs2.py",
+    "chia_plot_calculator.py",
+    "copy_artifacts.py",
+    "debug_ktxt.py",
+    "discord_notifier.py",
+    "extract_docx.py",
+    "fetch_gospels.py",
+    "fetch_matthew.py",
+    "fix_port.py",
+    "generate_70_dbs.py",
+    "generate_70_interactive_hubs.py",
+    "generate_70_vector_dbs.py",
+    "generate_functional_utilities.py",
+    "generate_unreal_scripts.py",
+    "live_check.py",
+    "merge_app.py",
+    "nvidia_ctk_wrapper.py",
+    "patch_ktxt.py",
+    "populate_unreal_assets.py",
+    "quick_check_ledger.py",
+    "runc_wrapper.py",
+    "run_full_scan.py",
+    "run_scan.py",
+    "scaffold_high_perf.py",
+    "test_bundles.py",
+    "test_parse.py",
+    "vast.py",
+    "vast_install.py",
+    "vault_ingest_leadengine.py"
+  ]
+}

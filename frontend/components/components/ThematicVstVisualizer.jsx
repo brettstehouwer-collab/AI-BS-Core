@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { Sliders, Activity, Flame, Waves, Zap, Cpu } from 'lucide-react';
 import { theme } from '../styles/theme';
 
 const BACKEND_VST_URL = 'http://127.0.0.1:8013';
 
+/** @type {Record<string, {"color": string, "icon": import('lucide-react').LucideIcon, "label": string, "desc": string}>} */
 const THEME_CONFIG = {
   aggressive: { color: '#ff3366', icon: Flame, label: 'AGGRESSIVE', desc: 'High Drive, Tight Gate, Saturating Harmonics' },
   calm: { color: '#00e5ff', icon: Waves, label: 'CALM', desc: 'Deep Reverb, Warm 1.2kHz Filter, Spatial Echo' },
@@ -12,7 +13,8 @@ const THEME_CONFIG = {
   neutral: { color: '#94a3b8', icon: Activity, label: 'NEUTRAL', desc: 'Default Pass-Through Acoustic Profile' }
 };
 
-export const ThematicVstVisualizer = ({ compact = false }) => {
+export /** @param {{"compact"?: boolean}} props */
+const ThematicVstVisualizer = ({ compact = false }) => {
   const [vstState, setVstState] = useState({ theme: 'neutral', active_modulations: {} });
   const [isOnline, setIsOnline] = useState(false);
   const [isTriggering, setIsTriggering] = useState(false);
@@ -41,7 +43,8 @@ export const ThematicVstVisualizer = ({ compact = false }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const triggerTheme = async (themeName) => {
+  /** @param {string} themeName */
+const triggerTheme = async ( themeName) => {
     setIsTriggering(true);
     try {
       const res = await fetch(`${BACKEND_VST_URL}/api/vst/trigger-theme`, {

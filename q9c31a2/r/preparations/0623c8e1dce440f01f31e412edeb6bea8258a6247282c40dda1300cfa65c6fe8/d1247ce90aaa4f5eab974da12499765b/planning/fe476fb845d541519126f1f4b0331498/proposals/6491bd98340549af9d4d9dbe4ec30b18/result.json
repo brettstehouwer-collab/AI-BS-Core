@@ -1,0 +1,38 @@
+{
+  "state": "PROPOSAL_READY",
+  "input_sha256": "1df4aa0415de5b24b49961892bda222bced82c66cb802e28547009793b32e0a6",
+  "proposal": {
+    "summary": "Synthetic fixture proposal: value42.",
+    "files": [
+      {
+        "path": "app.py",
+        "base_sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "proposed_sha256": "88f92d58d9706e16b293aacf471dd930213780b70cbf773d31c716c3e1e84682",
+        "content": "value = 42\n",
+        "diff": "--- a/app.py\n+++ b/app.py\n@@ -1 +1 @@\n-value = 1\n+value = 42\n"
+      }
+    ],
+    "diff": "--- a/app.py\n+++ b/app.py\n@@ -1 +1 @@\n-value = 1\n+value = 42\n"
+  },
+  "model_output": {
+    "summary": "Synthetic fixture proposal: value42.",
+    "changes": [
+      {
+        "path": "app.py",
+        "base_sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "hunks": [
+          {
+            "before": "value = 1",
+            "after": "value = 42"
+          }
+        ]
+      }
+    ]
+  },
+  "error_code": null,
+  "elapsed_seconds": 0.016,
+  "finished_at_utc": "2026-11-14T22:52:44.895081+00:00",
+  "response_sha256": "2c017b7fb21e27900481675451492d885df9318d226afe7df0fe38f5d8454f52",
+  "response_bytes": 226,
+  "entry_sha256": "919de53509f245fd8d04dd21b8f9ca4447d7695e08d43bdff41244bc5fa736d1"
+}

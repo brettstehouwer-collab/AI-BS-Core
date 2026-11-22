@@ -1,0 +1,19 @@
+{
+  "scope": "12 source-policy smoke checks; not device/runtime qualification",
+  "checks": {
+    "application_id": true,
+    "chat_endpoint": true,
+    "no_backup": true,
+    "no_cleartext": true,
+    "no_mixed_content": true,
+    "no_file_content_access": true,
+    "no_native_bridge": true,
+    "ssl_cancel": true,
+    "javascript_dom": true,
+    "host_and_scheme_policy": true,
+    "error_retry": true,
+    "lifecycle_and_back": true
+  },
+  "passed": 12,
+  "total": 12
+}

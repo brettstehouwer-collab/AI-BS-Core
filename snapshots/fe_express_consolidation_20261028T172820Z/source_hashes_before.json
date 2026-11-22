@@ -1,0 +1,30 @@
+[
+  {
+    "Path": "C:\\AI-BS\\frontend\\App.jsx",
+    "Hash": "CD4B78E5CE4F05BD0AC2982698C85C8F1D69314EF5F2B8FBB18110D1E341A974"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\components\\clients\\ClientsModule.jsx",
+    "Hash": "825C1F0901D5D4D5E0A9DDB1955F8D8FE46063DA237F31F2043DD86C5F7DDCA4"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\src\\components\\GlobalCommandPalette.jsx",
+    "Hash": "593453EC392A14FFD85A38820F067ECA74743A28A3465C73E4C3E3F77F8CDD50"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\src\\components\\LoginModal.jsx",
+    "Hash": "1AC5BD1C3DDF6AEC9315E4D2AF287D69FB3C7E060B136496A5ED0EADE0F1FBBA"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\src\\components\\FEExpressDispatcher.jsx",
+    "Hash": "40277509A8742D36F9E237CA89558193B39B2EF9127840F4B7B95DC793EAAEEA"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\src\\components\\FEExpressPinPortal.jsx",
+    "Hash": "15BF0BEBEA1A010379B5447B13E18B6C08A4BB87AC1C2ED964984431C4265D7C"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\src\\components\\navigationConfig.js",
+    "Hash": "3A66C97E4A2B695612CD8CF753F46B36D26F5AFAFAB0990D3754C5B60747A1F4"
+  }
+]

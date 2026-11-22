@@ -1,0 +1,31 @@
+{
+  "handoff_id": "BS-CHAT-CHALLENGE-20261114-v01",
+  "utc": "2026-11-14T13:42:01.599587+00:00",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "64fad2871e0a716d9964f506bdef1050612b173d",
+  "source_hashes": {
+    "backend/core/sovereign_reasoning/dispatcher.py": "298c66149257fdceeeb9525dcc799c2066a6147381a76d57d98ce67b82396fed",
+    "backend/core/local_chat_inference.py": "29c18b9b4a2b28af5f364e3fbf79317fc1a18f2f192df01a9c561da795e141d7",
+    "scripts/tests/test_chat_context_budget.py": "9478c5dc989add03bf9388c0b40448aaef34b0686e5c22d9937ea51413de8c14",
+    "scripts/tests/test_local_chat_failures.py": "0a88c44dbf05458c705449f2dd0c65d67e825b0b0f3ac1a99c0374472f731e8b"
+  },
+  "source_unchanged_since_restart_preflight": true,
+  "focused_checks": 59,
+  "live": {
+    "status_code": 200,
+    "elapsed_s": 101.34,
+    "characters": 11171,
+    "chunks": 438,
+    "request_sha256": "4e657aa2e3b4dfe3cdf5204a9db5ecef8599c81dff3585f75d1fd0b2cbd506c7",
+    "primary_status": "completed",
+    "primary_completion_verified": true,
+    "error_codes": [],
+    "health": 200,
+    "authenticated": 200,
+    "anonymous": 403
+  },
+  "answer_correctness": "FAILED: reported12; optimum14; E starts before D ends",
+  "handoff": "docs/agent_sync/BS_CHAT_CHALLENGE_REPAIR_2026-11-14.md",
+  "next": "Retain transport repair; separate reasoning-quality validation and reconcile creative source pins before creative acceptance",
+  "cloud_backup": "not performed"
+}

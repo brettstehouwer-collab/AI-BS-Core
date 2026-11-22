@@ -1,0 +1,66 @@
+NETWORK AND PUBLISHING: DIAGNOSTIC BASELINE
+25 October 2026. Times below are UTC; Eastern Daylight Time is UTC-04:00.
+Confidence categories: OBSERVED, USER-REPORTED, HISTORICAL, INFERRED, UNKNOWN.
+This baseline precedes restoration. The operator subsequently authorized fixing stehouwer-publishing.com. Restoration is a separate phase and is not claimed complete here.
+
+Scope/resources
+OBSERVED 20:56:56 UTC /16:56:56 EDT: PowerShell7.6.5 Core. Terminating error handling and native exit-code checks used. No duplicate active investigation found in35recent chats plus pinned entries.
+All system/repository/publishing/output paths useC:. Initial total1796861837312/free145561362432bytes(8.10percent). At21:02:04UTC free99554451456bytes(5.54percent); asset helper21:16:58UTC reported43183140864bytes(2.40percent). Cause of rapid concurrent consumption UNKNOWN. No cleanup or unrelated process termination. Apply brief low-space threshold free<10GiB OR<10percent; small outputs only.
+No whole-disk traversal, recursive bulk hashing, model/download/install/build/packet/throughput test in baseline. No credential files, raw environment dumps, browser profiles, visitor records or private document contents retained. No live handoff/ledger append.
+
+Public DNS/HTTPS
+OBSERVED 20:57:57-58 UTC /16:57:57-58 EDT: Resolve-DnsName A/DnsOnly/NoHostsFile/QuickTimeout through Windows system resolution and explicit8.8.8.8.
+Both stehouwer-publishing.com and www.stehouwer-publishing.com resolve to104.21.51.119 and172.67.180.43 through both paths. Windows path may include cache; active adapter DNS192.168.4.1 does not authenticate resolver chain.
+Both stehouwerpublishing.com and www.stehouwerpublishing.com return DNS_ERROR_RCODE_NAME_ERROR(NXDOMAIN) through both paths. Ownership/registration/intended-name status UNKNOWN.
+OBSERVED 20:58:41UTC /16:58:41EDT: exactly one raw TLS-verified HTTPS GET / to each resolvable hyphenated hostname; no redirects, JavaScript or subresources; read cap8192bytes.
+Root:404,0bodybytes,servercloudflare,CF-Cache-StatusDYNAMIC,Date20:58:39GMT,CF-Ray a50423feeb066501-ORD.
+www:404,0bodybytes,servercloudflare,CF-Cache-StatusDYNAMIC,Date20:58:40GMT,CF-Ray a50424007f97eaf9-ORD.
+No redirects observed. HTTP to nonhyphenated names UNTESTED after NXDOMAIN.
+HISTORICAL brief snapshot approximately19:55UTC reported502for hyphenated names. Current404is different; generic502does not prove a stopped tunnel.
+
+Origin/tunnel evidence
+OBSERVED 20:57:57UTC /16:57:57EDT: no80/443listener and no nginx process. No observed Nginx/Python port collision. Local Host-header GET not attempted because no listener.
+Candidate C:/StehouwerPublishing.com/nginx.conf6485bytes declares127.0.0.1/[::1]:80 and website-rebuild/dist root. No active process proves configuration selection.
+Installed executable exists through WinGetLinks target .../nginx-1.31.3/nginx.exe(6646784bytes); directory label is NOT verified runtime version. No executable test/start during baseline.
+OBSERVED 20:59:48UTC: userconnectorPID16512 selects userconfig.yml; PID34912 selects api-tunnel-scoped.yml; their local tunnel identities are equal(rawidentity omitted). Userconfig includes publishing->80; scopedAPIconfig omits publishing and ends404catch-all.
+APIpolicy differs: userconfig forwards /sse,/messages to8099; scopedAPI intentionally returns404for these and forwards APIremainder8000. Do not replace scoped policy with fulluserconfig.
+SYSTEMCloudflaredPID6252 Running/Auto/LocalSystem has tokenargument but no explicitconfig. Token/credential file never opened. Remoteidentity/ingress UNKNOWN in baseline.
+Scheduled publishing tunnel task Running under currentuser. Runningprocess/task alone does not certify registeredhealthyconnector.
+Candidate proxy declarations /api/->8000; recdebut/r->8080; /hls/->8089. None requested.
+8000loopback GoPID30912;8080loopback PythonPID50200.8089loopback is svchost/IPHelperPID6232, not an identifiedHLSserver; forwarding target UNKNOWN.
+Source health-body review found no start/restart call in inspected handlers; middleware/runtime not certified. No application APIprobe needed. /models calls Ollama; catch-allAPI can forward effectful operations.
+Pythonfallback binds0.0.0.0:80, wildcard credentialedCORS, unvalidated static full_path join. Securityreview required before use. Daemon-manager auto_start declaration is not activation proof.
+
+Logs/correlation
+OBSERVED bounded tails only: error.log13156151bytes, final64KiB/142complete lines with141file-open failures; final embedded2026/10/24 21:07:23(timezone unspecified).
+access.log14225684bytes, final16KiB/89complete lines, last24/Oct/2026:21:07:23 -0400=25Oct01:07:23UTC. No raw visitor/client/path rows retained.
+cloud_tunnel.log7125bytes lastwrite11Oct22:24:47UTC. Current core connector log0bytes. None can correlate to20:58UTCedge404responses.
+
+Network
+USER-REPORTED ONT->eeroMax7->PCdirectCat8. OptionalR6700v3/RAX40 connections/modes andRAX40revision UNKNOWN. Described photos not independently viewed.
+OBSERVED20:58UTC: Ethernet2(if9/Realtek#2)Up2.5Gbps,192.168.4.35/22,DHCP/DNS/gateway192.168.4.1. Only IPv4default viaEthernet2,routeMetric0/interfaceMetric20; noIPv6default returned.
+OtherEthernet(if19/Realtek#1)Up1Gbps,static192.168.10.50/24,noGW; cable destinationUNKNOWN.
+SharedAccess/DhcpRunning;icssvcStopped;IPEnableRouter0;noUDP67;IPNATStopped/WinNatRunning.137.1registry scope alone is not activeICSproof. StandaloneDhcpAddress property unavailable(PSArgumentException); no retry.
+IPv4forwardingDisabled onphysicalinterfaces;IPv6forwardingEnabled. ActiveXboxNAT internal192.168.10.0/24,externalprefixunset; forwarding/deviceacceptance not established. ICSCOMbindings UNKNOWN/not enumerated.
+INFERRED privateDHCP/default-route evidence supports newer router-before-PC topology, not independent gateway-model identity. HistoricalONT->WindowsICS->eero6diagram must not drive changes.
+USER-REPORTED oneNETGEAR powered on during task. OBSERVED passive21:06:17-18UTC/17:06EDTrefresh: sameIPs/linkrates/defaultgateway. Neighbor cache inspected only as aggregate states; no individualclients scanned/identified. NETGEARmodel/role remainsUNKNOWN.
+
+Assets/conclusion
+52targeted rows in Asset_Manifest.csv. Public/dist placement is not approval. Candidate ledger.html/invoices/tracking/indexing resources need privacy review. Matching-size invoice copies are duplicate candidates only; byte duplication untested.
+Three sample PDFs referenced in downloadsREADME are missing; contentgap is not outageproof.
+HISTORICAL AI-BSRecord98v70artifact is web_build_attempt2, not older frontend/dist; its publicallowlist does not approve publishingassets.
+OBSERVED independentblocker: no local80origin.
+INFERRED strong404lead: divergenthostname rules on same-local-tunnel connectors. Specificrequestattribution remainsUNKNOWN.
+UNKNOWN SYSTEMmapping/currentedgeregistration and stale-log gap prevent a conclusive single-cause claim. Householdnetworkfailure/stoppedtunnel not established.
+Next restoration must privacy-review assets, start exactlyoneowned loopbackorigin and reconcile ingress while preserving APIrestrictions/availability and core_boot CONFIG_SHAadmission. NonhyphenatedDNS is separateownershipdecision.
+Helpers: /root/network_baseline20:58UTC; /root/publishing_origin20:57-21:02UTC; /root/asset_reconciliation20:58-21:02UTC. Parent owns publicDNS/HTTPS/outputvalidation. Concise methods/results, no hidden reasoning.
+
+
+FINAL DIAGNOSTIC RESOURCE/READBACK 2026-10-25T21:29:11.193057+00:00 / 2026-10-25T17:29:11.193057-04:00; sameC:system/repository/publishing/output total=1796861837312 free=43200700416bytes (2.4percent). Outputfivefiles/52CSVrows validatedUTF8/formula-safe/no recognizedsecretpatterns. Earlier long stdincommand exceededWindowsargumentlimit beforewriting; pivoted tosmallfilepatches/CSVbatches. No livehandoff/ledgerappend.
+
+RESTORATION ADDENDUM (subsequent explicit operatorauthorization)
+RESTORATION COMPLETE — 2026-10-25T21:41:10.858939+00:00
+Public root and www both200; functional homepage boots at390/1440 with JS/CSS loaded. Reviewed19-file static origin is loopback-only and logon-task managed. Original dist unchanged; private/tracking files excluded and8publicnegativepaths404. Paired ingress/config admission consistent; API/core/SYSTEM peers preserved. No household or nonhyphenatedDNSchange.
+Known limits: mobile135px overflow; missing background and3samplePDFs; legacy unsafe form-value analytics omitted; existingCloudflareInsights blocked during smoke; one handoffhealthassertion failed with unknownspecificresponse, currentAPIhealthy. No zero-outage/full-API/reboot acceptanceclaim.
+Next peroperator: verifyCodexPID33936/memorycommit/pagefile/disk snapshot before othermajorwork. No Codex/pagefile changeauthorized yet.
+Detailed evidence: restoration/restoration_receipt.json. Live handoff/architecturalledger remain unmodified by this task.

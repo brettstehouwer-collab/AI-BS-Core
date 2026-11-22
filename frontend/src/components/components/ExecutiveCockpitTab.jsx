@@ -1,6 +1,33 @@
-import React, { useState, useEffect, useRef } from 'react';
+import './StudioOverview.css';
+import { SYSTEM_VERSION } from './version';
+/** @typedef {{action_id?: string, pillar: string, action_name?: string, action?: string, tier?: number, status?: string, parameters?: unknown, result?: unknown}} ExecutiveAction */
+/** @typedef {{severity: string, category: string, title: string, message: string, metadata?: {file_hash?: string}}} SentinelAlert */
+/** @typedef {{running?: boolean, status?: string, bandwidth_mbps?: number, rigel_mining?: boolean}} SaladStatus */
+import { useState, useEffect, useRef } from 'react';
 import { useAppStore } from './useAppStore';
+import { chatAuthHeaders } from '/src/utils/chatAuth.js';
 
+function emptyExecutiveMatrix() {
+  return {
+    salad: /** @type {SaladStatus | undefined} */ (undefined),
+    pillars: {
+      salad_engine: /** @type {SaladStatus | undefined} */ (undefined),
+      media_studio: { status: 'UNVERIFIED', nvenc_cfr_gate: 'UNVERIFIED', supported_models: [] },
+      broadcast_kernel: { status: 'UNVERIFIED' },
+      crypto_swarm: { trading_paused: /** @type {boolean | null} */ (null), status: 'UNVERIFIED', daemon_port: 8007, twap_plans_count: null, drip_orders_count: null },
+      ollama_swarm: { status: 'UNVERIFIED', models_count: null, models_sample: [] }
+    },
+    hardware: /** @type {Record<string, number | null>} */ ({ temp_c: null, vram_used_mb: null, vram_total_mb: null, gpu_util_pct: null, ram_used_gb: null, ram_total_gb: null, ram_percent: null, disk_free_gb: null, disk_percent: null }),
+    vault: { sqlite_vault_records: null, media_memory_records: null }
+  };
+}
+
+/** @param {unknown} value @param {string} [unit] */
+function executiveMetric(value, unit = '') {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? `${value.toLocaleString()}${unit}` : 'Unavailable';
+}
+
+/** @param {{BACKEND_URL?: string, backendUrl?: string}} props */
 export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   const activeBackend = backendUrl || BACKEND_URL || useAppStore((state) => state.BACKEND_URL) || 'http://localhost:8080';
 
@@ -17,71 +44,45 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   const [chatMessages, setChatMessages] = useState([
     {
       role: 'assistant',
-      content: "⚡ **Sovereign Executive Command Cockpit Online (v5.327.0)**\n\nDirectorial Voice HUD & Autonomous Sentinel Engine active. 100% Sovereign Local RTX 4090 execution enforced (Zero Cloud Spend: $0.00).\n\nSpeak or issue directives across Media Studio, Broadcast Kernel, Crypto Swarm, Knowledge Vault (305k records), and Local Ollama Swarm.",
-      tool_calls: []
+      content: "Executive Command Cockpit. Service status, hardware metrics, model readiness, and spending have not yet been verified. Reported backend values do not prove live execution or trading authorization.",
+      tool_calls: /** @type {ExecutiveAction[]} */ ([])
     }
   ]);
   const [isSendingChat, setIsSendingChat] = useState(false);
-  const chatEndRef = useRef(null);
+  const chatEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   // Column 2: 4-Pillar Matrix Status
-  const [matrixStatus, setMatrixStatus] = useState({
-    pillars: {
-      media_studio: { status: 'ONLINE', nvenc_cfr_gate: 'READY', supported_models: ['wan2.1', 'ltx-video'] },
-      broadcast_kernel: { is_obs_running: false, suggested_scene: 'AI-BS Main Dashboard', active_studio_apps_count: 0 },
-      crypto_swarm: { status: 'ONLINE', daemon_port: 8007, twap_plans_count: 0, drip_orders_count: 0 },
-      ollama_swarm: { status: 'CONNECTING', models_count: 17, models_sample: ['stehouwer_llm', 'stehouwer_qwen'] }
-    },
-    hardware: {
-      gpu_name: 'NVIDIA GeForce RTX 4090 (24GB)',
-      temp_c: 42,
-      vram_used_mb: 4096,
-      vram_total_mb: 24576,
-      vram_free_mb: 20480,
-      gpu_util_pct: 12,
-      ram_used_gb: 18.4,
-      ram_total_gb: 64.0,
-      ram_percent: 28.7,
-      disk_free_gb: 840.5,
-      disk_total_gb: 1900.0,
-      disk_percent: 55.7
-    },
-    vault: {
-      sqlite_vault_records: 305654,
-      media_memory_records: 12,
-      chromadb_collection: 'stehouwer_media_memory'
-    }
-  });
+  const [matrixStatus, setMatrixStatus] = useState(emptyExecutiveMatrix);
 
   // Column 3: Action Queue & Governance
-  const [pendingActions, setPendingActions] = useState([]);
-  const [actionHistory, setActionHistory] = useState([]);
+  const [pendingActions, setPendingActions] = useState(/** @type {ExecutiveAction[]} */ ([]));
+  const [actionHistory, setActionHistory] = useState(/** @type {ExecutiveAction[]} */ ([]));
   const [isResolving, setIsResolving] = useState(false);
   const [resolvingActionIds, setResolvingActionIds] = useState(new Set());
   const [isHalting, setIsHalting] = useState(false);
 
   // Column 4: Polling & Auto-refresh
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [lastRefreshed, setLastRefreshed] = useState(Date.now());
+  const [, setLastRefreshed] = useState(Date.now());
 
   // v5.299.0: Directorial Voice HUD State
   const [isListening, setIsListening] = useState(false);
   const [voiceAudioEnabled, setVoiceAudioEnabled] = useState(true);
-  const [voiceStatus, setVoiceStatus] = useState({
+  const [, setVoiceStatus] = useState({
     web_speech_api_available: true,
     f5_tts_eligible: false,
     active_mode: 'Web Speech API (Zero-Overhead Hybrid Fallback)'
   });
-  const recognitionRef = useRef(null);
+  const recognitionRef = useRef(/** @type {import("/types/aibs").SpeechRecognitionController | null} */ (null));
 
   // v5.299.0: Autonomous Sentinel Engine State
-  const [sentinelAlerts, setSentinelAlerts] = useState([]);
-  const [sentinelStatus, setSentinelStatus] = useState(null);
+  const [sentinelAlerts, setSentinelAlerts] = useState(/** @type {SentinelAlert[]} */ ([]));
+  const [, setSentinelStatus] = useState(null);
   const [isScanningSentinel, setIsScanningSentinel] = useState(false);
   const [expandingHashes, setExpandingHashes] = useState(new Set());
 
   // v5.299.0: Sovereign GPU Execution ($0.00 spend lock)
-  const [cloudStatus, setCloudStatus] = useState({
+  const [, setCloudStatus] = useState({
     sovereign_local_exclusive: true,
     cloud_burst_enabled: false,
     daily_spend_limit_usd: 5.0,
@@ -92,7 +93,8 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
 
   // Auto-scroll chat
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const transcript = chatEndRef.current?.parentElement;
+    transcript?.scrollTo({ top: transcript.scrollHeight, behavior: 'smooth' });
   }, [chatMessages]);
 
   // =========================================================================
@@ -101,15 +103,14 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 1. Fetch Matrix Status & Telemetry
   const fetchMatrixStatus = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/matrix/status`);
-      if (res.ok) {
-        const data = await res.json();
-        setMatrixStatus(data);
-        if (data.autonomy_mode) {
-          setAutonomyMode(data.autonomy_mode);
-        }
-      }
+      const res = await fetch(`${activeBackend}/api/v1/executive/matrix/status`, { headers: await chatAuthHeaders() });
+      if (!res.ok) throw new Error('Matrix status request rejected');
+      const data = await res.json();
+      if (!data || typeof data !== 'object' || !data.pillars || typeof data.pillars !== 'object' || !data.hardware || typeof data.hardware !== 'object' || !data.vault || typeof data.vault !== 'object') throw new Error('Matrix status contract unavailable');
+      setMatrixStatus(data);
+      if (['SAFE', 'SEMI_AUTO', 'FULL_AUTO'].includes(data.autonomy_mode)) setAutonomyMode(data.autonomy_mode);
     } catch (err) {
+      setMatrixStatus(emptyExecutiveMatrix());
       console.warn('Matrix status fetch warning:', err);
     }
   };
@@ -117,7 +118,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 2. Fetch Pending Queue
   const fetchPendingActions = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/actions/pending`);
+      const res = await fetch(`${activeBackend}/api/v1/executive/actions/pending`, { headers: await chatAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         setPendingActions(data.pending_actions || []);
@@ -130,7 +131,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 3. Fetch Action History
   const fetchActionHistory = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/actions/history?limit=25`);
+      const res = await fetch(`${activeBackend}/api/v1/executive/actions/history?limit=25`, { headers: await chatAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         setActionHistory(data.history || []);
@@ -143,7 +144,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 4. Fetch Sentinel Alerts
   const fetchSentinelAlerts = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/sentinel/alerts?limit=10`);
+      const res = await fetch(`${activeBackend}/api/v1/executive/sentinel/alerts?limit=10`, { headers: await chatAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         setSentinelAlerts(data.alerts || []);
@@ -157,7 +158,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 5. Fetch Cloud / Sovereign GPU Status
   const fetchCloudStatus = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/cloud/status`);
+      const res = await fetch(`${activeBackend}/api/v1/executive/cloud/status`, { headers: await chatAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         if (data.gpu_sovereignty) setCloudStatus(data.gpu_sovereignty);
@@ -170,7 +171,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 6. Fetch Voice Status
   const fetchVoiceStatus = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/voice/status`);
+      const res = await fetch(`${activeBackend}/api/v1/executive/voice/status`, { headers: await chatAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         setVoiceStatus(data);
@@ -202,7 +203,8 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   }, [activeBackend, autoRefresh]);
 
   // 8. Directorial Voice Feedback
-  const speakDirectorialResponse = (text) => {
+  /** @param {string} text */
+const speakDirectorialResponse = (text) => {
     if (!voiceAudioEnabled || !('speechSynthesis' in window)) return;
     try {
       window.speechSynthesis.cancel();
@@ -261,7 +263,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   const handleTriggerSentinelScan = async () => {
     setIsScanningSentinel(true);
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/sentinel/scan`, { method: 'POST' });
+      const res = await fetch(`${activeBackend}/api/v1/executive/sentinel/scan`, { method: 'POST', headers: await chatAuthHeaders() });
       if (res.ok) {
         await fetchSentinelAlerts();
         await fetchMatrixStatus();
@@ -274,12 +276,14 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   };
 
   // 11. Expand Media Asset Non-destructively
-  const handleExpandMedia = async (fileHash, action = 'reframe_9_16') => {
+  /** @param {string | undefined} fileHash @param {string} [action] */
+const handleExpandMedia = async (fileHash, action = 'reframe_9_16') => {
+    if (!fileHash) return;
     setExpandingHashes((prev) => new Set(prev).add(fileHash));
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/sentinel/expand-media`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ file_hash: fileHash, action })
       });
       if (res.ok) {
@@ -298,11 +302,12 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   };
 
   // 12. Send Prompt to Executive Copilot
-  const handleSendMessage = async (textToSend) => {
+  /** @param {string | null} [textToSend] */
+const handleSendMessage = async (textToSend) => {
     const text = textToSend || chatInput;
     if (!text.trim() || isSendingChat) return;
 
-    const userMsg = { role: 'user', content: text, tool_calls: [] };
+    const userMsg = { role: 'user', content: text, tool_calls: /** @type {ExecutiveAction[]} */ ([]) };
     setChatMessages((prev) => [...prev, userMsg]);
     setChatInput('');
     setIsSendingChat(true);
@@ -310,7 +315,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           prompt: text,
           model: selectedModel,
@@ -335,13 +340,13 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
       } else {
         setChatMessages((prev) => [
           ...prev,
-          { role: 'assistant', content: `❌ Error ${res.status}: Failed to dispatch executive action.`, tool_calls: [] }
+          { role: 'assistant', content: `❌ Error ${res.status}: Failed to dispatch executive action.`, tool_calls: /** @type {ExecutiveAction[]} */ ([]) }
         ]);
       }
     } catch (err) {
       setChatMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: `❌ Connection Error: ${err.message}`, tool_calls: [] }
+        { role: 'assistant', content: `❌ Connection Error: ${errorMessage(err)}`, tool_calls: /** @type {ExecutiveAction[]} */ ([]) }
       ]);
     } finally {
       setIsSendingChat(false);
@@ -349,13 +354,14 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   };
 
   // 6. Resolve Pending Action (Approve / Reject)
-  const handleResolveAction = async (actionId, decision) => {
+  /** @param {string} actionId @param {string} decision */
+const handleResolveAction = async (actionId, decision) => {
     setIsResolving(true);
     setResolvingActionIds((prev) => new Set(prev).add(actionId));
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/actions/${actionId}/resolve`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ decision, operator_note: `Manual resolution via Executive Cockpit HUD.` })
       });
       if (res.ok) {
@@ -376,12 +382,13 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   };
 
   // 7. Toggle Autonomy Mode
-  const handleSetAutonomy = async (mode) => {
+  /** @param {string} mode */
+const handleSetAutonomy = async (mode) => {
     setIsUpdatingAutonomy(true);
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/settings/autonomy`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ mode })
       });
       if (res.ok) {
@@ -401,7 +408,8 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
     setIsHalting(true);
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/actions/halt`, {
-        method: 'POST'
+        method: 'POST',
+        headers: await chatAuthHeaders()
       });
       if (res.ok) {
         setAutonomyMode('SAFE');
@@ -424,7 +432,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/vibe-checkpoint`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ label: 'Manual Executive Vibe Checkpoint', author: 'Operator' })
       });
       if (res.ok) {
@@ -445,7 +453,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/vibe-rollback`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({})
       });
       if (res.ok) {
@@ -463,31 +471,30 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // =========================================================================
   const PRESET_COMMANDS = [
     { label: '🎬 Reframe 9:16 Short', prompt: 'Generate 9:16 Short from mtd.mp4' },
-    { label: '🎥 Switch OBS Scene', prompt: 'Switch OBS to Camera 1' },
     { label: '⚡ Crypto Scalp Status', prompt: 'Query CRO Scalp Status' },
-    { label: '🏛️ Query Vault (305k)', prompt: 'Search Vault for Bio-Intelligence' },
+    { label: '🏛️ Query Vault', prompt: 'Search Vault for Bio-Intelligence' },
     { label: '💰 Stage CRO Buy Order', prompt: 'Stage a $50 CRO limit buy order at 0.125' },
     { label: '🏥 Full System Health Audit', prompt: 'Audit system health and check crypto daemon status' }
   ];
 
   return (
-    <div style={{
+    <div className="aibs-studio-overview" role="region" aria-label="Studio overview" style={{
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
       width: '100%',
-      backgroundColor: '#090d13',
-      color: '#c9d1d9',
+      backgroundColor: 'var(--overview-canvas)',
+      color: 'var(--overview-text)',
       fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace',
       overflow: 'hidden'
     }}>
       {/* ── TOP EXECUTIVE BANNER & GLOBAL HUD CONTROLS ── */}
-      <div style={{
+      <div className="overview-banner" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '10px clamp(10px, 2.5vw, 18px)',
-        backgroundColor: '#0d1117',
+        backgroundColor: 'var(--overview-surface)',
         borderBottom: '1px solid #21262d',
         flexShrink: 0,
         flexWrap: 'wrap',
@@ -497,19 +504,19 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           <span style={{ fontSize: '1.4rem' }}>⚡</span>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              <span style={{ fontWeight: 800, fontSize: 'clamp(0.92rem, 3vw, 1.05rem)', color: '#58a6ff', letterSpacing: '0.04em' }}>
-                AI-BS EXECUTIVE COMMAND COCKPIT
+              <span className="overview-title" role="heading" aria-level={1} style={{ fontWeight: 800, fontSize: 'clamp(0.92rem, 3vw, 1.05rem)', color: 'var(--overview-cyan)', letterSpacing: '0.04em' }}>
+                Studio overview
               </span>
               <span style={{
                 background: 'rgba(88, 166, 255, 0.15)',
-                color: '#58a6ff',
+                color: 'var(--overview-cyan)',
                 fontSize: '0.68rem',
                 padding: '2px 7px',
                 borderRadius: '10px',
                 fontWeight: 700,
                 border: '1px solid rgba(88, 166, 255, 0.3)'
               }}>
-                v5.327.0
+                {SYSTEM_VERSION}
               </span>
               <span style={{
                 background: 'rgba(63, 185, 80, 0.15)',
@@ -520,11 +527,11 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                 fontWeight: 700,
                 border: '1px solid rgba(63, 185, 80, 0.3)'
               }}>
-                UNIFIED BUS ONLINE
+                UNIFIED BUS UNVERIFIED
               </span>
               <span style={{
                 background: 'rgba(163, 113, 247, 0.15)',
-                color: '#d2a8ff',
+                color: 'var(--overview-violet)',
                 fontSize: '0.68rem',
                 padding: '2px 7px',
                 borderRadius: '10px',
@@ -542,10 +549,10 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                 fontWeight: 700,
                 border: '1px solid rgba(56, 139, 253, 0.3)'
               }}>
-                SOVEREIGN RTX 4090 ($0.00 SPEND)
+                LOCAL COMPUTE POLICY
               </span>
             </div>
-            <div style={{ fontSize: '0.74rem', color: '#8b949e', marginTop: '1px' }}>
+            <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', marginTop: '1px' }}>
               Autonomous 4-Pillar Cross-Matrix Dispatcher • Tiered Governance Gates • Zero Real-Money Mock Law • Proactive Sentinel
             </div>
           </div>
@@ -557,12 +564,12 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            background: '#161b22',
+            background: 'var(--overview-raised)',
             padding: '3px 4px',
             borderRadius: '8px',
             border: '1px solid #30363d'
           }}>
-            <span style={{ fontSize: '0.7rem', color: '#8b949e', margin: '0 8px', fontWeight: 600 }}>GOVERNANCE:</span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--overview-muted)', margin: '0 8px', fontWeight: 600 }}>GOVERNANCE:</span>
             {['SAFE', 'SEMI_AUTO', 'FULL_AUTO'].map((mode) => {
               const active = autonomyMode === mode;
               const color = mode === 'SAFE' ? '#3fb950' : (mode === 'SEMI_AUTO' ? '#d29922' : '#f85149');
@@ -573,7 +580,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                   disabled={isUpdatingAutonomy}
                   style={{
                     background: active ? color : 'transparent',
-                    color: active ? '#ffffff' : '#8b949e',
+                    color: active ? '#ffffff' : 'var(--overview-muted)',
                     border: 'none',
                     borderRadius: '6px',
                     padding: '4px 10px',
@@ -597,7 +604,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           </div>
 
           {/* Vibe Checkpoint & Rollback Controls */}
-          <button
+          <button className="overview-snapshot"
             onClick={handleCreateVibeCheckpoint}
             disabled={isCheckpointing}
             style={{
@@ -624,7 +631,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
             onClick={handleRollbackVibeCheckpoint}
             disabled={isCheckpointing}
             style={{
-              background: '#21262d',
+              background: 'var(--overview-divider)',
               color: '#e6edf3',
               border: '1px solid #30363d',
               borderRadius: '6px',
@@ -643,7 +650,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           </button>
 
           {/* Emergency Halt Button */}
-          <button
+          <button className="overview-halt"
             onClick={handleEmergencyHalt}
             disabled={isHalting}
             style={{
@@ -669,9 +676,9 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
             style={{
-              background: autoRefresh ? 'rgba(63, 185, 80, 0.15)' : '#161b22',
-              color: autoRefresh ? '#3fb950' : '#8b949e',
-              border: `1px solid ${autoRefresh ? 'rgba(63, 185, 80, 0.4)' : '#30363d'}`,
+              background: autoRefresh ? 'rgba(63, 185, 80, 0.15)' : 'var(--overview-raised)',
+              color: autoRefresh ? '#3fb950' : 'var(--overview-muted)',
+              border: `1px solid ${autoRefresh ? 'rgba(63, 185, 80, 0.4)' : 'var(--overview-border)'}`,
               borderRadius: '6px',
               padding: '6px 10px',
               fontSize: '0.72rem',
@@ -686,12 +693,12 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
       </div>
 
       {/* ── SENTINEL ALERT TICKER & DIRECTORIAL VOICE DIRECTING STRIP (v5.299.0) ── */}
-      <div style={{
+      <div className="overview-notices" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '6px 18px',
-        backgroundColor: '#161b22',
+        backgroundColor: 'var(--overview-raised)',
         borderBottom: '1px solid #30363d',
         gap: '12px',
         fontSize: '0.76rem',
@@ -718,7 +725,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               <span style={{
                 background: sentinelAlerts[0].severity === 'RECOMMENDATION' ? 'rgba(88, 166, 255, 0.2)' : 'rgba(248, 81, 73, 0.2)',
-                color: sentinelAlerts[0].severity === 'RECOMMENDATION' ? '#58a6ff' : '#f85149',
+                color: sentinelAlerts[0].severity === 'RECOMMENDATION' ? 'var(--overview-cyan)' : '#f85149',
                 padding: '1px 6px',
                 borderRadius: '4px',
                 fontSize: '0.68rem',
@@ -726,12 +733,12 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
               }}>
                 {sentinelAlerts[0].category}
               </span>
-              <span style={{ color: '#c9d1d9', fontWeight: 500 }}>
+              <span style={{ color: 'var(--overview-text)', fontWeight: 500 }}>
                 {sentinelAlerts[0].title}: {sentinelAlerts[0].message}
               </span>
               {sentinelAlerts[0]?.metadata?.file_hash && (
                 <button
-                  onClick={() => handleExpandMedia(sentinelAlerts[0].metadata.file_hash, 'reframe_9_16')}
+                  onClick={() => handleExpandMedia(sentinelAlerts[0]?.metadata?.file_hash, 'reframe_9_16')}
                   disabled={expandingHashes.has(sentinelAlerts[0].metadata.file_hash)}
                   style={{
                     background: 'linear-gradient(180deg, #238636 0%, #2ea043 100%)',
@@ -749,7 +756,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
               )}
             </div>
           ) : (
-            <span style={{ color: '#8b949e', fontStyle: 'italic' }}>
+            <span style={{ color: 'var(--overview-muted)', fontStyle: 'italic' }}>
               All intake folders, market velocity, and GPU thermals nominal.
             </span>
           )}
@@ -761,8 +768,8 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
             onClick={handleTriggerSentinelScan}
             disabled={isScanningSentinel}
             style={{
-              background: '#21262d',
-              color: '#58a6ff',
+              background: 'var(--overview-divider)',
+              color: 'var(--overview-cyan)',
               border: '1px solid #30363d',
               borderRadius: '5px',
               padding: '3px 8px',
@@ -780,7 +787,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
             onClick={toggleVoiceRecognition}
             style={{
               background: isListening ? '#f85149' : 'rgba(88, 166, 255, 0.15)',
-              color: isListening ? '#ffffff' : '#58a6ff',
+              color: isListening ? '#ffffff' : 'var(--overview-cyan)',
               border: `1px solid ${isListening ? '#f85149' : 'rgba(88, 166, 255, 0.4)'}`,
               borderRadius: '6px',
               padding: '3px 10px',
@@ -800,9 +807,9 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           <button
             onClick={() => setVoiceAudioEnabled(!voiceAudioEnabled)}
             style={{
-              background: voiceAudioEnabled ? 'rgba(63, 185, 80, 0.15)' : '#21262d',
-              color: voiceAudioEnabled ? '#3fb950' : '#8b949e',
-              border: `1px solid ${voiceAudioEnabled ? 'rgba(63, 185, 80, 0.4)' : '#30363d'}`,
+              background: voiceAudioEnabled ? 'rgba(63, 185, 80, 0.15)' : 'var(--overview-divider)',
+              color: voiceAudioEnabled ? '#3fb950' : 'var(--overview-muted)',
+              border: `1px solid ${voiceAudioEnabled ? 'rgba(63, 185, 80, 0.4)' : 'var(--overview-border)'}`,
               borderRadius: '6px',
               padding: '3px 8px',
               fontSize: '0.7rem',
@@ -817,20 +824,20 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           {/* Sovereign Local GPU Spend Lock Badge */}
           <span style={{
             background: 'rgba(56, 139, 253, 0.12)',
-            color: '#58a6ff',
+            color: 'var(--overview-cyan)',
             border: '1px solid rgba(56, 139, 253, 0.3)',
             borderRadius: '6px',
             padding: '2px 8px',
             fontSize: '0.68rem',
             fontWeight: 700
           }}>
-            RTX 4090: 100% LOCAL ($0.00 SPEND)
+            Local policy · verification pending
           </span>
         </div>
       </div>
 
       {/* ── HIGH-DENSITY 4-COLUMN RESPONSIVE COCKPIT HUD ── */}
-      <div style={{
+      <div className="overview-grid" style={{
         display: 'grid',
         gridTemplateColumns: 'minmax(320px, 1.25fr) minmax(280px, 1fr) minmax(320px, 1.2fr) minmax(260px, 0.95fr)',
         gap: '12px',
@@ -840,18 +847,18 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
       }}>
 
         {/* ── COLUMN 1: SOVEREIGN COPILOT & ACTION TERMINAL ── */}
-        <div style={{
+        <div className="overview-card overview-copilot" style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#0d1117',
+          backgroundColor: 'var(--overview-surface)',
           borderRadius: '8px',
           border: '1px solid #21262d',
           overflow: 'hidden'
         }}>
           {/* Header */}
-          <div style={{
+          <div className="overview-card-header" style={{
             padding: '10px 14px',
-            backgroundColor: '#161b22',
+            backgroundColor: 'var(--overview-raised)',
             borderBottom: '1px solid #21262d',
             display: 'flex',
             alignItems: 'center',
@@ -859,15 +866,15 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '1rem' }}>💬</span>
-              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: '#c9d1d9' }}>Sovereign Copilot Terminal</span>
+              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: 'var(--overview-text)' }}>Sovereign Copilot Terminal</span>
             </div>
             {/* Model Selector */}
             <select
               value={selectedModel}
               onChange={(e) => setSelectedModel(e.target.value)}
               style={{
-                background: '#0d1117',
-                color: '#58a6ff',
+                background: 'var(--overview-surface)',
+                color: 'var(--overview-cyan)',
                 border: '1px solid #30363d',
                 borderRadius: '6px',
                 fontSize: '0.72rem',
@@ -884,12 +891,12 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           </div>
 
           {/* Quick Command Presets */}
-          <div style={{
+          <div className="overview-presets" style={{
             display: 'flex',
             flexWrap: 'wrap',
             gap: '6px',
             padding: '8px 12px',
-            backgroundColor: '#12171f',
+            backgroundColor: 'var(--overview-surface)',
             borderBottom: '1px solid #21262d'
           }}>
             {PRESET_COMMANDS.map((cmd, idx) => (
@@ -899,7 +906,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                 disabled={isSendingChat}
                 style={{
                   background: 'rgba(88, 166, 255, 0.08)',
-                  color: '#58a6ff',
+                  color: 'var(--overview-cyan)',
                   border: '1px solid rgba(88, 166, 255, 0.25)',
                   borderRadius: '5px',
                   padding: '4px 8px',
@@ -915,7 +922,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           </div>
 
           {/* Chat Messages Log */}
-          <div style={{
+          <div className="overview-transcript" style={{
             flex: 1,
             overflowY: 'auto',
             padding: '12px',
@@ -931,8 +938,8 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                   style={{
                     alignSelf: isAssistant ? 'flex-start' : 'flex-end',
                     maxWidth: isAssistant ? '96%' : '85%',
-                    backgroundColor: isAssistant ? '#161b22' : '#1f6feb',
-                    color: isAssistant ? '#c9d1d9' : '#ffffff',
+                    backgroundColor: isAssistant ? 'var(--overview-raised)' : '#1f6feb',
+                    color: isAssistant ? 'var(--overview-text)' : '#ffffff',
                     padding: '10px 14px',
                     borderRadius: '8px',
                     border: isAssistant ? '1px solid #30363d' : 'none',
@@ -946,7 +953,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                   {/* Render Tool-Call Badges */}
                   {msg.tool_calls && msg.tool_calls.length > 0 && (
                     <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <div style={{ fontSize: '0.68rem', color: '#8b949e', fontWeight: 700, textTransform: 'uppercase' }}>
+                      <div style={{ fontSize: '0.68rem', color: 'var(--overview-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
                         Dispatched Tool Actions ({msg.tool_calls.length}):
                       </div>
                       {msg.tool_calls.map((tc, tcIdx) => {
@@ -957,7 +964,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                           <div
                             key={tcIdx}
                             style={{
-                              background: '#0d1117',
+                              background: 'var(--overview-surface)',
                               border: `1px solid ${badgeColor}`,
                               borderRadius: '6px',
                               padding: '6px 10px',
@@ -965,7 +972,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                             }}
                           >
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
-                              <span style={{ fontWeight: 700, color: '#58a6ff' }}>
+                              <span style={{ fontWeight: 700, color: 'var(--overview-cyan)' }}>
                                 ⚙️ {tc.pillar}.{tc.action_name || tc.action}
                               </span>
                               <span style={{
@@ -979,9 +986,9 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                                 {isQueued ? `[TIER ${tc.tier} - QUEUED FOR APPROVAL]` : `[TIER ${tc.tier} - ${tc.status}]`}
                               </span>
                             </div>
-                            {tc.result && (
-                              <div style={{ fontSize: '0.7rem', color: '#8b949e', marginTop: '2px' }}>
-                                {tc.result.message || JSON.stringify(tc.result)}
+                            {Boolean(tc.result) && (
+                              <div style={{ fontSize: '0.7rem', color: 'var(--overview-muted)', marginTop: '2px' }}>
+                                {typeof tc.result === 'object' && tc.result !== null && 'message' in tc.result && typeof tc.result.message === 'string' ? tc.result.message : JSON.stringify(tc.result)}
                               </div>
                             )}
                           </div>
@@ -996,9 +1003,9 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           </div>
 
           {/* Terminal Input Bar */}
-          <div style={{
+          <div className="overview-inputbar" style={{
             padding: '10px',
-            backgroundColor: '#161b22',
+            backgroundColor: 'var(--overview-raised)',
             borderTop: '1px solid #21262d',
             display: 'flex',
             gap: '8px'
@@ -1012,8 +1019,8 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
               disabled={isSendingChat}
               style={{
                 flex: 1,
-                background: '#0d1117',
-                color: '#c9d1d9',
+                background: 'var(--overview-surface)',
+                color: 'var(--overview-text)',
                 border: '1px solid #30363d',
                 borderRadius: '6px',
                 padding: '8px 12px',
@@ -1024,9 +1031,9 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
             <button
               onClick={toggleVoiceRecognition}
               style={{
-                background: isListening ? '#f85149' : '#21262d',
-                color: isListening ? '#ffffff' : '#58a6ff',
-                border: `1px solid ${isListening ? '#f85149' : '#30363d'}`,
+                background: isListening ? '#f85149' : 'var(--overview-divider)',
+                color: isListening ? '#ffffff' : 'var(--overview-cyan)',
+                border: `1px solid ${isListening ? '#f85149' : 'var(--overview-border)'}`,
                 borderRadius: '6px',
                 padding: '8px 12px',
                 fontSize: '0.85rem',
@@ -1056,18 +1063,18 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
         </div>
 
         {/* ── COLUMN 2: 4-PILLAR LIVE MATRIX STATUS ── */}
-        <div style={{
+        <div className="overview-card overview-services" style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#0d1117',
+          backgroundColor: 'var(--overview-surface)',
           borderRadius: '8px',
           border: '1px solid #21262d',
           overflow: 'hidden'
         }}>
           {/* Header */}
-          <div style={{
+          <div className="overview-card-header" style={{
             padding: '10px 14px',
-            backgroundColor: '#161b22',
+            backgroundColor: 'var(--overview-raised)',
             borderBottom: '1px solid #21262d',
             display: 'flex',
             alignItems: 'center',
@@ -1075,13 +1082,13 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '1rem' }}>🌐</span>
-              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: '#c9d1d9' }}>4-Pillar Live Matrix</span>
+              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: 'var(--overview-text)' }}>4-Pillar Live Matrix</span>
             </div>
-            <span style={{ fontSize: '0.7rem', color: '#3fb950', fontWeight: 600 }}>● ALL SYSTEMS GREEN</span>
+            <span style={{ fontSize: '0.7rem', color: '#3fb950', fontWeight: 600 }}>Backend reports; verification pending</span>
           </div>
 
           {/* Cards List */}
-          <div style={{
+          <div className="overview-card-body" style={{
             flex: 1,
             overflowY: 'auto',
             padding: '12px',
@@ -1091,7 +1098,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           }}>
             {/* Pillar 1: Media Creator Studio */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
@@ -1109,51 +1116,30 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                   padding: '2px 6px',
                   borderRadius: '4px'
                 }}>
-                  ONLINE
+                  UNVERIFIED
                 </span>
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• NVENC CFR 30fps Gate: <span style={{ color: '#3fb950', fontWeight: 600 }}>PASSING</span></div>
-                <div>• Vertical 9:16 Reframer: <span style={{ color: '#c9d1d9' }}>MediaPipe / Gaze Active</span></div>
-                <div>• ComfyUI Port: <span style={{ color: '#58a6ff' }}>8188 (Primary) / 8189 (Screenplay)</span></div>
-                <div>• Local Checkpoints: <span style={{ color: '#c9d1d9' }}>Wan2.1 (5.41GB), LTX-2B (5.45GB)</span></div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>• NVENC CFR 30fps Gate: <span style={{ color: '#3fb950', fontWeight: 600 }}>UNVERIFIED</span></div>
+                <div>• Vertical 9:16 Reframer: <span style={{ color: 'var(--overview-text)' }}>Readiness unverified</span></div>
+                <div>• ComfyUI Port: <span style={{ color: 'var(--overview-cyan)' }}>8188 (Primary) / 8189 (Screenplay)</span></div>
+                <div>• Local Checkpoints: <span style={{ color: 'var(--overview-text)' }}>Inventory unverified</span></div>
               </div>
             </div>
 
-            {/* Pillar 2: Broadcast Kernel & OBS Studio */}
-            <div style={{
-              backgroundColor: '#161b22',
-              borderRadius: '7px',
-              border: '1px solid #30363d',
-              padding: '12px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '1.1rem' }}>📡</span>
-                  <span style={{ fontWeight: 700, fontSize: '0.82rem', color: '#a371f7' }}>Broadcast Kernel (OBS / UE5)</span>
-                </div>
-                <span style={{
-                  fontSize: '0.66rem',
-                  fontWeight: 700,
-                  color: matrixStatus.pillars?.broadcast_kernel?.is_obs_running ? '#3fb950' : '#8b949e',
-                  background: matrixStatus.pillars?.broadcast_kernel?.is_obs_running ? 'rgba(63, 185, 80, 0.15)' : 'rgba(139, 148, 158, 0.15)',
-                  padding: '2px 6px',
-                  borderRadius: '4px'
-                }}>
-                  {matrixStatus.pillars?.broadcast_kernel?.is_obs_running ? 'OBS STREAMING' : 'SOCKET READY'}
-                </span>
-              </div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• OBS WebSocket Engine: <span style={{ color: '#58a6ff' }}>Port 4455 (v5.x Protocol)</span></div>
-                <div>• Suggested Scene: <span style={{ color: '#c9d1d9' }}>{matrixStatus.pillars?.broadcast_kernel?.suggested_scene || 'AI-BS Main'}</span></div>
-                <div>• Unreal Engine 5 Bridge: <span style={{ color: '#58a6ff' }}>Port 8888 (Signaling Host)</span></div>
-                <div>• Master Audio Mix: <span style={{ color: '#3fb950' }}>48kHz AES3 6-Track Matrix</span></div>
+            {/* Pillar 2: Native Broadcast Studio */}
+            <div style={{ backgroundColor: 'var(--overview-raised)', borderRadius: '7px', border: '1px solid #30363d', padding: '12px' }}>
+              <div style={{ fontWeight: 700, fontSize: '0.82rem', color: '#a371f7', marginBottom: '8px' }}>📡 Native Broadcast Studio</div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>Stream status unverified here.</div>
+                <div>Manage capture and output in the Windows app: Creative Media → Universal AV.</div>
+                <div>Audio routing unverified here.</div>
               </div>
             </div>
 
             {/* Pillar 3: Crypto Swarm & Scalp Bot */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
@@ -1166,25 +1152,25 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                 <span style={{
                   fontSize: '0.66rem',
                   fontWeight: 700,
-                  color: matrixStatus.pillars?.crypto_swarm?.trading_paused ? '#f85149' : '#3fb950',
-                  background: matrixStatus.pillars?.crypto_swarm?.trading_paused ? 'rgba(248, 81, 73, 0.15)' : 'rgba(63, 185, 80, 0.15)',
+                  color: '#d29922',
+                  background: 'rgba(210, 153, 34, 0.15)',
                   padding: '2px 6px',
                   borderRadius: '4px'
                 }}>
-                  {matrixStatus.pillars?.crypto_swarm?.trading_paused ? 'TRADING PAUSED' : 'PORT 8007 ACTIVE'}
+                  {matrixStatus.pillars?.crypto_swarm?.trading_paused ? 'TRADING PAUSED (REPORTED)' : 'TRADING STATE UNVERIFIED'}
                 </span>
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• Execution Engine: <span style={{ color: '#c9d1d9' }}>TWAP Drip Micro-Allocations</span></div>
-                <div>• Active TWAP Plans: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{matrixStatus.pillars?.crypto_swarm?.twap_plans_count ?? 0}</span></div>
-                <div>• Drip Orders in Queue: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{matrixStatus.pillars?.crypto_swarm?.drip_orders_count ?? 0}</span></div>
-                <div>• Trailing Stop Guards: <span style={{ color: '#3fb950' }}>ARMED (Max Slippage 0.5%)</span></div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>• Execution Engine: <span style={{ color: 'var(--overview-text)' }}>TWAP Drip Micro-Allocations</span></div>
+                <div>• Active TWAP Plans: <span style={{ color: 'var(--overview-cyan)', fontWeight: 600 }}>{executiveMetric(matrixStatus.pillars?.crypto_swarm?.twap_plans_count)}</span></div>
+                <div>• Drip Orders in Queue: <span style={{ color: 'var(--overview-cyan)', fontWeight: 600 }}>{executiveMetric(matrixStatus.pillars?.crypto_swarm?.drip_orders_count)}</span></div>
+                <div>• Trailing Stop Guards: <span style={{ color: '#3fb950' }}>UNVERIFIED</span></div>
               </div>
             </div>
 
             {/* Pillar 4: Ollama Swarm & Reasoning */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
@@ -1192,7 +1178,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ fontSize: '1.1rem' }}>🧠</span>
-                  <span style={{ fontWeight: 700, fontSize: '0.82rem', color: '#58a6ff' }}>Ollama Swarm (17 Models)</span>
+                  <span style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--overview-cyan)' }}>Ollama Swarm (reported)</span>
                 </div>
                 <span style={{
                   fontSize: '0.66rem',
@@ -1202,20 +1188,20 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                   padding: '2px 6px',
                   borderRadius: '4px'
                 }}>
-                  {matrixStatus.pillars?.ollama_swarm?.status || 'ONLINE'}
+                  {matrixStatus.pillars?.ollama_swarm?.status || 'UNVERIFIED'}
                 </span>
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• Port Matrix: <span style={{ color: '#58a6ff' }}>11434 (C: Drive) & 11435 (E: Drive)</span></div>
-                <div>• Loaded Models: <span style={{ color: '#c9d1d9' }}>stehouwer_llm, stehouwer_qwen, mixtral</span></div>
-                <div>• Vector Memory: <span style={{ color: '#3fb950' }}>ChromaDB (stehouwer_llm_memory)</span></div>
-                <div>• Context Window: <span style={{ color: '#c9d1d9' }}>8,192 tokens with SSD Virtual Swap</span></div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>• Port Matrix: <span style={{ color: 'var(--overview-cyan)' }}>11434 (C: Drive) & 11435 (E: Drive)</span></div>
+                <div>• Loaded Models: <span style={{ color: 'var(--overview-text)' }}>Inventory unverified</span></div>
+                <div>• Vector Memory: <span style={{ color: '#3fb950' }}>ChromaDB health unverified</span></div>
+                <div>• Context Window: <span style={{ color: 'var(--overview-text)' }}>Configuration unverified</span></div>
               </div>
             </div>
 
             {/* Pillar 5: Salad Compute & Distributed Telemetry Feed */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
@@ -1228,19 +1214,19 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                 <span style={{
                   fontSize: '0.66rem',
                   fontWeight: 700,
-                  color: (matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? '#3fb950' : '#8b949e',
+                  color: (matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? '#3fb950' : 'var(--overview-muted)',
                   background: (matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? 'rgba(63, 185, 80, 0.15)' : 'rgba(139, 148, 158, 0.15)',
                   padding: '2px 6px',
                   borderRadius: '4px'
                 }}>
-                  {(matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? 'ACTIVE' : 'IDLE'}
+                  {(matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? 'PROCESS REPORTED' : 'UNVERIFIED'}
                 </span>
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• Workload State: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{matrixStatus.salad?.status || matrixStatus.pillars?.salad_engine?.status || 'idle'}</span></div>
-                <div>• Bandwidth Sharing: <span style={{ color: '#3fb950', fontWeight: 600 }}>{(matrixStatus.salad?.bandwidth_mbps || matrixStatus.pillars?.salad_engine?.bandwidth_mbps || 0) > 0 ? `${matrixStatus.salad?.bandwidth_mbps || matrixStatus.pillars?.salad_engine?.bandwidth_mbps} Mbps` : 'Online / Listening'}</span></div>
-                <div>• GPU Chopping: <span style={{ color: (matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? '#3fb950' : '#c9d1d9' }}>{(matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? 'Rigel RTX 4090 Mining' : 'RTX 4090 Available'}</span></div>
-                <div>• Container Disk: <span style={{ color: '#c9d1d9' }}>E:\SaladData\ (Junction on C:\)</span></div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>• Workload State: <span style={{ color: 'var(--overview-cyan)', fontWeight: 600 }}>{matrixStatus.salad?.status || matrixStatus.pillars?.salad_engine?.status || 'UNVERIFIED'}</span></div>
+                <div>• Bandwidth Sharing: <span style={{ color: '#3fb950', fontWeight: 600 }}>{executiveMetric(matrixStatus.salad?.bandwidth_mbps ?? matrixStatus.pillars?.salad_engine?.bandwidth_mbps, ' Mbps')}</span></div>
+                <div>• GPU Chopping: <span style={{ color: (matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? '#3fb950' : 'var(--overview-text)' }}>{(matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? 'Mining process reported' : 'Availability unverified'}</span></div>
+                <div>• Container Disk: <span style={{ color: 'var(--overview-text)' }}>E:\SaladData\ (Junction on C:\)</span></div>
               </div>
             </div>
 
@@ -1248,18 +1234,18 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
         </div>
 
         {/* ── COLUMN 3: ACTION QUEUE & GOVERNANCE LEDGER ── */}
-        <div style={{
+        <div className="overview-card overview-queue" style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#0d1117',
+          backgroundColor: 'var(--overview-surface)',
           borderRadius: '8px',
           border: '1px solid #21262d',
           overflow: 'hidden'
         }}>
           {/* Header */}
-          <div style={{
+          <div className="overview-card-header" style={{
             padding: '10px 14px',
-            backgroundColor: '#161b22',
+            backgroundColor: 'var(--overview-raised)',
             borderBottom: '1px solid #21262d',
             display: 'flex',
             alignItems: 'center',
@@ -1267,7 +1253,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '1rem' }}>🛡️</span>
-              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: '#c9d1d9' }}>
+              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: 'var(--overview-text)' }}>
                 Action Queue & Governance ({pendingActions.length})
               </span>
             </div>
@@ -1281,7 +1267,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           </div>
 
           {/* Pending Approval List & History */}
-          <div style={{
+          <div className="overview-card-body" style={{
             flex: 1,
             overflowY: 'auto',
             padding: '12px',
@@ -1290,7 +1276,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
             gap: '12px'
           }}>
             {/* Section 1: Pending Actions Awaiting Operator Approval */}
-            <div style={{ fontSize: '0.72rem', color: '#8b949e', fontWeight: 700, textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--overview-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
               Pending Operator Confirmation:
             </div>
 
@@ -1298,10 +1284,10 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
               <div style={{
                 padding: '24px 16px',
                 textAlign: 'center',
-                backgroundColor: '#161b22',
+                backgroundColor: 'var(--overview-raised)',
                 borderRadius: '8px',
                 border: '1px dashed #30363d',
-                color: '#8b949e',
+                color: 'var(--overview-muted)',
                 fontSize: '0.78rem'
               }}>
                 <div>✓ No actions currently awaiting confirmation.</div>
@@ -1316,7 +1302,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                   <div
                     key={action.action_id}
                     style={{
-                      backgroundColor: '#161b22',
+                      backgroundColor: 'var(--overview-raised)',
                       borderRadius: '8px',
                       border: `1px solid ${isHighRisk ? '#f85149' : '#d29922'}`,
                       padding: '12px',
@@ -1329,27 +1315,27 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                       </span>
                       <span style={{
                         fontSize: '0.66rem',
-                        background: '#0d1117',
+                        background: 'var(--overview-surface)',
                         padding: '2px 6px',
                         borderRadius: '4px',
-                        color: '#8b949e'
+                        color: 'var(--overview-muted)'
                       }}>
                         {action.action_id}
                       </span>
                     </div>
 
-                    <div style={{ fontSize: '0.76rem', color: '#c9d1d9', marginBottom: '8px', fontWeight: 600 }}>
-                      Target: <span style={{ color: '#58a6ff' }}>{action.pillar}.{action.action_name}</span>
+                    <div style={{ fontSize: '0.76rem', color: 'var(--overview-text)', marginBottom: '8px', fontWeight: 600 }}>
+                      Target: <span style={{ color: 'var(--overview-cyan)' }}>{action.pillar}.{action.action_name}</span>
                     </div>
 
                     {/* Parameters Box */}
                     <div style={{
-                      backgroundColor: '#0d1117',
+                      backgroundColor: 'var(--overview-surface)',
                       padding: '8px',
                       borderRadius: '6px',
                       fontSize: '0.7rem',
                       fontFamily: 'monospace',
-                      color: '#8b949e',
+                      color: 'var(--overview-muted)',
                       marginBottom: '10px',
                       maxHeight: '80px',
                       overflowY: 'auto'
@@ -1363,11 +1349,11 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                       return (
                         <div style={{ display: 'flex', gap: '8px' }}>
                           <button
-                            onClick={() => handleResolveAction(action.action_id, 'APPROVE')}
+                            onClick={() => action.action_id && handleResolveAction(action.action_id, 'APPROVE')}
                             disabled={isThisResolving}
                             style={{
                               flex: 1,
-                              background: isThisResolving ? '#21262d' : '#238636',
+                              background: isThisResolving ? 'var(--overview-divider)' : '#238636',
                               color: '#ffffff',
                               border: 'none',
                               borderRadius: '6px',
@@ -1381,10 +1367,10 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                             {isThisResolving ? '⏳ EXECUTING...' : '✓ APPROVE & EXECUTE'}
                           </button>
                           <button
-                            onClick={() => handleResolveAction(action.action_id, 'REJECT')}
+                            onClick={() => action.action_id && handleResolveAction(action.action_id, 'REJECT')}
                             disabled={isThisResolving}
                             style={{
-                              background: isThisResolving ? '#21262d' : '#da3633',
+                              background: isThisResolving ? 'var(--overview-divider)' : '#da3633',
                               color: '#ffffff',
                               border: 'none',
                               borderRadius: '6px',
@@ -1406,7 +1392,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
             )}
 
             {/* Section 2: Execution Audit Ledger */}
-            <div style={{ fontSize: '0.72rem', color: '#8b949e', fontWeight: 700, textTransform: 'uppercase', marginTop: '12px' }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--overview-muted)', fontWeight: 700, textTransform: 'uppercase', marginTop: '12px' }}>
               Recent Audit Log ({actionHistory.length}):
             </div>
 
@@ -1420,7 +1406,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      backgroundColor: '#161b22',
+                      backgroundColor: 'var(--overview-raised)',
                       padding: '6px 10px',
                       borderRadius: '6px',
                       fontSize: '0.72rem',
@@ -1428,8 +1414,8 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                     }}
                   >
                     <div>
-                      <span style={{ fontWeight: 600, color: '#c9d1d9' }}>{hist.pillar}.{hist.action_name}</span>
-                      <span style={{ fontSize: '0.66rem', color: '#8b949e', marginLeft: '6px' }}>T{hist.tier}</span>
+                      <span style={{ fontWeight: 600, color: 'var(--overview-text)' }}>{hist.pillar}.{hist.action_name}</span>
+                      <span style={{ fontSize: '0.66rem', color: 'var(--overview-muted)', marginLeft: '6px' }}>T{hist.tier}</span>
                     </div>
                     <span style={{
                       color: isApproved ? '#3fb950' : '#f85149',
@@ -1446,18 +1432,18 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
         </div>
 
         {/* ── COLUMN 4: HARDWARE & VAULT TELEMETRY HUD ── */}
-        <div style={{
+        <div className="overview-card overview-hardware" style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#0d1117',
+          backgroundColor: 'var(--overview-surface)',
           borderRadius: '8px',
           border: '1px solid #21262d',
           overflow: 'hidden'
         }}>
           {/* Header */}
-          <div style={{
+          <div className="overview-card-header" style={{
             padding: '10px 14px',
-            backgroundColor: '#161b22',
+            backgroundColor: 'var(--overview-raised)',
             borderBottom: '1px solid #21262d',
             display: 'flex',
             alignItems: 'center',
@@ -1465,13 +1451,13 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '1rem' }}>📊</span>
-              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: '#c9d1d9' }}>Hardware & Vault HUD</span>
+              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: 'var(--overview-text)' }}>Hardware & Vault HUD</span>
             </div>
-            <span style={{ fontSize: '0.7rem', color: '#8b949e' }}>RTX 4090 • NVMe</span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--overview-muted)' }}>RTX 4090 • NVMe</span>
           </div>
 
           {/* Gauges & Telemetry Panels */}
-          <div style={{
+          <div className="overview-card-body" style={{
             flex: 1,
             overflowY: 'auto',
             padding: '12px',
@@ -1481,35 +1467,35 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
           }}>
             {/* RTX 4090 GPU Panel */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#58a6ff' }}>
-                  NVIDIA GeForce RTX 4090
+                <span style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--overview-cyan)' }}>
+                  GPU (reported metrics)
                 </span>
                 <span style={{
                   fontSize: '0.72rem',
                   fontWeight: 700,
                   color: (matrixStatus.hardware?.temp_c || 0) < 70 ? '#3fb950' : '#f85149'
                 }}>
-                  {matrixStatus.hardware?.temp_c || 42}°C
+                  {executiveMetric(matrixStatus.hardware?.temp_c, '°C')}
                 </span>
               </div>
 
               {/* VRAM Meter */}
               <div style={{ marginBottom: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--overview-muted)', marginBottom: '3px' }}>
                   <span>VRAM Allocated:</span>
-                  <span>{matrixStatus.hardware?.vram_used_mb || 0} MB / {matrixStatus.hardware?.vram_total_mb || 24576} MB</span>
+                  <span>{executiveMetric(matrixStatus.hardware?.vram_used_mb, ' MB')} / {executiveMetric(matrixStatus.hardware?.vram_total_mb, ' MB')}</span>
                 </div>
-                <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--overview-surface)', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
-                    width: `${Math.min(100, Math.round(((matrixStatus.hardware?.vram_used_mb || 0) / (matrixStatus.hardware?.vram_total_mb || 24576)) * 100))}%`,
+                    width: `${(matrixStatus.hardware?.vram_total_mb ?? 0) > 0 ? Math.max(0, Math.min(100, Math.round(((matrixStatus.hardware?.vram_used_mb ?? 0) / (matrixStatus.hardware?.vram_total_mb || 1)) * 100))) : 0}%`,
                     height: '100%',
-                    backgroundColor: '#58a6ff',
+                    backgroundColor: 'var(--overview-cyan)',
                     transition: 'width 0.3s ease'
                   }} />
                 </div>
@@ -1517,13 +1503,13 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
 
               {/* GPU Load Meter */}
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--overview-muted)', marginBottom: '3px' }}>
                   <span>Core Utilization:</span>
-                  <span>{matrixStatus.hardware?.gpu_util_pct || 0}%</span>
+                  <span>{executiveMetric(matrixStatus.hardware?.gpu_util_pct, '%')}</span>
                 </div>
-                <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--overview-surface)', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
-                    width: `${matrixStatus.hardware?.gpu_util_pct || 0}%`,
+                    width: `${executiveMetric(matrixStatus.hardware?.gpu_util_pct, '%')}`,
                     height: '100%',
                     backgroundColor: '#3fb950',
                     transition: 'width 0.3s ease'
@@ -1534,22 +1520,22 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
 
             {/* Host System RAM & NVMe Disk */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
             }}>
-              <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#c9d1d9', display: 'block', marginBottom: '8px' }}>
+              <span style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--overview-text)', display: 'block', marginBottom: '8px' }}>
                 System Memory & Storage
               </span>
 
               {/* RAM Meter */}
               <div style={{ marginBottom: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--overview-muted)', marginBottom: '3px' }}>
                   <span>DDR5 RAM:</span>
-                  <span>{matrixStatus.hardware?.ram_used_gb || 0} GB / {matrixStatus.hardware?.ram_total_gb || 64} GB ({matrixStatus.hardware?.ram_percent || 0}%)</span>
+                  <span>{executiveMetric(matrixStatus.hardware?.ram_used_gb, ' GB')} / {executiveMetric(matrixStatus.hardware?.ram_total_gb, ' GB')} ({executiveMetric(matrixStatus.hardware?.ram_percent, '%')})</span>
                 </div>
-                <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--overview-surface)', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
                     width: `${matrixStatus.hardware?.ram_percent || 0}%`,
                     height: '100%',
@@ -1561,11 +1547,11 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
 
               {/* NVMe Storage Meter */}
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--overview-muted)', marginBottom: '3px' }}>
                   <span>Samsung 990 Pro NVMe:</span>
-                  <span>{matrixStatus.hardware?.disk_free_gb || 0} GB Free</span>
+                  <span>{executiveMetric(matrixStatus.hardware?.disk_free_gb, ' GB Free')}</span>
                 </div>
-                <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--overview-surface)', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
                     width: `${matrixStatus.hardware?.disk_percent || 0}%`,
                     height: '100%',
@@ -1578,22 +1564,22 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
 
             {/* Knowledge Vault Intelligence Counter */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <span style={{ fontSize: '1.1rem' }}>🏛️</span>
-                <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#c9d1d9' }}>
+                <span style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--overview-text)' }}>
                   Stehouwer Knowledge Vault
                 </span>
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• SQLite Vault Records: <span style={{ color: '#58a6ff', fontWeight: 700 }}>{(matrixStatus.vault?.sqlite_vault_records || 305654).toLocaleString()}</span></div>
-                <div>• Media Memory Records: <span style={{ color: '#3fb950', fontWeight: 700 }}>{matrixStatus.vault?.media_memory_records || 0}</span></div>
-                <div>• ChromaDB Vector Heartbeat: <span style={{ color: '#3fb950', fontWeight: 600 }}>ONLINE</span></div>
-                <div>• Multi-Tenant Isolation: <span style={{ color: '#c9d1d9' }}>stehouwer_publishing</span></div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>• SQLite Vault Records: <span style={{ color: 'var(--overview-cyan)', fontWeight: 700 }}>{executiveMetric(matrixStatus.vault?.sqlite_vault_records)}</span></div>
+                <div>• Media Memory Records: <span style={{ color: '#3fb950', fontWeight: 700 }}>{executiveMetric(matrixStatus.vault?.media_memory_records)}</span></div>
+                <div>• ChromaDB Vector Heartbeat: <span style={{ color: 'var(--overview-muted)', fontWeight: 600 }}>UNVERIFIED</span></div>
+                <div>• Multi-Tenant Isolation: <span style={{ color: 'var(--overview-text)' }}>stehouwer_publishing</span></div>
               </div>
             </div>
           </div>
@@ -1602,4 +1588,10 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
       </div>
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

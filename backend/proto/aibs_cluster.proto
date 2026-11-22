@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package aibs.cluster.v1;
+
+option go_package = "github.com/stehouwer/ai-bs/backend/proto/aibs_cluster_v1;aibs_cluster_v1";
+
+// ══════════════════════════════════════════════════════════════════════════
+// AI-BS SOVEREIGN CLUSTER ENGINE PROTOCOL BUFFERS DEFINITION
+// High-Frequency Binary IPC between Go Core, Python Daemons, and Rust ASGI
+// ══════════════════════════════════════════════════════════════════════════
+
+enum SystemHealthStatus {
+  HEALTH_UNKNOWN = 0;
+  HEALTH_OPTIMAL = 1;
+  HEALTH_DEGRADED = 2;
+  HEALTH_CRITICAL = 3;
+}
+
+message TelemetryPacket {
+  double timestamp = 1;
+  string source = 2;
+  float cpu_percent = 3;
+  float gpu_vram_used_mb = 4;
+  float gpu_vram_total_mb = 5;
+  float gpu_temp_c = 6;
+  int32 listening_ports = 7;
+  int32 total_ports = 8;
+  int64 requests_per_second = 9;
+  int64 shm_packets_per_second = 10;
+  SystemHealthStatus health = 11;
+}
+
+message StreamEvent {
+  string stream_id = 1;
+  string topic = 2;
+  bytes payload = 3;
+  string origin = 4;
+  double timestamp = 5;
+  int64 sequence_number = 6;
+}
+
+message StreamEventAck {
+  string stream_id = 1;
+  int64 sequence_number = 2;
+  bool success = 3;
+  string error_message = 4;
+}
+
+message WorkflowExecutionRequest {
+  string workflow_id = 1;
+  string workflow_type = 2; // "wan2.1_render", "audio_stem_separation", "agent_dag"
+  bytes parameters_json = 3;
+  bool require_gpu = 4;
+  float vram_budget_gb = 5;
+  int32 timeout_seconds = 6;
+  bool is_durable = 7; // Routed via Temporal.io
+}
+
+message WorkflowExecutionResponse {
+  string workflow_id = 1;
+  string status = 2; // "QUEUED", "RUNNING", "COMPLETED", "FAILED"
+  double start_time = 3;
+  double duration_seconds = 4;
+  bytes result_payload = 5;
+  string error_message = 6;
+}
+
+message CacheGetRequest {
+  string key = 1;
+  string namespace = 2;
+}
+
+message CacheGetResponse {
+  string key = 1;
+  bytes value = 2;
+  bool exists = 3;
+  double latency_us = 4;
+}
+
+message CacheSetRequest {
+  string key = 1;
+  string namespace = 2;
+  bytes value = 3;
+  int64 ttl_seconds = 4;
+}
+
+message CacheSetResponse {
+  string key = 1;
+  bool success = 2;
+  double latency_us = 3;
+}
+
+service AibsClusterService {
+  // Bi-directional telemetry stream
+  rpc StreamTelemetry(stream TelemetryPacket) returns (stream TelemetryPacket);
+  
+  // High-throughput binary event streaming (NATS JetStream bridge)
+  rpc PublishStreamEvent(StreamEvent) returns (StreamEventAck);
+  
+  // Durable task execution (Temporal.io bridge)
+  rpc ExecuteWorkflow(WorkflowExecutionRequest) returns (WorkflowExecutionResponse);
+  
+  // Dragonfly multi-threaded in-memory cache IPC
+  rpc CacheGet(CacheGetRequest) returns (CacheGetResponse);
+  rpc CacheSet(CacheSetRequest) returns (CacheSetResponse);
+}

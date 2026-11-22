@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"name": "AI-BS",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true,
+		"files.autoSave": "onWindowChange",
+		"breadcrumbs.symbolSortOrder": "type",
+		"scm.defaultViewSortKey": "status",
+		"scm.repositories.sortOrder": "name",
+		"editor.snippetSuggestions": "top",
+		"terminal.integrated.defaultProfile.windows": "PowerShell",
+		"terminal.integrated.windowsEnableConpty": true,
+		"go.goroot": "C:\\Program Files\\Go",
+		"go.gopath": "C:\\Users\\footb\\go",
+		"go.alternateTools": {
+			"go": "C:\\Program Files\\Go\\bin\\go.exe"
+		}
+	}
+}

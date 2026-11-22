@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+/** @typedef {{id?:string,name:string,industry:string,website:string,target_audience:string,brand_voice:string,preferred_channels:string,contact_email:string}} SchedulerClient */
+import { useState, useEffect } from 'react';
 import { getApiBase } from '../config/api';
 
+/** @param {{backendUrl?: string}} props */
 export default function AutomatedClientSchedulerTab({ backendUrl }) {
   const apiHost = backendUrl || getApiBase() || `${backendUrl}`;
 
   // Client Profiles State
-  const [clients, setClients] = useState([]);
+  const [clients, setClients] = useState(/** @type {SchedulerClient[]} */ ([]));
   const [selectedClientName, setSelectedClientName] = useState('Stehouwer Publishing');
   const [activeClientProfile, setActiveClientProfile] = useState({
     name: 'Stehouwer Publishing',
@@ -24,11 +26,11 @@ export default function AutomatedClientSchedulerTab({ backendUrl }) {
   const [isIngestingEmail, setIsIngestingEmail] = useState(false);
 
   // Weekly Schedule State
-  const [weeklySchedule, setWeeklySchedule] = useState([]);
+  const [weeklySchedule, setWeeklySchedule] = useState(/** @type {{id:string,scheduled_day:string,scheduled_time:string,platform:string,post_topic:string,post_copy:string,status:string}[]} */ ([]));
   const [isGeneratingSchedule, setIsGeneratingSchedule] = useState(false);
 
   // Stehouwer Publishing Promo Templates
-  const [selectedPromoTemplate, setSelectedPromoTemplate] = useState('book_release');
+  useState('book_release');
 
   // Load clients on mount
   const fetchClients = async () => {
@@ -38,7 +40,7 @@ export default function AutomatedClientSchedulerTab({ backendUrl }) {
         const data = await res.json();
         if (data.clients && data.clients.length > 0) {
           setClients(data.clients);
-          const found = data.clients.find(c => c.name === selectedClientName);
+          const found = data.clients.find(/** @param {{"name": string}} c */ c => c.name === selectedClientName);
           if (found) setActiveClientProfile(found);
         }
       }
@@ -64,7 +66,7 @@ export default function AutomatedClientSchedulerTab({ backendUrl }) {
     fetchWeeklyQueue();
   }, [selectedClientName]);
 
-  const handleSelectClient = (name) => {
+  const handleSelectClient = (/** @type {string} */ name) => {
     setSelectedClientName(name);
     const found = clients.find(c => c.name === name);
     if (found) {
@@ -86,7 +88,7 @@ export default function AutomatedClientSchedulerTab({ backendUrl }) {
         fetchClients();
       }
     } catch (e) {
-      alert('Error saving client profile: ' + e.message);
+      alert('Error saving client profile: ' + errorMessage(e));
     }
   };
 
@@ -122,14 +124,14 @@ export default function AutomatedClientSchedulerTab({ backendUrl }) {
         alert(`Weekly schedule generated for ${selectedClientName} (${dataSched.schedule_count} daily posts queued)!`);
       }
     } catch (e) {
-      alert('Email Ingestion & Schedule Generation Error: ' + e.message);
+      alert('Email Ingestion & Schedule Generation Error: ' + errorMessage(e));
     } finally {
       setIsIngestingEmail(false);
       setIsGeneratingSchedule(false);
     }
   };
 
-  const handleTriggerPromoTemplate = async (templateType) => {
+  const handleTriggerPromoTemplate = async (/** @type {string} */ templateType) => {
     let promoSubject = "";
     let promoBody = "";
 
@@ -415,4 +417,10 @@ export default function AutomatedClientSchedulerTab({ backendUrl }) {
 
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

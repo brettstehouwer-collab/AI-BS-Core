@@ -1,0 +1,82 @@
+{
+  "utc": "2026-10-25T21:27:52.146405+00:00",
+  "actor": "/root",
+  "authorization": "Operator requested fixing stehouwer-publishing.com",
+  "phase": "origin_ready",
+  "exe": "C:\\Users\\footb\\AppData\\Local\\Microsoft\\WinGet\\Packages\\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\\nginx-1.31.3\\nginx.exe",
+  "config": "C:\\StehouwerPublishing.com\\restoration_staging\\20261025T205656Z\\nginx.static.conf",
+  "config_sha256": "fcf8f8e919e2fe02e1797f555845f584f6c8782d1487ce1c82f6e891211dc1a9",
+  "access_log": "off; no visitor log collection",
+  "master_pid": 54672,
+  "master_created": 1792963672.3073928,
+  "owner": "AI-BS\\footb",
+  "listener_bindings": [
+    {
+      "ip": "::1",
+      "port": 80,
+      "pid": 42516,
+      "created": 1792963673.0732093
+    },
+    {
+      "ip": "127.0.0.1",
+      "port": 80,
+      "pid": 42516,
+      "created": 1792963673.0732093
+    }
+  ],
+  "local_checks": [
+    {
+      "host": "stehouwer-publishing.com",
+      "path": "/",
+      "status": 200,
+      "mime": "text/html",
+      "hash_match": true
+    },
+    {
+      "host": "www.stehouwer-publishing.com",
+      "path": "/",
+      "status": 200,
+      "mime": "text/html",
+      "hash_match": true
+    },
+    {
+      "host": "stehouwer-publishing.com",
+      "path": "/ledger.html",
+      "status": 404,
+      "private_file_absent": true
+    },
+    {
+      "host": "stehouwer-publishing.com",
+      "path": "/invoice.html",
+      "status": 404,
+      "private_file_absent": true
+    },
+    {
+      "host": "stehouwer-publishing.com",
+      "path": "/invoice.pdf",
+      "status": 404,
+      "private_file_absent": true
+    },
+    {
+      "host": "stehouwer-publishing.com",
+      "path": "/.env",
+      "status": 404,
+      "private_file_absent": true
+    },
+    {
+      "host": "stehouwer-publishing.com",
+      "path": "/indexnow_key.txt",
+      "status": 404,
+      "private_file_absent": true
+    },
+    {
+      "host": "stehouwer-publishing.com",
+      "path": "/api/health",
+      "status": 404,
+      "private_file_absent": true
+    }
+  ],
+  "unapproved_host_404": true,
+  "private_files_not_copied": true,
+  "scope": "Static root only; no JavaScript/API/HLS/full-site workflow acceptance"
+}

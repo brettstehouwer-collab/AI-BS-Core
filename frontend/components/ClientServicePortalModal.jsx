@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './ClientServicePortalModal.css';
 
+/** @param {{isOpen: boolean, onClose: () => void, serviceId?: string}} props */
 export default function ClientServicePortalModal({
   isOpen,
   onClose,

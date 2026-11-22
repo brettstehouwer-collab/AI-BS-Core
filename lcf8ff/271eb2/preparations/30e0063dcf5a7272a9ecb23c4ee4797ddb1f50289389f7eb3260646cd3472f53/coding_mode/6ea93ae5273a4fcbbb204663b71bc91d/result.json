@@ -1,0 +1,37 @@
+{
+  "kind": "trusted_local_result",
+  "input_sha256": "531d0d4e326f9a1567898e122bd85c9d372c04944e42bd998350b4378cbcce48",
+  "state": "FAILED",
+  "checks": [
+    {
+      "check_id": "npm",
+      "returncode": 1,
+      "error": null,
+      "execution_time_ms": 172,
+      "stdout": "",
+      "stderr": "Exit prior to config file resolving\ncause\ndouble-loading config \"C:\\AI-BS\\lcf8ff\\271eb2\\preparations\\30e0063dcf5a7272a9ecb23c4ee4797ddb1f50289389f7eb3260646cd3472f53\\coding_mode\\6ea93ae5273a4fcbbb204663b71bc91d\\candidate\\nul\" as \"global\", previously loaded",
+      "preview_truncated": true,
+      "log_file": "check_logs\\npm.json",
+      "log_sha256": "361dbf453cfbe551d7db763b4d84e20d80d0e7710d160ad7210f14a1910e7b8e"
+    }
+  ],
+  "static_checks": [
+    {
+      "path": "src/app.js",
+      "kind": "syntax",
+      "status": "passed",
+      "parser_sha256": "914c11c83f502189db0479fa0452db4baf86cdb1b75555e5ed7ff77cd118ce8e"
+    }
+  ],
+  "started_at": 1794665419.4321218,
+  "worker": null,
+  "resource_limits": {
+    "cpu_percent": 20,
+    "job_memory_bytes": 536870912,
+    "below_normal_priority": true
+  },
+  "npm_policy": "Selected script may use a shell; pre/post lifecycle hooks disabled; no installation requested.",
+  "finished_at": 1794665419.6909468,
+  "runtime_seal": "03038fe162fd927f1828bfca1604509d7ff575f4f1c41809240afe6acd1acfb4",
+  "entry_sha256": "4bf32859d0ffd770cca125ff6c5233ecbbf9c2c220eb51ad6653db814e2e264c"
+}

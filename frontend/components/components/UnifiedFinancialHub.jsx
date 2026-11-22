@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import MasterAccountingTab from './MasterAccountingTab';
 import MoneyTrackTab from './MoneyTrackTab';
 
-export default function UnifiedFinancialHub(props) {
+/** @param {import('react').ComponentProps<typeof MasterAccountingTab> & import('react').ComponentProps<typeof MoneyTrackTab>} props */
+export default function UnifiedFinancialHub( props) {
   const [activeSubTab, setActiveSubTab] = useState('fiat');
 
   const tabs = [
@@ -38,7 +39,7 @@ export default function UnifiedFinancialHub(props) {
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {activeSubTab === 'fiat' && <MasterAccountingTab {...props} />}
-        {activeSubTab === 'crypto' && <MoneyTrackTab {...props} />}
+        {activeSubTab === 'crypto' && <MoneyTrackTab />}
       </div>
     </div>
   );

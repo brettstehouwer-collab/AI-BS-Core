@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\04_Surface_Placement_V3_CPU.zip",
+  "bytes": 4268670,
+  "sha256": "1b5fa6299e909f3b2c2a63357edfb09195cada7da2ac06561eebae3aafbe716c",
+  "files": 1006,
+  "source_manifest_sha256": "2d04967e5686bb08c33c5c5f5535919ea8f46d012298eb4a7fee5ee01ceb9dca",
+  "local_verification": "All ZIP CRCs, per-file lengths/SHA and current selected bytes match",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "free_bytes": {
+    "C": 92402737152,
+    "D": 184025579520,
+    "E": 146813599744
+  }
+}

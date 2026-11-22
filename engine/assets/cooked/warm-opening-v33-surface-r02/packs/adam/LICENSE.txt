@@ -1,0 +1,33 @@
+AI-BS Adam v15 local-feature/pigment STUDY; likeness NOT approved.
+
+Inherited anatomical head is the official MakeHuman base.obj CC0-1.0 data,
+pinned a8bc2d54ff0ac92e78ff71431b1023eda42bf482; license texts retained in
+SourceData/MakeHuman-a8bc2d54. Original body data is official Blender Human Base
+Meshes v1.2.0 CC0. No downloaded add-on/application code was executed. Retain
+complete contribution history in LICENSE_HISTORY.txt. The project owns the
+new local coordinate/pigment changes, rig/clips and authored cloth print.
+Family originals and their separate rights remain outside the art/export.
+No photo/video pixels, photo-derived textures, recordings or synthetic voice
+are embedded. This establishes no approval to distribute a family likeness.
+
+V16 contribution: bounded lower-face/neck/lid/fringe coordinate changes and owned low-contrast beard pigment. Reference appearances are qualitative, not a calibrated reconstruction. Rig/UV/weights/topology/clothing remain retained. Separate unapproved private development study; not installed or approved as a final likeness. No family reference pixels or recordings embedded.
+
+Separate v19 face study: existing authored mesh/pigment edited using qualitative adult references. Family photo pixels are not included. Not an approved likeness or public likeness-distribution approval. Parent v18 retained.
+
+V20 private short-fringe cap: only hair cap retopologized; existing short strands translated with skin anchors. No family pixels or public likeness approval.
+
+P63separate material-only scalar roughness study. No family pixels added; not likeness-approved or installed. Editable source remains retained v20master; companion surface-master recipe carries material parameters.
+
+Separate v21 cheek/jaw/nose contour study from the owned v20surface mesh. Qualitative adult references; no photo pixels embedded. Not approved likeness or public-distribution approval. Installed106/v20retained.
+
+Separate v22soft-stubble study: v21face shape retained; lower-face opaque fibre components removed and procedural vertex pigment softened. No original family image pixels. Not approved likeness/public distribution. Installed106/v20retained.
+
+Separate v23 eyelid and lip study: v22 parent retained; local eyelid/lip shape and lip pigment adjusted. Rig and protected appearance unchanged. No original family image pixels. Not approved likeness/public distribution. Installed106/v20retained.
+
+V24 private unapproved head albedo study: authored procedural image baked in Blender; no family photograph pixels. Removed opaque eyebrow fibres; retained facial geometry, rig and animations. Parent v23 retained; installed106 unchanged.
+
+V26 private unapproved hair-surface study. Owned directional hair albedo baked in Blender; no family photo pixels. Existing cap shape retained;1,500opaque strands removed. Face/neck, rig, clothing and band unchanged. P73neck fairing remains stopped; no failed neck result included.
+
+V27 private unapproved mouth-width study. Bounded mouth geometry only; original family pixels excluded. No likeness approval or installed replacement.
+
+V29 separate bounded neck-surface study; parent v27 retained. No original family pixels. Likeness unapproved.

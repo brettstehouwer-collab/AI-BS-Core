@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "sdk_version": "@PROJECT_VERSION@",
+  "target": "windows-x64",
+  "features": {
+    "durable_world": true,
+    "first_boot_chapter": true,
+    "first_boot_content_play": true,
+    "chapter-saved-play-v1": true,
+    "mesh_asset_v1": true,
+    "asset_catalog_v1": true,
+    "asset_showcase": true,
+    "chapter_asset_placement_v1": true,
+    "chapter_asset_surfaces": true,
+    "chapter_content_v3": true,
+    "chapter_content_export_v2": true,
+    "character_asset_v2": true,
+    "audio_asset_v2": true,
+    "chapter-memory-audio-v1": true,
+    "chapter-authored-inspections-v1": true,
+    "chapter-initial-view-v1": true,
+    "chapter-workshop-commissioning-v1": true,
+    "audio-reviewed-captions-v1": true,
+    "bounded_gltf_import": true,
+    "adam_companion_follow_wait_recall": true
+  }
+}

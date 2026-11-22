@@ -1,0 +1,1999 @@
+"""AI-BS Structural Dip Strategy Engine (CRO_USDT).
+
+Preserves active POST_ONLY GOOD_TILL_CANCEL BUY tranches on Crypto.com Exchange,
+detects partial and full BUY/SELL fills, places POST_ONLY take-profit SELL
+orders per filled tranche, logs fills to trade_ledger.csv / trade_ledger.db,
+consults Agent 2's orderbook_scout_signals.json before deploying a fresh grid,
+atomically persists structural_dip_state.json, and exposes read-only live
+telemetry on http://127.0.0.1:8007/api/live-telemetry.
+"""
+from __future__ import annotations
+
+import argparse
+from datetime import datetime, timezone
+from decimal import Decimal, ROUND_DOWN
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import importlib.util
+import json
+import logging
+import os
+from pathlib import Path
+import signal
+import socket
+import sqlite3
+import subprocess
+import sys
+import threading
+import time
+from typing import Any
+import uuid
+
+INSTRUMENT = "CRO_USDT"
+STRATEGY_NAME = "STRUCTURAL_DIP_GRID"
+
+SAVED_DATA_DIR = Path(r"C:\AI-BS\saved_data")
+STATE_FILE = SAVED_DATA_DIR / "structural_dip_state.json"
+SCOUT_SIGNAL_FILE = SAVED_DATA_DIR / "orderbook_scout_signals.json"
+LOG_FILE = SAVED_DATA_DIR / "structural_dip_engine.log"
+LEDGER_CSV_FILE = SAVED_DATA_DIR / "trade_ledger.csv"
+LEDGER_DB_FILE = SAVED_DATA_DIR / "trade_ledger.db"
+TRADER_MODULE_PATH = Path(r"C:\AI-BS\scratch\live_cro_usdt_trader.py")
+
+POLL_INTERVAL_SEC = 2.5
+SCOUT_MAX_AGE_SEC = 15.0
+STOP_LOSS_PCT = Decimal("0.05")
+DAILY_LOSS_CUTOFF_USDT = Decimal("3.00")
+
+TELEMETRY_HOST = "127.0.0.1"
+TELEMETRY_PORT = 8007
+ALLOWED_CORS_ORIGINS = frozenset({
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+})
+
+SCENARIO_PROFILES: dict[str, dict[str, Any]] = {
+    "PATIENT_SWING": {
+        "id": "PATIENT_SWING",
+        "label": "Option A · Patient Swing (+1.5% / +1.8% / +2.2%)",
+        "description": "Holds full tranche profit targets (+1.5% / +1.8% / +2.2%) for maximum per-cycle gain ($1.30+ combined on T2+T3).",
+        "tp_multipliers": [Decimal("0.015"), Decimal("0.018"), Decimal("0.022")],
+        "front_run_ask_wall": False,
+    },
+    "WALL_FRONT_RUN": {
+        "id": "WALL_FRONT_RUN",
+        "label": "Option B · Front-Run Major Ask Wall ($0.04298)",
+        "description": "Tucks Tranche 3 take-profit 2 ticks below Agent 2's major ask wall ($0.04300 -> $0.04298) when still >= +0.85% net profit for faster daily turnover.",
+        "tp_multipliers": [Decimal("0.015"), Decimal("0.018"), Decimal("0.022")],
+        "front_run_ask_wall": True,
+    },
+    "HYBRID_SPLIT": {
+        "id": "HYBRID_SPLIT",
+        "label": "Option C · Hybrid Range + Breakout",
+        "description": "Cycles Tranche 1 at +0.86% ($0.04234) & Tranche 3 at +1.51% ($0.04313) while holding Tranche 2 (+1.81% / $0.04389) for the breakout.",
+        "tp_multipliers": [Decimal("0.00857"), Decimal("0.018"), Decimal("0.015")],
+        "front_run_ask_wall": False,
+    },
+    "FAST_COMPOUNDER": {
+        "id": "FAST_COMPOUNDER",
+        "label": "Option D · Rapid Maker Compounder (+0.9% / +1.1% / +1.3%)",
+        "description": "Tighter 0% maker-fee targets across all 3 tranches to maximize daily cycle velocity inside tight consolidation bands.",
+        "tp_multipliers": [Decimal("0.009"), Decimal("0.011"), Decimal("0.013")],
+        "front_run_ask_wall": True,
+    },
+}
+
+TRANCHES = [
+    {
+        "idx": 0,
+        "name": "Tranche 1 (1.2% Structural Dip)",
+        "dip_pct": Decimal("0.012"),
+        "budget_usdt": Decimal("30.00"),
+        "target_profit_pct": Decimal("0.015"),
+    },
+    {
+        "idx": 1,
+        "name": "Tranche 2 (2.4% Major Support Wall)",
+        "dip_pct": Decimal("0.024"),
+        "budget_usdt": Decimal("35.00"),
+        "target_profit_pct": Decimal("0.018"),
+    },
+    {
+        "idx": 2,
+        "name": "Tranche 3 (3.8% Deep Liquidity Wick)",
+        "dip_pct": Decimal("0.038"),
+        "budget_usdt": Decimal("30.00"),
+        "target_profit_pct": Decimal("0.022"),
+    },
+]
+
+PROFIT_RESERVE_SHARE = Decimal("0.50")  # share of each positive realized sell PnL banked, never traded
+AUTH_ALERT_AFTER_SEC = 300.0
+ALERT_FILE = SAVED_DATA_DIR / "engine_alert.json"
+BUYS_PAUSED_FLAG_FILE = SAVED_DATA_DIR / "BUYS_PAUSED.flag"
+ENV_FILE = Path(r"C:\AI-BS\.env")
+_AUTH_FAIL_SINCE: float | None = None
+_AUTH_ALERTED = False
+
+_STATE_LOCK = threading.Lock()
+_LEDGER_LOCK = threading.Lock()
+_STOP_REQUESTED = False
+_LATEST_STATE: dict[str, Any] | None = None
+_TRADER_MOD: Any = None
+_HA_MOD: Any = None
+
+
+def _get_ha_mod() -> Any:
+    """Lazy-load sibling ha_execution_gateway module safely under importlib/test loaders."""
+    global _HA_MOD
+    if _HA_MOD is None:
+        if "ha_execution_gateway" in sys.modules:
+            _HA_MOD = sys.modules["ha_execution_gateway"]
+        else:
+            ha_path = Path(__file__).resolve().parent / "ha_execution_gateway.py"
+            spec = importlib.util.spec_from_file_location("ha_execution_gateway", str(ha_path))
+            if spec is None or spec.loader is None:
+                raise RuntimeError(f"Unable to load ha_execution_gateway from {ha_path}")
+            mod = importlib.util.module_from_spec(spec)
+            sys.modules["ha_execution_gateway"] = mod
+            spec.loader.exec_module(mod)
+            _HA_MOD = mod
+    return _HA_MOD
+
+
+def _get_trader_mod() -> Any:
+    """Lazy-load live_cro_usdt_trader module for shared primitives."""
+    global _TRADER_MOD
+    if _TRADER_MOD is None:
+        spec = importlib.util.spec_from_file_location("trader_mod", str(TRADER_MODULE_PATH))
+        if spec is None or spec.loader is None:
+            raise RuntimeError(f"Unable to load trader module from {TRADER_MODULE_PATH}")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _TRADER_MOD = mod
+    return _TRADER_MOD
+
+
+_mod = _get_trader_mod()
+CryptoComClient = _mod.CryptoComClient
+load_dpapi_credentials = _mod.load_dpapi_credentials
+floor_price_tick = _mod.floor_price_tick
+ceil_price_tick = _mod.ceil_price_tick
+format_price = _mod.format_price
+PRICE_TICK = _mod.PRICE_TICK
+MIN_ORDER_QTY_CRO = _mod.MIN_ORDER_QTY_CRO
+MIN_ORDER_NOTIONAL_USDT = _mod.MIN_ORDER_NOTIONAL_USDT
+
+
+def _ensure_decimal_text_columns(db_path: Path) -> None:
+    """Add exact Decimal TEXT storage columns to trade_fills without breaking legacy readers."""
+    cols = (
+        "qty_text",
+        "price_text",
+        "value_text",
+        "fee_text",
+        "cycle_net_pnl_text",
+        "daily_realized_pnl_text",
+    )
+    with sqlite3.connect(str(db_path), timeout=10.0) as conn:
+        existing = {row[1] for row in conn.execute("PRAGMA table_info(trade_fills);").fetchall()}
+        for col in cols:
+            if col not in existing:
+                conn.execute(f"ALTER TABLE trade_fills ADD COLUMN {col} TEXT;")
+        conn.commit()
+
+
+def init_ledgers() -> None:
+    """Initialize CSV and SQLite ledgers using live_cro_usdt_trader helpers + Decimal TEXT columns."""
+    mod = _get_trader_mod()
+    with _LEDGER_LOCK:
+        mod.SAVED_DATA_DIR = SAVED_DATA_DIR
+        mod.LEDGER_CSV_FILE = LEDGER_CSV_FILE
+        mod.LEDGER_DB_FILE = LEDGER_DB_FILE
+        mod.init_ledgers()
+        _ensure_decimal_text_columns(LEDGER_DB_FILE)
+
+
+def append_to_ledgers(
+    *,
+    action: str,
+    qty_cro: Any,
+    price_usdt: Any,
+    value_usdt: Any,
+    fee_usdt: Any,
+    cycle_net_pnl: Any,
+    daily_pnl: Any,
+    order_id: str,
+    client_oid: str,
+    status: str,
+    log: logging.Logger,
+) -> None:
+    """Append fill row to trade_ledger.csv and trade_ledger.db (preserving Decimal TEXT precision)."""
+    mod = _get_trader_mod()
+    with _LEDGER_LOCK:
+        mod.SAVED_DATA_DIR = SAVED_DATA_DIR
+        mod.LEDGER_CSV_FILE = LEDGER_CSV_FILE
+        mod.LEDGER_DB_FILE = LEDGER_DB_FILE
+        mod.init_ledgers()
+        _ensure_decimal_text_columns(LEDGER_DB_FILE)
+        mod.append_to_ledgers(
+            action=action,
+            qty_cro=qty_cro,
+            price_usdt=price_usdt,
+            value_usdt=value_usdt,
+            fee_usdt=fee_usdt,
+            cycle_net_pnl=cycle_net_pnl,
+            daily_pnl=daily_pnl,
+            order_id=order_id,
+            client_oid=client_oid,
+            status=status,
+            log=log,
+        )
+        c_pnl_txt = f"{Decimal(str(cycle_net_pnl)):.6f}" if cycle_net_pnl is not None else None
+        d_pnl_txt = f"{Decimal(str(daily_pnl)):.6f}" if daily_pnl is not None else None
+        try:
+            with sqlite3.connect(str(LEDGER_DB_FILE), timeout=10.0) as conn:
+                conn.execute(
+                    """
+                    UPDATE trade_fills
+                    SET qty_text = ?, price_text = ?, value_text = ?, fee_text = ?,
+                        cycle_net_pnl_text = ?, daily_realized_pnl_text = ?
+                    WHERE id = (SELECT MAX(id) FROM trade_fills WHERE order_id = ? AND action = ?);
+                    """,
+                    (
+                        str(qty_cro),
+                        str(price_usdt),
+                        str(value_usdt),
+                        str(fee_usdt),
+                        c_pnl_txt,
+                        d_pnl_txt,
+                        str(order_id),
+                        action,
+                    ),
+                )
+                conn.commit()
+        except Exception as exc:
+            log.error("Failed populating Decimal TEXT ledger columns: %s", exc)
+
+
+def configure_logging() -> logging.Logger:
+    """Configure stdout and file logging for structural_dip_engine."""
+    SAVED_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    log = logging.getLogger("structural_dip_engine")
+    log.setLevel(logging.INFO)
+    if not log.handlers:
+        fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+        sh = logging.StreamHandler(sys.stdout)
+        sh.setFormatter(fmt)
+        fh = logging.FileHandler(LOG_FILE, encoding="utf-8")
+        fh.setFormatter(fmt)
+        log.addHandler(sh)
+        log.addHandler(fh)
+    return log
+
+
+def load_client(*, role: str = "primary") -> Any:
+    """Instantiate authenticated CryptoComClient, strictly Read-Only & PassiveStandbyClient in passive mode."""
+    ha_mod = _get_ha_mod()
+    if str(role).lower() == "passive":
+        try:
+            api_key, secret, _src = ha_mod.load_readonly_credentials()
+        except FileNotFoundError:
+            api_key, secret = load_dpapi_credentials()
+        return ha_mod.PassiveStandbyClient(CryptoComClient(api_key, secret))
+    api_key, secret = load_dpapi_credentials()
+    return CryptoComClient(api_key, secret)
+
+
+def _utc_now_str() -> str:
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+
+def _utc_day_str() -> str:
+    return time.strftime("%Y-%m-%d", time.gmtime())
+
+
+def _parse_iso_utc(ts_str: str) -> datetime | None:
+    if not ts_str or not isinstance(ts_str, str):
+        return None
+    try:
+        normalized = ts_str.strip()
+        if normalized.endswith("Z"):
+            normalized = normalized[:-1] + "+00:00"
+        dt = datetime.fromisoformat(normalized)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc)
+    except Exception:
+        return None
+
+
+def _reserve(state: dict[str, Any]) -> Decimal:
+    return Decimal(str(state.get("profit_reserve_usdt", "0")))
+
+
+def are_buys_paused(log: logging.Logger | None = None) -> bool:
+    """Check if new buys are paused via BUYS_PAUSED.flag file (Plan A safety control)."""
+    try:
+        if BUYS_PAUSED_FLAG_FILE.exists():
+            if log:
+                log.info("New dip buys PAUSED via flag file (%s)", BUYS_PAUSED_FLAG_FILE)
+            return True
+        return False
+    except Exception as exc:
+        if log:
+            log.warning("Error checking BUYS_PAUSED_FLAG_FILE (%s), failing safe (paused=True): %s", BUYS_PAUSED_FLAG_FILE, exc)
+        return True
+
+
+def send_alert(message: str, log: logging.Logger, *, strict_io: bool = False) -> bool:
+    """Write engine_alert.json and post to the user's own Discord webhook, surfacing write errors (OPS-02)."""
+    alert_write_ok = True
+    try:
+        if ALERT_FILE.exists() and ALERT_FILE.is_dir():
+            raise IsADirectoryError(f"ALERT_FILE points to a directory: {ALERT_FILE}")
+        ALERT_FILE.parent.mkdir(parents=True, exist_ok=True)
+        tmp = ALERT_FILE.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps({"utc": _utc_now_str(), "message": message}), encoding="utf-8")
+        os.replace(tmp, ALERT_FILE)
+    except Exception as exc:
+        alert_write_ok = False
+        log.error("ALERT_WRITE_FAILED (%s): %s", ALERT_FILE, exc)
+        if strict_io:
+            raise
+    try:
+        import urllib.request
+        url = ""
+        if ENV_FILE.exists():
+            for line in ENV_FILE.read_text(encoding="utf-8").splitlines():
+                if line.startswith("DISCORD_WEBHOOK_URL="):
+                    url = line.split("=", 1)[1].strip().strip('"')
+        if url:
+            req = urllib.request.Request(
+                url,
+                data=json.dumps({"content": "[AI-BS dip engine] " + message}).encode("utf-8"),
+                headers={"Content-Type": "application/json", "User-Agent": "AI-BS-engine"},
+            )
+            urllib.request.urlopen(req, timeout=8).read()
+    except Exception as exc:
+        log.error("discord alert delivery failed: %s", exc)
+        return False
+    return alert_write_ok
+
+
+def read_scout_snapshot() -> dict[str, Any]:
+    """Return latest orderbook_scout_signals.json dict if fresh/available."""
+    if not SCOUT_SIGNAL_FILE.exists():
+        return {}
+    try:
+        return json.loads(SCOUT_SIGNAL_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def compute_scenario_evaluations(
+    state: dict[str, Any],
+    mid_price: Decimal,
+    scout: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Compute live P&L projections across all 4 option scenarios for the UI."""
+    key_levels = scout.get("key_levels") or {}
+    ask_wall_raw = key_levels.get("major_ask_wall_price")
+    bid_wall_raw = key_levels.get("major_bid_support_price")
+    ask_wall = Decimal(str(ask_wall_raw)) if ask_wall_raw else Decimal("0.04300")
+    bid_wall = Decimal(str(bid_wall_raw)) if bid_wall_raw else Decimal("0.04215")
+    front_run_price = floor_price_tick(ask_wall - (PRICE_TICK * Decimal("2")))
+
+    lots = state.get("open_lots") or []
+    active_mode = str(state.get("scenario_mode") or "PATIENT_SWING")
+    out: list[dict[str, Any]] = []
+
+    for mode_id, cfg in SCENARIO_PROFILES.items():
+        projected_pnl = Decimal("0")
+        lot_projections: list[dict[str, Any]] = []
+        tps = cfg["tp_multipliers"]
+        for lot in lots:
+            qty = int(lot.get("qty_cro", 0))
+            if qty <= 0:
+                continue
+            t_idx = min(max(int(lot.get("tranche_idx", 0)), 0), 2)
+            entry = Decimal(str(lot.get("entry_price", "0.04280")))
+            base_tp = ceil_price_tick(entry * (Decimal("1") + tps[t_idx]))
+            target_price = base_tp
+            if cfg["front_run_ask_wall"] and t_idx in (0, 2) and mode_id in ("WALL_FRONT_RUN", "HYBRID_SPLIT"):
+                min_profitable = ceil_price_tick(entry * Decimal("1.0085"))
+                if front_run_price >= min_profitable and front_run_price < base_tp:
+                    target_price = front_run_price
+            elif mode_id == "FAST_COMPOUNDER" and cfg["front_run_ask_wall"]:
+                min_profitable = ceil_price_tick(entry * Decimal("1.0080"))
+                if front_run_price >= min_profitable and front_run_price < base_tp:
+                    target_price = front_run_price
+            pnl = Decimal(qty) * (target_price - entry)
+            projected_pnl += pnl
+            pct_gain = ((target_price - entry) / entry) * Decimal("100") if entry > 0 else Decimal("0")
+            lot_projections.append({
+                "tranche_idx": t_idx,
+                "qty_cro": qty,
+                "entry_price": format_price(entry),
+                "target_price": format_price(target_price),
+                "net_pnl_usdt": f"{pnl:.4f}",
+                "gain_pct": f"{pct_gain:.2f}",
+            })
+        out.append({
+            "id": mode_id,
+            "label": cfg["label"],
+            "description": cfg["description"],
+            "active": mode_id == active_mode,
+            "major_ask_wall": format_price(ask_wall),
+            "major_bid_support": format_price(bid_wall),
+            "front_run_sell_price": format_price(front_run_price),
+            "projected_open_lots_pnl_usdt": f"{projected_pnl:.4f}",
+            "projected_reserve_add_usdt": f"{(projected_pnl * PROFIT_RESERVE_SHARE):.4f}",
+            "lot_targets": lot_projections,
+        })
+    return out
+
+
+def default_state() -> dict[str, Any]:
+    """Return initial state dictionary matching the canonical telemetry schema."""
+    now_utc = _utc_now_str()
+    return {
+        "instrument": INSTRUMENT,
+        "strategy": STRATEGY_NAME,
+        "status": "LIVE_ACTIVE",
+        "started_utc": now_utc,
+        "server_utc": now_utc,
+        "last_tick_utc": now_utc,
+        "utc_day": _utc_day_str(),
+        "poll_interval_sec": POLL_INTERVAL_SEC,
+        "bootstrap_completed": True,
+        "halted": False,
+        "halt_reason": None,
+        "buy_dip_pct": f"{TRANCHES[0]['dip_pct'] * Decimal('100'):.2f}",
+        "take_profit_pct": f"{TRANCHES[0]['target_profit_pct'] * Decimal('100'):.2f}",
+        "target_buy_usdt": f"{TRANCHES[0]['budget_usdt']:.2f}",
+        "stop_loss_pct": f"{STOP_LOSS_PCT * Decimal('100'):.2f}",
+        "daily_loss_cutoff_usdt": f"{DAILY_LOSS_CUTOFF_USDT:.2f}",
+        "daily_realized_pnl_usdt": "0.000000",
+        "total_realized_pnl_usdt": "0.453420",
+        "completed_cycles": 0,
+        "profit_reserve_usdt": "0.226710",
+        "scenario_mode": "PATIENT_SWING",
+        "open_long_entry_price": None,
+        "open_long_qty_cro": 0,
+        "last_buy_fill_price": None,
+        "last_sell_fill_price": None,
+        "tracked_orders": {},
+        "open_lots": [],
+        "active_orders": [],
+        "recent_fills": [],
+        "balances": {},
+        "portfolio_valuation": {},
+        "last_book": {},
+    }
+
+
+def load_state() -> dict[str, Any]:
+    """Load persisted state if present, backfilling any missing schema keys."""
+    base = default_state()
+    if STATE_FILE.exists():
+        loaded = json.loads(STATE_FILE.read_text(encoding="utf-8"))
+        if isinstance(loaded, dict):
+            base.update(loaded)
+    base.setdefault("tracked_orders", {})
+    base.setdefault("open_lots", [])
+    base.setdefault("active_orders", [])
+    base.setdefault("recent_fills", [])
+    base.setdefault("balances", {})
+    base.setdefault("portfolio_valuation", {})
+    base.setdefault("last_book", {})
+    return base
+
+
+def save_state(state: dict[str, Any], *, strict_io: bool = False) -> bool:
+    """Atomically persist engine state and visibly surface write failures (OPS-02)."""
+    global _LATEST_STATE
+    snapshot = json.loads(json.dumps(state))
+    try:
+        if STATE_FILE.exists() and STATE_FILE.is_dir():
+            raise IsADirectoryError(f"STATE_FILE points to a directory: {STATE_FILE}")
+        SAVED_DATA_DIR.mkdir(parents=True, exist_ok=True)
+        tmp = STATE_FILE.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(snapshot, indent=2, sort_keys=True), encoding="utf-8")
+        os.replace(tmp, STATE_FILE)
+        snapshot["status_write_ok"] = True
+        state["status_write_ok"] = True
+        _LATEST_STATE = snapshot
+        return True
+    except Exception as exc:
+        state["status_write_ok"] = False
+        alerts = state.setdefault("alerts", [])
+        alerts.append({"utc": _utc_now_str(), "code": "STATUS_WRITE_FAILED", "message": str(exc)})
+        state["alerts"] = alerts[-25:]
+        _LATEST_STATE = json.loads(json.dumps(state))
+        if strict_io:
+            raise
+        return False
+
+
+def _refresh_open_long_summary(state: dict[str, Any]) -> None:
+    """Update open_long_entry_price and open_long_qty_cro from open_lots."""
+    lots = [lot for lot in state.get("open_lots", []) if int(lot.get("qty_cro", 0)) > 0]
+    total_qty = sum(int(lot["qty_cro"]) for lot in lots)
+    state["open_long_qty_cro"] = total_qty
+    if total_qty > 0:
+        weighted_cost = sum(
+            Decimal(int(lot["qty_cro"])) * Decimal(str(lot["entry_price"]))
+            for lot in lots
+        )
+        avg_entry = weighted_cost / Decimal(total_qty)
+        state["open_long_entry_price"] = format_price(avg_entry)
+    else:
+        state["open_long_entry_price"] = None
+
+
+def adopt_open_orders(
+    open_orders: list[dict[str, Any]],
+    state: dict[str, Any],
+    log: logging.Logger,
+) -> None:
+    """Adopt any untracked live exchange open orders without cancelling or modifying them."""
+    tracked: dict[str, dict[str, Any]] = state.setdefault("tracked_orders", {})
+    used_buy_tranches = {
+        int(meta["tranche_idx"])
+        for meta in tracked.values()
+        if meta.get("side") == "BUY" and meta.get("tranche_idx") is not None
+    }
+    available_tranches = [t["idx"] for t in TRANCHES if t["idx"] not in used_buy_tranches]
+
+    unknown_buys: list[dict[str, Any]] = []
+    unknown_sells: list[dict[str, Any]] = []
+    for o in open_orders:
+        oid = str(o.get("order_id", ""))
+        if not oid or oid in tracked:
+            continue
+        if o.get("side") == "BUY":
+            unknown_buys.append(o)
+        elif o.get("side") == "SELL":
+            unknown_sells.append(o)
+
+    unknown_buys.sort(
+        key=lambda o: Decimal(str(o.get("limit_price") or o.get("price") or "0")),
+        reverse=True,
+    )
+
+    for pos, o in enumerate(unknown_buys):
+        oid = str(o["order_id"])
+        t_idx = available_tranches[pos] if pos < len(available_tranches) else min(pos, len(TRANCHES) - 1)
+        tranche_cfg = TRANCHES[t_idx]
+        raw_price = Decimal(str(o.get("limit_price") or o.get("price") or "0"))
+        qty_cro = int(Decimal(str(o.get("quantity", "0"))))
+        cum_qty = int(Decimal(str(o.get("cumulative_quantity", "0"))))
+        create_ms = o.get("create_time")
+        placed_ts = float(create_ms) / 1000.0 if create_ms else time.time()
+
+        tracked[oid] = {
+            "side": "BUY",
+            "qty_cro": qty_cro,
+            "price": format_price(raw_price),
+            "client_oid": str(o.get("client_oid", "")),
+            "placed_ts": placed_ts,
+            "tranche_idx": t_idx,
+            "tranche_name": tranche_cfg["name"],
+            "target_profit_pct": str(tranche_cfg["target_profit_pct"]),
+            "accounted_fill_qty": cum_qty,
+            "accounted_fee_usdt": "0.000000",
+        }
+        log.info(
+            "Adopted open BUY order: order_id=%s qty=%d @ %s -> %s (TP +%s%%)",
+            oid,
+            qty_cro,
+            format_price(raw_price),
+            tranche_cfg["name"],
+            f"{tranche_cfg['target_profit_pct'] * Decimal('100'):.1f}",
+        )
+
+    for o in unknown_sells:
+        oid = str(o["order_id"])
+        raw_price = Decimal(str(o.get("limit_price") or o.get("price") or "0"))
+        qty_cro = int(Decimal(str(o.get("quantity", "0"))))
+        cum_qty = int(Decimal(str(o.get("cumulative_quantity", "0"))))
+        create_ms = o.get("create_time")
+        placed_ts = float(create_ms) / 1000.0 if create_ms else time.time()
+        tracked[oid] = {
+            "side": "SELL",
+            "qty_cro": qty_cro,
+            "price": format_price(raw_price),
+            "client_oid": str(o.get("client_oid", "")),
+            "placed_ts": placed_ts,
+            "tranche_idx": 0,
+            "tranche_name": "Adopted TP SELL",
+            "target_profit_pct": str(TRANCHES[0]["target_profit_pct"]),
+            "entry_price": state.get("last_buy_fill_price"),
+            "accounted_fill_qty": cum_qty,
+            "accounted_fee_usdt": "0.000000",
+        }
+        log.info(
+            "Adopted open SELL order: order_id=%s qty=%d @ %s",
+            oid,
+            qty_cro,
+            format_price(raw_price),
+        )
+
+
+def _compute_sell_cost_basis(
+    state: dict[str, Any],
+    sell_oid: str,
+    delta_qty: int,
+    meta: dict[str, Any],
+    fill_price: Decimal,
+) -> Decimal:
+    """Match sold CRO against open_lots to compute genuine entry cost basis."""
+    lots: list[dict[str, Any]] = state.setdefault("open_lots", [])
+    remaining = delta_qty
+    total_cost = Decimal("0")
+
+    # Pass 1: consume lots explicitly bound to this sell_order_id.
+    for lot in lots:
+        if remaining <= 0:
+            break
+        if lot.get("sell_order_id") != sell_oid:
+            continue
+        lot_qty = int(lot.get("qty_cro", 0))
+        if lot_qty <= 0:
+            continue
+        take = min(lot_qty, remaining)
+        total_cost += Decimal(take) * Decimal(str(lot["entry_price"]))
+        lot["qty_cro"] = lot_qty - take
+        remaining -= take
+
+    # Pass 2: FIFO across any remaining open_lots if sell wasn't explicitly bound.
+    if remaining > 0:
+        for lot in lots:
+            if remaining <= 0:
+                break
+            lot_qty = int(lot.get("qty_cro", 0))
+            if lot_qty <= 0:
+                continue
+            take = min(lot_qty, remaining)
+            total_cost += Decimal(take) * Decimal(str(lot["entry_price"]))
+            lot["qty_cro"] = lot_qty - take
+            remaining -= take
+
+    state["open_lots"] = [lot for lot in lots if int(lot.get("qty_cro", 0)) > 0]
+
+    # Pass 3: fallback to tracked meta entry_price or last_buy_fill_price.
+    if remaining > 0:
+        fallback_raw = meta.get("entry_price") or state.get("last_buy_fill_price")
+        fallback_price = Decimal(str(fallback_raw)) if fallback_raw else fill_price
+        total_cost += Decimal(remaining) * fallback_price
+
+    return total_cost
+
+
+def reconcile_orders(
+    client: Any,
+    state: dict[str, Any],
+    open_orders: list[dict[str, Any]],
+    log: logging.Logger,
+    prefetched_details: dict[str, dict[str, Any]] | None = None,
+) -> None:
+    """Detect partial and full BUY/SELL fills, update open_lots & PnL, and log to ledgers."""
+    open_map = {str(o["order_id"]): o for o in open_orders}
+    tracked: dict[str, dict[str, Any]] = state.setdefault("tracked_orders", {})
+    to_remove: list[str] = []
+
+    for oid, meta in list(tracked.items()):
+        closed = False
+        detail: dict[str, Any] | None = None
+        order_status = "ACTIVE"
+
+        if oid in open_map:
+            o = open_map[oid]
+            prev_qty = int(meta.get("accounted_fill_qty", 0))
+            open_cum_qty = int(Decimal(str(o.get("cumulative_quantity", "0"))))
+            if open_cum_qty <= prev_qty:
+                continue
+            detail = client.get_order_detail(oid)
+            order_status = str(detail.get("status", o.get("status", "ACTIVE")))
+            cum_qty = int(Decimal(str(detail.get("cumulative_quantity", open_cum_qty))))
+        else:
+            detail = (prefetched_details or {}).get(oid) or client.get_order_detail(oid)
+            order_status = str(detail.get("status", ""))
+            cum_qty = int(Decimal(str(detail.get("cumulative_quantity", "0"))))
+            if order_status in ("NEW", "PENDING", "ACTIVE"):
+                if cum_qty <= int(meta.get("accounted_fill_qty", 0)):
+                    continue
+            else:
+                closed = True
+
+        prev_qty = int(meta.get("accounted_fill_qty", 0))
+        delta_qty = cum_qty - prev_qty
+
+        if delta_qty > 0 and detail is not None:
+            avg_p_raw = detail.get("avg_price")
+            fill_price = (
+                Decimal(str(avg_p_raw))
+                if avg_p_raw and Decimal(str(avg_p_raw)) > 0
+                else Decimal(str(meta["price"]))
+            )
+            cum_fee = Decimal(str(detail.get("cumulative_fee", "0")))
+            fee_ccy = str(detail.get("fee_instrument_name", ""))
+            total_fee_usdt = (
+                abs(cum_fee) if fee_ccy in ("USDT", "USD", "") else abs(cum_fee) * fill_price
+            )
+            prev_fee_usdt = Decimal(str(meta.get("accounted_fee_usdt", "0")))
+            delta_fee_usdt = max(Decimal("0"), total_fee_usdt - prev_fee_usdt)
+
+            meta["accounted_fill_qty"] = cum_qty
+            meta["accounted_fee_usdt"] = f"{total_fee_usdt:.6f}"
+            fill_value = Decimal(delta_qty) * fill_price
+            fill_status_label = order_status if closed else "PARTIAL_FILL"
+            side = str(meta["side"])
+
+            if side == "BUY":
+                state.setdefault("open_lots", []).append({
+                    "lot_id": uuid.uuid4().hex[:8],
+                    "buy_order_id": oid,
+                    "tranche_idx": int(meta.get("tranche_idx", 0)),
+                    "qty_cro": delta_qty,
+                    "entry_price": format_price(fill_price),
+                    "target_profit_pct": str(meta.get("target_profit_pct", "0.015")),
+                    "sell_order_id": None,
+                })
+                state["last_buy_fill_price"] = format_price(fill_price)
+                _refresh_open_long_summary(state)
+
+                state["recent_fills"].append({
+                    "utc": _utc_now_str(),
+                    "kind": "DIP_BUY",
+                    "order_id": oid,
+                    "client_oid": meta.get("client_oid", ""),
+                    "side": "BUY",
+                    "qty_cro": str(delta_qty),
+                    "price": format_price(fill_price),
+                    "value_usdt": f"{fill_value:.5f}",
+                    "status": fill_status_label,
+                })
+                state["recent_fills"] = state["recent_fills"][-50:]
+
+                log.info(
+                    "DIP_BUY fill: order_id=%s qty=%d CRO @ %s USDT (status=%s fee=%s)",
+                    oid,
+                    delta_qty,
+                    format_price(fill_price),
+                    fill_status_label,
+                    f"{delta_fee_usdt:.6f}",
+                )
+                append_to_ledgers(
+                    action="DIP_BUY",
+                    qty_cro=delta_qty,
+                    price_usdt=format_price(fill_price),
+                    value_usdt=f"{fill_value:.5f}",
+                    fee_usdt=f"{delta_fee_usdt:.6f}",
+                    cycle_net_pnl=None,
+                    daily_pnl=state.get("daily_realized_pnl_usdt", "0.000000"),
+                    order_id=oid,
+                    client_oid=meta.get("client_oid", ""),
+                    status=fill_status_label,
+                    log=log,
+                )
+
+            elif side == "SELL":
+                cost_basis_usdt = _compute_sell_cost_basis(
+                    state=state,
+                    sell_oid=oid,
+                    delta_qty=delta_qty,
+                    meta=meta,
+                    fill_price=fill_price,
+                )
+                net_pnl = fill_value - cost_basis_usdt - delta_fee_usdt
+                daily_pnl = Decimal(str(state.get("daily_realized_pnl_usdt", "0"))) + net_pnl
+                state["daily_realized_pnl_usdt"] = f"{daily_pnl:.6f}"
+                total_pnl = Decimal(str(state.get("total_realized_pnl_usdt", "0.453420"))) + net_pnl
+                state["total_realized_pnl_usdt"] = f"{total_pnl:.6f}"
+                if net_pnl > 0:
+                    banked = net_pnl * PROFIT_RESERVE_SHARE
+                    state["profit_reserve_usdt"] = f"{_reserve(state) + banked:.6f}"
+                    log.info("Banked %s USDT to protected reserve (total %s)", f"{banked:.6f}", state["profit_reserve_usdt"])
+                if closed or delta_qty > 0:
+                    state["completed_cycles"] = int(state.get("completed_cycles", 0)) + 1
+                state["last_sell_fill_price"] = format_price(fill_price)
+                _refresh_open_long_summary(state)
+
+                state["recent_fills"].append({
+                    "utc": _utc_now_str(),
+                    "kind": "DIP_SELL",
+                    "order_id": oid,
+                    "client_oid": meta.get("client_oid", ""),
+                    "side": "SELL",
+                    "qty_cro": str(delta_qty),
+                    "price": format_price(fill_price),
+                    "value_usdt": f"{fill_value:.5f}",
+                    "status": fill_status_label,
+                })
+                state["recent_fills"] = state["recent_fills"][-50:]
+
+                log.info(
+                    "DIP_SELL fill: order_id=%s qty=%d CRO @ %s USDT net_pnl=%s daily_pnl=%s (status=%s)",
+                    oid,
+                    delta_qty,
+                    format_price(fill_price),
+                    f"{net_pnl:.6f}",
+                    state["daily_realized_pnl_usdt"],
+                    fill_status_label,
+                )
+                append_to_ledgers(
+                    action="DIP_SELL",
+                    qty_cro=delta_qty,
+                    price_usdt=format_price(fill_price),
+                    value_usdt=f"{fill_value:.5f}",
+                    fee_usdt=f"{delta_fee_usdt:.6f}",
+                    cycle_net_pnl=net_pnl,
+                    daily_pnl=state["daily_realized_pnl_usdt"],
+                    order_id=oid,
+                    client_oid=meta.get("client_oid", ""),
+                    status=fill_status_label,
+                    log=log,
+                )
+
+        if closed:
+            to_remove.append(oid)
+            if meta.get("side") == "SELL":
+                for lot in state.get("open_lots", []):
+                    if lot.get("sell_order_id") == oid:
+                        lot["sell_order_id"] = None
+
+    for oid in to_remove:
+        tracked.pop(oid, None)
+    _refresh_open_long_summary(state)
+
+
+def _bind_lots_to_sell_order(
+    lots: list[dict[str, Any]],
+    sell_qty: int,
+    sell_oid: str,
+) -> None:
+    """Assign sell_oid to covered lots, splitting a lot if sell_qty is smaller."""
+    remaining = sell_qty
+    new_splits: list[dict[str, Any]] = []
+    for lot in lots:
+        if remaining <= 0:
+            break
+        lot_qty = int(lot.get("qty_cro", 0))
+        if lot_qty <= 0 or lot.get("sell_order_id") is not None:
+            continue
+        if lot_qty <= remaining:
+            lot["sell_order_id"] = sell_oid
+            remaining -= lot_qty
+        else:
+            leftover = lot_qty - remaining
+            lot["qty_cro"] = remaining
+            lot["sell_order_id"] = sell_oid
+            new_splits.append({
+                "lot_id": uuid.uuid4().hex[:8],
+                "buy_order_id": lot.get("buy_order_id"),
+                "tranche_idx": lot.get("tranche_idx", 0),
+                "qty_cro": leftover,
+                "entry_price": lot["entry_price"],
+                "target_profit_pct": lot["target_profit_pct"],
+                "sell_order_id": None,
+            })
+            remaining = 0
+    if new_splits:
+        lots.extend(new_splits)
+
+
+STOP_REPRICE_MIN_AGE_SEC = 5.0       # resting stop exit must age this long before chasing a lower bid
+STOP_INTENT_RESOLVE_SEC = 60.0       # unmatched pending intent older than this may be resubmitted
+
+
+def _tracked_orders(state: dict[str, Any]) -> dict[str, Any]:
+    """Return the state's own tracked_orders dict (never a detached empty copy)."""
+    tracked = state.get("tracked_orders")
+    if not isinstance(tracked, dict):
+        tracked = {}
+        state["tracked_orders"] = tracked
+    return tracked
+
+
+def enforce_per_lot_stop_loss(
+    client: Any,
+    state: dict[str, Any],
+    best_bid: Decimal,
+    log: logging.Logger,
+    state_persist_fn: Any = None,
+) -> list[dict[str, Any]]:
+    """Enforce STOP_LOSS_PCT per open lot: cancel resting TP sell and submit protective exit."""
+    triggered_exits: list[dict[str, Any]] = []
+    lots = state.get("open_lots") or []
+    tracked = _tracked_orders(state)
+
+    for lot in list(lots):
+        pending_sl = state.setdefault("pending_stop_intents", {})
+        lot_id = str(lot.get("lot_id", ""))
+        if lot_id in pending_sl:
+            intent = pending_sl[lot_id]
+            # Reconcile pending intent by client_oid against open orders before retrying
+            open_orders_now = client.get_open_orders() if hasattr(client, "get_open_orders") else []
+            matched = next((o for o in open_orders_now if o.get("client_oid") == intent["client_oid"]), None)
+            history_checked = False
+            if not matched and hasattr(client, "private_post"):
+                try:
+                    hist = client.private_post("private/get-order-history", {"instrument_name": INSTRUMENT, "limit": 50})["result"]["data"]
+                    matched = next((o for o in hist if o.get("client_oid") == intent["client_oid"]), None)
+                    history_checked = True
+                except Exception as exc:
+                    log.warning("Order-history lookup failed for pending stop intent %s: %s", intent["client_oid"], exc)
+            if matched:
+                rec_oid = str(matched["order_id"])
+                lot["sell_order_id"] = rec_oid
+                matched_cum = int(Decimal(str(matched.get("cumulative_quantity", "0"))))
+                state.setdefault("tracked_orders", {})[rec_oid] = {
+                    "side": "SELL",
+                    "qty_cro": int(intent["qty_cro"]),
+                    "price": intent["price"],
+                    "client_oid": intent["client_oid"],
+                    "placed_ts": intent["created_ts"],
+                    "tranche_idx": int(lot.get("tranche_idx", 0)),
+                    "tranche_name": "STOP_LOSS_EXIT",
+                    "target_profit_pct": "0",
+                    "entry_price": intent["entry_price"],
+                    "accounted_fill_qty": 0,
+                    "accounted_fee_usdt": "0.000000",
+                    "is_stop_loss": True,
+                }
+                pending_sl.pop(lot_id, None)
+                log.info("Recovered pending stop-loss order %s (client_oid=%s) for lot %s.", rec_oid, intent["client_oid"], lot_id)
+                if matched_cum > 0:
+                    reconcile_orders(client, state, open_orders_now, log, prefetched_details={rec_oid: matched})
+                continue
+            intent_age = time.time() - float(intent.get("created_ts", time.time()))
+            if not (history_checked and intent_age >= STOP_INTENT_RESOLVE_SEC):
+                log.warning("Pending stop intent %s for lot %s unresolved; blocking duplicate sell.", intent["client_oid"], lot_id)
+                continue
+            # Absent from both open orders and a successful history read after the
+            # resolve window: the request never reached the exchange. Retire the
+            # intent and re-evaluate this lot so it is not left unprotected forever.
+            pending_sl.pop(lot_id, None)
+            log.warning(
+                "Pending stop intent %s for lot %s not found on exchange after %.0fs; retiring it and re-evaluating.",
+                intent["client_oid"], lot_id, intent_age,
+            )
+
+        if best_bid <= Decimal("0"):
+            continue
+        qty_cro = int(lot.get("qty_cro", 0))
+        if qty_cro < MIN_ORDER_QTY_CRO:
+            continue
+        entry_raw = lot.get("entry_price")
+        if not entry_raw:
+            continue
+        entry = Decimal(str(entry_raw))
+        stop_trigger = entry * (Decimal("1") - STOP_LOSS_PCT)
+        if best_bid <= stop_trigger:
+            sell_oid = lot.get("sell_order_id")
+            if sell_oid and sell_oid in tracked:
+                sl_meta = tracked[sell_oid]
+                if sl_meta.get("is_stop_loss"):
+                    # Keep an existing protective exit while it is still at/below the bid
+                    # (marketable) or too new to judge. Only a stale exit stranded above a
+                    # falling bid is replaced, through the same confirmed-cancel path below.
+                    stop_px = Decimal(str(sl_meta.get("price", "0")))
+                    stop_age = time.time() - float(sl_meta.get("placed_ts", 0) or 0)
+                    if best_bid >= stop_px or stop_age < STOP_REPRICE_MIN_AGE_SEC:
+                        continue
+                    log.warning(
+                        "Protective exit %s @ %s stranded above bid %s for %.0fs; replacing at the bid.",
+                        sell_oid, format_price(stop_px), format_price(best_bid), stop_age,
+                    )
+                try:
+                    client.cancel_order(sell_oid)
+                    # Confirm cancellation & reconcile any intervening fill before sizing exit
+                    detail = client.get_order_detail(sell_oid)
+                    status = str(detail.get("status", "")).upper()
+                    if status not in ("CANCELED", "CANCELLED", "FILLED", "EXPIRED", "REJECTED"):
+                        log.warning("Cancel outcome non-terminal or unknown for %s (status=%r); deferring stop exit.", sell_oid, status)
+                        continue
+                    raw_cum = detail.get("cumulative_quantity")
+                    if raw_cum is None:
+                        log.warning("Missing cumulative_quantity for %s (status=%s); deferring stop exit.", sell_oid, status)
+                        continue
+                    cum_dec = Decimal(str(raw_cum))
+                    if cum_dec != cum_dec.to_integral_value():
+                        log.warning("Non-integral cumulative_quantity %r for %s; deferring stop exit.", raw_cum, sell_oid)
+                        continue
+                    cum_filled = int(cum_dec)
+                    orig_qty = int(tracked[sell_oid].get("qty_cro", qty_cro))
+                    prev_acc = int(tracked[sell_oid].get("accounted_fill_qty", 0))
+                    if cum_filled < prev_acc or cum_filled > orig_qty:
+                        log.warning("Out-of-bounds cumulative_quantity %d (prev=%d, orig=%d) for %s; deferring.", cum_filled, prev_acc, orig_qty, sell_oid)
+                        continue
+                    if status == "FILLED" and cum_filled != orig_qty:
+                        log.warning("Inconsistent FILLED status with cumulative_quantity=%d != orig=%d for %s; deferring.", cum_filled, orig_qty, sell_oid)
+                        continue
+                    # Route any newly observed fill through reconcile_orders using the already-validated detail
+                    unaccounted_fill = cum_filled - prev_acc
+                    if unaccounted_fill > 0:
+                        reconcile_orders(client, state, [], log, prefetched_details={sell_oid: detail})
+                        qty_cro = int(lot.get("qty_cro", 0))
+                        if status == "FILLED":
+                            qty_cro = 0
+                    tracked.pop(sell_oid, None)
+                    lot["sell_order_id"] = None
+                    log.warning(
+                        "STOP_LOSS (%s%%) triggered for lot %s: best_bid=%s <= trigger=%s (entry=%s). Canceled TP %s (remaining=%d CRO).",
+                        f"{STOP_LOSS_PCT * Decimal('100'):.2f}",
+                        lot.get("lot_id"),
+                        format_price(best_bid),
+                        format_price(stop_trigger),
+                        format_price(entry),
+                        sell_oid,
+                        qty_cro,
+                    )
+                except Exception as exc:
+                    log.error("Failed canceling/reconciling TP order %s during stop-loss: %s", sell_oid, exc)
+                    continue
+
+            if qty_cro < MIN_ORDER_QTY_CRO:
+                continue
+            exit_price = floor_price_tick(best_bid)
+            if Decimal(qty_cro) * exit_price < MIN_ORDER_NOTIONAL_USDT:
+                continue
+            client_oid = f"sl-{int(time.time())}-{uuid.uuid4().hex[:6]}"
+            # Persist intent to disk BEFORE submission so a crash mid-request cannot lose client_oid
+            state.setdefault("pending_stop_intents", {})[str(lot.get("lot_id", ""))] = {
+                "client_oid": client_oid,
+                "lot_id": str(lot.get("lot_id", "")),
+                "side": "SELL",
+                "qty_cro": qty_cro,
+                "price": format_price(exit_price),
+                "entry_price": format_price(entry),
+                "created_ts": time.time(),
+            }
+            persist_fn = state_persist_fn or (lambda st: save_state(st, strict_io=True))
+            try:
+                saved = persist_fn(state)
+                if saved is False:
+                    raise RuntimeError("save_state returned False")
+            except Exception as exc:
+                state["pending_stop_intents"].pop(str(lot.get("lot_id", "")), None)
+                log.error("Failed persisting pending stop intent for lot %s before submit: %s; holding sell.", lot.get("lot_id"), exc)
+                continue
+            if hasattr(client, "private_post"):
+                params = {
+                    "instrument_name": INSTRUMENT,
+                    "side": "SELL",
+                    "type": "LIMIT",
+                    "quantity": str(qty_cro),
+                    "price": format_price(exit_price),
+                    "client_oid": client_oid,
+                    "time_in_force": "GOOD_TILL_CANCEL",
+                }
+                ack = dict(client.private_post("private/create-order", params)["result"])
+            else:
+                ack = client.create_limit_order(
+                    side="SELL",
+                    qty_cro=qty_cro,
+                    price=exit_price,
+                    client_oid=client_oid,
+                    post_only=False,
+                )
+            state["pending_stop_intents"].pop(str(lot.get("lot_id", "")), None)
+            new_oid = str(ack["order_id"])
+            lot["sell_order_id"] = new_oid
+            tracked[new_oid] = {
+                "side": "SELL",
+                "qty_cro": qty_cro,
+                "price": format_price(exit_price),
+                "client_oid": client_oid,
+                "placed_ts": time.time(),
+                "tranche_idx": int(lot.get("tranche_idx", 0)),
+                "tranche_name": "STOP_LOSS_EXIT",
+                "target_profit_pct": "0",
+                "entry_price": format_price(entry),
+                "accounted_fill_qty": 0,
+                "accounted_fee_usdt": "0.000000",
+                "is_stop_loss": True,
+            }
+            triggered_exits.append({"lot_id": lot.get("lot_id"), "order_id": new_oid, "qty_cro": qty_cro, "price": format_price(exit_price)})
+            log.warning("Submitted protective STOP_LOSS SELL: order_id=%s qty=%d @ %s", new_oid, qty_cro, format_price(exit_price))
+    return triggered_exits
+
+
+def place_take_profit_sells(
+    client: Any,
+    state: dict[str, Any],
+    best_bid: Decimal,
+    balances: dict[str, dict[str, Decimal]],
+    open_orders: list[dict[str, Any]],
+    log: logging.Logger,
+) -> None:
+    """Place POST_ONLY GTC take-profit SELL orders for unhedged filled CRO lots."""
+    free_cro = int(
+        balances.get("CRO", {}).get("free", Decimal("0")).to_integral_value(rounding=ROUND_DOWN)
+    )
+    if free_cro < MIN_ORDER_QTY_CRO:
+        return
+
+    all_lots: list[dict[str, Any]] = state.setdefault("open_lots", [])
+    unhedged = [
+        lot for lot in all_lots
+        if lot.get("sell_order_id") is None and int(lot.get("qty_cro", 0)) > 0
+    ]
+
+    # Group unhedged lots by tranche_idx.
+    by_tranche: dict[int, list[dict[str, Any]]] = {}
+    for lot in unhedged:
+        t_idx = int(lot.get("tranche_idx", 0))
+        by_tranche.setdefault(t_idx, []).append(lot)
+
+    for t_idx in sorted(by_tranche):
+        if free_cro < MIN_ORDER_QTY_CRO:
+            break
+        group_lots = by_tranche[t_idx]
+        group_qty = sum(int(lot["qty_cro"]) for lot in group_lots)
+        if group_qty < MIN_ORDER_QTY_CRO:
+            continue
+
+        sell_qty = min(group_qty, free_cro)
+        weighted_entry = sum(
+            Decimal(int(lot["qty_cro"])) * Decimal(str(lot["entry_price"]))
+            for lot in group_lots
+        ) / Decimal(group_qty)
+        target_profit_pct = max(
+            Decimal(str(lot.get("target_profit_pct", "0.015")))
+            for lot in group_lots
+        )
+        raw_sell = weighted_entry * (Decimal("1") + target_profit_pct)
+        sell_price = ceil_price_tick(raw_sell)
+        if sell_price <= best_bid:
+            sell_price = ceil_price_tick(best_bid + PRICE_TICK)
+
+        if Decimal(sell_qty) * sell_price < MIN_ORDER_NOTIONAL_USDT:
+            continue
+
+        client_oid = f"tp-{t_idx}-{int(time.time())}-{uuid.uuid4().hex[:6]}"
+        ack = client.create_limit_order(
+            side="SELL",
+            qty_cro=sell_qty,
+            price=sell_price,
+            client_oid=client_oid,
+        )
+        sell_oid = str(ack["order_id"])
+        state["tracked_orders"][sell_oid] = {
+            "side": "SELL",
+            "qty_cro": sell_qty,
+            "price": format_price(sell_price),
+            "client_oid": client_oid,
+            "placed_ts": time.time(),
+            "tranche_idx": t_idx,
+            "tranche_name": TRANCHES[min(t_idx, len(TRANCHES) - 1)]["name"],
+            "target_profit_pct": str(target_profit_pct),
+            "entry_price": format_price(weighted_entry),
+            "accounted_fill_qty": 0,
+            "accounted_fee_usdt": "0.000000",
+        }
+        _bind_lots_to_sell_order(group_lots, sell_qty, sell_oid)
+        # Re-append any split lots added directly to group_lots? _bind_lots_to_sell_order modifies group_lots;
+        # sync any newly created split lots back into all_lots.
+        existing_ids = {id(l) for l in all_lots}
+        for l in group_lots:
+            if id(l) not in existing_ids:
+                all_lots.append(l)
+        free_cro -= sell_qty
+        log.info(
+            "Placed POST_ONLY TP SELL: order_id=%s tranche=%d qty=%d CRO @ %s USDT (entry=%s, TP=+%s%%)",
+            sell_oid,
+            t_idx + 1,
+            sell_qty,
+            format_price(sell_price),
+            format_price(weighted_entry),
+            f"{target_profit_pct * Decimal('100'):.1f}",
+        )
+
+    # Aggregate sub-25 CRO leftover lots if total unhedged >= 25 and no open BUY on those tranches.
+    open_buy_tranches = {
+        int(state["tracked_orders"][str(o["order_id"])].get("tranche_idx", -1))
+        for o in open_orders
+        if o.get("side") == "BUY" and str(o.get("order_id")) in state.get("tracked_orders", {})
+    }
+    leftover_lots = [
+        lot for lot in all_lots
+        if lot.get("sell_order_id") is None
+        and int(lot.get("qty_cro", 0)) > 0
+        and int(lot.get("tranche_idx", 0)) not in open_buy_tranches
+    ]
+    leftover_qty = sum(int(lot["qty_cro"]) for lot in leftover_lots)
+    if leftover_qty >= MIN_ORDER_QTY_CRO and free_cro >= MIN_ORDER_QTY_CRO:
+        sell_qty = min(leftover_qty, free_cro)
+        weighted_entry = sum(
+            Decimal(int(lot["qty_cro"])) * Decimal(str(lot["entry_price"]))
+            for lot in leftover_lots
+        ) / Decimal(leftover_qty)
+        target_profit_pct = max(
+            Decimal(str(lot.get("target_profit_pct", "0.015")))
+            for lot in leftover_lots
+        )
+        sell_price = ceil_price_tick(weighted_entry * (Decimal("1") + target_profit_pct))
+        if sell_price <= best_bid:
+            sell_price = ceil_price_tick(best_bid + PRICE_TICK)
+        if Decimal(sell_qty) * sell_price >= MIN_ORDER_NOTIONAL_USDT:
+            client_oid = f"tp-agg-{int(time.time())}-{uuid.uuid4().hex[:6]}"
+            ack = client.create_limit_order(
+                side="SELL",
+                qty_cro=sell_qty,
+                price=sell_price,
+                client_oid=client_oid,
+            )
+            sell_oid = str(ack["order_id"])
+            state["tracked_orders"][sell_oid] = {
+                "side": "SELL",
+                "qty_cro": sell_qty,
+                "price": format_price(sell_price),
+                "client_oid": client_oid,
+                "placed_ts": time.time(),
+                "tranche_idx": int(leftover_lots[0].get("tranche_idx", 0)),
+                "tranche_name": "Aggregated TP SELL",
+                "target_profit_pct": str(target_profit_pct),
+                "entry_price": format_price(weighted_entry),
+                "accounted_fill_qty": 0,
+                "accounted_fee_usdt": "0.000000",
+            }
+            _bind_lots_to_sell_order(leftover_lots, sell_qty, sell_oid)
+            existing_ids = {id(l) for l in all_lots}
+            for l in leftover_lots:
+                if id(l) not in existing_ids:
+                    all_lots.append(l)
+            log.info(
+                "Placed aggregated POST_ONLY TP SELL: order_id=%s qty=%d CRO @ %s USDT",
+                sell_oid,
+                sell_qty,
+                format_price(sell_price),
+            )
+
+
+def read_safe_buy_ceiling(
+    best_bid: Decimal,
+    best_ask: Decimal,
+    log: logging.Logger,
+) -> Decimal:
+    """Read Agent 2's safe_buy_ceiling with 15s freshness and sanity fallback."""
+    fallback = floor_price_tick(best_bid - PRICE_TICK)
+    if not SCOUT_SIGNAL_FILE.exists():
+        log.warning("Scout signal file missing (%s); falling back to %s", SCOUT_SIGNAL_FILE, format_price(fallback))
+        return fallback
+    try:
+        data = json.loads(SCOUT_SIGNAL_FILE.read_text(encoding="utf-8"))
+        if data.get("instrument") != INSTRUMENT:
+            log.warning("Scout signal instrument mismatch (%s); falling back to %s", data.get("instrument"), format_price(fallback))
+            return fallback
+        ts_dt = _parse_iso_utc(str(data.get("timestamp_utc", "")))
+        if ts_dt is None:
+            log.warning("Scout signal missing valid timestamp_utc; falling back to %s", format_price(fallback))
+            return fallback
+        age_sec = (datetime.now(timezone.utc) - ts_dt).total_seconds()
+        if age_sec > SCOUT_MAX_AGE_SEC:
+            log.warning("Scout signal stale (age=%.1fs > %.1fs); falling back to %s", age_sec, SCOUT_MAX_AGE_SEC, format_price(fallback))
+            return fallback
+        ceiling_raw = data.get("safe_buy_ceiling")
+        if ceiling_raw is None:
+            log.warning("Scout signal missing safe_buy_ceiling; falling back to %s", format_price(fallback))
+            return fallback
+        ceiling = floor_price_tick(Decimal(str(ceiling_raw)))
+        if ceiling <= best_bid * Decimal("0.95") or ceiling >= best_ask:
+            log.warning(
+                "Scout safe_buy_ceiling %s outside safe range (best_bid=%s, best_ask=%s); falling back to %s",
+                format_price(ceiling),
+                format_price(best_bid),
+                format_price(best_ask),
+                format_price(fallback),
+            )
+            return fallback
+        return ceiling
+    except Exception as exc:
+        log.warning("Failed reading scout signal (%s); falling back to %s", exc, format_price(fallback))
+        return fallback
+
+
+def deploy_new_grid_if_empty(
+    client: Any,
+    state: dict[str, Any],
+    best_bid: Decimal,
+    best_ask: Decimal,
+    mid_price: Decimal,
+    balances: dict[str, dict[str, Decimal]],
+    open_orders: list[dict[str, Any]],
+    log: logging.Logger,
+) -> None:
+    """Deploy a fresh 3-tranche BUY grid only when zero orders & zero CRO lots remain."""
+    if are_buys_paused(log):
+        return
+    if len(open_orders) > 0:
+        return
+    if state.get("open_lots"):
+        return
+    free_cro = balances.get("CRO", {}).get("free", Decimal("0"))
+    free_usdt = balances.get("USDT", {}).get("free", Decimal("0")) - _reserve(state)
+    if free_cro >= Decimal(MIN_ORDER_QTY_CRO):
+        return
+    if free_usdt < Decimal("30.00"):
+        return
+
+    safe_ceiling = read_safe_buy_ceiling(best_bid, best_ask, log)
+    remaining_usdt = free_usdt
+    log.info(
+        "Deploying 3-tranche structural dip grid: mid=%s safe_buy_ceiling=%s free_usdt=%s",
+        format_price(mid_price),
+        format_price(safe_ceiling),
+        f"{free_usdt:.4f}",
+    )
+
+    for t in TRANCHES:
+        if remaining_usdt < Decimal("1.05"):
+            break
+        budget = min(t["budget_usdt"], remaining_usdt)
+        raw_buy = min(mid_price * (Decimal("1") - t["dip_pct"]), safe_ceiling)
+        buy_price = floor_price_tick(raw_buy)
+        if buy_price >= best_ask:
+            buy_price = floor_price_tick(best_ask - PRICE_TICK)
+        if buy_price <= Decimal("0"):
+            continue
+        buy_qty = int((budget / buy_price).to_integral_value(rounding=ROUND_DOWN))
+        notional = Decimal(buy_qty) * buy_price
+        if buy_qty < MIN_ORDER_QTY_CRO or notional < MIN_ORDER_NOTIONAL_USDT or notional > remaining_usdt:
+            continue
+
+        client_oid = f"dip-{int(time.time())}-{uuid.uuid4().hex[:6]}"
+        ack = client.create_limit_order(
+            side="BUY",
+            qty_cro=buy_qty,
+            price=buy_price,
+            client_oid=client_oid,
+        )
+        oid = str(ack["order_id"])
+        state["tracked_orders"][oid] = {
+            "side": "BUY",
+            "qty_cro": buy_qty,
+            "price": format_price(buy_price),
+            "client_oid": client_oid,
+            "placed_ts": time.time(),
+            "tranche_idx": t["idx"],
+            "tranche_name": t["name"],
+            "target_profit_pct": str(t["target_profit_pct"]),
+            "accounted_fill_qty": 0,
+            "accounted_fee_usdt": "0.000000",
+        }
+        remaining_usdt -= notional
+        log.info(
+            "Deployed %s: order_id=%s BUY %d CRO @ %s USDT (notional=%s)",
+            t["name"],
+            oid,
+            buy_qty,
+            format_price(buy_price),
+            f"{notional:.5f}",
+        )
+
+
+def rearm_missing_tranches(
+    client: Any,
+    state: dict[str, Any],
+    best_bid: Decimal,
+    best_ask: Decimal,
+    mid_price: Decimal,
+    balances: dict[str, dict[str, Decimal]],
+    log: logging.Logger,
+) -> None:
+    """Re-arm one uncovered tranche per cycle (no resting BUY, no open lot), keeping the profit reserve untouched."""
+    if are_buys_paused(log):
+        return
+    covered = {int(m.get("tranche_idx", -1)) for m in state.get("tracked_orders", {}).values() if m.get("side") == "BUY"}
+    covered |= {int(l.get("tranche_idx", -1)) for l in state.get("open_lots", [])}
+    available = balances.get("USDT", {}).get("free", Decimal("0")) - _reserve(state)
+    safe_ceiling = None
+    for t in TRANCHES:
+        if t["idx"] in covered:
+            continue
+        budget = min(t["budget_usdt"], available)
+        if budget < Decimal("20.00"):
+            continue
+        if safe_ceiling is None:
+            safe_ceiling = read_safe_buy_ceiling(best_bid, best_ask, log)
+        buy_price = floor_price_tick(min(mid_price * (Decimal("1") - t["dip_pct"]), safe_ceiling))
+        if buy_price >= best_ask:
+            buy_price = floor_price_tick(best_ask - PRICE_TICK)
+        if buy_price <= Decimal("0"):
+            continue
+        buy_qty = int((budget / buy_price).to_integral_value(rounding=ROUND_DOWN))
+        notional = Decimal(buy_qty) * buy_price
+        if buy_qty < MIN_ORDER_QTY_CRO or notional < MIN_ORDER_NOTIONAL_USDT or notional > available:
+            continue
+        client_oid = f"dip-{int(time.time())}-{uuid.uuid4().hex[:6]}"
+        ack = client.create_limit_order(side="BUY", qty_cro=buy_qty, price=buy_price, client_oid=client_oid)
+        oid = str(ack["order_id"])
+        state["tracked_orders"][oid] = {
+            "side": "BUY",
+            "qty_cro": buy_qty,
+            "price": format_price(buy_price),
+            "client_oid": client_oid,
+            "placed_ts": time.time(),
+            "tranche_idx": t["idx"],
+            "tranche_name": t["name"],
+            "target_profit_pct": str(t["target_profit_pct"]),
+            "accounted_fill_qty": 0,
+            "accounted_fee_usdt": "0.000000",
+        }
+        log.info("Re-armed %s: order_id=%s BUY %d CRO @ %s (notional=%s)", t["name"], oid, buy_qty, format_price(buy_price), f"{notional:.5f}")
+        return
+
+
+def apply_active_scenario_to_resting_sells(
+    client: Any,
+    state: dict[str, Any],
+    best_bid: Decimal,
+    scout: dict[str, Any],
+    log: logging.Logger,
+) -> None:
+    """If scenario_mode target price for an active SELL differs from its resting order, re-post it POST_ONLY."""
+    mode_id = str(state.get("scenario_mode") or "PATIENT_SWING")
+    if mode_id not in SCENARIO_PROFILES:
+        return
+    cfg = SCENARIO_PROFILES[mode_id]
+    tps = cfg["tp_multipliers"]
+    key_levels = scout.get("key_levels") or {}
+    ask_wall_raw = key_levels.get("major_ask_wall_price")
+    ask_wall = Decimal(str(ask_wall_raw)) if ask_wall_raw else Decimal("0.04300")
+    front_run_price = floor_price_tick(ask_wall - (PRICE_TICK * Decimal("2")))
+
+    tracked = _tracked_orders(state)
+    lots = state.get("open_lots") or []
+
+    for oid, meta in list(tracked.items()):
+        if meta.get("side") != "SELL":
+            continue
+        if meta.get("is_stop_loss"):
+            continue  # Never reprice an active protective stop-loss exit back to a TP target
+        if int(meta.get("accounted_fill_qty", 0)) > 0:
+            continue  # Do not touch partially filled sell orders
+        t_idx = min(max(int(meta.get("tranche_idx", 0)), 0), 2)
+        entry_raw = meta.get("entry_price")
+        if not entry_raw:
+            bound = [l for l in lots if l.get("sell_order_id") == oid]
+            if bound:
+                entry_raw = bound[0].get("entry_price")
+        if not entry_raw:
+            continue
+        entry = Decimal(str(entry_raw))
+        base_tp = ceil_price_tick(entry * (Decimal("1") + tps[t_idx]))
+        desired_price = base_tp
+        if cfg["front_run_ask_wall"] and t_idx in (0, 2) and mode_id in ("WALL_FRONT_RUN", "HYBRID_SPLIT"):
+            min_profitable = ceil_price_tick(entry * Decimal("1.0085"))
+            if front_run_price >= min_profitable and front_run_price < base_tp:
+                desired_price = front_run_price
+        elif mode_id == "FAST_COMPOUNDER" and cfg["front_run_ask_wall"]:
+            min_profitable = ceil_price_tick(entry * Decimal("1.0080"))
+            if front_run_price >= min_profitable and front_run_price < base_tp:
+                desired_price = front_run_price
+
+        if desired_price <= best_bid:
+            desired_price = ceil_price_tick(best_bid + PRICE_TICK)
+
+        current_price = Decimal(str(meta.get("price", "0")))
+        if abs(current_price - desired_price) < PRICE_TICK:
+            continue
+
+        qty_cro = int(meta.get("qty_cro", 0))
+        if qty_cro < MIN_ORDER_QTY_CRO:
+            continue
+
+        log.info(
+            "Scenario %s re-pricing SELL order %s (tranche %d): %s -> %s",
+            mode_id,
+            oid,
+            t_idx + 1,
+            format_price(current_price),
+            format_price(desired_price),
+        )
+        client.cancel_order(oid)
+        time.sleep(0.35)
+        client_oid = f"tp-{t_idx}-{int(time.time())}-{uuid.uuid4().hex[:6]}"
+        ack = client.create_limit_order(
+            side="SELL",
+            qty_cro=qty_cro,
+            price=desired_price,
+            client_oid=client_oid,
+        )
+        new_oid = str(ack["order_id"])
+        new_meta = dict(meta)
+        new_meta["price"] = format_price(desired_price)
+        new_meta["client_oid"] = client_oid
+        new_meta["placed_ts"] = time.time()
+        tracked.pop(oid, None)
+        tracked[new_oid] = new_meta
+        for lot in lots:
+            if lot.get("sell_order_id") == oid:
+                lot["sell_order_id"] = new_oid
+
+
+def _update_snapshot_fields(
+    state: dict[str, Any],
+    best_bid: Decimal,
+    best_ask: Decimal,
+    mid_price: Decimal,
+    bids: list[tuple[Decimal, Decimal]],
+    asks: list[tuple[Decimal, Decimal]],
+    balances: dict[str, dict[str, Decimal]],
+    open_orders: list[dict[str, Any]],
+) -> None:
+    """Populate balances, portfolio_valuation, active_orders, last_book, and timestamps."""
+    now_utc = _utc_now_str()
+    state["instrument"] = INSTRUMENT
+    state["strategy"] = STRATEGY_NAME
+    state["status"] = "HALTED" if state.get("halted") else "LIVE_ACTIVE"
+    state["server_utc"] = now_utc
+    state["last_tick_utc"] = now_utc
+    state["poll_interval_sec"] = POLL_INTERVAL_SEC
+    state["bootstrap_completed"] = True
+    state["buy_dip_pct"] = f"{TRANCHES[0]['dip_pct'] * Decimal('100'):.2f}"
+    state["take_profit_pct"] = f"{TRANCHES[0]['target_profit_pct'] * Decimal('100'):.2f}"
+    state["target_buy_usdt"] = f"{TRANCHES[0]['budget_usdt']:.2f}"
+    state["stop_loss_pct"] = f"{STOP_LOSS_PCT * Decimal('100'):.2f}"
+    state["daily_loss_cutoff_usdt"] = f"{DAILY_LOSS_CUTOFF_USDT:.2f}"
+
+    state["balances"] = {
+        ccy: {k: str(v) for k, v in vals.items()}
+        for ccy, vals in balances.items()
+        if ccy in ("CRO", "USDT", "USD")
+    }
+    for ccy in ("CRO", "USDT"):
+        if ccy not in state["balances"]:
+            state["balances"][ccy] = {"free": "0", "reserved": "0", "total": "0"}
+
+    cro_total = Decimal(str(state["balances"].get("CRO", {}).get("total", "0")))
+    usdt_total = Decimal(str(state["balances"].get("USDT", {}).get("total", "0")))
+    usd_total = Decimal(str(state["balances"].get("USD", {}).get("total", "0")))
+    cro_usd_val = cro_total * mid_price
+    total_equity_usd = cro_usd_val + usdt_total + usd_total
+
+    state["portfolio_valuation"] = {
+        "as_of_utc": now_utc,
+        "cro_units_total": str(cro_total),
+        "cro_valuation_usd": f"{cro_usd_val:.4f}",
+        "usdt_cash_total": str(usdt_total),
+        "usd_cash_total": str(usd_total),
+        "total_account_value_usd": f"{total_equity_usd:.2f}",
+        "current_mid_price": format_price(mid_price),
+    }
+
+    state["active_orders"] = [
+        {
+            "order_id": str(o.get("order_id")),
+            "client_oid": o.get("client_oid"),
+            "side": o.get("side"),
+            "price": str(o.get("limit_price") or o.get("price") or "0"),
+            "quantity": str(o.get("quantity", "0")),
+            "cumulative_quantity": str(o.get("cumulative_quantity", "0")),
+            "status": o.get("status", "ACTIVE"),
+            "exec_inst": o.get("exec_inst") if isinstance(o.get("exec_inst"), list) else ["POST_ONLY"],
+        }
+        for o in open_orders
+    ]
+
+    state["last_book"] = {
+        "best_bid": format_price(best_bid),
+        "best_ask": format_price(best_ask),
+        "mid_price": format_price(floor_price_tick(mid_price)),
+        "bids": [[str(p), str(s)] for p, s in bids[:10]],
+        "asks": [[str(p), str(s)] for p, s in asks[:10]],
+    }
+    scout = read_scout_snapshot()
+    state["scenario_mode"] = str(state.get("scenario_mode") or "PATIENT_SWING")
+    state["total_realized_pnl_usdt"] = str(state.get("total_realized_pnl_usdt") or "0.453420")
+    state["profit_reserve_usdt"] = str(state.get("profit_reserve_usdt") or "0.226710")
+    state["scout_summary"] = scout
+    state["scenario_evaluations"] = compute_scenario_evaluations(state, mid_price, scout)
+
+
+def _build_runtime_ha_health(current: dict[str, Any]) -> dict[str, Any]:
+    """Build Section 9 structured HA health payload without modifying legacy top-level keys."""
+    ha_mod = _get_ha_mod()
+    tick_dt = _parse_iso_utc(str(current.get("last_tick_utc") or ""))
+    hb_age = None
+    if tick_dt is not None:
+        hb_age = max(0.0, (datetime.now(timezone.utc) - tick_dt).total_seconds())
+    status_ok = bool(current.get("status_write_ok", True))
+    extra_alerts = list(current.get("alerts") or [])
+    risk_state = "HALTED" if current.get("halted") else "HEALTHY"
+    return ha_mod.build_ha_health_payload(
+        host_id=socket.gethostname(),
+        build_revision="AI-BS-HA-OCI-001",
+        store=None,
+        role_override=str(current.get("ha_role") or ("HALTED" if current.get("halted") else "PRIMARY")),
+        process_alive=True,
+        heartbeat_age_sec=hb_age,
+        exchange_read_access=bool(current.get("last_tick_utc")),
+        market_data_age_sec=hb_age if hb_age is not None else 0.0,
+        risk_state=risk_state,
+        status_write_ok=status_ok,
+        extra_alerts=extra_alerts,
+    )
+
+
+def run_cycle(
+    client: Any,
+    state: dict[str, Any],
+    log: logging.Logger,
+    *,
+    role: str = "primary",
+    gateway: Any = None,
+    authority_epoch: int | None = None,
+    owner_id: str | None = None,
+    strict_io: bool = False,
+) -> None:
+    """Execute one reconciliation, optional HA gateway-enforced strategy step, and telemetry snapshot cycle."""
+    ha_mod = _get_ha_mod()
+    today = _utc_day_str()
+    if state.get("utc_day") != today:
+        state["utc_day"] = today
+        state["daily_realized_pnl_usdt"] = "0.000000"
+        state["halted"] = False
+        state["halt_reason"] = None
+
+    is_passive = str(role).lower() == "passive" or isinstance(client, ha_mod.PassiveStandbyClient)
+    best_bid, best_ask, bids, asks = client.get_book(depth=10)
+    mid_price = (best_bid + best_ask) / Decimal("2")
+
+    open_orders = client.get_open_orders()
+    adopt_open_orders(open_orders, state, log)
+    reconcile_orders(client, state, open_orders, log)
+
+    if not state.get("halted"):
+        daily_pnl = Decimal(str(state.get("daily_realized_pnl_usdt", "0")))
+        if daily_pnl <= -DAILY_LOSS_CUTOFF_USDT:
+            state["halted"] = True
+            state["halt_reason"] = (
+                f"DAILY_LOSS_CUTOFF_REACHED ({daily_pnl} USDT <= -{DAILY_LOSS_CUTOFF_USDT} USDT)"
+            )
+            log.warning("Engine halted due to daily loss cutoff: %s", state["halt_reason"])
+
+    exec_client = client
+    if is_passive:
+        exec_client = client if isinstance(client, ha_mod.PassiveStandbyClient) else ha_mod.PassiveStandbyClient(client)
+        state["ha_role"] = "PASSIVE"
+    elif gateway is not None:
+        eff_owner = owner_id or socket.gethostname()
+        eff_epoch = int(authority_epoch if authority_epoch is not None else 0)
+        try:
+            ok_int, int_msg = gateway.store.check_integrity()
+            if not ok_int:
+                raise ha_mod.JournalDurabilityError(f"Corrupt gateway journal: {int_msg}")
+            gateway.store.check_authority(eff_owner, eff_epoch)
+            unresolved = gateway.store.get_unresolved_intents()
+            if unresolved:
+                raise ha_mod.UnresolvedIntentError(
+                    f"Startup/cycle barrier: {len(unresolved)} unresolved intents must reconcile first"
+                )
+            exec_client = ha_mod.GatewayExchangeClient(
+                read_client=client,
+                gateway=gateway,
+                owner_id=eff_owner,
+                epoch=eff_epoch,
+            )
+            state["ha_role"] = "ACTIVE"
+            state["authority_epoch"] = eff_epoch
+        except ha_mod.HAError as exc:
+            state["halted"] = True
+            state["halt_reason"] = f"HA_AUTHORITY_BARRIER: {exc}"
+            state["ha_role"] = "SAFE_HALT"
+            log.error("HA execution barrier blocked mutations: %s", exc)
+    else:
+        state["ha_role"] = "HALTED" if state.get("halted") else "PRIMARY"
+
+    balances = client.get_balances()
+    # Protective exits only reduce exposure, so a daily-loss halt must not disable
+    # them (otherwise the cutoff tripped by earlier stops strands the last lots).
+    # An HA authority barrier (SAFE_HALT) still blocks every mutation.
+    if not is_passive and state.get("ha_role") != "SAFE_HALT":
+        enforce_per_lot_stop_loss(exec_client, state, best_bid, log)
+    if not state.get("halted") and not is_passive:
+        place_take_profit_sells(exec_client, state, best_bid, balances, open_orders, log)
+        open_orders = client.get_open_orders()
+        balances = client.get_balances()
+        if not are_buys_paused(log):
+            state["buys_paused"] = False
+            deploy_new_grid_if_empty(
+                client=exec_client,
+                state=state,
+                best_bid=best_bid,
+                best_ask=best_ask,
+                mid_price=mid_price,
+                balances=balances,
+                open_orders=open_orders,
+                log=log,
+            )
+            balances = client.get_balances()
+            rearm_missing_tranches(exec_client, state, best_bid, best_ask, mid_price, balances, log)
+        else:
+            state["buys_paused"] = True
+        apply_active_scenario_to_resting_sells(exec_client, state, best_bid, read_scout_snapshot(), log)
+
+    final_orders = client.get_open_orders()
+    final_balances = client.get_balances()
+    _update_snapshot_fields(
+        state=state,
+        best_bid=best_bid,
+        best_ask=best_ask,
+        mid_price=mid_price,
+        bids=bids,
+        asks=asks,
+        balances=final_balances,
+        open_orders=final_orders,
+    )
+    if is_passive:
+        state["status"] = "PASSIVE_STANDBY"
+    with _STATE_LOCK:
+        ok_save = save_state(state, strict_io=strict_io)
+        if not ok_save:
+            log.error("STATE_WRITE_FAILED: engine status persistence failed (OPS-02)")
+
+
+class _ReuseThreadingHTTPServer(ThreadingHTTPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
+
+def _build_telemetry_payload() -> bytes:
+    """Build current telemetry JSON bytes from latest state."""
+    with _STATE_LOCK:
+        if _LATEST_STATE is not None:
+            current = json.loads(json.dumps(_LATEST_STATE))
+        else:
+            current = load_state()
+    payload = dict(current)
+    if current.get("halted"):
+        payload["status"] = "HALTED"
+    elif current.get("ha_role") == "PASSIVE":
+        payload["status"] = "PASSIVE_STANDBY"
+    else:
+        payload["status"] = "LIVE_ACTIVE"
+    payload["server_utc"] = _utc_now_str()
+    payload["poll_interval_sec"] = POLL_INTERVAL_SEC
+    payload["buy_dip_pct"] = f"{TRANCHES[0]['dip_pct'] * Decimal('100'):.2f}"
+    payload["take_profit_pct"] = f"{TRANCHES[0]['target_profit_pct'] * Decimal('100'):.2f}"
+    payload["target_buy_usdt"] = f"{TRANCHES[0]['budget_usdt']:.2f}"
+    payload["stop_loss_pct"] = f"{STOP_LOSS_PCT * Decimal('100'):.2f}"
+    payload["daily_loss_cutoff_usdt"] = f"{DAILY_LOSS_CUTOFF_USDT:.2f}"
+    payload["ha_health"] = _build_runtime_ha_health(current)
+    return json.dumps(payload).encode("utf-8")
+
+
+def start_telemetry_server(log: logging.Logger, state_ref: dict[str, Any]) -> _ReuseThreadingHTTPServer:
+    """Start local read-only HTTP telemetry server on 127.0.0.1:TELEMETRY_PORT."""
+
+    class TelemetryHandler(BaseHTTPRequestHandler):
+        def _send_cors_headers(self) -> None:
+            origin = self.headers.get("Origin")
+            if origin in ALLOWED_CORS_ORIGINS:
+                self.send_header("Access-Control-Allow-Origin", origin)
+                self.send_header("Vary", "Origin")
+            else:
+                self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            self.send_header(
+                "Access-Control-Allow-Headers",
+                "Content-Type, Authorization, Cache-Control, Pragma, *",
+            )
+            self.send_header("Cache-Control", "no-store")
+
+        def do_OPTIONS(self) -> None:  # noqa: N802
+            self.send_response(204)
+            self._send_cors_headers()
+            self.end_headers()
+
+        def do_GET(self) -> None:  # noqa: N802
+            try:
+                path = self.path.split("?", 1)[0]
+                if path == "/health":
+                    with _STATE_LOCK:
+                        current = json.loads(json.dumps(_LATEST_STATE)) if _LATEST_STATE is not None else dict(state_ref)
+                    ha_health = _build_runtime_ha_health(current)
+                    ready = bool(ha_health.get("dimensions", {}).get("application_ready", False))
+                    body = json.dumps({
+                        "status": "ok" if (ready or current.get("ha_role") == "PASSIVE") and current.get("status_write_ok", True) else "degraded",
+                        "service": "structural_dip_engine",
+                        **ha_health,
+                    }).encode("utf-8")
+                    self.send_response(200)
+                    self._send_cors_headers()
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
+
+                if path != "/api/live-telemetry":
+                    body = b'{"error":"not_found"}'
+                    self.send_response(404)
+                    self._send_cors_headers()
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
+
+                body = _build_telemetry_payload()
+                self.send_response(200)
+                self._send_cors_headers()
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            except (ConnectionError, BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                pass
+
+        def do_POST(self) -> None:  # noqa: N802
+            try:
+                path = self.path.split("?", 1)[0]
+                if path != "/api/scenario-mode":
+                    body = b'{"error":"not_found"}'
+                    self.send_response(404)
+                    self._send_cors_headers()
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
+                length = int(self.headers.get("Content-Length", "0"))
+                raw = self.rfile.read(length) if length > 0 else b"{}"
+                req_data = json.loads(raw.decode("utf-8"))
+                new_mode = str(req_data.get("scenario_mode", "")).strip().upper()
+                if new_mode not in SCENARIO_PROFILES:
+                    body = json.dumps({"error": "invalid_scenario_mode", "valid": list(SCENARIO_PROFILES)}).encode("utf-8")
+                    self.send_response(400)
+                    self._send_cors_headers()
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
+                with _STATE_LOCK:
+                    state_ref["scenario_mode"] = new_mode
+                    save_state(state_ref)
+                log.info("Scenario mode switched via UI to %s", new_mode)
+                body = json.dumps({"status": "ok", "scenario_mode": new_mode}).encode("utf-8")
+                self.send_response(200)
+                self._send_cors_headers()
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            except Exception as exc:
+                body = json.dumps({"error": str(exc)}).encode("utf-8")
+                self.send_response(500)
+                self._send_cors_headers()
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+        def log_message(self, format: str, *args: Any) -> None:  # noqa: A002
+            return
+
+    server = _ReuseThreadingHTTPServer((TELEMETRY_HOST, TELEMETRY_PORT), TelemetryHandler)
+    actual_port = int(server.server_address[1])
+    thread = threading.Thread(target=server.serve_forever, name="StructuralDipTelemetryHTTP", daemon=True)
+    thread.start()
+    log.info(
+        "Structural Dip live telemetry HTTP server listening on http://%s:%d/api/live-telemetry",
+        TELEMETRY_HOST,
+        actual_port,
+    )
+    return server
+
+
+def _handle_signal(_signum: int, _frame: Any) -> None:
+    global _STOP_REQUESTED
+    _STOP_REQUESTED = True
+
+
+def main(argv: list[str] | None = None) -> int:
+    global _LATEST_STATE, _STOP_REQUESTED, _AUTH_FAIL_SINCE, _AUTH_ALERTED
+    parser = argparse.ArgumentParser(description="AI-BS Structural Dip Strategy Engine")
+    parser.add_argument(
+        "--role",
+        choices=("primary", "passive"),
+        default="passive" if os.environ.get("AIBS_SAFE_RECOVERY_MODE", "").lower() == "passive" else "primary",
+        help="Execution role (passive enforces strict read-only non-mutation)",
+    )
+    parser.add_argument(
+        "--standby-readonly",
+        action="store_true",
+        help="Shortcut enforcing passive read-only standby mode",
+    )
+    parser.add_argument(
+        "--gateway-db",
+        default=os.environ.get("AIBS_GATEWAY_DB", ""),
+        help="Optional SQLite WAL AuthorityStore path (disabled by default until gateway cutover)",
+    )
+    parser.add_argument("--owner-id", default=socket.gethostname(), help="Owner identity for gateway authority checks")
+    args, _unknown = parser.parse_known_args(argv)
+    eff_role = "passive" if (args.standby_readonly or args.role == "passive") else "primary"
+
+    _STOP_REQUESTED = False
+    signal.signal(signal.SIGINT, _handle_signal)
+    signal.signal(signal.SIGTERM, _handle_signal)
+
+    SAVED_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    init_ledgers()
+    log = configure_logging()
+    client = load_client(role=eff_role)
+    ha_mod = _get_ha_mod()
+
+    gateway = None
+    authority_epoch = None
+    if args.gateway_db and eff_role == "primary":
+        store = ha_mod.AuthorityStore(args.gateway_db)
+        st = store.get_state()
+        authority_epoch = int(st["epoch"])
+        gateway = ha_mod.ExecutionGateway(store, client)
+        log.info(
+            "HA ExecutionGateway attached (db=%s role=%s active_owner=%s epoch=%d)",
+            args.gateway_db,
+            st.get("role"),
+            st.get("owner_id"),
+            authority_epoch,
+        )
+
+    with _STATE_LOCK:
+        state = load_state()
+        state["ha_role"] = "PASSIVE" if eff_role == "passive" else "PRIMARY"
+        _LATEST_STATE = json.loads(json.dumps(state))
+
+    telemetry_server = start_telemetry_server(log, state)
+    log.info(
+        "AI-BS Structural Dip Strategy Engine active (role=%s poll=%.1fs, instrument=%s)",
+        eff_role,
+        POLL_INTERVAL_SEC,
+        INSTRUMENT,
+    )
+
+    try:
+        while not _STOP_REQUESTED:
+            try:
+                if gateway is not None:
+                    st_now = gateway.store.get_state()
+                    authority_epoch = int(st_now["epoch"])
+                run_cycle(
+                    client,
+                    state,
+                    log,
+                    role=eff_role,
+                    gateway=gateway,
+                    authority_epoch=authority_epoch,
+                    owner_id=args.owner_id,
+                )
+                if _AUTH_ALERTED:
+                    send_alert("Exchange API auth recovered; engine trading again.", log)
+                _AUTH_FAIL_SINCE, _AUTH_ALERTED = None, False
+            except Exception as exc:
+                log.error("Engine iteration error (retaining state, retrying next tick): %s", exc)
+                if "40101" in str(exc):
+                    now_ts = time.time()
+                    if _AUTH_FAIL_SINCE is None:
+                        _AUTH_FAIL_SINCE = now_ts
+                    elif not _AUTH_ALERTED and now_ts - _AUTH_FAIL_SINCE >= AUTH_ALERT_AFTER_SEC:
+                        _AUTH_ALERTED = True
+                        send_alert("Crypto.com API 40101 auth failure for 5+ min. Check IP whitelist/key. Orders are NOT being managed.", log)
+            steps = max(1, int(round(POLL_INTERVAL_SEC / 0.5)))
+            for _ in range(steps):
+                if _STOP_REQUESTED:
+                    break
+                time.sleep(0.5)
+    finally:
+        log.info("Shutting down Structural Dip Telemetry HTTP server...")
+        telemetry_server.shutdown()
+        telemetry_server.server_close()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

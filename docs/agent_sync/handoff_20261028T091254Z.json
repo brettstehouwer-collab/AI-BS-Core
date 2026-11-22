@@ -1,0 +1,88 @@
+{
+  "handoff_id": "handoff_20261028T091254Z",
+  "protocol": "AI-BS-UADP-1.0",
+  "timestamp_utc": "2026-10-28T09:12:54.704777+00:00",
+  "outgoing_agent": "Google Antigravity",
+  "receiving_agent": "OpenAI Codex",
+  "synchronization_score": "7/7",
+  "checklist": {
+    "1_git_commit_identity": true,
+    "2_source_file_hashes": true,
+    "3_architecture_ledger": true,
+    "4_dependency_environment": true,
+    "5_acceptance_tests": true,
+    "6_handoff_manifest": true,
+    "7_task_continuity": true
+  },
+  "git": {
+    "commit": "0bdca059f5dcfc250f9da8927d7ca46d473387df",
+    "branch": "main",
+    "is_clean": false,
+    "status_summary": "3468 modified/untracked files"
+  },
+  "critical_file_hashes": {
+    "AGENTS.md": "46e5541ddef2e02f01ca6b21dae7db3882f458a12d421a8540fde55e3a7647a3",
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md": "d400f1ce981c0d54f1a92857377af452081d710e0adc1c2ee06e41ce5e886d85",
+    "docs/CODEX_HANDOFF.md": "205121344011a5fe75aaff9cbc75f49e423354c6c1c8e60d3eb6a57a448e4da2",
+    "docs/CODEX_DECISIONS.md": "48f4010c9f52cfa96d8858f24df42b60d02e9f3364257e0558a864060c9e056d",
+    "docs/CODEX_JOURNAL.md": "3c82881aab0559df25d699a6a3b6f2ee8faa11345fad65e6406c9f5ec79bd68b",
+    "docs/CODEX_TASKS.md": "e5d65656118dbb18237f6c1acb4c7ac924adcfca34d3ffeb49ee8a18b2eb702e",
+    "docs/memory/Conversation_Learning_and_RAG.md": "7c2425a91c1d9f66c133f44c907a3f961db5eb73e546443e0f37411323b186ab",
+    "backend/AI_BS_Backend.py": "b32d7d4e2813ebba735838daa10a7fd6dd7b10289780b605d45650b2994539bc",
+    "backend/routers/chat_router.py": "59bcafeade8321c6bb451a98405bb5f2a3cfbdc3100992d5a59a6368c0a4df2d",
+    "backend/core/coding_guest_runner.py": "4ec5f0b1113acf1e5ceb7d4f9331ef6666a0eeaa1fb6a535eb1e479d80347a16",
+    "backend/core/coding_workflow.py": "cedcb04cea3a33a7359be89f9aa51f07ff8427d7b79e245aebecafc25ec31541",
+    "backend/core/coding_chat.py": "12e7582054d712c6e03751f95f60a9d8b4699a3e06d406f887ada5ed4d2c1cc5",
+    "backend/core/coding_review.py": "003f220a5fa74346dcd35c3e8851448b953bc0a1cbd39213fde56e6892d42c9f",
+    "backend/core/hybrid_reasoning_engine.py": "cb478b357a9782143d2e5c81eab812de01e13e5237c5bfefc6aefea6e09ec640",
+    "backend/core/optional_web_search.py": "a8b5fdfc7a75bfe6dbac36cb5ea42d9b348d53b5ff98ec91c4ebe11d0b925111",
+    "backend/tools/tool_registry.py": "b9f877d76eb41ef9a6ec2d92f322ea29f2cc13475c179cff76471cd954275069",
+    "backend/core/sovereign_reasoning/document_engine.py": "1dd1a27f0300578332bf1f4025f3b6b728c5b2bb30d28923e62cde5baef62b58",
+    "frontend/src/components/CodingTaskReviewCard.jsx": "b218d82a20e4ac968fee0c046f0669b1f07a5e01440874a3dab8b9670f4fc148",
+    "scripts/verify_and_connect_guest_runner.py": "bb9a7283172b51b142b5f611fe15b61c661486af7246b9476e20b61b4dc2fb96",
+    "scripts/tests/test_coding_guest_runner.py": "ffa4d116e32987498c1d9ccaa7daa77326a3fe9b04a4e93dbaa23bbbcf22977b",
+    "scripts/agent_sync/sync_gateway.py": "5135476e2e58c9c5bb93b11f05075da5c925dc427be2faa1df0494244be6a1eb"
+  },
+  "mirror_parity": {
+    "ChatTab.jsx": {
+      "parity": true,
+      "mirrors": {
+        "frontend/src/components/ChatTab.jsx": "5c8c1400b80b10ccd5375f23f5071d0f6d823d29e378ae17769e0d138cefb6c3",
+        "frontend/components/ChatTab.jsx": "5c8c1400b80b10ccd5375f23f5071d0f6d823d29e378ae17769e0d138cefb6c3",
+        "frontend/src/components/components/ChatTab.jsx": "5c8c1400b80b10ccd5375f23f5071d0f6d823d29e378ae17769e0d138cefb6c3",
+        "frontend/components/components/ChatTab.jsx": "5c8c1400b80b10ccd5375f23f5071d0f6d823d29e378ae17769e0d138cefb6c3"
+      }
+    },
+    "MobileStehouwerChat.jsx": {
+      "parity": true,
+      "mirrors": {
+        "frontend/src/components/MobileStehouwerChat.jsx": "c110a3836800177dca9eea323a2a1847eb01952edc661908ad4950a67433c689",
+        "frontend/components/MobileStehouwerChat.jsx": "c110a3836800177dca9eea323a2a1847eb01952edc661908ad4950a67433c689",
+        "frontend/src/components/components/MobileStehouwerChat.jsx": "c110a3836800177dca9eea323a2a1847eb01952edc661908ad4950a67433c689",
+        "frontend/components/components/MobileStehouwerChat.jsx": "c110a3836800177dca9eea323a2a1847eb01952edc661908ad4950a67433c689"
+      }
+    },
+    "CodingTaskReviewCard.jsx": {
+      "parity": true,
+      "mirrors": {
+        "frontend/src/components/CodingTaskReviewCard.jsx": "b218d82a20e4ac968fee0c046f0669b1f07a5e01440874a3dab8b9670f4fc148",
+        "frontend/components/CodingTaskReviewCard.jsx": "b218d82a20e4ac968fee0c046f0669b1f07a5e01440874a3dab8b9670f4fc148",
+        "frontend/src/components/components/CodingTaskReviewCard.jsx": "b218d82a20e4ac968fee0c046f0669b1f07a5e01440874a3dab8b9670f4fc148",
+        "frontend/components/components/CodingTaskReviewCard.jsx": "b218d82a20e4ac968fee0c046f0669b1f07a5e01440874a3dab8b9670f4fc148"
+      }
+    }
+  },
+  "acceptance_tests": {
+    "passed": true,
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "TestClient  # noqa\n..........................................C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\threading.py:287: ResourceWarning: unclosed file <_io.FileIO name='C:\\\\Users\\\\footb\\\\AppData\\\\Local\\\\Temp\\\\tmpe76zdqe1\\\\synthetic_test.wav' mode='rb' closefd=True>\n  if hasattr(lock, '_release_save'):\nResourceWarning: Enable tracemalloc to get the object allocation traceback\n....\n----------------------------------------------------------------------\nRan 46 tests in 14.259s\n\nOK\n"
+  },
+  "tasks_completed": [
+    "Implemented isolated VM guest check runner (backend/core/coding_guest_runner.py) with Hyper-V/WSL2 namespace+tmpfs+seccomp-bpf sandbox and VirtualBox headless Windows guest provider (Record 172, ADR-108)",
+    "Wired isolated guest runners into coding_workflow.py, coding_chat.py, coding_review.py, chat routers, and CodingTaskReviewCard.jsx (4 mirrors) with zero host fallback and explicit execution_mode/guest_provider provenance",
+    "Created turnkey CLI (scripts/verify_and_connect_guest_runner.py: status, verify, enroll-vbox, verify-vbox, test-all) and verified 7-test Number Summary canary + 6 containment escape-denial probes live in isolated VM",
+    "Added automated suite scripts/tests/test_coding_guest_runner.py; verified 105/105 automated tests passing across guest runner, baseline regressions, and snapshot/preparation suites"
+  ],
+  "next_step": "Codex runs 'python C:\\AI-BS\\scripts\\agent_sync\\sync_gateway.py verify' and 'python C:\\AI-BS\\scripts\\verify_and_connect_guest_runner.py verify' (plus 'test-all') to independently verify Git HEAD, SHA-256 fingerprints, ADR-108 provenance, zero host fallback, and live isolated VM guest execution. When operator wishes to run native Windows-kernel checks inside VirtualBox AI-BS-Eval-Base-20261023, run 'python C:\\AI-BS\\scripts\\verify_and_connect_guest_runner.py enroll-vbox'."
+}

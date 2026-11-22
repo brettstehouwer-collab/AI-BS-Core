@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "7c51c0b8c5154447941484e1606800a2",
+  "plan_id": "0e649b1e336242328cf2b5ba997a33ef",
+  "snapshot_sha256": "9022d32bee8c3878e45950f87efc5bd7e3f69c3b540009e35bb20488e777c6e9",
+  "review_digest": "7425bc87190d10a9a9e9b8217eddad6797a3e7c966f71d72ab99d3bbdef3e72d",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "1fc62503adbc4fc3b4d56a12e28eb49e",
+  "reviewed_plan_sha256": "acf553baee9ca517a6db05526ced8421addda622cebad2dd8b3d1af8053b5956",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 31832,
+    "created": 1794664490.3250988
+  },
+  "created_at_utc": "2026-11-14T13:54:51.079964+00:00",
+  "entry_sha256": "d047e52cb4ee6196f52c4b2e6f147c22f3adab287bcdf8428d776e3810d1080f"
+}

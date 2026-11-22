@@ -1,0 +1,48 @@
+{
+  "utc": "2026-11-01T01:32:36.392201+00:00",
+  "services": [
+    {
+      "name": "backend",
+      "port": 8080,
+      "http_status": 200,
+      "response_bytes_read": 602,
+      "healthy": true
+    },
+    {
+      "name": "gateway",
+      "port": 8000,
+      "http_status": 200,
+      "response_bytes_read": 165,
+      "healthy": true
+    },
+    {
+      "name": "ollama",
+      "port": 11434,
+      "http_status": 200,
+      "response_bytes_read": 21,
+      "healthy": true
+    },
+    {
+      "name": "frontend",
+      "port": 5173,
+      "http_status": 200,
+      "response_bytes_read": 2461,
+      "healthy": true
+    },
+    {
+      "name": "api_connector",
+      "port": 20243,
+      "http_status": 200,
+      "response_bytes_read": 88,
+      "healthy": true
+    }
+  ],
+  "all_core_healthy": true,
+  "trading": {
+    "dispatch_enabled": false,
+    "reconciliation_required": true,
+    "halt_marker_present": false,
+    "reason": "Reconciliation required: fills, fees, slippage and shared risk limits are unverified."
+  },
+  "cloud": "LOCAL_ONLY_PER_USER"
+}

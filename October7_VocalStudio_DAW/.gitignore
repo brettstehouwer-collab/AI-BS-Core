@@ -1,0 +1,21 @@
+# Keep installed libraries, executables and personal media out of source control.
+/*
+!/.gitignore
+!/PROJECT_GUIDE.md
+!/source/
+!/setup_installer.py
+!/Install_Wizard.ps1
+!/Install_October7_DAW.bat
+!/Uninstall_October7_DAW.bat
+__pycache__/
+*.pyc
+*.wav
+*.mp3
+*.flac
+*.exe
+*.dll
+*.pyd
+*.key
+*.pfx
+*.p12
+.env*

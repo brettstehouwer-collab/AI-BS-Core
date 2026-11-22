@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "record": 153,
+  "profile_id": "recdebut-sender-review-v1",
+  "revision": 1,
+  "prepared_utc": "2026-10-27T17:36:52.157376+00:00",
+  "tenant": "recdebut",
+  "purpose": "Nonsecret review data only; no runtime consumer or dispatch authority",
+  "status": "BLOCKED_PENDING_REPAIRS_AND_DENNIS_OPERATOR_REVIEW",
+  "runtime_consumption_enabled": false,
+  "sending_enabled": false,
+  "approval": {
+    "dennis_reviewed": false,
+    "operator_reviewed": false,
+    "authorization_id": null,
+    "issued_at": null,
+    "expires_at": null
+  },
+  "selection": {
+    "provider": null,
+    "from_identity": null,
+    "display_name": null,
+    "reply_to": null,
+    "sender_profile_digest": null
+  },
+  "preferred_candidate_for_review": {
+    "connection_label": "saved_smtp_1",
+    "provider": "ionos_smtp",
+    "configured_mailbox_domain": "stehouwerproductions.com",
+    "authentication": "AUTHENTICATED",
+    "tls": "TLSv1.3",
+    "reason": "Existing business mailbox authenticated and domain publishes matching IONOS MX/SPF",
+    "exact_sender_authority_verified": false,
+    "branding_approved": false,
+    "dkim_signing_alignment_verified": false,
+    "delivery_verified": false,
+    "provider_selected_or_switched": false
+  },
+  "existing_saved_provider": "resend",
+  "existing_saved_provider_changed": false,
+  "email_provider_evidence": {
+    "resend_domain_read": "restricted_api_key; send validity not established either way",
+    "configured_resend_from_domain": "stehouwerproductions.com",
+    "reply_to_authenticated": false,
+    "primary_gmail_imap": "AUTHENTICATED_NO_MAIL_READ",
+    "primary_gmail_smtp": "UNVERIFIED_TWO_AUTH_STAGE_DISCONNECTIONS_NO_MORE_RETRIES",
+    "saved_smtp_2": "AUTHENTICATED_NOT_SELECTED",
+    "saved_smtp_3": "AUTHENTICATED_NOT_SELECTED"
+  },
+  "sms_provider_evidence": {
+    "textbee_device": "AUTHENTICATED_ENABLED_FRESH_HEARTBEAT_AT_CHECK",
+    "provider_subscription": "ACTIVE_MESSAGE_RECEIVED_METADATA_ONLY",
+    "public_webhook_delivery_verified": false,
+    "durable_inbound_accepted": false,
+    "automatic_stop_suppression_implemented": false,
+    "delivery_verified": false
+  },
+  "audience": {
+    "selected_recipients": [],
+    "audience_sha256": null,
+    "parent_guardian_records_in_current_workflow": 0,
+    "parent_guardian_sms_granted_with_evidence": 0,
+    "parent_guardian_email_granted_with_evidence": 0,
+    "required_role": [
+      "parent",
+      "guardian"
+    ],
+    "verified_relationship_required": true,
+    "channel_specific_permission_evidence_required": true,
+    "common_suppression_check_before_dispatch_required": true,
+    "historical_outreach_implies_permission": false,
+    "duplicate_and_shared_destination_review_required": true
+  },
+  "message": {
+    "channel": null,
+    "subject": null,
+    "body": null,
+    "message_sha256": null,
+    "approved_link_destination": null,
+    "postal_address_reviewed": false,
+    "opt_out_mechanism_accepted": false,
+    "promotional_video_approved": false
+  },
+  "proposed_future_limits": {
+    "implemented_or_enforced": false,
+    "dispatcher_implemented_by_this_profile": false,
+    "first_internal_test_recipients": 1,
+    "separate_internal_test_approval_required": true,
+    "unique_parent_guardian_recipients_total_per_pilot_approval": 5,
+    "channels_per_approval": 1,
+    "providers_per_approval": 1,
+    "approval_ttl_minutes": 30,
+    "single_use_attempt": true,
+    "automatic_provider_fallback": false,
+    "smtp_rotation": false,
+    "automatic_retry": false,
+    "unknown_delivery_outcome_requires_reconciliation": true
+  },
+  "required_authorization_binding": [
+    "tenant",
+    "profile_revision_and_digest",
+    "exact_provider_and_sender_identity",
+    "reply_to",
+    "subject_body_footer_links_and_personalized_bytes",
+    "exact_normalized_audience_and_permission_evidence_revisions",
+    "suppression_freshness",
+    "positive_recipient_cap",
+    "unique_attempt_and_idempotency_scope",
+    "issued_at_and_expiry",
+    "dennis_and_operator_review_records"
+  ],
+  "activation_blockers": [
+    "Separate durable signed inbound intake from held forwarding and acknowledge only after commit",
+    "Persist STOP/common suppression independently of sending and roster membership",
+    "Verify approved exact sender, reply-to and sender-domain SPF/DKIM/DMARC alignment",
+    "Create and review exact permission-qualified audience and message; current workflow is empty",
+    "Extend existing preview digest and review UI; review is not dispatch authorization",
+    "Implement explicit provider dispatch, refusal handling, durable reservation, expiry, cancellation and recovery",
+    "Complete separately approved internal delivery and reply/STOP acceptance",
+    "Dennis and operator must review; source hold release needs a separate reviewed change"
+  ],
+  "evidence_references": [
+    {
+      "path": "backups/recdebut_send_setup_20261027_record152/connection_results.json",
+      "sha256": "5187b68332842176ccd2887c64933d093920ac33266955309805b5a463151545"
+    },
+    {
+      "path": "backups/recdebut_send_setup_20261027_record152/smtp_followup.json",
+      "sha256": "1c08ba0ac26c36a7355c4780a88a16417ad9fbc879bebfb6de0cd3c00609e763"
+    },
+    {
+      "path": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json",
+      "sha256": "6f6292382e33d69ea336277821f73ba8fdecc3d3597d5ebddfbb5f83ea11862a"
+    },
+    {
+      "path": "backups/recdebut_send_setup_20261027_record152/source_review/provider_free_review.json",
+      "sha256": "0ab58bc90a0a1e7136009d7e599e8ae85ecd950b79e81f38dcce26217ecc13a2"
+    },
+    {
+      "path": "backups/recdebut_send_setup_20261027_record152/source_review/workflow_readiness_aggregates.json",
+      "sha256": "2f4a636c134d2057e9a0d026abb28585a2b8f0f7ec5588ee2f53fb4644027180"
+    },
+    {
+      "path": "backups/recdebut_send_setup_20261027_record152/focused_tests.txt",
+      "sha256": "bf94b386131ef4880d68cb51ba520a8d9bba99ac1a0e8c56a4f0648f39b29a81"
+    }
+  ],
+  "cloud_sync_status": "pending",
+  "credentials_or_private_recipient_data_included": false,
+  "checkpoint_note": "Evidence directory retains initial record152 task name; concurrent E-drive work owns Record152. This review is Record153."
+}

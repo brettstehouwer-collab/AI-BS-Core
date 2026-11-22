@@ -1,0 +1,11 @@
+{
+  "state": "FAILED",
+  "input_sha256": "fc2f6b5b48e92cb41d8902617478a62069b3768064c6e12fb3b607f6b9fb6fbd",
+  "proposal": null,
+  "error_code": "invalid_model_output",
+  "finished_at_utc": "2026-11-14T14:20:52.807266+00:00",
+  "elapsed_seconds": 0.0,
+  "response_sha256": "62b8125a6f6d924ec53345b5fcd58ca3ed3f5e7d51e2e146e5f1346508acce69",
+  "response_bytes": 8,
+  "entry_sha256": "86d98df683eac3390841585f71a92ca328d6ddc2cf62d7f117fb582a4bd6f20a"
+}

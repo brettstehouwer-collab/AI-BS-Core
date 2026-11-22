@@ -1,0 +1,61 @@
+{
+  "utc": "2026-10-25T21:33:16.854123+00:00",
+  "purpose": "single diagnostic after acceptance failure; no repeat activation",
+  "health": [
+    {
+      "target": "http://127.0.0.1:8000/health",
+      "status": 200,
+      "json_status": "online",
+      "content_type": "application/json",
+      "server": null,
+      "retry_after": null,
+      "cf_ray": null,
+      "bytes": 165,
+      "body_not_retained": true
+    },
+    {
+      "target": "https://api.brettstehouwer.live/health",
+      "status": 200,
+      "json_status": "online",
+      "content_type": "application/json",
+      "server": "cloudflare",
+      "retry_after": null,
+      "cf_ray": "a50456a96dac9a2e-ORD",
+      "bytes": 165,
+      "body_not_retained": true
+    }
+  ],
+  "processes": [
+    {
+      "pid": 14588,
+      "created": 1792963938.9991512,
+      "name": "cloudflared.exe"
+    },
+    {
+      "pid": 6720,
+      "created": 1792963947.253989,
+      "name": "cloudflared.exe"
+    },
+    {
+      "pid": 6252,
+      "created": 1792907174.92084,
+      "name": "cloudflared.exe"
+    },
+    {
+      "pid": 30912,
+      "created": 1792907269.683978,
+      "name": "aibs_engine.exe"
+    },
+    {
+      "pid": 50200,
+      "created": 1792960715.105764,
+      "name": "python.exe"
+    },
+    {
+      "pid": 48724,
+      "created": 1792963881.7564092,
+      "name": "nginx.exe"
+    }
+  ],
+  "sources_restored_before": true
+}

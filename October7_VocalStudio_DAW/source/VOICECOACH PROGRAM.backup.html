@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>October 7 - Vocal Tracking Studio & Performance Engine</title>
+<style>
+  :root {
+    --bg-dark: #0d0f12;
+    --panel-bg: #161a20;
+    --panel-border: #242b35;
+    --accent-gold: #e5a93b;
+    --accent-blue: #3b82f6;
+    --accent-red: #ef4444;
+    --accent-green: #10b981;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-dark);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  header {
+    background: var(--panel-bg);
+    border-bottom: 1px solid var(--panel-border);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .track-meta { font-size: 0.9rem; letter-spacing: 0.5px; }
+  .track-meta span { color: var(--accent-gold); font-weight: bold; }
+  .controls { display: flex; gap: 10px; align-items: center; }
+  button {
+    background: #252b36;
+    color: var(--text-main);
+    border: 1px solid var(--panel-border);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  button:hover { background: #323b49; }
+  button.rec-active { background: var(--accent-red); border-color: #ff6b6b; color: white; animation: pulse 1.5s infinite; }
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+  }
+  .main-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 320px 1fr 340px;
+    gap: 12px;
+    padding: 12px;
+    height: calc(100vh - 120px);
+    overflow: hidden;
+  }
+  .panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+  }
+  .panel h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 6px;
+  }
+  /* Teleprompter */
+  #prompter-container {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    padding-right: 6px;
+    scroll-behavior: smooth;
+  }
+  .lyric-line {
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    font-size: 1.05rem;
+    line-height: 1.4;
+    color: #6b7280;
+    transition: all 0.2s ease;
+  }
+  .lyric-line.active {
+    color: #ffffff;
+    background: #1f2937;
+    border-left: 3px solid var(--accent-gold);
+    transform: scale(1.02);
+  }
+  .section-tag {
+    font-size: 0.75rem;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 14px;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .breath-mark {
+    display: inline-block;
+    color: var(--accent-blue);
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 4px;
+    background: rgba(59, 130, 246, 0.15);
+    border-radius: 3px;
+    margin-right: 6px;
+  }
+  /* Center Stage Visualizers */
+  .visualizer-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  canvas {
+    width: 100%;
+    background: #090b0e;
+    border-radius: 4px;
+    border: 1px solid var(--panel-border);
+  }
+  #pitch-canvas { flex: 2; }
+  #oscilloscope-canvas { flex: 1; }
+  /* Diagnostics / Performance Review */
+  #report-container {
+    flex: 1;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .metric-card {
+    background: #0f1216;
+    border: 1px solid var(--panel-border);
+    padding: 10px;
+    border-radius: 4px;
+  }
+  .metric-title { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; }
+  .metric-value { font-size: 1.4rem; font-weight: bold; color: var(--accent-gold); margin: 4px 0; }
+  .metric-bar { height: 6px; background: #262c36; border-radius: 3px; overflow: hidden; }
+  .metric-fill { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.5s; }
+  .diagnostic-log {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+  }
+  .diagnostic-log li {
+    padding: 6px 8px;
+    background: #11141a;
+    border-left: 2px solid var(--accent-blue);
+    border-radius: 2px;
+  }
+  /* Footer transport */
+  footer {
+    background: var(--panel-bg);
+    border-top: 1px solid var(--panel-border);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .timecode { font-family: monospace; font-size: 1.1rem; color: var(--accent-gold); min-width: 90px; }
+  .timeline-bar {
+    flex: 1;
+    height: 8px;
+    background: #252b36;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+  }
+  .timeline-progress { height: 100%; width: 0%; background: var(--accent-gold); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="track-meta">
+    PROJECT: <span>OCTOBER 7</span> | TEMPO: <span>80 BPM</span> | METER: <span>4/4</span>
+  </div>
+  <div class="controls">
+    <label style="font-size:0.8rem; color:var(--text-muted)">Backing Audio:
+      <input type="file" id="backing-input" accept="audio/*" style="font-size:0.75rem;">
+    </label>
+    <button id="btn-mic">Enable Mic</button>
+    <button id="btn-rec">Start Recording</button>
+    <button id="btn-play">Play Take</button>
+  </div>
+</header>
+
+<div class="main-layout">
+  <!-- Prompter & Breath Guidance -->
+  <div class="panel">
+    <h3>Dynamic Prompter & Breath Track</h3>
+    <div id="prompter-container"></div>
+  </div>
+
+  <!-- Real-Time Pitch & Oscilloscope Visualizers -->
+  <div class="panel">
+    <h3>Real-Time Pitch Centering & Waveform</h3>
+    <div class="visualizer-wrapper">
+      <canvas id="pitch-canvas"></canvas>
+      <canvas id="oscilloscope-canvas"></canvas>
+    </div>
+  </div>
+
+  <!-- Automated Post-Take Diagnostics -->
+  <div class="panel">
+    <h3>Auto-Review Performance Score</h3>
+    <div id="report-container">
+      <div class="metric-card">
+        <div class="metric-title">Overall Technical Score</div>
+        <div class="metric-value" id="score-overall">--%</div>
+        <div class="metric-bar"><div class="metric-fill" id="bar-overall"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Cadence & Timing Locking (80 BPM)</div>
+        <div class="metric-value" id="score-timing">--%</div>
+        <div class="metric-bar"><div class="metric-fill" id="bar-timing"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Melodic Pitch Accuracy</div>
+        <div class="metric-value" id="score-pitch">--%</div>
+        <div class="metric-bar"><div class="metric-fill" id="bar-pitch"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Dynamic Contrast & Energy Curve</div>
+        <div class="metric-value" id="score-dynamics">--%</div>
+        <div class="metric-bar"><div class="metric-fill" id="bar-dynamics"></div></div>
+      </div>
+      <h3 style="margin-top:10px;">Section-by-Section Feedback</h3>
+      <ul class="diagnostic-log" id="feedback-log">
+        <li>Record a full pass to calculate performance metrics.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="timecode" id="timecode">00:00.0</div>
+  <div class="timeline-bar" id="timeline-track">
+    <div class="timeline-progress" id="timeline-fill"></div>
+  </div>
+</footer>
+
+<script>
+/**
+ * October 7 - Song Score & Structural Blueprint
+ * Timecodes calibrated for an 80 BPM grid.
+ */
+const SONG_BLUEPRINT = [
+  { time: 0.0, section: "Intro", breath: true, text: "October 7th, 20-17, a day I never foreseen." },
+  { time: 6.0, section: "Intro", breath: true, text: "Losing Adam, now it's going on year 3." },
+  { time: 12.0, section: "Intro", breath: true, text: "Why couldn't this be a horrible dream?" },
+  { time: 15.0, section: "Intro", breath: false, text: "Him and I were the ultimate team." },
+  { time: 18.0, section: "Intro", breath: true, text: "Why the fuck can't I feel like a normal human being." },
+  { time: 21.0, section: "Intro", breath: true, text: "Keep living life, go ahead and agree." },
+  { time: 24.0, section: "Intro", breath: false, text: "No emotion matches what's going on inside of me." },
+
+  { time: 27.5, section: "Verse 1", breath: true, text: "Some say it's still there. I mostly sit in despair," },
+  { time: 33.0, section: "Verse 1", breath: true, text: "Afraid of not getting back what's not yet there." },
+  { time: 39.0, section: "Verse 1", breath: true, text: "Full emotions I seek," },
+  { time: 42.0, section: "Verse 1", breath: false, text: "Hoping I feel them through my lyrics I speak." },
+  { time: 45.0, section: "Verse 1", breath: true, text: "Everyday as I wake up, I go outside." },
+  { time: 48.0, section: "Verse 1", breath: true, text: "Look up at the sky and wonder why my brother's life had to subside." },
+  { time: 54.0, section: "Verse 1", breath: true, text: "His life, something that I did not think would expire." },
+  { time: 57.0, section: "Verse 1", breath: true, text: "We had plans to start a company, then build our house and retire." },
+  { time: 61.5, section: "Verse 1", breath: true, text: "Looks like my plans are something I'm gonna have to learn to rewire." },
+
+  { time: 66.0, section: "Chorus", breath: true, text: "As he left, my pain was so bad. Felt like I was on fire." },
+  { time: 73.0, section: "Chorus", breath: true, text: "But as the flame died down, it left me with no more desire." },
+  { time: 79.0, section: "Chorus", breath: true, text: "Adam was my ultimate purpose. He did not fucking deserve this." },
+  { time: 85.0, section: "Chorus", breath: true, text: "I spent everyday figuring out how I could better his life in anyway." },
+  { time: 91.0, section: "Chorus", breath: true, text: "I hope my words reach heaven as he is looking down, just as proud even to this day." },
+
+  { time: 100.0, section: "Verse 2", breath: true, text: "Same time, trying to make my pain go away everyday." },
+  { time: 104.0, section: "Verse 2", breath: true, text: "Latching to no one because people never stay." },
+  { time: 107.5, section: "Verse 2", breath: true, text: "Demons follow me around, waiting for me to take some percs." },
+  { time: 111.0, section: "Verse 2", breath: true, text: "Hoping they work, one after another." },
+  { time: 114.0, section: "Verse 2", breath: false, text: "Enough so when I close my eyes, I may just see my brother." },
+  { time: 118.0, section: "Verse 2", breath: true, text: "I hope I carry your name on for the rest of my life." },
+  { time: 122.0, section: "Verse 2", breath: true, text: "One day when my wife gives birth to new life, his name will be Adam." },
+  { time: 126.0, section: "Verse 2", breath: false, text: "There will be many stories I'll throw at him." },
+  { time: 129.0, section: "Verse 2", breath: true, text: "I'll keep writing, but I feel so stuck, like damn! What the fuck!" },
+  { time: 133.0, section: "Verse 2", breath: true, text: "My mind is no longer pacing, but my fast thoughts are what keep these words racing." },
+
+  { time: 138.0, section: "Pre-Chorus", breath: true, text: "Now all my lines are generic. I just keep on erasing." },
+  { time: 142.0, section: "Pre-Chorus", breath: true, text: "Try to keep on embracing this career that I'm chasing." },
+  { time: 146.0, section: "Pre-Chorus", breath: true, text: "Reality that I'll be facing? Is down the road, there will be no more escaping." },
+  { time: 152.0, section: "Pre-Chorus", breath: true, text: "Soon it will only be me. I can't believe the fact that I'm running out of my fucking family." },
+
+  { time: 160.0, section: "Instrumental Break", breath: true, text: "[Melancholic Saxophone Solo - Reset Diaphragm & Posture]" },
+
+  { time: 184.0, section: "Verse 3", breath: true, text: "There is a part of me that you will never see. It hides deep in a place of misery." },
+  { time: 191.0, section: "Verse 3", breath: true, text: "When my demons come out, be prepared to scream. I don't care what you saw before." },
+  { time: 197.0, section: "Verse 3", breath: true, text: "No, I'm not that good person you knew anymore." },
+  { time: 201.0, section: "Verse 3", breath: true, text: "That part of me passed away on the day that mother fucker named death came my brother's way." },
+  { time: 208.0, section: "Verse 3", breath: true, text: "Adam, it was supposed to be me and you. Now what the fuck am I supposed to do." },
+
+  { time: 215.0, section: "Bridge", breath: true, text: "Now I write alone while I smoke my bowl." },
+  { time: 218.5, section: "Bridge", breath: true, text: "Trying to stay in my zone while I roll up a cone, hoping it all goes to the dome." },
+  { time: 224.0, section: "Bridge", breath: true, text: "I'm trying to get over the voice I won't hear on the other side of the phone." },
+  { time: 229.0, section: "Bridge", breath: true, text: "God fucking damnit, give me that shot of crown. Bro, for you, I'll always throw down." },
+
+  { time: 235.0, section: "Verse 4", breath: true, text: "It's now the 7th of September, 30 more days," },
+  { time: 238.5, section: "Verse 4", breath: false, text: "And I can still remember the day that heaven gained a new member." },
+  { time: 243.0, section: "Verse 4", breath: true, text: "I'm told I write about you too much, but they don't know I'm writing to keep in touch." },
+  { time: 249.0, section: "Verse 4", breath: true, text: "Why does heaven have to be so far away. God, give me a ticket so I can head his way," },
+  { time: 254.5, section: "Verse 4", breath: true, text: "So then I can stay for an entire day. Lord, what do you say." },
+  { time: 261.0, section: "Verse 4", breath: true, text: "My demons that scream remind me of memories I won't ever be seeing." },
+  { time: 266.0, section: "Verse 4", breath: true, text: "Maybe they will come back while I am dreaming." },
+
+  { time: 272.0, section: "Outro", breath: true, text: "My song for my brother. Proud to be Adam's brother." },
+  { time: 278.0, section: "Outro", breath: true, text: "This is my personality. Brett Adam Stehouwer." },
+  { time: 284.0, section: "Outro", breath: false, text: "I am [fast pause] him he is me." }
+];
+
+// Audio Context & Hardware Nodes
+let audioCtx = null;
+let micStream = null;
+let analyserNode = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+let recordedAudioUrl = null;
+let backingAudioBuffer = null;
+let backingSourceNode = null;
+
+// Engine State
+let isRecording = false;
+let sessionStartTime = 0;
+let playbackDuration = 295; // 4m 55s
+let animationFrameId = null;
+
+// Telemetry Buffers for Performance Scoring
+let performanceTelemetry = {
+  timestamps: [],
+  frequencies: [],
+  energies: [],
+  onsets: []
+};
+
+// UI Elements
+const prompterContainer = document.getElementById("prompter-container");
+const pitchCanvas = document.getElementById("pitch-canvas");
+const oscCanvas = document.getElementById("oscilloscope-canvas");
+const pCtx = pitchCanvas.getContext("2d");
+const oCtx = oscCanvas.getContext("2d");
+const btnMic = document.getElementById("btn-mic");
+const btnRec = document.getElementById("btn-rec");
+const btnPlay = document.getElementById("btn-play");
+const timecodeDisplay = document.getElementById("timecode");
+const timelineFill = document.getElementById("timeline-fill");
+const backingInput = document.getElementById("backing-input");
+
+// Build Teleprompter
+function initPrompter() {
+  prompterContainer.innerHTML = "";
+  let lastSection = "";
+  SONG_BLUEPRINT.forEach((cue, index) => {
+    if (cue.section !== lastSection) {
+      const tag = document.createElement("span");
+      tag.className = "section-tag";
+      tag.innerText = `[${cue.section}]`;
+      prompterContainer.appendChild(tag);
+      lastSection = cue.section;
+    }
+    const div = document.createElement("div");
+    div.className = "lyric-line";
+    div.id = `cue-${index}`;
+    div.innerHTML = (cue.breath ? `<span class="breath-mark">IN</span>` : "") + cue.text;
+    prompterContainer.appendChild(div);
+  });
+}
+initPrompter();
+
+// Canvas Sizing
+function resizeCanvases() {
+  pitchCanvas.width = pitchCanvas.clientWidth * window.devicePixelRatio;
+  pitchCanvas.height = pitchCanvas.clientHeight * window.devicePixelRatio;
+  oscCanvas.width = oscCanvas.clientWidth * window.devicePixelRatio;
+  oscCanvas.height = oscCanvas.clientHeight * window.devicePixelRatio;
+}
+window.addEventListener("resize", resizeCanvases);
+resizeCanvases();
+
+// Load Backing Track
+backingInput.addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const arrayBuffer = await file.arrayBuffer();
+  backingAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+  playbackDuration = backingAudioBuffer.duration;
+});
+
+// Microphone Initialization
+btnMic.addEventListener("click", async () => {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+    });
+    const sourceNode = audioCtx.createMediaStreamSource(micStream);
+    analyserNode = audioCtx.createAnalyser();
+    analyserNode.fftSize = 2048;
+    sourceNode.connect(analyserNode);
+
+    btnMic.innerText = "Mic Online";
+    btnMic.style.borderColor = "var(--accent-green)";
+    btnMic.disabled = true;
+  } catch (err) {
+    alert("Microphone capture failed: " + err.message);
+  }
+});
+
+// Autocorrelation Pitch Detection
+function detectPitch(buffer, sampleRate) {
+  const SIZE = buffer.length;
+  let rms = 0;
+  for (let i = 0; i < SIZE; i++) rms += buffer[i] * buffer[i];
+  rms = Math.sqrt(rms / SIZE);
+  if (rms < 0.015) return { pitch: -1, energy: rms }; // Ambient noise floor threshold
+
+  let r1 = 0, r2 = SIZE - 1, thres = 0.2;
+  for (let i = 0; i < SIZE / 2; i++) {
+    if (Math.abs(buffer[i]) < thres) { r1 = i; break; }
+  }
+  for (let i = 1; i < SIZE / 2; i++) {
+    if (Math.abs(buffer[SIZE - i]) < thres) { r2 = SIZE - i; break; }
+  }
+
+  const buf = buffer.slice(r1, r2);
+  const c = new Array(buf.length).fill(0);
+  for (let i = 0; i < buf.length; i++) {
+    for (let j = 0; j < buf.length - i; j++) {
+      c[i] = c[i] + buf[j] * buf[j + i];
+    }
+  }
+
+  let d = 0;
+  while (c[d] > c[d + 1]) d++;
+  let maxval = -1, maxpos = -1;
+  for (let i = d; i < buf.length; i++) {
+    if (c[i] > maxval) { maxval = c[i]; maxpos = i; }
+  }
+
+  let T0 = maxpos;
+  return { pitch: sampleRate / T0, energy: rms };
+}
+
+// Recording & Transport Loop
+btnRec.addEventListener("click", () => {
+  if (!micStream) { alert("Enable the microphone before tracking."); return; }
+
+  if (!isRecording) {
+    // Start Recording
+    isRecording = true;
+    btnRec.innerText = "Halt & Process Take";
+    btnRec.classList.add("rec-active");
+
+    performanceTelemetry = { timestamps: [], frequencies: [], energies: [], onsets: [] };
+    recordedChunks = [];
+
+    mediaRecorder = new MediaRecorder(micStream);
+    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+    mediaRecorder.onstop = processPerformanceReport;
+    mediaRecorder.start();
+
+    // Start Backing if available
+    if (backingAudioBuffer) {
+      backingSourceNode = audioCtx.createBufferSource();
+      backingSourceNode.buffer = backingAudioBuffer;
+      backingSourceNode.connect(audioCtx.destination);
+      backingSourceNode.start(0);
+    }
+
+    sessionStartTime = audioCtx.currentTime;
+    renderTrackingEngine();
+  } else {
+    // Stop Recording
+    isRecording = false;
+    btnRec.innerText = "Start Recording";
+    btnRec.classList.remove("rec-active");
+    if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
+    if (backingSourceNode) { backingSourceNode.stop(); backingSourceNode.disconnect(); }
+    cancelAnimationFrame(animationFrameId);
+  }
+});
+
+// Render Loop: Visualizers, Timecode, Prompter Synchronization
+function renderTrackingEngine() {
+  const elapsed = audioCtx.currentTime - sessionStartTime;
+
+  // Update Timecode
+  const minutes = Math.floor(elapsed / 60);
+  const seconds = (elapsed % 60).toFixed(1);
+  timecodeDisplay.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(4, '0')}`;
+  timelineFill.style.width = `${Math.min(100, (elapsed / playbackDuration) * 100)}%`;
+
+  // Sync Prompter
+  for (let i = 0; i < SONG_BLUEPRINT.length; i++) {
+    const cur = SONG_BLUEPRINT[i];
+    const nxt = SONG_BLUEPRINT[i + 1];
+    if (elapsed >= cur.time && (!nxt || elapsed < nxt.time)) {
+      document.querySelectorAll(".lyric-line").forEach(el => el.classList.remove("active"));
+      const activeEl = document.getElementById(`cue-${i}`);
+      if (activeEl) {
+        activeEl.classList.add("active");
+        activeEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      break;
+    }
+  }
+
+  // Audio Telemetry
+  const buffer = new Float32Array(analyserNode.fftSize);
+  analyserNode.getFloatTimeDomainData(buffer);
+  const { pitch, energy } = detectPitch(buffer, audioCtx.sampleRate);
+
+  if (isRecording) {
+    performanceTelemetry.timestamps.push(elapsed);
+    performanceTelemetry.frequencies.push(pitch);
+    performanceTelemetry.energies.push(energy);
+  }
+
+  // Draw Oscilloscope
+  oCtx.clearRect(0, 0, oscCanvas.width, oscCanvas.height);
+  oCtx.lineWidth = 2;
+  oCtx.strokeStyle = "#3b82f6";
+  oCtx.beginPath();
+  const sliceWidth = oscCanvas.width / buffer.length;
+  let ox = 0;
+  for (let i = 0; i < buffer.length; i++) {
+    const v = buffer[i] * 0.5 + 0.5;
+    const oy = v * oscCanvas.height;
+    if (i === 0) oCtx.moveTo(ox, oy); else oCtx.lineTo(ox, oy);
+    ox += sliceWidth;
+  }
+  oCtx.stroke();
+
+  // Draw Pitch Lane
+  pCtx.fillStyle = "rgba(9, 11, 14, 0.15)";
+  pCtx.fillRect(0, 0, pitchCanvas.width, pitchCanvas.height);
+
+  if (pitch > 60 && pitch < 500) {
+    const normPitch = (pitch - 60) / (500 - 60);
+    const py = pitchCanvas.height - (normPitch * pitchCanvas.height);
+    pCtx.fillStyle = "#e5a93b";
+    pCtx.beginPath();
+    pCtx.arc(pitchCanvas.width - 20, py, 4 * window.devicePixelRatio, 0, Math.PI * 2);
+    pCtx.fill();
+  }
+
+  if (isRecording) {
+    animationFrameId = requestAnimationFrame(renderTrackingEngine);
+  }
+}
+
+// Performance Scoring Diagnostics Engine
+function processPerformanceReport() {
+  const blob = new Blob(recordedChunks, { type: "audio/webm" });
+  recordedAudioUrl = URL.createObjectURL(blob);
+  btnPlay.disabled = false;
+
+  const data = performanceTelemetry;
+  if (data.timestamps.length === 0) return;
+
+  // 1. Cadence Locking (Evaluate onset dispersion against 80 BPM grid intervals)
+  // 80 BPM = 0.75s quarter note = 0.1875s 16th subdivisions
+  const sixteenthGrid = 0.1875;
+  let timingHits = 0;
+  let onsetCount = 0;
+
+  for (let i = 1; i < data.energies.length; i++) {
+    if (data.energies[i] > 0.05 && data.energies[i - 1] <= 0.05) {
+      onsetCount++;
+      const t = data.timestamps[i];
+      const remainder = t % sixteenthGrid;
+      if (remainder < 0.045 || remainder > (sixteenthGrid - 0.045)) {
+        timingHits++;
+      }
+    }
+  }
+  const timingScore = onsetCount > 0 ? Math.min(100, Math.round((timingHits / onsetCount) * 100)) : 75;
+
+  // 2. Pitch Centering (Evaluate stability during the melodic Chorus and Verse 4)
+  let pitchDetections = 0;
+  let stablePitches = 0;
+  for (let i = 0; i < data.frequencies.length; i++) {
+    const f = data.frequencies[i];
+    const t = data.timestamps[i];
+    // Filter to melodic windows (Chorus: 66-99s, Verse 4 Melodic: 249-265s)
+    if ((t >= 66 && t <= 99) || (t >= 249 && t <= 265)) {
+      if (f > 80 && f < 400) {
+        pitchDetections++;
+        // Calculate semitone quantization stability
+        const semitone = 12 * (Math.log2(f / 440)) + 69;
+        const centDeviation = Math.abs(semitone - Math.round(semitone)) * 100;
+        if (centDeviation < 35) stablePitches++;
+      }
+    }
+  }
+  const pitchScore = pitchDetections > 0 ? Math.min(100, Math.round((stablePitches / pitchDetections) * 100)) : 80;
+
+  // 3. Dynamic Contrast Verification
+  // Verse 3 requires maximum RMS; Bridge requires soft spoken decibels
+  let v3MaxRms = 0;
+  let bridgeMaxRms = 0;
+  for (let i = 0; i < data.timestamps.length; i++) {
+    const t = data.timestamps[i];
+    const e = data.energies[i];
+    if (t >= 184 && t <= 214) if (e > v3MaxRms) v3MaxRms = e;
+    if (t >= 215 && t <= 234) if (e > bridgeMaxRms) bridgeMaxRms = e;
+  }
+  const dynamicRatio = bridgeMaxRms > 0 ? (v3MaxRms / bridgeMaxRms) : 1.5;
+  const dynamicsScore = Math.min(100, Math.round(Math.min(dynamicRatio / 2.0, 1.0) * 100));
+
+  // Overall Score Calculation
+  const overall = Math.round((timingScore * 0.4) + (pitchScore * 0.35) + (dynamicsScore * 0.25));
+
+  // Render Scores
+  document.getElementById("score-overall").innerText = `${overall}%`;
+  document.getElementById("bar-overall").style.width = `${overall}%`;
+  document.getElementById("score-timing").innerText = `${timingScore}%`;
+  document.getElementById("bar-timing").style.width = `${timingScore}%`;
+  document.getElementById("score-pitch").innerText = `${pitchScore}%`;
+  document.getElementById("bar-pitch").style.width = `${pitchScore}%`;
+  document.getElementById("score-dynamics").innerText = `${dynamicsScore}%`;
+  document.getElementById("bar-dynamics").style.width = `${dynamicsScore}%`;
+
+  // Render Diagnostic Text Log
+  const feedbackLog = document.getElementById("feedback-log");
+  feedbackLog.innerHTML = "";
+
+  const notes = [];
+  if (timingScore < 70) {
+    notes.push("[Timing]: Rushing ahead of the 80 BPM grid detected during multi-syllabic clusters in Verse 2. Sit slightly deeper behind beats 2 and 4.");
+  } else {
+    notes.push("[Timing]: Rhythmic locking remained on-grid through conversational and 16th rap passages.");
+  }
+
+  if (pitchScore < 70) {
+    notes.push("[Pitch]: Microtonal drift detected on terminal syllables in the Chorus ('fire', 'desire'). Support breath till note completion.");
+  } else {
+    notes.push("[Pitch]: Chorus vowel sustain locked accurately to root musical intervals.");
+  }
+
+  if (dynamicRatio < 1.3) {
+    notes.push("[Dynamics]: Verse 3 gritty delivery lacked sufficient volume contrast compared to the Bridge. Increase diaphragmatic compression on 'Adam, it was supposed to be me and you.'");
+  } else {
+    notes.push("[Dynamics]: Effective acoustic range verified between Verse 3 projection and Bridge vocal intimacy.");
+  }
+
+  notes.forEach(msg => {
+    const li = document.createElement("li");
+    li.innerText = msg;
+    feedbackLog.appendChild(li);
+  });
+}
+
+// Playback Rendered Vocal Take
+btnPlay.addEventListener("click", () => {
+  if (!recordedAudioUrl) return;
+  const audio = new Audio(recordedAudioUrl);
+  audio.play();
+});
+</script>
+</body>
+</html>

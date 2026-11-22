@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-25T21:29:11.193057+00:00",
+  "diagnostic_files": [
+    {
+      "name": "Evidence_Report.txt",
+      "bytes": 7406
+    },
+    {
+      "name": "Asset_Manifest.csv",
+      "bytes": 20079
+    },
+    {
+      "name": "Corrected_Network_and_Service_Map.txt",
+      "bytes": 2019
+    },
+    {
+      "name": "Proposed_Minimal_Repair.txt",
+      "bytes": 3880
+    },
+    {
+      "name": "Codex_Handoff_Update_Draft.txt",
+      "bytes": 1539
+    }
+  ],
+  "asset_rows": 52,
+  "formula_safe": true,
+  "utf8_readable": true,
+  "recognized_secret_signatures": 0,
+  "free_bytes": 43200700416,
+  "live_handoff_ledger_modified": false
+}

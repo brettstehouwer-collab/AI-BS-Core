@@ -1,0 +1,15 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TelemetrySchema",
+  "type": "object",
+  "properties": {
+    "cpu_usage": { "type": "number" },
+    "gpu_usage": { "type": "number" },
+    "vram_free_gb": { "type": "number" },
+    "vram_total_gb": { "type": "number" },
+    "shm_packets_per_sec": { "type": "number" },
+    "status": { "type": "string" },
+    "timestamp": { "type": "number" }
+  },
+  "required": ["cpu_usage", "vram_free_gb", "vram_total_gb"]
+}

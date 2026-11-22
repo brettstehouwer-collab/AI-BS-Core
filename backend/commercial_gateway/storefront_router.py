@@ -1,3 +1,5 @@
+from security.financial_auth import require_financial_owner
+from security.host_control_access import AdminHostControlRoute
 import sqlite3
 import os
 import urllib.request
@@ -6,16 +8,16 @@ from fastapi import APIRouter, HTTPException, Header, Depends
 from pydantic import BaseModel
 from typing import Optional
 
-router = APIRouter(prefix="/api/storefront", tags=["Digital Storefront"])
+router = APIRouter(route_class=AdminHostControlRoute, prefix="/api/storefront", tags=["Digital Storefront"])
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "stehouwer_vault.db")
 
-def get_tenant(x_client_id: Optional[str] = Header(None)):
-    if not x_client_id:
-        return "stehouwer_publishing"
-    return x_client_id
+def get_tenant(owner: str = Depends(require_financial_owner)):
+    return owner
+
 
 def init_db():
+    raise RuntimeError("Storefront schema held pending verified ownership migration.")
     try:
         conn = sqlite3.connect(DB_PATH)
         try:
@@ -49,7 +51,7 @@ def init_db():
     except Exception as e:
         print(f"Error initializing storefront vault DB: {e}")
 
-init_db()
+# Schema initialization requires an explicit ownership migration; never run on import.
 
 class GenerateRequest(BaseModel):
     user_email: str = "default_user@stehouwer.com"
@@ -67,6 +69,7 @@ async def get_balance(user_email: str = "default_user@stehouwer.com", tenant: st
     """
     Returns current credit balance for the given user email and tenant.
     """
+    raise HTTPException(503, "Storefront held: legacy credits/leads lack verified ownership and durable idempotent accounting evidence.")
     try:
         conn = sqlite3.connect(DB_PATH)
         try:
@@ -99,6 +102,7 @@ async def generate_content(req: GenerateRequest, tenant: str = Depends(get_tenan
     Executes an AI content generation request using local Ollama.
     Deducts 10 credits from SQLite.
     """
+    raise HTTPException(503, "Storefront held: legacy credits/leads lack verified ownership and durable idempotent accounting evidence.")
     conn = sqlite3.connect(DB_PATH)
     try:
         conn.execute("PRAGMA journal_mode=WAL;")
@@ -166,6 +170,7 @@ async def get_leads(tenant: str = Depends(get_tenant)):
     """
     Returns active CRM leads for the tenant.
     """
+    raise HTTPException(503, "Storefront held: legacy credits/leads lack verified ownership and durable idempotent accounting evidence.")
     try:
         conn = sqlite3.connect(DB_PATH)
         conn.row_factory = sqlite3.Row
@@ -187,6 +192,7 @@ async def add_lead(lead: LeadRequest, tenant: str = Depends(get_tenant)):
     """
     Adds a new CRM lead securely bound to the client_id.
     """
+    raise HTTPException(503, "Storefront held: legacy credits/leads lack verified ownership and durable idempotent accounting evidence.")
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()

@@ -1,0 +1,213 @@
+{
+    "State":  "READY",
+    "Session":  "b6e37d8b-dcfa-4f69-be12-2bb681ae46ba",
+    "PID":  365880,
+    "ProcessCreationUTC":  "2026-10-24T17:05:16.7459552Z",
+    "SID":  "S-1-5-21-2133766663-4066672948-2456486318-1005",
+    "VMUUID":  "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+    "Disk":  "cddcb90b-9ea3-42d2-90a5-49de79b7dc0e",
+    "Snapshot":  "afda1952-6c48-4086-9590-897c21323990",
+    "StartedUTC":  "2026-10-24T17:08:03.7241808Z",
+    "NextSequence":  5,
+    "LastFrameSHA256":  "cde421af946945b352495078df25ef9f9d25ab1507b9ec99d54002c859f3f62e",
+    "Phase4Accepted":  false,
+    "GeneratedExecutionEnabled":  false,
+    "Commands":  [
+                     {
+                         "Step":  1,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  2,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  3,
+                         "Arguments":  [
+                                           "startvm",
+                                           "--type=headless",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  4,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  5,
+                         "Arguments":  [
+                                           "controlvm",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "screenshotpng",
+                                           "C:\\AI-BS\\isolated_workers\\windows\\runtime\\setup_channel_b6e37d8b-dcfa-4f69-be12-2bb681ae46ba\\frame_0001.png"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  6,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  7,
+                         "Arguments":  [
+                                           "controlvm",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "screenshotpng",
+                                           "C:\\AI-BS\\isolated_workers\\windows\\runtime\\setup_channel_b6e37d8b-dcfa-4f69-be12-2bb681ae46ba\\before_key_0002.png"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  8,
+                         "Arguments":  [
+                                           "controlvm",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "keyboardputscancode",
+                                           "1c",
+                                           "9c"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  9,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  10,
+                         "Arguments":  [
+                                           "controlvm",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "screenshotpng",
+                                           "C:\\AI-BS\\isolated_workers\\windows\\runtime\\setup_channel_b6e37d8b-dcfa-4f69-be12-2bb681ae46ba\\frame_0002.png"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  11,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  12,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  13,
+                         "Arguments":  [
+                                           "controlvm",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "screenshotpng",
+                                           "C:\\AI-BS\\isolated_workers\\windows\\runtime\\setup_channel_b6e37d8b-dcfa-4f69-be12-2bb681ae46ba\\frame_0003.png"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  14,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  15,
+                         "Arguments":  [
+                                           "controlvm",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "screenshotpng",
+                                           "C:\\AI-BS\\isolated_workers\\windows\\runtime\\setup_channel_b6e37d8b-dcfa-4f69-be12-2bb681ae46ba\\before_key_0004.png"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  16,
+                         "Arguments":  [
+                                           "controlvm",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "keyboardputscancode",
+                                           "1c",
+                                           "9c"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  17,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     },
+                     {
+                         "Step":  18,
+                         "Arguments":  [
+                                           "controlvm",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "screenshotpng",
+                                           "C:\\AI-BS\\isolated_workers\\windows\\runtime\\setup_channel_b6e37d8b-dcfa-4f69-be12-2bb681ae46ba\\frame_0004.png"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     }
+                 ],
+    "UpdatedUTC":  "2026-10-24T17:10:21.5968142Z",
+    "FrameUTC":  "2026-10-24T17:10:16.5521234Z",
+    "LastFramePath":  "C:\\AI-BS\\isolated_workers\\windows\\runtime\\setup_channel_b6e37d8b-dcfa-4f69-be12-2bb681ae46ba\\frame_0004.png",
+    "LastOperation":  "key",
+    "LastCompletedSequence":  4,
+    "Publication":  120
+}

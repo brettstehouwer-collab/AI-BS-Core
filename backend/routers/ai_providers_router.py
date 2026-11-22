@@ -5,15 +5,37 @@ Replicate, and Fal.ai API accounts or use the local RTX 4090 Ollama engine.
 """
 
 import os
+import asyncio
 import json
 import httpx
 from typing import Optional, List, Dict, Any
-from fastapi import APIRouter, HTTPException, Header, Body
-from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException, Header, Body, Depends, Request
+from pydantic import BaseModel, Field, StrictStr, StrictBool, ConfigDict
+from security.host_control_access import AdminHostControlRoute, require_host_admin
 
-router = APIRouter(prefix="/api/ai", tags=["AI Providers & BYOK Gateway"])
+router = APIRouter(prefix="/api/ai", tags=["AI Providers & BYOK Gateway"], route_class=AdminHostControlRoute)
 
 CONFIG_FILE = os.path.join("C:\\AI-BS", "database", "ai_providers_config.json")
+DEFAULT_OPENAI_MODEL = "gpt-4.1-mini"
+
+
+def _unmasked_key(value: Optional[str]) -> str:
+    """Display markers are never credentials or replacements for saved keys."""
+    key = value.strip() if isinstance(value, str) else ""
+    return "" if "*" in key or "..." in key else key
+
+
+def _openai_credential(cfg: dict, *, request_key=None, header_key=None) -> tuple[str, str]:
+    """Resolve a server credential without copying the environment into config."""
+    saved = cfg.get("providers", {}).get("openai", {})
+    candidates = (("request", request_key), ("header", header_key),
+                  ("saved", saved.get("api_key")),
+                  ("environment", os.environ.get("OPENAI_API_KEY")))
+    for source, value in candidates:
+        key = _unmasked_key(value)
+        if key:
+            return key, source
+    return "", "none"
 
 
 def load_config() -> dict:
@@ -28,7 +50,7 @@ def load_config() -> dict:
         "active_provider": "local",
         "providers": {
             "local": {"model": "stehouwer_llm", "host": "http://127.0.0.1:11434"},
-            "openai": {"api_key": "", "model": "gpt-4o"},
+            "openai": {"api_key": "", "model": DEFAULT_OPENAI_MODEL},
             "anthropic": {"api_key": "", "model": "claude-3-5-sonnet-20241022"},
             "gemini": {"api_key": "", "model": "gemini-2.0-flash"},
             "groq": {"api_key": "", "model": "llama-3.3-70b-versatile"},
@@ -59,7 +81,7 @@ SUPPORTED_PROVIDERS = [
         "name": "OpenAI (GPT-4o / o1)",
         "icon": "🟢",
         "description": "Industry standard reasoning and multimodal text generation.",
-        "models": ["gpt-4o", "gpt-4o-mini", "o1", "o3-mini", "gpt-4-turbo"],
+        "models": [DEFAULT_OPENAI_MODEL, "gpt-4o", "gpt-4o-mini", "o1", "o3-mini", "gpt-4-turbo"],
         "requires_key": True,
         "key_hint": "sk-..."
     },
@@ -126,7 +148,7 @@ SUPPORTED_PROVIDERS = [
 
 class KeyValidationRequest(BaseModel):
     provider: str
-    api_key: str
+    api_key: Optional[str] = None
     model: Optional[str] = None
 
 
@@ -136,8 +158,8 @@ class MultiProviderGenerateRequest(BaseModel):
     provider: Optional[str] = None
     model: Optional[str] = None
     api_key: Optional[str] = None
-    temperature: Optional[float] = 0.7
-    max_tokens: Optional[int] = 2048
+    temperature: Optional[float] = Field(default=0.7, strict=True, ge=0.0, le=2.0)
+    max_tokens: Optional[int] = Field(default=2048, strict=True, ge=1, le=16384)
 
 
 # ---------------------------------------------------------------------------
@@ -159,6 +181,12 @@ async def list_providers():
         # Mask API key for security
         key = saved_info.get("api_key", "")
         p_copy["masked_key"] = f"{key[:6]}...{key[-4:]}" if len(key) > 10 else ("***" if key else "")
+        if p["id"] == "openai":
+            key, source = _openai_credential(cfg)
+            p_copy["is_configured"] = bool(key)
+            p_copy["credential_source"] = source
+            if source == "environment":
+                p_copy["masked_key"] = "***"
         providers_with_state.append(p_copy)
 
     return {
@@ -179,7 +207,11 @@ async def save_provider_configuration(payload: Dict[str, Any] = Body(...)):
         for p_id, p_data in payload["providers"].items():
             if p_id not in cfg["providers"]:
                 cfg["providers"][p_id] = {}
-            if "api_key" in p_data and p_data["api_key"] and not p_data["api_key"].startswith("***"):
+            if p_id == "openai":
+                key = _unmasked_key(p_data.get("api_key"))
+                if key:
+                    cfg["providers"][p_id]["api_key"] = key
+            elif "api_key" in p_data and p_data["api_key"] and not p_data["api_key"].startswith("***"):
                 cfg["providers"][p_id]["api_key"] = p_data["api_key"].strip()
             if "model" in p_data:
                 cfg["providers"][p_id]["model"] = p_data["model"]
@@ -189,12 +221,14 @@ async def save_provider_configuration(payload: Dict[str, Any] = Body(...)):
 
 
 @router.post("/validate-key")
-async def validate_provider_api_key(req: KeyValidationRequest):
+async def validate_provider_api_key(req: KeyValidationRequest, x_ai_key: Optional[str] = Header(None)):
     """
     Test live connectivity with a provider using the supplied API key.
     """
     provider = req.provider.lower()
-    key = req.api_key.strip()
+    key = (req.api_key or "").strip()
+    if provider == "openai":
+        key, _ = _openai_credential(load_config(), request_key=req.api_key, header_key=x_ai_key)
     
     if provider == "local":
         for o_port in [11434, 11435]:
@@ -212,7 +246,7 @@ async def validate_provider_api_key(req: KeyValidationRequest):
         raise HTTPException(status_code=400, detail="API key is required for validation.")
 
     try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
+        async with httpx.AsyncClient(timeout=10.0, trust_env=provider != "openai", follow_redirects=False) as client:
             # 1. OpenAI
             if provider == "openai":
                 r = await client.get(
@@ -220,8 +254,31 @@ async def validate_provider_api_key(req: KeyValidationRequest):
                     headers={"Authorization": f"Bearer {key}"}
                 )
                 if r.status_code == 200:
-                    return {"status": "valid", "provider": "openai", "message": "Successfully authenticated with OpenAI API."}
-                return {"status": "error", "message": f"OpenAI authentication failed ({r.status_code}): {r.text[:120]}"}
+                    if len(r.content) > 2 * 1024 * 1024:
+                        raise ValueError("oversized model listing")
+                    data = r.json()
+                    if not isinstance(data, dict) or not isinstance(data.get("data"), list):
+                        raise ValueError("invalid model listing")
+                    identifiers = {item["id"] for item in data["data"]
+                                   if isinstance(item, dict) and isinstance(item.get("id"), str)}
+                    model = (req.model or "").strip()
+                    supported = next(item["models"] for item in SUPPORTED_PROVIDERS if item["id"] == "openai")
+                    result = {"status": "valid", "provider": "openai", "authenticated": True,
+                              "models": [item for item in supported if item in identifiers],
+                              "validation_scope": "authentication_and_model_listing", "generation_verified": False}
+                    if model:
+                        result.update(model=model, model_available=model in identifiers, model_supported=model in supported)
+                        if model not in identifiers:
+                            return {**result, "status": "error", "message":
+                                f"OpenAI authentication succeeded, but selected model '{model}' is not listed for this credential/project. Choose an available model. No generation was attempted."}
+                        if model not in supported:
+                            return {**result, "status": "error", "message":
+                                f"OpenAI lists model '{model}', but this BS-Chat route does not support it. Choose a supported model. No generation was attempted."}
+                        result["message"] = f"OpenAI authentication succeeded and model '{model}' is listed. Generation has not been tested."
+                    else:
+                        result["message"] = "OpenAI authentication succeeded. No selected model or generation was tested."
+                    return result
+                return {"status": "error", "message": f"OpenAI authentication failed (HTTP {r.status_code})."}
 
             # 2. Anthropic
             elif provider == "anthropic":
@@ -295,6 +352,8 @@ async def validate_provider_api_key(req: KeyValidationRequest):
                 return {"status": "error", "message": f"Unknown provider: {provider}"}
 
     except Exception as e:
+        if provider == "openai":
+            return {"status": "error", "message": "OpenAI connection could not be verified."}
         return {"status": "error", "message": f"Network or connection error: {str(e)}"}
 
 
@@ -315,6 +374,8 @@ async def generate_with_provider(
     saved_provider_cfg = cfg.get("providers", {}).get(provider, {})
     api_key = req.api_key or x_ai_key or saved_provider_cfg.get("api_key", "")
     model = req.model or saved_provider_cfg.get("model")
+    if provider == "openai":
+        api_key, _ = _openai_credential(cfg, request_key=req.api_key, header_key=x_ai_key)
 
     # 1. LOCAL OLLAMA
     if provider == "local":
@@ -347,27 +408,11 @@ async def generate_with_provider(
 
     # 2. OPENAI
     if provider == "openai":
-        model = model or "gpt-4o"
-        try:
-            async with httpx.AsyncClient(timeout=60.0) as client:
-                r = await client.post(
-                    "https://api.openai.com/v1/chat/completions",
-                    headers={"Authorization": f"Bearer {api_key}"},
-                    json={
-                        "model": model,
-                        "messages": [
-                            {"role": "system", "content": req.system_prompt},
-                            {"role": "user", "content": req.prompt}
-                        ],
-                        "temperature": req.temperature,
-                        "max_tokens": req.max_tokens
-                    }
-                )
-                r.raise_for_status()
-                text = r.json()["choices"][0]["message"]["content"]
-                return {"provider": "openai", "model": model, "content": text}
-        except Exception as e:
-            raise HTTPException(status_code=502, detail=f"OpenAI error: {str(e)}")
+        model = model or DEFAULT_OPENAI_MODEL
+        from core.bs_chat_provider import openai_completion
+        result = await openai_completion(api_key=api_key, model=model, prompt=req.prompt,
+            system_prompt=req.system_prompt, temperature=req.temperature, max_tokens=req.max_tokens)
+        return {key: result[key] for key in ("provider", "model", "content")}
 
     # 3. ANTHROPIC CLAUDE
     elif provider == "anthropic":
@@ -464,3 +509,39 @@ async def generate_with_provider(
 
     else:
         raise HTTPException(status_code=400, detail=f"Unsupported generation provider: {provider}")
+
+
+class OpenCodeWorkerRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    model: StrictStr = Field(min_length=1, max_length=96)
+    prompt: StrictStr = Field(min_length=1, max_length=32768)
+    public_input_only: StrictBool = False
+
+
+@router.get("/opencode/models")
+async def list_opencode_workers():
+    """Additional official-client workers; no provider configuration is changed."""
+    from core.opencode_worker import list_worker_models
+    return {"models": list_worker_models(), "primary_unchanged": True,
+            "role": "additional_coding_review_workers"}
+
+
+@router.post("/opencode/work")
+async def delegate_opencode_work(payload: OpenCodeWorkerRequest, request: Request,
+                                 owner: str = Depends(require_host_admin)):
+    """Only explicit task text crosses into a fresh, owner-bound OpenCode worker."""
+    from core.opencode_worker import run_worker, WorkerError
+    work = asyncio.create_task(run_worker(owner=owner, model=payload.model, prompt=payload.prompt,
+                                         public_input_only=payload.public_input_only))
+    try:
+        while not work.done():
+            if await request.is_disconnected():
+                raise HTTPException(499, "OpenCode worker request was cancelled.")
+            await asyncio.wait({work}, timeout=.15)
+        return await work
+    except WorkerError as error:
+        raise HTTPException(error.status_code, detail={"code": error.code, "message": error.public_message}) from None
+    finally:
+        if not work.done():
+            work.cancel()
+        await asyncio.gather(work, return_exceptions=True)

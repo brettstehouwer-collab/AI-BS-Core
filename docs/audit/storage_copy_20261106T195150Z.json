@@ -1,0 +1,2931 @@
+{
+  "started_utc": "20261106T195150Z",
+  "mode": "copy_only",
+  "inactive_cutoff_local": "2026-10-29",
+  "inactivity_basis": "All entry modification times older than cutoff; no claim of exclusive access. Changed sources are rejected.",
+  "originals_preserved": true,
+  "source_bytes_freed": 0,
+  "copied": [
+    {
+      "name": "accepted_checkpoint_5_329_7_20261023T141517Z",
+      "files": 22,
+      "directories": 13,
+      "bytes": 1677951,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "adaptation_safety_20261023",
+      "files": 15,
+      "directories": 13,
+      "bytes": 439215,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "adaptive_gpu_20261027_record147",
+      "files": 49,
+      "directories": 10,
+      "bytes": 7235998,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "adaptive_gpu_provision_20261027",
+      "files": 61,
+      "directories": 11,
+      "bytes": 2839382,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "analytics_auth_20261023",
+      "files": 15,
+      "directories": 12,
+      "bytes": 7739725,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "archive_verification_75df212a77",
+      "files": 4,
+      "directories": 5,
+      "bytes": 663,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "audio_audition_lazy_20261024T214253Z",
+      "files": 11,
+      "directories": 1,
+      "bytes": 60676,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "audio_router_trace_20261027T232200Z",
+      "files": 7,
+      "directories": 2,
+      "bytes": 397377,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "backend_cache_binding_20261023",
+      "files": 7,
+      "directories": 1,
+      "bytes": 383918,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "backend_lifecycle_owner_20261023",
+      "files": 1,
+      "directories": 1,
+      "bytes": 377147,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "backend_startup_5_329_34_20261024T054938951Z",
+      "files": 66,
+      "directories": 23,
+      "bytes": 2896086,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "browser_access_review_20261024T135142357419Z",
+      "files": 18,
+      "directories": 8,
+      "bytes": 1066168,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "bs_chat_checkpoint_5_329_5_20261023T131157Z",
+      "files": 11,
+      "directories": 5,
+      "bytes": 751650,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "bs_chat_frontend_auth_20261023",
+      "files": 7,
+      "directories": 7,
+      "bytes": 432094,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "bs_chat_frontend_typefix_20261023",
+      "files": 5,
+      "directories": 7,
+      "bytes": 425147,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "bs_chat_generation_audit_20261026",
+      "files": 4,
+      "directories": 1,
+      "bytes": 6357,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "bs_chat_release_5_329_6_20261023T133920Z",
+      "files": 37,
+      "directories": 15,
+      "bytes": 3762431,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "c_drive_pressure_20261027",
+      "files": 3,
+      "directories": 1,
+      "bytes": 4012,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "chat_archive_5_329_29_20261024T034040183Z",
+      "files": 59,
+      "directories": 36,
+      "bytes": 4720951,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "chat_document_verification_Verification_537a1e5bdbfa",
+      "files": 3,
+      "directories": 5,
+      "bytes": 163,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "chat_execution_boundary_20261023",
+      "files": 2,
+      "directories": 1,
+      "bytes": 377480,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "chat_input_bug_audit_20261024T220000Z",
+      "files": 27,
+      "directories": 7,
+      "bytes": 420020,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "chat_retry_safety_20261023",
+      "files": 9,
+      "directories": 13,
+      "bytes": 3147641,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "chat_service_restore_20261024T141955593753Z",
+      "files": 1,
+      "directories": 1,
+      "bytes": 465,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "chat_upload_repair_20261028T001130Z",
+      "files": 7,
+      "directories": 1,
+      "bytes": 1993972,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "chat_workspace_tools_20261025T140434Z",
+      "files": 773,
+      "directories": 47,
+      "bytes": 385288960,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "checkpoint_resume_5_329_17_20261023T180104Z",
+      "files": 6,
+      "directories": 1,
+      "bytes": 136941,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "code_quality_integration_20261023",
+      "files": 2,
+      "directories": 1,
+      "bytes": 23730,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "codex_hook_checkpoints",
+      "files": 12,
+      "directories": 2,
+      "bytes": 42538,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_actor_scope_20261024T203404Z",
+      "files": 857,
+      "directories": 290,
+      "bytes": 60517444,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_backend_selection_5_329_27_20261024T030257721Z",
+      "files": 43,
+      "directories": 1,
+      "bytes": 2052423,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_generation_cancel_5_329_16_20261023",
+      "files": 1206,
+      "directories": 71,
+      "bytes": 2311627121,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_history_scope_5_329_24_20261024T022049301Z",
+      "files": 23,
+      "directories": 14,
+      "bytes": 3864907,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_journal_5_329_26_20261024T024418158Z",
+      "files": 23,
+      "directories": 1,
+      "bytes": 526781,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_recovery_5_329_14_20261023T161152Z",
+      "files": 1186,
+      "directories": 69,
+      "bytes": 2311497724,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_recovery_candidate_20261023",
+      "files": 1173,
+      "directories": 62,
+      "bytes": 2310588779,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_repair_5_329_13_20261023T160534Z",
+      "files": 11,
+      "directories": 8,
+      "bytes": 894811,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_review_5_329_12_20261023T160058Z",
+      "files": 1183,
+      "directories": 69,
+      "bytes": 2311464617,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_review_before_20261023",
+      "files": 5,
+      "directories": 1,
+      "bytes": 498330,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_review_evidence_5_329_22_20261024T020512951Z",
+      "files": 15,
+      "directories": 14,
+      "bytes": 390572,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_review_scope_5_329_23_20261024T021046123Z",
+      "files": 27,
+      "directories": 14,
+      "bytes": 4915177,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_safety_5_329_15_20261023",
+      "files": 1202,
+      "directories": 71,
+      "bytes": 2311597219,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_safety_before_20261023T161959Z",
+      "files": 5,
+      "directories": 1,
+      "bytes": 62862,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "coding_validation_records_5_329_17_20261023",
+      "files": 1220,
+      "directories": 75,
+      "bytes": 2312442862,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "comfy_restore_20261026T090100Z",
+      "files": 23,
+      "directories": 1,
+      "bytes": 4821522,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "computer_use_continuation_20261026",
+      "files": 5,
+      "directories": 1,
+      "bytes": 16407,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "connection_map_review_20261025_record105",
+      "files": 13,
+      "directories": 4,
+      "bytes": 1880400,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "controlled_start_baseline_20261023T125918Z",
+      "files": 1,
+      "directories": 1,
+      "bytes": 146983,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "conversation_binding_5_329_33_20261024T050802214Z",
+      "files": 562,
+      "directories": 224,
+      "bytes": 46892692,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "conversation_learning_policy_20261024T081450038145Z",
+      "files": 27,
+      "directories": 13,
+      "bytes": 1138490,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "conversation_outbox_5_329_32_20261024T044741334Z",
+      "files": 586,
+      "directories": 242,
+      "bytes": 57233627,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "conversation_sessions_5_329_30_20261024T040256125Z",
+      "files": 5,
+      "directories": 6,
+      "bytes": 601670,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "conversation_sessions_5_329_31_20261024T043351705Z",
+      "files": 58,
+      "directories": 28,
+      "bytes": 1812679,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "creation_suite_audit_20261025_record96",
+      "files": 70,
+      "directories": 1,
+      "bytes": 2485418,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "creation_suite_audit_20261025_record97",
+      "files": 121,
+      "directories": 5,
+      "bytes": 5358359,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "creation_suite_deploy_20261025_record98",
+      "files": 544,
+      "directories": 25,
+      "bytes": 174748656,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "decision_inspector_audit_20261025_record94",
+      "files": 12,
+      "directories": 1,
+      "bytes": 3182250,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "deployment_final_review_20261026T100112Z",
+      "files": 10,
+      "directories": 1,
+      "bytes": 3744585,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "deployment_operator_review_20261026T1127Z",
+      "files": 8,
+      "directories": 1,
+      "bytes": 3191797,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "deployment_reconciliation_20261026T084900Z",
+      "files": 11,
+      "directories": 1,
+      "bytes": 3739930,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "deployment_resume_20261026T102500Z",
+      "files": 8,
+      "directories": 1,
+      "bytes": 3194130,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "deployment_resume_20261026T103101Z",
+      "files": 7,
+      "directories": 1,
+      "bytes": 3233013,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "deployment_resume_20261026T110500Z",
+      "files": 6,
+      "directories": 1,
+      "bytes": 3230817,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "deployment_runtime_20261026T112000Z",
+      "files": 18,
+      "directories": 1,
+      "bytes": 4671563,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "devin_phone_20261026_record132",
+      "files": 411,
+      "directories": 22,
+      "bytes": 101395119,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "devin_pin_20261026_record133",
+      "files": 264,
+      "directories": 28,
+      "bytes": 86250054,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "disposable_probe_20261026_record127",
+      "files": 166,
+      "directories": 11,
+      "bytes": 3177923,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "disposable_probe_infrastructure_20261026T180937Z_241291b1ee544cfba658dc9b7471fc92",
+      "files": 6,
+      "directories": 1,
+      "bytes": 73436,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "disposable_probe_infrastructure_20261026T181037Z_07e813a84b274b8cba89d70d9f1f9206",
+      "files": 6,
+      "directories": 1,
+      "bytes": 73436,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "disposable_probe_install_review_42a4ec7536f4453296d3eeefcf789246",
+      "files": 9,
+      "directories": 1,
+      "bytes": 1749179,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "document_auth_20261023_051200",
+      "files": 4,
+      "directories": 1,
+      "bytes": 529962,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "document_auth_verification_e155662c5be6",
+      "files": 8,
+      "directories": 2,
+      "bytes": 85852,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "document_filing_20261023_045851",
+      "files": 2,
+      "directories": 1,
+      "bytes": 442614,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "documents_activation_20261025_record104",
+      "files": 342,
+      "directories": 35,
+      "bytes": 160834836,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "documents_repair_20261023_042542",
+      "files": 2,
+      "directories": 1,
+      "bytes": 433077,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "documents_safety_20261025_record101",
+      "files": 47,
+      "directories": 7,
+      "bytes": 2915475,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "documents_verification_27c1c97bf7",
+      "files": 2,
+      "directories": 2,
+      "bytes": 22,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "domain_portfolio_20261027_record151",
+      "files": 14,
+      "directories": 4,
+      "bytes": 2488850,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "drive_intake_retention_20261023",
+      "files": 3,
+      "directories": 4,
+      "bytes": 409825,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "drive_intake_ui_20261023",
+      "files": 5,
+      "directories": 3,
+      "bytes": 269517,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "drive_media_actor_20261024T210949Z",
+      "files": 1373,
+      "directories": 441,
+      "bytes": 97783070,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "drive_retention_activation_20261023T114045Z",
+      "files": 11,
+      "directories": 9,
+      "bytes": 932291,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "driver_reports_20261026_record137",
+      "files": 1142,
+      "directories": 46,
+      "bytes": 284709238,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "driver_spreadsheet_20261026_record139",
+      "files": 276,
+      "directories": 18,
+      "bytes": 86296361,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "durable_packet_inbox_20261026_record122",
+      "files": 183,
+      "directories": 119,
+      "bytes": 14831335,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "e_drive_assessment_20261027",
+      "files": 31,
+      "directories": 4,
+      "bytes": 7745471,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "e_drive_compression_20261027",
+      "files": 125,
+      "directories": 13,
+      "bytes": 346898481,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "evaluation_iso_verified_20261023T201640Z",
+      "files": 6,
+      "directories": 1,
+      "bytes": 202737,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "evaluation_review_20261023T194011Z",
+      "files": 8,
+      "directories": 1,
+      "bytes": 208600,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "execution_access_20261023",
+      "files": 2,
+      "directories": 1,
+      "bytes": 389938,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "export_verification_2e279269c1",
+      "files": 13,
+      "directories": 3,
+      "bytes": 41268,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "export_verification_43d716034e",
+      "files": 14,
+      "directories": 3,
+      "bytes": 46800,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "fe_express_audit_20261026_record130",
+      "files": 10,
+      "directories": 1,
+      "bytes": 22812,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "fe_express_repair_20261026_record131",
+      "files": 642,
+      "directories": 32,
+      "bytes": 184661503,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "fe_portal_save_20261026_record141",
+      "files": 277,
+      "directories": 17,
+      "bytes": 89328284,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "fe_workspace_boards_20261026_record140",
+      "files": 256,
+      "directories": 12,
+      "bytes": 88927778,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "filing_verification_be1d46c98125",
+      "files": 4,
+      "directories": 1,
+      "bytes": 196273,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "firebase_id_token_repair_20261024T222808213066Z",
+      "files": 33,
+      "directories": 7,
+      "bytes": 24397994,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "firebase_release_5_329_4_20261023",
+      "files": 1175,
+      "directories": 62,
+      "bytes": 2310812010,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "firebase_release_5_329_5_20261023",
+      "files": 1175,
+      "directories": 62,
+      "bytes": 2310812041,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "firebase_release_5_329_7_20261023",
+      "files": 1176,
+      "directories": 63,
+      "bytes": 2310970091,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "firebase_release_5_329_9_20261023",
+      "files": 1176,
+      "directories": 63,
+      "bytes": 2310971011,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "firecrawl_provider_20261025_record90",
+      "files": 10,
+      "directories": 1,
+      "bytes": 1370177,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "free_boards_20261026_record136",
+      "files": 258,
+      "directories": 19,
+      "bytes": 86959523,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "frontend_health_5_329_36_20261024T070634807579Z",
+      "files": 61,
+      "directories": 25,
+      "bytes": 1907232,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "frontend_legacy_auth_20261023113849",
+      "files": 45,
+      "directories": 7,
+      "bytes": 3537848,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "frontend_runtime_activation_20261023T120929Z",
+      "files": 21,
+      "directories": 7,
+      "bytes": 1790145,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "frontend_runtime_faults_20261023",
+      "files": 14,
+      "directories": 8,
+      "bytes": 2922940,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "frontend_runtime_followup_20261023",
+      "files": 42,
+      "directories": 15,
+      "bytes": 3533389,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "frozen_updater_20261024T215332Z",
+      "files": 10,
+      "directories": 1,
+      "bytes": 71077,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "gateway_handoff_20261023",
+      "files": 11,
+      "directories": 1,
+      "bytes": 20217889,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "gateway_identity_5_329_37_20261024T072602753556Z",
+      "files": 83,
+      "directories": 39,
+      "bytes": 32578149,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "gemini_antigravity_handoff_20261027_record165",
+      "files": 18,
+      "directories": 4,
+      "bytes": 2223046,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "gemini_handoff_20261027T224424Z",
+      "files": 13,
+      "directories": 3,
+      "bytes": 2152515,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "generation_cancel_before_20261023T164543Z",
+      "files": 5,
+      "directories": 1,
+      "bytes": 72525,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "guest_enrollment_20261025_record114",
+      "files": 719,
+      "directories": 200,
+      "bytes": 3370908,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "guest_roundtrip_20261026_record115",
+      "files": 20,
+      "directories": 4,
+      "bytes": 2312141,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "handoff_refresh_20261025_record95",
+      "files": 10,
+      "directories": 1,
+      "bytes": 1584887,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "host_authority_requirement_20261026_record121",
+      "files": 13,
+      "directories": 4,
+      "bytes": 2204534,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "host_protection_candidate_20261026_record118",
+      "files": 49,
+      "directories": 8,
+      "bytes": 2850987,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "host_source_exchange_review_20261026_record117",
+      "files": 14,
+      "directories": 5,
+      "bytes": 2129684,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "hosted_chat_confirmation_20261023T134234Z",
+      "files": 5,
+      "directories": 1,
+      "bytes": 145963,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "hybrid_execution_gate_5_329_35_20261024T064402503650Z",
+      "files": 64,
+      "directories": 24,
+      "bytes": 2831862,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "integration_profile_20261025_record110",
+      "files": 20,
+      "directories": 4,
+      "bytes": 2232154,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "isolation_feasibility_20261023T161400Z",
+      "files": 1,
+      "directories": 1,
+      "bytes": 27414,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "local_verification_20261026_record125",
+      "files": 583,
+      "directories": 469,
+      "bytes": 199362134,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "local_web_reader_20261025_record92",
+      "files": 23,
+      "directories": 1,
+      "bytes": 1575768,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "localhost_restore_20261024T1406033034435Z",
+      "files": 20,
+      "directories": 3,
+      "bytes": 1019570,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "manifest_chunk_transfer_20261026_record120",
+      "files": 53,
+      "directories": 23,
+      "bytes": 8587361,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "master_db_writer_20261025_record102",
+      "files": 29,
+      "directories": 4,
+      "bytes": 1842137,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "memory_access_5_329_28_20261024T033148662Z",
+      "files": 27,
+      "directories": 1,
+      "bytes": 1824966,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "memory_inventory_20261024T032002Z",
+      "files": 17,
+      "directories": 1,
+      "bytes": 622826,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "mission_api_status_20261023T143625Z",
+      "files": 6,
+      "directories": 8,
+      "bytes": 434257,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "mission_verification_truth_20261023",
+      "files": 1,
+      "directories": 1,
+      "bytes": 57821,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "mobile_image_stability_20261025T135450Z",
+      "files": 260,
+      "directories": 22,
+      "bytes": 151114521,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "mobile_media_20261025T064514Z",
+      "files": 222,
+      "directories": 19,
+      "bytes": 83918185,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "mobile_writer_20261025T130407Z",
+      "files": 561,
+      "directories": 38,
+      "bytes": 304712747,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native56_acceptance_20261025T0022294884917Z",
+      "files": 2721,
+      "directories": 341,
+      "bytes": 909491872,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native57_workflows_20261025T015322912998Z",
+      "files": 9189,
+      "directories": 1127,
+      "bytes": 2463667743,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_candidate_5_329_4_20261023",
+      "files": 8664,
+      "directories": 2056,
+      "bytes": 2030956830,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_chat_recovery_20261025T0011434057022Z",
+      "files": 2322,
+      "directories": 286,
+      "bytes": 645120169,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_cockpit_20261025T022559185554Z",
+      "files": 32,
+      "directories": 9,
+      "bytes": 1735001,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_cockpit_baseline64_20261025T152925Z",
+      "files": 4666,
+      "directories": 571,
+      "bytes": 1289563876,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_current_web_rebuild_20261024T223635205654Z",
+      "files": 6987,
+      "directories": 848,
+      "bytes": 2151165397,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_local_connection_20261024T2352566892827Z",
+      "files": 4628,
+      "directories": 568,
+      "bytes": 1288042774,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_local_export_20261024T232141476138Z",
+      "files": 2318,
+      "directories": 286,
+      "bytes": 645982802,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_release_recheck_20261026T092000Z",
+      "files": 12,
+      "directories": 1,
+      "bytes": 1661204,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_release_safety_20261023",
+      "files": 4,
+      "directories": 1,
+      "bytes": 104624,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_shared_chat_20261025T155347Z",
+      "files": 7115,
+      "directories": 860,
+      "bytes": 2003798300,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_signing_safeguards_20261026T092445Z",
+      "files": 39,
+      "directories": 3,
+      "bytes": 2863241,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_startup_policy_20261024T213544Z",
+      "files": 16,
+      "directories": 1,
+      "bytes": 247661,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_video_delivery_20261025T144039Z",
+      "files": 582,
+      "directories": 43,
+      "bytes": 303310993,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_writer_matrix_20261025T164005Z",
+      "files": 66,
+      "directories": 14,
+      "bytes": 3709172,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "native_writer_packaging_20261023",
+      "files": 1,
+      "directories": 1,
+      "bytes": 3818,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "notos_demo_seed_20261024T225500Z",
+      "files": 863,
+      "directories": 276,
+      "bytes": 65839619,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "nvidia_driver_update_20261027",
+      "files": 235,
+      "directories": 9,
+      "bytes": 3891615536,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "ollama_update_recovery_20261023T123753Z",
+      "files": 3,
+      "directories": 1,
+      "bytes": 85221,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "paypal_capture_guard_20261023",
+      "files": 2,
+      "directories": 1,
+      "bytes": 3931,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "pdf_repair_20261023_045035",
+      "files": 2,
+      "directories": 1,
+      "bytes": 440356,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "pdf_verification_3ec4cb2bf228",
+      "files": 2,
+      "directories": 2,
+      "bytes": 1464,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "pdf_verification_fca5c92a3cbc",
+      "files": 8,
+      "directories": 2,
+      "bytes": 12947,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "personal_vault_review_20261025_record103",
+      "files": 31,
+      "directories": 4,
+      "bytes": 1856547,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase1_review_candidate_20261023",
+      "files": 1173,
+      "directories": 62,
+      "bytes": 2310586933,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_actual_guest_report_20261024T1915272413927Z",
+      "files": 11,
+      "directories": 1,
+      "bytes": 713452,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_append_status_20261024T1633507696211Z",
+      "files": 42,
+      "directories": 8,
+      "bytes": 522001,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_continuation_20261025_record107",
+      "files": 28,
+      "directories": 4,
+      "bytes": 2010736,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_cursor_additions_review_20261024T182240457544Z",
+      "files": 4,
+      "directories": 1,
+      "bytes": 8764496,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_cursor_recovery_20261024T1817423065021Z",
+      "files": 17,
+      "directories": 1,
+      "bytes": 846974,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_entry_policy_20261024T2021279810123Z",
+      "files": 1,
+      "directories": 1,
+      "bytes": 12827,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_entry_policy_20261024T2021503710069Z",
+      "files": 2,
+      "directories": 1,
+      "bytes": 13403,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_entry_policy_20261024T2026169203009Z",
+      "files": 11,
+      "directories": 2,
+      "bytes": 43548,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_entry_policy_20261024T2027182727238Z",
+      "files": 11,
+      "directories": 2,
+      "bytes": 43548,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_entry_policy_20261024T2028146384605Z",
+      "files": 5,
+      "directories": 1,
+      "bytes": 55076,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_entry_policy_20261026T011102399124Z",
+      "files": 11,
+      "directories": 2,
+      "bytes": 43548,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_entry_policy_20261026T011107663956Z",
+      "files": 11,
+      "directories": 2,
+      "bytes": 43548,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_evidence_20261026T011312140968Z",
+      "files": 24,
+      "directories": 8,
+      "bytes": 868,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_evidence_20261026T011325144150Z",
+      "files": 24,
+      "directories": 8,
+      "bytes": 745,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_preflight_20261024T2013338606252Z",
+      "files": 28,
+      "directories": 1,
+      "bytes": 1163259,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_profile_20261024T1759392200193Z",
+      "files": 18,
+      "directories": 1,
+      "bytes": 657849,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_profile_20261024T2012357031301Z",
+      "files": 9,
+      "directories": 1,
+      "bytes": 102995,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_provision_20261024T1728128377953Z",
+      "files": 13,
+      "directories": 1,
+      "bytes": 576744,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_query_20261024T2013326956891Z",
+      "files": 0,
+      "directories": 1,
+      "bytes": 0,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_query_20261024T2013403802131Z",
+      "files": 4,
+      "directories": 1,
+      "bytes": 14187,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_query_20261024T2015382895840Z",
+      "files": 3,
+      "directories": 1,
+      "bytes": 28959,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_query_20261024T2016198210610Z",
+      "files": 12,
+      "directories": 1,
+      "bytes": 60683,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_query_20261026T010936547596Z",
+      "files": 3,
+      "directories": 1,
+      "bytes": 31430,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_query_20261026T011100248349Z",
+      "files": 3,
+      "directories": 1,
+      "bytes": 31430,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_desktop_query_20261026T011105568016Z",
+      "files": 3,
+      "directories": 1,
+      "bytes": 30050,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_diagnostic_v2_20261024T1920072312648Z",
+      "files": 20,
+      "directories": 2,
+      "bytes": 93913,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_driver_desktop_20261024T1848569301713Z",
+      "files": 10,
+      "directories": 1,
+      "bytes": 667441,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_driver_install_20261024T1834172752783Z",
+      "files": 19,
+      "directories": 1,
+      "bytes": 1139435,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_driver_verified_20261024T1901193534483Z",
+      "files": 16,
+      "directories": 1,
+      "bytes": 1106755,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_guest_installer_20261024T1733537733101Z",
+      "files": 28,
+      "directories": 1,
+      "bytes": 600332,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_guest_media_v2_20261024T1745111782692Z",
+      "files": 58,
+      "directories": 8,
+      "bytes": 141859922,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_ledger_sync_20261024T1906079390269Z",
+      "files": 10,
+      "directories": 1,
+      "bytes": 747959,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_ledger_sync_20261024T1918473417537Z",
+      "files": 10,
+      "directories": 1,
+      "bytes": 811269,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_ledger_sync_20261024T1942247463380Z",
+      "files": 14,
+      "directories": 1,
+      "bytes": 665469,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_ledger_sync_20261024T2004400950700Z",
+      "files": 17,
+      "directories": 1,
+      "bytes": 900766,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_ledger_sync_20261024T2034301517746Z",
+      "files": 13,
+      "directories": 1,
+      "bytes": 715801,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_ledger_sync_20261024T2100047852998Z",
+      "files": 13,
+      "directories": 1,
+      "bytes": 738157,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_ledger_sync_20261024T2131201627552Z",
+      "files": 13,
+      "directories": 1,
+      "bytes": 762739,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_ledger_sync_20261024T2152350911478Z",
+      "files": 13,
+      "directories": 1,
+      "bytes": 790631,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_ledger_sync_20261024T2219497039353Z",
+      "files": 13,
+      "directories": 1,
+      "bytes": 819793,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_mouse_diagnostic_20261024T1807353951512Z",
+      "files": 33,
+      "directories": 2,
+      "bytes": 766065,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_offline_runtime_20261024T1627099457287Z",
+      "files": 22,
+      "directories": 3,
+      "bytes": 72282266,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_oobe_progress_20261024T1717498815873Z",
+      "files": 410,
+      "directories": 2,
+      "bytes": 5103883,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_package_licensing_recheck_20261024T1952321613877Z",
+      "files": 21,
+      "directories": 1,
+      "bytes": 1355267,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_preparation_20261023T183902Z",
+      "files": 8,
+      "directories": 1,
+      "bytes": 168975,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_resume_20261025_record106",
+      "files": 40,
+      "directories": 4,
+      "bytes": 2223592,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_runtime_blocked_20261024T1802544929148Z",
+      "files": 9,
+      "directories": 1,
+      "bytes": 602693,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_runtime_recheck_20261024T1927388408441Z",
+      "files": 13,
+      "directories": 1,
+      "bytes": 729607,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_runtime_verify_pending_20261024T1757412184751Z",
+      "files": 10,
+      "directories": 1,
+      "bytes": 586278,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_setup_channel_20261024T1621219828891Z",
+      "files": 20,
+      "directories": 5,
+      "bytes": 878162,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_status_publication_20261024T1631367876869Z",
+      "files": 19,
+      "directories": 2,
+      "bytes": 442433,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_wheel_setup_20261024T221500Z",
+      "files": 3,
+      "directories": 1,
+      "bytes": 3928,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_wheel_setup_media_20261024T1956190906803Z",
+      "files": 5,
+      "directories": 2,
+      "bytes": 7090396,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_wheel_setup_media_20261024T1956407930591Z",
+      "files": 32,
+      "directories": 4,
+      "bytes": 14367959,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_wheel_setup_media_20261024T2001079098022Z",
+      "files": 13,
+      "directories": 3,
+      "bytes": 14289560,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_wheel_setup_media_20261024T2003424861639Z",
+      "files": 34,
+      "directories": 3,
+      "bytes": 14391499,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase4_worker_recovery_20261024T1602257422359Z",
+      "files": 59,
+      "directories": 13,
+      "bytes": 764168,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase6_model_baseline_20261024T1638411889333Z",
+      "files": 47,
+      "directories": 2,
+      "bytes": 950699,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase6_realistic_baseline_20261024T193545Z",
+      "files": 40,
+      "directories": 1,
+      "bytes": 311408,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "phase6_realistic_record_20261024T1941524162940Z",
+      "files": 9,
+      "directories": 1,
+      "bytes": 702270,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "plan_checkpoints",
+      "files": 4,
+      "directories": 3,
+      "bytes": 74237,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "planning_controls_5_329_45_20261024T131228359055Z",
+      "files": 2890,
+      "directories": 3140,
+      "bytes": 3919500,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "plugin_import_identity_20261023",
+      "files": 4,
+      "directories": 1,
+      "bytes": 17787,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "portal_scroll_20261026_record135",
+      "files": 267,
+      "directories": 19,
+      "bytes": 86221642,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "post_reboot_verification_20261025_record100",
+      "files": 10,
+      "directories": 4,
+      "bytes": 1712842,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "private_connector_20261025_record113",
+      "files": 508,
+      "directories": 122,
+      "bytes": 3362083,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "probe_cmd_tail_4db4eee99dc54d7ca44fcccc4bd7def6",
+      "files": 1,
+      "directories": 1,
+      "bytes": 117,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "production_readiness_5_329_33_20261024T054356815Z",
+      "files": 959,
+      "directories": 518,
+      "bytes": 524934293,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "program_builder_quality_gate_20261023T095752534",
+      "files": 1,
+      "directories": 1,
+      "bytes": 24260,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "project_input_schema_5_329_25_20261024T022921704Z",
+      "files": 25,
+      "directories": 4,
+      "bytes": 509008,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "proposal_history_5_329_48_20261024T145341207541Z",
+      "files": 3961,
+      "directories": 4033,
+      "bytes": 10615951,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "proposal_ui_5_329_47_20261024T143740416296Z",
+      "files": 67,
+      "directories": 26,
+      "bytes": 2642975,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "rag_staging_5_329_30_20261024T041018797Z",
+      "files": 110,
+      "directories": 44,
+      "bytes": 9110797,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "rapidapi_frontend_redaction_20261023",
+      "files": 4,
+      "directories": 8,
+      "bytes": 122144,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "reboot_handoff_20261024T190057675619Z",
+      "files": 11,
+      "directories": 5,
+      "bytes": 1306246,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "reboot_handoff_20261025T220833Z",
+      "files": 12,
+      "directories": 1,
+      "bytes": 1706411,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_audience_review_20261027",
+      "files": 200,
+      "directories": 8,
+      "bytes": 79605788,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_audit_20261027_record143",
+      "files": 5,
+      "directories": 1,
+      "bytes": 6640,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_frontend_20261023",
+      "files": 16,
+      "directories": 11,
+      "bytes": 3383628,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_inbox_20261027_record149",
+      "files": 425,
+      "directories": 20,
+      "bytes": 105477410,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_live_monitor_20261027",
+      "files": 7,
+      "directories": 1,
+      "bytes": 25317,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_personalization_20261027",
+      "files": 19,
+      "directories": 1,
+      "bytes": 142190,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_presend_20261027_record144",
+      "files": 5,
+      "directories": 1,
+      "bytes": 9374,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_privacy_20261023",
+      "files": 5,
+      "directories": 1,
+      "bytes": 8104086,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_registration_20261027_record148",
+      "files": 17,
+      "directories": 2,
+      "bytes": 5840503,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_review_drafts_20261027",
+      "files": 5,
+      "directories": 1,
+      "bytes": 10548,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_send_repair_20261027",
+      "files": 88,
+      "directories": 11,
+      "bytes": 33927163,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_sources_20261027_record145",
+      "files": 5,
+      "directories": 1,
+      "bytes": 145408,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_textbee_key_20261027",
+      "files": 63,
+      "directories": 4,
+      "bytes": 8941645,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_textbee_live_20261027",
+      "files": 21,
+      "directories": 6,
+      "bytes": 6456013,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_transcript_20261027_record146",
+      "files": 1,
+      "directories": 1,
+      "bytes": 1256,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "recdebut_workflow_20261027_record147",
+      "files": 267,
+      "directories": 26,
+      "bytes": 92838016,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "record162_resume_20261027T204317209667Z",
+      "files": 5,
+      "directories": 1,
+      "bytes": 1895263,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "release_privacy_20261023",
+      "files": 2,
+      "directories": 1,
+      "bytes": 6263,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "release_readiness_20261024T2036078048242Z",
+      "files": 382,
+      "directories": 17,
+      "bytes": 154961973,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "release_review_20261026_record128",
+      "files": 1637,
+      "directories": 71,
+      "bytes": 468386954,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "release_versioning_20261023",
+      "files": 20,
+      "directories": 11,
+      "bytes": 1072209,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "remaining_plan_approved_20261024T021820663Z",
+      "files": 2,
+      "directories": 1,
+      "bytes": 172715,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "report_formats_20261026_record138",
+      "files": 260,
+      "directories": 22,
+      "bytes": 86245005,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "review_checkpoint_5_329_4_20261023T124033Z",
+      "files": 56,
+      "directories": 18,
+      "bytes": 3573413,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "review_pause_20261023T120153Z",
+      "files": 34,
+      "directories": 13,
+      "bytes": 4040907,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "router_mount_dedup_20261027T234514Z",
+      "files": 14,
+      "directories": 1,
+      "bytes": 1461443,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_10_20261023T145041Z",
+      "files": 12,
+      "directories": 6,
+      "bytes": 873324,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_10_20261023T145118Z",
+      "files": 12,
+      "directories": 6,
+      "bytes": 873524,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_11_20261023T145941Z",
+      "files": 15,
+      "directories": 7,
+      "bytes": 953732,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_11_20261023T150246Z",
+      "files": 15,
+      "directories": 6,
+      "bytes": 954788,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_12_20261023T155909Z",
+      "files": 17,
+      "directories": 6,
+      "bytes": 967922,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_13_20261023T160442Z",
+      "files": 17,
+      "directories": 6,
+      "bytes": 970758,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_14_20261023T161041Z",
+      "files": 18,
+      "directories": 6,
+      "bytes": 978435,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_15_20261023T163117Z",
+      "files": 20,
+      "directories": 6,
+      "bytes": 989466,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_15_20261023T163728Z",
+      "files": 20,
+      "directories": 6,
+      "bytes": 990793,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_16_20261023T165204Z",
+      "files": 21,
+      "directories": 6,
+      "bytes": 997106,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_17_20261023T170752Z",
+      "files": 21,
+      "directories": 6,
+      "bytes": 999490,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_18_20261023T193153Z",
+      "files": 21,
+      "directories": 6,
+      "bytes": 1000297,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_7_20261023T140616Z",
+      "files": 8,
+      "directories": 5,
+      "bytes": 496717,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_8_20261023T142253Z",
+      "files": 10,
+      "directories": 5,
+      "bytes": 624781,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "runtime_checkpoint_5_329_9_20261023T144008Z",
+      "files": 17,
+      "directories": 11,
+      "bytes": 688027,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "save_verification_8d199df727",
+      "files": 2,
+      "directories": 3,
+      "bytes": 575,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "scoped_transport_20261025_record111",
+      "files": 123,
+      "directories": 118,
+      "bytes": 3075718,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "screenplay_export_20261023_052639",
+      "files": 3,
+      "directories": 1,
+      "bytes": 270372,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "screenplay_import_utf8_20261023",
+      "files": 1,
+      "directories": 1,
+      "bytes": 30892,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "screenwriting_archive_patch_20261023_041637",
+      "files": 2,
+      "directories": 1,
+      "bytes": 232307,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "screenwriting_auth_20261023_053335",
+      "files": 8,
+      "directories": 1,
+      "bytes": 20654960,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "screenwriting_auth_verification_772a827075",
+      "files": 4,
+      "directories": 5,
+      "bytes": 3388,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "screenwriting_auth_verification_9bbf2e7498",
+      "files": 4,
+      "directories": 5,
+      "bytes": 3388,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "screenwriting_auth_verification_b308579976",
+      "files": 4,
+      "directories": 5,
+      "bytes": 3388,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "screenwriting_auth_verification_b903581fa2",
+      "files": 4,
+      "directories": 5,
+      "bytes": 3388,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "screenwriting_project_scope_20261023",
+      "files": 11,
+      "directories": 7,
+      "bytes": 11001560,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "screenwriting_recovery_20261023_035551",
+      "files": 4,
+      "directories": 1,
+      "bytes": 10397562,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "screenwriting_revision_20261023",
+      "files": 12,
+      "directories": 11,
+      "bytes": 1330564,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "security_baseline_provenance_20261025T175629Z",
+      "files": 43,
+      "directories": 13,
+      "bytes": 5119877,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "security_safeguard_review_20261025T174925Z",
+      "files": 9,
+      "directories": 4,
+      "bytes": 1539390,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "standard_worker_prerequisites_20261026_record119",
+      "files": 23,
+      "directories": 5,
+      "bytes": 2194804,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "startup_outbound_safety_20261023",
+      "files": 5,
+      "directories": 4,
+      "bytes": 245531,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "static_syntax_20261023",
+      "files": 10,
+      "directories": 12,
+      "bytes": 45299,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "subsystem_review_20261027",
+      "files": 167,
+      "directories": 88,
+      "bytes": 16703455,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "theatrical_ancestors_20261026T110600Z",
+      "files": 24,
+      "directories": 1,
+      "bytes": 3222992,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "theatrical_api_20261026T100500Z",
+      "files": 38,
+      "directories": 5,
+      "bytes": 1837850,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "theatrical_blobs_20261026T105600Z",
+      "files": 263,
+      "directories": 188,
+      "bytes": 45189673,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "theatrical_boundary_20261026T094500Z",
+      "files": 10,
+      "directories": 1,
+      "bytes": 24860,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "theatrical_embeddings_20261026T103219Z",
+      "files": 14,
+      "directories": 1,
+      "bytes": 1626704,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "theatrical_registry_20261026T095300Z",
+      "files": 6,
+      "directories": 1,
+      "bytes": 13033,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "transfer_lifecycle_20261026_record123",
+      "files": 310,
+      "directories": 134,
+      "bytes": 154631215,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "typescript_scope_alignment_20261023",
+      "files": 4,
+      "directories": 1,
+      "bytes": 3819942,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "validation_records_before_20261023T170223Z",
+      "files": 5,
+      "directories": 7,
+      "bytes": 92918,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vault_auth_20261023",
+      "files": 2,
+      "directories": 2,
+      "bytes": 384143,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "virtualbox_install_20261023T201920Z",
+      "files": 33,
+      "directories": 2,
+      "bytes": 358980989,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_artifacts_5_329_20_20261023T194338Z",
+      "files": 12,
+      "directories": 1,
+      "bytes": 225533,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_communication_goal_20261025_record108",
+      "files": 13,
+      "directories": 4,
+      "bytes": 1971947,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_current_state_review_20261024T155215168489Z",
+      "files": 11,
+      "directories": 5,
+      "bytes": 875652,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_deferred_20261024T020321803Z",
+      "files": 5,
+      "directories": 1,
+      "bytes": 323114,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_diagnostic_preflight_20261026_record126",
+      "files": 13,
+      "directories": 4,
+      "bytes": 2270097,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_firmware_stall_20261023T215930169Z",
+      "files": 13,
+      "directories": 1,
+      "bytes": 1105738,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_guard_5_329_18_20261023T193124Z",
+      "files": 10,
+      "directories": 1,
+      "bytes": 489264,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_guard_before_20261023T192932Z",
+      "files": 2,
+      "directories": 1,
+      "bytes": 320095,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_guard_live_5_329_18_20261023T193314Z",
+      "files": 9,
+      "directories": 1,
+      "bytes": 223440,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_inputs_5_329_19_20261023T193640Z",
+      "files": 11,
+      "directories": 1,
+      "bytes": 206618,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_install_review_20261023T185725Z",
+      "files": 7,
+      "directories": 1,
+      "bytes": 164748,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_installation_recovery_20261023T2322Z",
+      "files": 17,
+      "directories": 1,
+      "bytes": 951878,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_preparation_process_fix_20261023T210538688Z",
+      "files": 26,
+      "directories": 2,
+      "bytes": 300612,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_prepared_verification_20261023T2110Z",
+      "files": 29,
+      "directories": 2,
+      "bytes": 291034,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_recovery_log_guard_20261023T224324589Z",
+      "files": 15,
+      "directories": 1,
+      "bytes": 329396,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_recovery_login_20261023T223104882Z",
+      "files": 5,
+      "directories": 1,
+      "bytes": 226035,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_snapshot_media_recovery_20261023T220457243Z",
+      "files": 14,
+      "directories": 1,
+      "bytes": 301464,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_staging_5_329_21_20261023T221547796Z",
+      "files": 13,
+      "directories": 1,
+      "bytes": 321734,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "vm_transport_20261026_record116",
+      "files": 23,
+      "directories": 8,
+      "bytes": 2343562,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "web_api_comfy_20261025T062754Z",
+      "files": 217,
+      "directories": 12,
+      "bytes": 82119349,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "web_chat_recovery_20261024T2209238530417Z",
+      "files": 276,
+      "directories": 14,
+      "bytes": 150966574,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "web_orchestration_20261025_record91",
+      "files": 13,
+      "directories": 1,
+      "bytes": 1561860,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "web_publication_assets_20261024T2035083599433Z",
+      "files": 10,
+      "directories": 1,
+      "bytes": 839587,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "web_search_repair_20261025_record89",
+      "files": 22,
+      "directories": 1,
+      "bytes": 2112473,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "web_url_punctuation_20261025_record93",
+      "files": 18,
+      "directories": 1,
+      "bytes": 1585387,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "website_phone_pin_20261026_record134",
+      "files": 496,
+      "directories": 27,
+      "bytes": 172228337,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "windows_image_discovery_20261023T200353Z",
+      "files": 4,
+      "directories": 1,
+      "bytes": 155925,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "windows_vm_enrollment_20261028_record174",
+      "files": 5,
+      "directories": 1,
+      "bytes": 64461,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "windows_web_parity_20261024T213000Z",
+      "files": 2419,
+      "directories": 296,
+      "bytes": 656291185,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "worker_account_setup_20261023T203626Z",
+      "files": 24,
+      "directories": 1,
+      "bytes": 521703,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "worker_config_gate_20261026T023144149307Z",
+      "files": 1,
+      "directories": 1,
+      "bytes": 31,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "worker_identity_verified_20261023T205507957Z",
+      "files": 9,
+      "directories": 1,
+      "bytes": 240699,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "worker_s4u_20261025_record109",
+      "files": 31,
+      "directories": 4,
+      "bytes": 2227109,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "writer_contract_activation_20261023T121944Z",
+      "files": 4,
+      "directories": 5,
+      "bytes": 368508,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "writing_client_20261026T1158Z",
+      "files": 21,
+      "directories": 1,
+      "bytes": 3233518,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "writing_reorder_20261026T1220Z",
+      "files": 22,
+      "directories": 1,
+      "bytes": 3245016,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "writing_transport_20261026T1215Z",
+      "files": 11,
+      "directories": 1,
+      "bytes": 22485,
+      "status": "SHA256_VERIFIED"
+    },
+    {
+      "name": "writing_workflows_20261026T1140Z",
+      "files": 19,
+      "directories": 1,
+      "bytes": 143809,
+      "status": "SHA256_VERIFIED"
+    }
+  ],
+  "skipped": [
+    {
+      "name": "broadcast_audio214",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "broadcast_fix_v81_20261031_record205",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "broadcast_game_follow207_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "broadcast_relay206_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "broadcast_secondary206_live",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "broadcast_secondary206_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "bs_chat_openai_20261105T020848Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_assets_materials",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_chapter_content",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_chapter_creator",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_chapter_play",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_creator_workspace",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_creator_workspace_safety",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_local_ai_authoring",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_m4_creator_host",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_m4_native_process",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_native95_creator",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_native95_restart",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_native_viewport",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_pause_after_M3_Studio94",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_persistent_placement",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "checkpoint_20261101_typed_authoring",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "chroma_fts_transaction_20261031T043703Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "coding_preparation_5_329_42_20261024T111235151300Z",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "creation_network_audit_20261030T214149Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "crypto_execution_controls_20261030T185003Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "crypto_integrity_audit_20261030T184032Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "crypto_news_archive_20261106",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "crypto_release_20261030T193043Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "economics_evidence_20261030T195745Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "evaluation_guidance_20261030",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "expansion_review_20261030T194851Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "firebase_payment_release_20261030T204732Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "firebase_release_5_329_1_20261023",
+      "reason": "existing_destination_preserved"
+    },
+    {
+      "name": "firebase_release_5_329_3_20261023",
+      "reason": "existing_destination_preserved"
+    },
+    {
+      "name": "firebase_release_5_329_6_20261023",
+      "reason": "existing_destination_preserved"
+    },
+    {
+      "name": "firebase_web-v109-20261104-210648",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "game_capture206_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "game_sampler207_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "gemini_fix_v80_20261031_record204",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "historical_knowledge_20261030",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "history_drive_20261030T213148Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "http_fallback_5_329_38_20261024T082130019256Z",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "live_overlay215",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_broadcast207_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_broadcast_preview209_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game87_20261101_gamehub",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game88_20261101_worldscene",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game89_20261101_grounded",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game90_20261101_recovery",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game91_20261101_m1",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game92_20261101_m2",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game93_20261101_m3",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game94_20261101_m3",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game95_20261101_creator",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game96_20261101_assets",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game97_20261101_placement",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game98_checkpoint09",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_game99_warm_opening",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_preview209_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_preview210_fix",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_preview210_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_preview_v84_20261031_record209",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_preview_v85_20261031_record209",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_preview_v86_20261031_record210",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_profile208_review",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_profile208_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_v5_329_78_20261031_record201",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "native_writer_safety_20261023",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "network_hardening_20261030T220825Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "network_hardware_evidence_20261030T222248Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "network_workspace_frontend_20261030T220946Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "october7_audit212",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "owned_archive_5_329_40_20261024T094712051012Z",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "payment_integrity_20261030T201856Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "personal_memory_authority_5_329_39_20261024T085505192187Z",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "photogrammetry_prop01_20261105T024638Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "post_reboot_health211",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "preparation_planning_5_329_44_20261024T124740911843Z",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "preparation_ui_5_329_43_20261024T115233251733Z",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "prop01_cleanup_unreal_20261105T235726Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "recdebut_access_recovery_20261027",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "recdebut_email_20261029",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "recdebut_send_setup_20261027_record152",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "recdebut_textbee_inbound_20261027",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "record205_close_storage_fallback_20261031",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "record207_close_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "record208_close_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "record209_close_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "record209_native_retirement",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "record209_secret_default_cleanup",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "record209_source_closure",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "record209_source_closure_corrected",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "record209_web",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "record210_close_work",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "record210_source_closure",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "release_versioning",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "repository_snapshot_5_329_41_20261024T104627999860Z",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "retained_proposal_5_329_46_20261024T141425139154Z",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "routing_fix_v79_20261031_record203",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "storage_diagnostics_20261031",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "studio100_warm_opening_20261102_v01",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "studio101_savedplay_20261103_v01",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "studio102_lifecycle_20261103_v01",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "studio103_warm_beginning_20261103_v01",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "studio104_warm_beginning_20261103_v01",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "studio105_warm_beginning_20261103_v01",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "studio106_warm_beginning_20261103_v01",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "studio107_warm_beginning_20261103_v01",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "studio108_warm_beginning_20261104_v01",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "studio109_warm_beginning_20261104_v01",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "theatrical_storage_20261026T104441Z",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "vm_decommission_20261104",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "vm_retirement_review_20261104T214202Z",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "website_live_audit205",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "windows_exchange_20261025_record112",
+      "reason": "reparse_point"
+    },
+    {
+      "name": "windows_integration_v82_20261031_record207",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "windows_integration_v83_20261031_record207",
+      "reason": "linked_or_recent_root"
+    },
+    {
+      "name": "windows_v83_live_verification_20261031_record208",
+      "reason": "linked_or_recent_root"
+    }
+  ],
+  "failed": [],
+  "loose_files": {
+    "files": 2,
+    "bytes": 15208
+  },
+  "dispatch_enabled": false,
+  "completed_utc": "2026-11-06T20:08:57.628278+00:00"
+}

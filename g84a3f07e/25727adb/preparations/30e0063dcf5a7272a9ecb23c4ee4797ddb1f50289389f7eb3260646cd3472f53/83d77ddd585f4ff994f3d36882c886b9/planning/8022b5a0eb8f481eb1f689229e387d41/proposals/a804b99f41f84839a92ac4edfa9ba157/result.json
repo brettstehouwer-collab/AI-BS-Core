@@ -1,0 +1,42 @@
+{
+  "state": "PROPOSAL_READY",
+  "input_sha256": "fe4ed46e16bf5e5e63bcaf8775efb84e61ea55a74243a0ca11c63f72a2e72fe8",
+  "proposal": {
+    "summary": "Selected implementations now return42.",
+    "files": [
+      {
+        "path": "src/app.py",
+        "base_sha256": "34c1c057b9a15c17e225e71939b719c489009af44a9133744c964da1d4baf347",
+        "proposed_sha256": "83b8687046986aa0d831ef13c512c42a391904d178a7bb1652f1c12833613325",
+        "content": "\ufeffvalue = 42\r\nother = 2000\r\n",
+        "diff": "--- a/src/app.py\n+++ b/src/app.py\n@@ -1,2 +1,2 @@\n-\ufeffvalue = 1\r\n-other = 2\r\n+\ufeffvalue = 42\r\n+other = 2000\r\n"
+      }
+    ],
+    "diff": "--- a/src/app.py\n+++ b/src/app.py\n@@ -1,2 +1,2 @@\n-\ufeffvalue = 1\r\n-other = 2\r\n+\ufeffvalue = 42\r\n+other = 2000\r\n"
+  },
+  "model_output": {
+    "summary": "Selected implementations now return42.",
+    "changes": [
+      {
+        "path": "src/app.py",
+        "base_sha256": "34c1c057b9a15c17e225e71939b719c489009af44a9133744c964da1d4baf347",
+        "hunks": [
+          {
+            "before": "other = 2",
+            "after": "other = 2000"
+          },
+          {
+            "before": "value = 1",
+            "after": "value = 42"
+          }
+        ]
+      }
+    ]
+  },
+  "error_code": null,
+  "elapsed_seconds": 0.0,
+  "finished_at_utc": "2026-11-14T14:20:57.635840+00:00",
+  "response_sha256": "4973c5454f521f471bdeecc9c57c4606e86f9b48f57025fafef117a4b75dee2c",
+  "response_bytes": 282,
+  "entry_sha256": "f74611530a63b95d63cf0127c49788eca65bb39be6ab94cfadd220c65c0fd663"
+}

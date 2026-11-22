@@ -1,0 +1,158 @@
+{
+  "id": "m4_payload_20261101",
+  "utc_timestamp": "2026-11-01T18:02:22.178712+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next active executor",
+  "branch": "codex/audit-v532976-20261031",
+  "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "files": [
+    {
+      "path": "engine/include/aibs/creator_payload.hpp",
+      "bytes": 5878,
+      "sha256": "22f7a1d2f071ca4802484f375f9eebd76a5d8e65e20a1917e302f8857de768df"
+    },
+    {
+      "path": "native_studio/game_engine/creator_payload.py",
+      "bytes": 6522,
+      "sha256": "c7be7d9315a66f4119655ee97c6e0b143e04836c13740d33d9ec02d2c8af09e7"
+    },
+    {
+      "path": "engine/tests/test_creator_payload.py",
+      "bytes": 3357,
+      "sha256": "825b6fd54f291bc65264e0159ed4e8db7aca0c40a76cd0cc392483093dc03453"
+    },
+    {
+      "path": "engine/tests/creator_payload_probe.cpp",
+      "bytes": 828,
+      "sha256": "3a097aa46cf2929d18338e929963c8a7ff96ba858d2f56c60801e526f61a773d"
+    },
+    {
+      "path": "engine/tests/verify_creator_payload.py",
+      "bytes": 3535,
+      "sha256": "2473b940f3e17695354e9c939cec2f0b8104181028ee01827fb47ebc52bb1df5"
+    },
+    {
+      "path": "engine/CREATOR_PROTOCOL.md",
+      "bytes": 3784,
+      "sha256": "0be3c8e748b7186ede48d8b2b6a3186ced4fc61fe94310edc5e11dedb02b256b"
+    },
+    {
+      "path": "engine/CMakeLists.txt",
+      "bytes": 18331,
+      "sha256": "4cd36f64c8d6a61fac44244246db8478b98b795a3ccb4984d5787363d335ce2e"
+    },
+    {
+      "path": "engine/out/creator-payload-source/CMakeLists.txt",
+      "bytes": 453,
+      "sha256": "1a7d80a71513381f21a1e7c32162db3a5d4ff070420f2ac325a4181bd474d673"
+    },
+    {
+      "path": "engine/out/creator-payload-configure.log",
+      "bytes": 583,
+      "sha256": "21b401eaca22a74278638204dc5027e5dbea2b117d412aa3f57f8c8776380348"
+    },
+    {
+      "path": "engine/out/creator-payload-cpp-green.Debug.log",
+      "bytes": 386,
+      "sha256": "7dcf0522760dec842bbe5af8d194ec51daea34dd92dff377d25399080e14a0b6"
+    },
+    {
+      "path": "engine/out/creator-payload-cpp-green.Release.log",
+      "bytes": 426,
+      "sha256": "3e052f142ce036b7f988ff503af9510a46503ce2b86e075de87e3ae414ffd550"
+    },
+    {
+      "path": "engine/out/creator-payload-cpp-red.log",
+      "bytes": 455,
+      "sha256": "3cd332398f551396f119e2adac35b43d600f50ffb78b2d421884c240e959955f"
+    },
+    {
+      "path": "engine/out/creator-payload-python-green.log",
+      "bytes": 108,
+      "sha256": "731497fe438734e5d846eb72a6e10623269b7612b89b976353e7d67fb6c7b7ef"
+    },
+    {
+      "path": "engine/out/creator-payload-python-red.log",
+      "bytes": 1025,
+      "sha256": "6710cf55d5a4086bb54592fcf7a3fc5172979900d247e0f7b41f6a111cfa83ff"
+    },
+    {
+      "path": "engine/out/creator-payload-python-regression.log",
+      "bytes": 174,
+      "sha256": "2e6dbe1b709c5258111d3666dee279e30a238cdd44d39a389f5acdcec4f492c8"
+    },
+    {
+      "path": "engine/out/creator-payload-root-build.log",
+      "bytes": 411,
+      "sha256": "3ff1775c1905da4503604a190c42b92a5066a726338c721066c176044c6553e1"
+    },
+    {
+      "path": "engine/out/creator-payload-root-configure.log",
+      "bytes": 203,
+      "sha256": "cdad0f70bae33f16550c46bb3e5fdf197535c94a60b46fbbef88c36d4d4bd4da"
+    },
+    {
+      "path": "engine/out/creator-payload-types-red.log",
+      "bytes": 1153,
+      "sha256": "4872332832f10ffeb195ec51d8e13fefe1a565e1404a8fbf88565d07cc10efab"
+    },
+    {
+      "path": "engine/out/creator-payload-cross.Debug.json",
+      "bytes": 311,
+      "sha256": "02a8694d9d7ea761775ce72914eae960f885a4b887e4f1c63324ae5e5dfaf5ea"
+    },
+    {
+      "path": "engine/out/creator-payload-cross.Release.json",
+      "bytes": 316,
+      "sha256": "07b5d00f0ffd88460e1417ad5591f418e1d2ac1ace5d66853e5fb0926bb6d4ee"
+    },
+    {
+      "path": "engine/out/creator-payload-verification.json",
+      "bytes": 686,
+      "sha256": "c0be26d817eaa4be5c913480eeb0d7606706ac3a8503df95f43265a8c4840c77"
+    },
+    {
+      "path": "engine/BUILD_STATUS.md",
+      "bytes": 58699,
+      "sha256": "92e8972acd30c6c35f215e5837b5c8a9d3541e7b7586d7f5a05367f02d804b9b"
+    },
+    {
+      "path": "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+      "bytes": 129923,
+      "sha256": "4145a30d35d8c842b3d64cf0570f90765b6dcb4a0c2786300e58c7db967cd192"
+    },
+    {
+      "path": "engine/milestone_queue.json",
+      "bytes": 26570,
+      "sha256": "25f5082054d1a00503f4261ecf873f5f4bb9d8115d0188a7c884e68fb60329b2"
+    }
+  ],
+  "source_manifest_checksum": "e6bc6c667cf8532a0b06f09d267d6079b5cf5e6308b4fcf151010bb6518ca4c2",
+  "verification": {
+    "schema_version": 1,
+    "at": "2026-11-01T18:02:22.178712+00:00",
+    "scope": "Numeric edit payload codec; no owner-process dispatcher",
+    "status": "passed",
+    "python_regression_tests": 70,
+    "debug_process_cases": 233,
+    "release_process_cases": 233,
+    "main_ctest_targeted": {
+      "passed": 2,
+      "names": [
+        "creator_wire_cross_language",
+        "creator_payload_cross_language"
+      ]
+    },
+    "full_engine_matrix": "Not rerun for this header/codec slice; prior38-test host checkpoint remains historical",
+    "next_step": "Implement structured responses and scoped Open/Describe/Save/history/Play payloads, then actual native CreatorHost stdio dispatcher."
+  },
+  "incomplete": [
+    "native dispatcher",
+    "negotiation",
+    "Qt client",
+    "editable chapter definitions",
+    "full personal alpha"
+  ],
+  "next_step": "Implement structured responses and scoped Open/Describe/Save/history/Play payloads, then actual native CreatorHost stdio dispatcher.",
+  "goal_status": "active"
+}

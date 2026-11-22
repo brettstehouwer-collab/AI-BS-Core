@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "evidence_class": "trusted_controller_sealing_infrastructure_only",
+  "vm_operations_performed": false,
+  "acl_mutations_performed": false,
+  "actual_effective_access_measured": false,
+  "image_hash_measured": false,
+  "profile_published": false,
+  "checks": [
+    {
+      "passed": true,
+      "name": "parse SealPolicy.ps1"
+    },
+    {
+      "passed": true,
+      "name": "parse Inspect-SealedWorker.ps1"
+    },
+    {
+      "passed": true,
+      "name": "parse Seal-WorkerImage.ps1"
+    },
+    {
+      "passed": true,
+      "name": "Inspect-SealedWorker.ps1 defaults to describe only"
+    },
+    {
+      "passed": true,
+      "name": "Inspect-SealedWorker.ps1 rejects source execution before mutations"
+    },
+    {
+      "passed": true,
+      "name": "Seal-WorkerImage.ps1 defaults to describe only"
+    },
+    {
+      "passed": true,
+      "name": "Seal-WorkerImage.ps1 rejects source execution before mutations"
+    },
+    {
+      "passed": true,
+      "name": "predeployed exact transport policy is accepted without rewriting"
+    },
+    {
+      "passed": true,
+      "name": "predeployed changed transport policy is refused"
+    },
+    {
+      "passed": true,
+      "name": "predeployed expanded transport policy is refused"
+    },
+    {
+      "passed": true,
+      "name": "retained bound standard guest proof is revalidated"
+    },
+    {
+      "passed": true,
+      "name": "guest proof refuses an administrator group"
+    },
+    {
+      "passed": true,
+      "name": "guest proof refuses string false as authority"
+    },
+    {
+      "passed": true,
+      "name": "guest proof requires disabled autologon"
+    },
+    {
+      "passed": true,
+      "name": "guest proof refuses host account identity"
+    },
+    {
+      "passed": true,
+      "name": "guest proof requires exact additions signer"
+    },
+    {
+      "passed": true,
+      "name": "exact seal grant accepted at issue time"
+    },
+    {
+      "passed": true,
+      "name": "seal grant rejected at expiration boundary"
+    },
+    {
+      "passed": true,
+      "name": "seal grant rejected one microsecond after expiration"
+    },
+    {
+      "passed": true,
+      "name": "seal grant rejected before issue time"
+    },
+    {
+      "passed": true,
+      "name": "seal grant rejects vm_uuid"
+    },
+    {
+      "passed": true,
+      "name": "seal grant rejects phase"
+    },
+    {
+      "passed": true,
+      "name": "seal grant rejects dispatcher_sid"
+    },
+    {
+      "passed": true,
+      "name": "seal grant rejects guest_sid"
+    },
+    {
+      "passed": true,
+      "name": "seal grant rejects module_sha256"
+    },
+    {
+      "passed": true,
+      "name": "publication profile has exactly nineteen fields and fixed base"
+    },
+    {
+      "passed": true,
+      "name": "base ACL has protected trusted owner and dispatcher read execute only"
+    },
+    {
+      "passed": true,
+      "name": "store ACL protects parent deletion while allowing confined disposable children"
+    },
+    {
+      "passed": true,
+      "name": "bound off metadata and acyclic snapshot ancestry accepted"
+    },
+    {
+      "passed": true,
+      "name": "seal observation rejects challenge"
+    },
+    {
+      "passed": true,
+      "name": "seal observation rejects vm_started"
+    },
+    {
+      "passed": true,
+      "name": "seal observation rejects config_sha256"
+    },
+    {
+      "passed": true,
+      "name": "raw medium output cannot contradict parsed metadata"
+    },
+    {
+      "passed": true,
+      "name": "cycle in differencing ancestry rejected"
+    },
+    {
+      "passed": true,
+      "name": "current disk path must bind VM attachment"
+    },
+    {
+      "passed": true,
+      "name": "wrong sealed base path rejected"
+    },
+    {
+      "passed": true,
+      "name": "exact thirteen effective access observations accepted"
+    },
+    {
+      "passed": true,
+      "name": "sharing violation does not count as access denied"
+    },
+    {
+      "passed": true,
+      "name": "duplicate access report cannot hide missing operation"
+    },
+    {
+      "passed": true,
+      "name": "base must remain readable to standard dispatcher"
+    }
+  ],
+  "passed": 40,
+  "failed": 0,
+  "completed_utc": "2026-10-26T18:49:59.5574842Z"
+}

@@ -35,6 +35,36 @@
       ],
       "/components/*": [
         "./components/*"
+      ],
+      "/types/*": [
+        "./types/*"
+      ],
+      "react": [
+        "./node_modules/@types/react/index.d.ts"
+      ],
+      "react/*": [
+        "./node_modules/@types/react/*"
+      ],
+      "react-dom": [
+        "./node_modules/@types/react-dom/index.d.ts"
+      ],
+      "react-dom/*": [
+        "./node_modules/@types/react-dom/*"
+      ],
+      "react-syntax-highlighter": [
+        "./node_modules/@types/react-syntax-highlighter/index.d.ts"
+      ],
+      "react-syntax-highlighter/*": [
+        "./node_modules/@types/react-syntax-highlighter/*"
+      ],
+      "three": [
+        "./node_modules/@types/three/index.d.ts"
+      ],
+      "three/*": [
+        "./node_modules/@types/three/*"
+      ],
+      "react-big-calendar": [
+        "./node_modules/@types/react-big-calendar/index.d.ts"
       ]
     }
   },
@@ -43,7 +73,8 @@
     "App.jsx",
     "src/writer_main.jsx",
     "public/analytics.js",
-    "public/ghost_preload.js"
+    "public/ghost_preload.js",
+    "types/aibs.d.ts"
   ],
   "files": [
     "utils/FDXSerializer.js",

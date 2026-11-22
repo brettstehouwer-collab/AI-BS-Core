@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "9cd92769d8a446f38f6ad4ac112d52d3",
+  "plan_id": "f2591b85a035411093d577ce55efff6d",
+  "snapshot_sha256": "72b995bf2e5b3719b4ae5626d9c7212538b603157886e4b367c1a4e2fedded83",
+  "review_digest": "f0b7839927c326397253c765b0e40aa16cb77493317e696577cb0f73190806fb",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "4058c094176a45b5a2bf983edd2524ba",
+  "reviewed_plan_sha256": "e8ff3191826411c686a372d91ce85a529f85fedd9130f223534c8851d912470c",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 29128,
+    "created": 1794666065.6990325
+  },
+  "created_at_utc": "2026-11-14T14:21:07.355479+00:00",
+  "entry_sha256": "26ab09f0cb49f0b1af0ec36d65c511a6bdc3d8e62acb84948cabd3c9fd3a3902"
+}

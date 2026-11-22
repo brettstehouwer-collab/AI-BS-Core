@@ -1,0 +1,12 @@
+test_arbitrary_source_command_denied (__main__.WorkerSourcePolicyTests.test_arbitrary_source_command_denied) ... ok
+test_elevated_worker_denied (__main__.WorkerSourcePolicyTests.test_elevated_worker_denied) ... ok
+test_high_integrity_denied (__main__.WorkerSourcePolicyTests.test_high_integrity_denied) ... ok
+test_other_program_denied (__main__.WorkerSourcePolicyTests.test_other_program_denied) ... ok
+test_other_user_denied (__main__.WorkerSourcePolicyTests.test_other_user_denied) ... ok
+test_reused_pid_denied (__main__.WorkerSourcePolicyTests.test_reused_pid_denied) ... ok
+test_verified_standard_worker_allowed (__main__.WorkerSourcePolicyTests.test_verified_standard_worker_allowed) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.044s
+
+OK

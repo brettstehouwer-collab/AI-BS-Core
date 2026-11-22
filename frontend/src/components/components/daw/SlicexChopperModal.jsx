@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { theme } from '../../styles/theme';
-import { 
-  Scissors, Play, Square, Grid, Sparkles, X, ArrowDownRight, Layers, Music
-} from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import "../../styles/theme";
+import { Sparkles, X, ArrowDownRight } from "lucide-react";
 
+/** @param {{clip?: import('/types/wave').EditableClip | null; onClose: () => void; onDumpSlices?: (slices: import('/types/wave').Slice[], clip?: import('/types/wave').EditableClip | null) => void}} props */
 export default function SlicexChopperModal({ clip, onClose, onDumpSlices }) {
-  const canvasRef = useRef(null);
-  const audioContextRef = useRef(null);
-  const audioBufferRef = useRef(null);
-  const activeSourceRef = useRef(null);
+  const canvasRef = useRef(/** @type {HTMLCanvasElement | null} */ (null));
+  const audioContextRef = useRef(/** @type {AudioContext | null} */ (null));
+  const audioBufferRef = useRef(/** @type {AudioBuffer | null} */ (null));
+  const activeSourceRef = useRef(/** @type {AudioBufferSourceNode | null} */ (null));
 
   const [chopMode, setChopMode] = useState('transients'); // 'transients' | '1/2_beat' | '1/4_beat' | '8_slices' | '16_slices'
-  const [slices, setSlices] = useState([]); // array of { start: 0..1, end: 0..1, label: string, color: string }
-  const [activeSliceIdx, setActiveSliceIdx] = useState(null);
+  const [slices, setSlices] = useState(/** @type {import("/types/wave").Slice[]} */ ([])); // array of { start: 0..1, end: 0..1, label: string, color: string }
+  const [activeSliceIdx, setActiveSliceIdx] = useState(/** @type {number | null} */ (null));
   const [audioDuration, setAudioDuration] = useState(4);
   const [statusMsg, setStatusMsg] = useState('Slicex Transient Chopper Ready');
 
@@ -68,9 +67,11 @@ export default function SlicexChopperModal({ clip, onClose, onDumpSlices }) {
   }, [clip]);
 
   // Generate slice divisions
+  /** @param {AudioBuffer} buffer @param {string} mode */
   const generateSlices = (buffer, mode) => {
     if (!buffer) return;
     let count = 8;
+    /** @type {import("/types/wave").Slice[]} */
     let computedSlices = [];
 
     if (mode === '1/2_beat') count = 8;
@@ -141,6 +142,7 @@ export default function SlicexChopperModal({ clip, onClose, onDumpSlices }) {
     const canvas = canvasRef.current;
     if (!canvas || !audioBufferRef.current) return;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     const width = canvas.width;
     const height = canvas.height;
 
@@ -199,11 +201,14 @@ export default function SlicexChopperModal({ clip, onClose, onDumpSlices }) {
   };
 
   // Play Specific Slice
+  /** @param {number} idx */
+  /** @param {import("/types/wave").Slice} slice @param {number} idx */
   const playSlice = (slice, idx) => {
     if (!audioBufferRef.current || !audioContextRef.current) return;
     stopPlayback();
 
     const ctx = audioContextRef.current;
+    if (!ctx) throw new Error('The audio editor is not initialized.');
     if (ctx.state === 'suspended') ctx.resume();
 
     const source = ctx.createBufferSource();

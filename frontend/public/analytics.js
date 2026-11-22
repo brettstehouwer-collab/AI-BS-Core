@@ -33,13 +33,13 @@
   const SESSION_ID = getOrCreateSessionId();
   const PAGE_START_TIME = performance.now();
   let maxScrollPct = 0;
-  let lastReportedDwell = 0;
+
 
   // 2. Hardware & Device Inspection
   function getGpuRenderer() {
     try {
       const canvas = document.createElement('canvas');
-      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      const gl = canvas.getContext('webgl') || /** @type {WebGLRenderingContext | null} */ (canvas.getContext('experimental-webgl'));
       if (gl) {
         const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
         if (debugInfo) {
@@ -71,6 +71,7 @@
   }
 
   // 3. Web Vitals & Performance Metrics
+  /** @type {number | null} */
   let lcpValue = null;
   let clsValue = 0;
 
@@ -87,7 +88,7 @@
     try {
       const clsObserver = new PerformanceObserver((entryList) => {
         for (const entry of entryList.getEntries()) {
-          if (!entry.hadRecentInput) {
+          if ("hadRecentInput" in entry && "value" in entry && typeof entry.value === "number" && !entry.hadRecentInput) {
             clsValue += entry.value;
           }
         }
@@ -102,6 +103,7 @@
       const navEntries = performance.getEntriesByType('navigation');
       if (navEntries && navEntries.length > 0) {
         const nav = navEntries[0];
+        if (!(nav instanceof PerformanceNavigationTiming)) return timings;
         timings.dns_ms = Math.round(nav.domainLookupEnd - nav.domainLookupStart);
         timings.ttfb_ms = Math.round(nav.responseStart - nav.requestStart);
         timings.dom_load_ms = Math.round(nav.domContentLoadedEventEnd - nav.startTime);
@@ -126,6 +128,7 @@
   }
 
   // 5. Beacon Dispatch Engine
+  /** @param {string} endpointPath @param {unknown} payload */
   function dispatchBeacon(endpointPath, payload) {
     const dataStr = JSON.stringify(payload);
     const targetUrl = `${PRIMARY_API}${endpointPath}`;
@@ -158,6 +161,7 @@
   }
 
   // 6. Public Telemetry Method
+  /** @param {string} [eventType] @param {unknown} [customData] */
   function sendPageView(eventType = 'pageview', customData = null) {
     const dwell = Math.round((performance.now() - PAGE_START_TIME) / 1000);
     const device = getDeviceInfo();
@@ -187,6 +191,7 @@
 
   // 7. Authenticated login notification. The app fetch interceptor supplies the
   // verified Firebase token. sendBeacon cannot carry that authorization header.
+  /** @param {import("../types/aibs").LoginTelemetryUser} userPayload */
   async function sendLoginNotification(userPayload) {
     if (!userPayload || !userPayload.email) return;
 

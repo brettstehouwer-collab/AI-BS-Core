@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const getApiBase = () => (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8080' : '');
 
 export default function StehouwerCMSTab() {
-  const [pages, setPages] = useState([]);
+  const [pages, setPages] = useState(/** @type {Array<{"filename": string, "size": number}>} */ ([]));
   const [selectedFile, setSelectedFile] = useState('index.html');
   const [fileContent, setFileContent] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
   const [activeView, setActiveView] = useState('editor'); // 'editor' | 'preview'
@@ -42,7 +42,8 @@ export default function StehouwerCMSTab() {
     }
   };
 
-  const loadFileContent = async (filename) => {
+  /** @param {string} filename */
+const loadFileContent = async ( filename) => {
     try {
       setLoading(true);
       const res = await fetch(`${getApiBase()}/api/cms/page/${filename}`);
@@ -80,7 +81,7 @@ export default function StehouwerCMSTab() {
         setStatusMsg(`❌ Error: ${data.message}`);
       }
     } catch (err) {
-      setStatusMsg(`❌ Error: ${err.message}`);
+      setStatusMsg(`❌ Error: ${(err instanceof Error ? err.message : String(err))}`);
     } finally {
       setSaving(false);
     }
@@ -106,7 +107,7 @@ export default function StehouwerCMSTab() {
         setAiResult('Error generating content');
       }
     } catch (err) {
-      setAiResult(`Error: ${err.message}`);
+      setAiResult(`Error: ${(err instanceof Error ? err.message : String(err))}`);
     } finally {
       setAiGenerating(false);
     }

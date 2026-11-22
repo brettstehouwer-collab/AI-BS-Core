@@ -1,4 +1,5 @@
 // Read a fallback response exactly once. Failed HTTP requests remain errors.
+/** @param {Response | null | undefined} response */
 export async function readChatHttpResponse(response) {
   if (!response) throw new Error('AI-BS backend connection is offline.');
   const raw = await response.text();
@@ -25,6 +26,7 @@ export async function readChatHttpResponse(response) {
   return data;
 }
 
+/** @param {{message?: string | {content?: string}; choices?: {message?: {content?: string}}[]; response?: unknown; plan_id?: unknown} | null | undefined} data @param {boolean} [isPlanMode] */
 export function chatResponseText(data, isPlanMode = false) {
   const message = typeof data?.message === 'string' ? data.message : data?.message?.content;
   const content = data?.choices?.[0]?.message?.content || message || data?.response;

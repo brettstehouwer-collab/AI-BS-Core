@@ -1,0 +1,19 @@
+[Unit]
+Description=AI-BS Unbounded Continuous Streaming Gateway
+After=network.target aibs-vllm.service
+Wants=aibs-vllm.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/mnt/c/AI-BS/inference_unbounded
+Environment="VLLM_API_URL=http://127.0.0.1:8009/v1"
+Environment="UNBOUNDED_ENGINE_PORT=8089"
+Environment="DISK_STREAM_PATH=/var/lib/ai_bs_kv/active_stream.bin"
+ExecStart=/usr/bin/python3 /mnt/c/AI-BS/inference_unbounded/unbounded_engine.py
+Restart=always
+RestartSec=3s
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

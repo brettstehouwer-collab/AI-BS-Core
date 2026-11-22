@@ -1,0 +1,64 @@
+{
+  "recorded_utc": "2026-11-01T01:40:46.685232+00:00",
+  "status": "VERIFIED_STATIC_CANDIDATE",
+  "application_executed": false,
+  "application_imported": false,
+  "candidate": "C:\\AI-BS\\releases\\october7\\native-1.0.212.0\\October7_VocalStudio_Native\\October7_VocalStudio_Native.exe",
+  "exe_sha256": "fa212891edcc3046eec30e7c4ded1fa9058cf21ede6b92f9ee1a3a0e57c7d288",
+  "exe_bytes": 10718072,
+  "file_version": [
+    1,
+    0,
+    212,
+    0
+  ],
+  "version_strings": {
+    "CompanyName": "October 7 Vocal Studio",
+    "FileDescription": "October 7 Vocal Studio Native \u2014 Audit 212",
+    "FileVersion": "1.0.212.0",
+    "InternalName": "October7_VocalStudio_Native",
+    "OriginalFilename": "October7_VocalStudio_Native.exe",
+    "ProductName": "October 7 Vocal Studio Native",
+    "ProductVersion": "1.0.212.0",
+    "Comments": "Repaired native candidate; no automatic installation or launch."
+  },
+  "machine": "AMD64",
+  "requested_execution_level": "asInvoker",
+  "source_sha256": "a7af7f4a81a593a12438ace9bb6a94e2f6af869ce7427df3f979ef0eebd75386",
+  "source_bytecode_equivalent": true,
+  "source_compile_optimization": 0,
+  "frozen_source_filename": "app_native.py",
+  "pyz_module_count": 1110,
+  "forbidden_module_matches": [],
+  "required_resources": {
+    "Python runtime": [
+      "_internal/python312.dll"
+    ],
+    "Qt widgets extension": [
+      "_internal/PyQt6/QtWidgets.pyd"
+    ],
+    "Qt Core DLL": [
+      "_internal/PyQt6/Qt6/bin/Qt6Core.dll"
+    ],
+    "Qt Gui DLL": [
+      "_internal/PyQt6/Qt6/bin/Qt6Gui.dll"
+    ],
+    "Qt Widgets DLL": [
+      "_internal/PyQt6/Qt6/bin/Qt6Widgets.dll"
+    ],
+    "PortAudio x64 DLL": [
+      "_internal/_sounddevice_data/portaudio-binaries/libportaudio64bit.dll"
+    ],
+    "libsndfile x64 DLL": [
+      "_internal/_soundfile_data/libsndfile_x64.dll"
+    ],
+    "pedalboard native extension": [
+      "_internal/pedalboard_native.cp312-win_amd64.pyd"
+    ]
+  },
+  "bundle_file_count": 447,
+  "bundle_bytes": 253289681,
+  "recordings_bundled": false,
+  "legacy_server_or_html_bundled": false,
+  "runtime_limits": "No GUI/audio/device/VST/runtime test was attempted. Signing is a separate release step."
+}

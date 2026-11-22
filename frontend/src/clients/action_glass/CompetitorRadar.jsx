@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
-export default function CompetitorRadar({ backendUrl }) {
+/** @param {{"backendUrl": string}} props */
+export default function CompetitorRadar({  }) {
   const [isScanning, setIsScanning] = useState(false);
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState(/** @type {Array<{"id": number, "location": string, "date": string, "zip": string, "rating": number, "text": string, "action": string}>} */ ([]));
 
   const handleScan = () => {
     setIsScanning(true);

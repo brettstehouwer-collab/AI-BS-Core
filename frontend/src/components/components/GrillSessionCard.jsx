@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAppStore } from './useAppStore';
 import { getApiBase } from '../config/api';
 
+/** @param {{grillData:import("/types/domain").GrillSession,onSessionUpdated?:(session:import("/types/domain").GrillSession)=>void,onAcceptRecommendations?:(id:string)=>Promise<void>,onBuildSpec?:(id:string)=>Promise<void>,onRespond?:(id:string,response:string)=>Promise<void>,onConclude?:(id:string)=>Promise<void>}} props */
 export default function GrillSessionCard({ grillData: initialGrill, onSessionUpdated, onAcceptRecommendations, onBuildSpec, onRespond, onConclude }) {
   const storeBackendUrl = useAppStore(state => state.BACKEND_URL);
   const BACKEND_URL = storeBackendUrl || getApiBase();
@@ -15,9 +16,9 @@ export default function GrillSessionCard({ grillData: initialGrill, onSessionUpd
     setIsProcessing(true);
     try {
       if (onAcceptRecommendations) {
-        await onAcceptRecommendations(session.grill_id);
+        await onAcceptRecommendations((session.grill_id || ''));
       } else if (onRespond) {
-        await onRespond(session.grill_id, 'yes');
+        await onRespond(session.grill_id || '', 'yes');
       } else {
         const res = await fetch(`${BACKEND_URL}/api/mission/grill-respond`, {
           method: 'POST',
@@ -46,9 +47,9 @@ export default function GrillSessionCard({ grillData: initialGrill, onSessionUpd
     setIsProcessing(true);
     try {
       if (onBuildSpec) {
-        await onBuildSpec(session.grill_id);
+        await onBuildSpec((session.grill_id || ''));
       } else if (onConclude) {
-        await onConclude(session.grill_id);
+        await onConclude((session.grill_id || ''));
       } else {
         const res = await fetch(`${BACKEND_URL}/api/mission/grill-conclude`, {
           method: 'POST',
@@ -179,12 +180,12 @@ export default function GrillSessionCard({ grillData: initialGrill, onSessionUpd
         </div>
         {context.verified_files && context.verified_files.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
-            {context.verified_files.map((f, i) => (
+            {context.verified_files.map(/** @param {{"name": string, "path": string}} f @param {number} i */ (f, i) => (
               <span key={i} style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.25)', color: '#7dd3fc', fontSize: '10px', padding: '2px 6px', borderRadius: '4px' }}>
                 📄 {f.name || f.path}
               </span>
             ))}
-            {context.verified_schemas && context.verified_schemas.map((s, i) => (
+            {context.verified_schemas && context.verified_schemas.map(/** @param {string} s @param {number} i */ (s, i) => (
               <span key={i} style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.25)', color: '#c084fc', fontSize: '10px', padding: '2px 6px', borderRadius: '4px' }}>
                 🏛️ {s}
               </span>
@@ -195,7 +196,7 @@ export default function GrillSessionCard({ grillData: initialGrill, onSessionUpd
 
       {/* Decision Tree Traversal: Questions & Opinionated Recommendations */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '12px' }}>
-        {questions.map((q, idx) => (
+        {questions.map(/** @param {{"branch": string, "question": string, "recommendation": string}} q @param {number} idx */ (q, idx) => (
           <div key={idx} style={{
             background: 'rgba(30, 41, 59, 0.7)',
             border: '1px solid rgba(255, 255, 255, 0.06)',

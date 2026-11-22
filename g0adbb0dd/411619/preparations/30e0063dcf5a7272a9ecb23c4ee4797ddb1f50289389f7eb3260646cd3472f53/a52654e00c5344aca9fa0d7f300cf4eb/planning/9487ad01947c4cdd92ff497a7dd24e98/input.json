@@ -1,0 +1,63 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "a52654e00c5344aca9fa0d7f300cf4eb",
+  "plan_id": "9487ad01947c4cdd92ff497a7dd24e98",
+  "snapshot_sha256": "d27ee76c02ed975d8db2cfc40ecd7ce847875eb2aeb0a9645d9cc6f8bd9cfbd3",
+  "review_digest": "352c34aa8126dbfa2e19c478dede4c29f598f9c80399b74e4e6466e7729f6f67",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.js",
+        "role": "editable",
+        "sha256": "8de5c07db8deb3b75dedd9b5bc999669936cea181ae0033c27c4e2071a6e434d",
+        "excerpt": "const value = 1;\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/app.test.cjs",
+        "role": "verification",
+        "sha256": "65de91e27330ad94491c6723465667e99ac3a02e59787368acfc76225ddf3f14",
+        "excerpt": "require('node:test')('candidate',()=>require('node:assert/strict').match(require('node:fs').readFileSync('src/app.js','utf8'),/value = 42/));\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "package.json",
+        "role": "dependency",
+        "sha256": "dcecf8cc830ac548798645cc1d7ed17b6c1c9063c7d2b7b19af8fc0220c77230",
+        "excerpt": "{\"scripts\": {\"check\": \"node --test tests/app.test.cjs\", \"precheck\": \"node -e \\\"process.exit(23)\\\"\", \"postcheck\": \"node -e \\\"process.exit(24)\\\"\"}}",
+        "excerpt_complete": true
+      },
+      {
+        "path": "package-lock.json",
+        "role": "dependency",
+        "sha256": "2086223f909ecaf4b063cfc7e8187ab73e8e8a24ec7029d54e0403dee55a3265",
+        "excerpt": "{\"lockfileVersion\":3}",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "npm",
+        "argv": [
+          "npm",
+          "run",
+          "check"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.js"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "2b2bc3ca07ecd42a29888c419ae232f5f3f89a51aa2ddc87ef5f127893dbfe94",
+  "worker": {
+    "pid": 34804,
+    "created": 1794771336.628209
+  },
+  "created_at_utc": "2026-11-15T19:35:38.899860+00:00",
+  "entry_sha256": "d359d3161d410b93b0abf135d8f79fb970a3d3fd1c6decf08eacf7111ebe9ecc"
+}

@@ -1,0 +1,36 @@
+{
+  "timestamp_utc": "2026-11-14T21:33:52.988864+00:00",
+  "status": "VERIFIED_LOCAL_REVIEW",
+  "source": "C:\\AI-BS\\work\\stehouwer-productions-20261114",
+  "preview": "http://127.0.0.1:4182/",
+  "phone_preview": "http://192.168.4.139:4182/",
+  "phone_requirement": "Same local Wi-Fi/network",
+  "pages": [
+    "/",
+    "/projects/",
+    "/projects/the-mafia-1/",
+    "/about/",
+    "/media/",
+    "/contact/"
+  ],
+  "git_branch": "codex/audit-v532976-20261031",
+  "git_commit": "64fad2871e0a716d9964f506bdef1050612b173d",
+  "checks": {
+    "build": "passed",
+    "browser_smoke": "14/14",
+    "schema_graphs": "6/6",
+    "javascript_syntax": "passed"
+  },
+  "patches": [
+    "C:\\AI-BS\\work\\stehouwer-productions-20261114\\review-evidence\\content-continuation.patch",
+    "C:\\AI-BS\\work\\stehouwer-productions-20261114\\review-evidence\\local-review.patch"
+  ],
+  "sources": "C:\\AI-BS\\work\\stehouwer-productions-20261114\\review-evidence\\content-sources.json",
+  "prior_failures_retained": true,
+  "deployment": false,
+  "dns_changed": false,
+  "aws_resources_created": false,
+  "production_analytics_changed": false,
+  "mail_form": "Opens a draft in visitor email app; no server submission",
+  "next_step": "Owner reviews local pages before any separately authorized publication"
+}

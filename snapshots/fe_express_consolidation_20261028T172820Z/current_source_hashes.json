@@ -1,0 +1,58 @@
+[
+  {
+    "Path": "C:\\AI-BS\\frontend\\App.jsx",
+    "Hash": "FEAB35C21C17992E45EAF135104D86437DCA0C07F0B01B72F21E2B97B93AA59E"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\components\\clients\\ClientsModule.jsx",
+    "Hash": "825C1F0901D5D4D5E0A9DDB1955F8D8FE46063DA237F31F2043DD86C5F7DDCA4"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\components\\components\\FEExpressDispatcher.jsx",
+    "Hash": "40277509A8742D36F9E237CA89558193B39B2EF9127840F4B7B95DC793EAAEEA"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\components\\FEExpressDispatcher.jsx",
+    "Hash": "40277509A8742D36F9E237CA89558193B39B2EF9127840F4B7B95DC793EAAEEA"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\src\\components\\components\\FEExpressDispatcher.jsx",
+    "Hash": "40277509A8742D36F9E237CA89558193B39B2EF9127840F4B7B95DC793EAAEEA"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\src\\components\\FEExpressDispatcher.jsx",
+    "Hash": "40277509A8742D36F9E237CA89558193B39B2EF9127840F4B7B95DC793EAAEEA"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\src\\components\\FEExpressPinPortal.jsx",
+    "Hash": "15BF0BEBEA1A010379B5447B13E18B6C08A4BB87AC1C2ED964984431C4265D7C"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\src\\components\\GlobalCommandPalette.jsx",
+    "Hash": "070568127F1A26AE87DD569FA41DA5278A7DAE07B536C5A73C60901065A6D8B5"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\src\\components\\LoginModal.jsx",
+    "Hash": "419CF73825DB8BD269550A8BFE2789A0F7BE0DBFE1B6F400280C13E9738E870E"
+  },
+  {
+    "Path": "C:\\AI-BS\\frontend\\src\\components\\navigationConfig.js",
+    "Hash": "3A66C97E4A2B695612CD8CF753F46B36D26F5AFAFAB0990D3754C5B60747A1F4"
+  },
+  {
+    "Path": "C:\\AI-BS\\scripts\\__pycache__\\generate_fe_express_application_pdf.cpython-312.pyc",
+    "Hash": "DD9F82B294DF82F8C2727F13BCCDE08531E7C0F1569335D3BF36C6F6B95E004C"
+  },
+  {
+    "Path": "C:\\AI-BS\\scripts\\generate_fe_express_application_pdf.py",
+    "Hash": "7FF488367D190367D0C4F28DB2873A52F461E82C1CE21BC081F1CA81995E1FB1"
+  },
+  {
+    "Path": "C:\\AI-BS\\scripts\\tests\\__pycache__\\test_native_fe_express.cpython-312.pyc",
+    "Hash": "E7DB5ED69BF68949CB0680D6325FEF1972BC841D649CE4B70A50C59854AA87C8"
+  },
+  {
+    "Path": "C:\\AI-BS\\scripts\\tests\\test_native_fe_express.py",
+    "Hash": "27ED0ADF63DC35FAAE895390614A91BA0D2EA33C64F8AB8B824B873842F197F5"
+  }
+]

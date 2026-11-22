@@ -1,0 +1,18 @@
+{
+  "status": "verified_full_private_drive_roundtrip",
+  "verified_at_utc": "2026-11-02T14:44:40.125622+00:00",
+  "drive_file_id": "17rny8FYXSPw_0aXq70BorcHc5NRs8efx",
+  "parent_folder_id": "1pyTl2AX0Q_T4eWt95fgZfAj4CcrzpduX",
+  "drive_url": "https://drive.google.com/file/d/17rny8FYXSPw_0aXq70BorcHc5NRs8efx/view",
+  "bytes": 28241836,
+  "sha256": "e70c12b1ff79e829fc3acb61f157960f5131c0c2ade32fe1f9f6952ee31668d7",
+  "manifest_sha256": "0fb098d9de40a79fee5b0f2d86e6280668df7310ba6cd2a82fc0ac8f0ba5b34b",
+  "crc_verified": true,
+  "verified_members": 38,
+  "all_member_sizes_hashes_verified": true,
+  "contains_complete_original_speech_private": true,
+  "caption_state": "EMPTY_DRAFT",
+  "human_review_complete": false,
+  "default_bound": false,
+  "distributable": false
+}

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { Gamepad2, Layers, Cpu, Wrench, FileCode, PlayCircle, Settings, Music, Box, Activity } from 'lucide-react';
 
 export default function UnrealEngineToolsTab() {
-  const [activeTool, setActiveTool] = useState(null);
+  const [activeTool, setActiveTool] = useState(/** @type {{"id": string, "name": string, "script": string, "desc": string} | null} */ (null));
 
   const tools = [
     { id: 'level', name: 'Level Editor Tools', icon: Layers, script: '01_Level_Editor/spawn_actors.py', desc: 'Scene assembly, actor placement, world composition.' },

@@ -1,0 +1,696 @@
+{
+  "schema_version": 1,
+  "status": "MIXED_VERIFIED_AND_PROPOSED",
+  "researched_on": "2026-10-31",
+  "purpose": "Planning registry for the AI-BS core game engine. This is not a build manifest or an installation inventory.",
+  "repository_root": "C:\\AI-BS",
+  "version_policy": {
+    "selection_point": "Resolve the selected distribution at its introducing milestone before the first integration build.",
+    "pin_requirements": [
+      "immutable release tag",
+      "resolved source commit",
+      "source archive or package SHA-256"
+    ],
+    "allow_floating_branches": false,
+    "selected_versions": "Null until compiled; verified integrations record an immutable pin and scoped evidence. Most entries remain proposed.",
+    "update_rule": "Update a dependency pin in an explicit change with its build options, notices, compatibility checks and relevant milestone validation."
+  },
+  "scope_notes": {
+    "required_for_v01": "Required by the proposed engine and editor v0.1 milestone set; this does not mean every entry is shipped with the player.",
+    "ships_in": "Proposed use or packaging scope. development_only means local development tooling, not automatic redistribution. A format entry describes supported data rather than a bundled implementation.",
+    "verification": "integration_status describes the new native-engine integration. Existing source evidence does not establish an installed SDK, a compiled integration, runtime availability or license compatibility.",
+    "installation_status": "Per-entry installation_status is verified only for explicitly tested integrations; this registry is not a full machine inventory."
+  },
+  "entries": [
+    {
+      "id": "cpp20",
+      "name": "C++20",
+      "role": "Language baseline for engine runtime, module interfaces and build targets.",
+      "introduce_at": "M0",
+      "required_for_v01": true,
+      "license_summary": "Language standard selection; the compiler and standard-library distribution have their own terms.",
+      "sources": [
+        "https://isocpp.org/std/status"
+      ],
+      "caveats": [
+        "Require a full C++20 compiler; current EnTT upstream requires at least C++20.",
+        "Keep engine SDK boundaries independent of third-party C++ object layouts."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "sdk",
+        "development_only"
+      ]
+    },
+    {
+      "id": "msvc",
+      "name": "MSVC C++ toolchain",
+      "role": "Windows x64 compiler, linker, debugger and C/C++ runtime selection.",
+      "introduce_at": "M0",
+      "required_for_v01": true,
+      "license_summary": "Microsoft publisher terms; verify the selected distribution and redistributable components.",
+      "sources": [
+        "https://learn.microsoft.com/en-us/cpp/build/building-on-the-command-line"
+      ],
+      "caveats": [
+        "Record exact compiler/toolset and runtime linkage choices.",
+        "An installed compiler does not establish a successful engine configuration or build."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "development_only"
+      ]
+    },
+    {
+      "id": "windows_sdk",
+      "name": "Windows SDK",
+      "role": "Windows headers, import libraries and Direct3D/DXGI development interfaces.",
+      "introduce_at": "M0",
+      "required_for_v01": true,
+      "license_summary": "Microsoft publisher terms; verify the selected SDK distribution and redistribution rights for chosen components.",
+      "sources": [
+        "https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/"
+      ],
+      "caveats": [
+        "Pin the SDK version with the toolchain.",
+        "The Windows SDK is distinct from the legacy DirectX SDK and optional DirectX Agility SDK."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "development_only"
+      ]
+    },
+    {
+      "id": "cmake",
+      "name": "CMake",
+      "role": "Configure engine targets, dependency integration, build presets and test targets.",
+      "introduce_at": "M0",
+      "required_for_v01": true,
+      "license_summary": "Kitware publisher license and notices; verify the selected distribution.",
+      "sources": [
+        "https://cmake.org/cmake/help/latest/"
+      ],
+      "caveats": [
+        "Pin a tested CMake release.",
+        "Use repository-local presets and separate generated build directories."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "development_only"
+      ]
+    },
+    {
+      "id": "ninja",
+      "name": "Ninja",
+      "role": "Build executor for the proposed CMake workflow.",
+      "introduce_at": "M0",
+      "required_for_v01": true,
+      "license_summary": "Upstream distribution terms and notices; verify the selected distribution.",
+      "sources": [
+        "https://github.com/ninja-build/ninja"
+      ],
+      "caveats": [
+        "Use the same generator and configuration conventions in developer and automated builds.",
+        "Record the executable version independently of the CMake version."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "development_only"
+      ]
+    },
+    {
+      "id": "vcpkg",
+      "name": "vcpkg",
+      "role": "Dependency acquisition and reproducible package integration.",
+      "introduce_at": "M0",
+      "required_for_v01": true,
+      "license_summary": "Microsoft/upstream publisher terms; individual ports retain their own licenses.",
+      "sources": [
+        "https://learn.microsoft.com/en-us/vcpkg/"
+      ],
+      "caveats": [
+        "Pin the vcpkg baseline and explicit dependency versions or overrides.",
+        "A package-manager baseline does not establish that all selected packages build together.",
+        "This registry does not create a vcpkg manifest or download any port."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "development_only"
+      ]
+    },
+    {
+      "id": "sdl3",
+      "name": "SDL3",
+      "role": "Window lifecycle, display handling, keyboard, mouse and controller input.",
+      "introduce_at": "M1",
+      "required_for_v01": true,
+      "license_summary": "zlib license, as documented by SDL.",
+      "sources": [
+        "https://wiki.libsdl.org/SDL3/FrontPage",
+        "https://www.libsdl.org/license.php"
+      ],
+      "caveats": [
+        "Use SDL3 platform/input facilities with AI-BS-owned Direct3D 12 rendering.",
+        "Do not add a second renderer through SDL_Renderer without an explicit architecture decision.",
+        "Establish one event-loop owner when connecting the standalone runtime to the Qt editor."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "player",
+        "sdk"
+      ]
+    },
+    {
+      "id": "direct3d12",
+      "name": "Direct3D 12 and DXGI",
+      "role": "Initial Windows renderer backend, presentation, GPU commands and resource state management.",
+      "introduce_at": "M1",
+      "required_for_v01": true,
+      "license_summary": "Microsoft publisher/runtime terms; verify the selected SDK and redistributable components.",
+      "sources": [
+        "https://learn.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-guide",
+        "https://learn.microsoft.com/en-us/windows/win32/direct3d12/command-queues-and-command-lists"
+      ],
+      "caveats": [
+        "Application code owns command submission, resource-state transitions and synchronization.",
+        "Declare the supported feature baseline and query device capabilities.",
+        "Ray tracing and additional backends are later milestones."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "player",
+        "sdk"
+      ]
+    },
+    {
+      "id": "dxc",
+      "name": "DirectX Shader Compiler",
+      "role": "Compile HLSL into versioned shader artifacts for the Direct3D 12 backend.",
+      "introduce_at": "M1",
+      "required_for_v01": true,
+      "license_summary": "Upstream LLVM Release License and bundled third-party notices; verify the selected DXC distribution.",
+      "sources": [
+        "https://github.com/microsoft/DirectXShaderCompiler",
+        "https://github.com/microsoft/DirectXShaderCompiler/blob/main/LICENSE.TXT"
+      ],
+      "caveats": [
+        "Pin compiler, shader-model target and flags in cooked artifact metadata.",
+        "Ship precompiled shaders in the player; runtime source compilation is not a v0.1 requirement.",
+        "Do not describe all bundled DXC code as a single MIT component."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "sdk",
+        "development_only"
+      ]
+    },
+    {
+      "id": "directxmath",
+      "name": "DirectXMath",
+      "role": "SIMD mathematics and graphics transforms behind AI-BS math types.",
+      "introduce_at": "M1",
+      "required_for_v01": true,
+      "license_summary": "MIT license, as documented by Microsoft.",
+      "sources": [
+        "https://github.com/microsoft/DirectXMath",
+        "https://github.com/microsoft/DirectXMath/blob/main/LICENSE"
+      ],
+      "caveats": [
+        "Specify coordinate handedness, matrix convention, units and quaternion serialization in engine contracts.",
+        "Do not expose SIMD-specific layouts in save files or the external SDK ABI."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "player",
+        "sdk"
+      ]
+    },
+    {
+      "id": "imgui",
+      "name": "Dear ImGui",
+      "role": "Runtime diagnostics and early inspector/debug panels.",
+      "introduce_at": "M1",
+      "required_for_v01": true,
+      "license_summary": "MIT license for Dear ImGui; the optional Dear ImGui Test Engine is a separate product.",
+      "sources": [
+        "https://github.com/ocornut/imgui/blob/master/docs/README.md",
+        "https://github.com/ocornut/imgui/blob/master/LICENSE.txt"
+      ],
+      "caveats": [
+        "Use maintained SDL3 or Win32 platform backend plus the Direct3D 12 renderer backend.",
+        "Pin a release/commit; docking and multiple-viewports features require a deliberate branch selection.",
+        "Keep Qt as the proposed outer editor shell and ImGui as runtime tooling to avoid competing editor architectures."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "sdk",
+        "development_only"
+      ]
+    },
+    {
+      "id": "entt",
+      "name": "EnTT",
+      "role": "Entity/component storage and optional reflection/event helpers behind engine-owned contracts.",
+      "introduce_at": "M2",
+      "required_for_v01": true,
+      "license_summary": "MIT license for EnTT source; documentation has separately stated licenses.",
+      "sources": [
+        "https://github.com/skypjack/entt",
+        "https://github.com/skypjack/entt/blob/main/README.md"
+      ],
+      "caveats": [
+        "Current upstream README requires C++20.",
+        "EnTT does not define AI-BS component attributes, persistent entity identities, editor undo or schema migration.",
+        "Serialize stable engine IDs and registered fields, not raw ECS handles."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "player",
+        "sdk"
+      ]
+    },
+    {
+      "id": "cgltf",
+      "name": "cgltf",
+      "role": "Import glTF/GLB source scenes into the AI-BS asset cooker.",
+      "introduce_at": "M2",
+      "required_for_v01": true,
+      "license_summary": "MIT license.",
+      "sources": [
+        "https://github.com/jkuhlmann/cgltf",
+        "https://github.com/jkuhlmann/cgltf/blob/master/LICENSE"
+      ],
+      "caveats": [
+        "Parsing does not automatically load or decode all external buffer/image content.",
+        "Compressed extensions require the corresponding decoder/transcoder.",
+        "Document the accepted glTF subset and reject unsupported required extensions.",
+        "Use cooked engine assets in the player rather than unrestricted source-scene parsing."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "sdk",
+        "editor"
+      ]
+    },
+    {
+      "id": "gltf2",
+      "name": "glTF 2.0 and GLB",
+      "role": "Source interchange format for meshes, materials, scenes, skins and animation.",
+      "introduce_at": "M2",
+      "required_for_v01": true,
+      "license_summary": "Khronos specification terms apply to the specification; importer and codec implementations have their own licenses.",
+      "sources": [
+        "https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html"
+      ],
+      "caveats": [
+        "A file format is not an SDK or a complete runtime asset pipeline.",
+        "Define supported extensions, coordinate conversion, tangents, material channels and texture color spaces.",
+        "Validate required extensions and resource references during import."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "sdk",
+        "editor"
+      ]
+    },
+    {
+      "id": "directxtex",
+      "name": "DirectXTex",
+      "role": "Offline texture conversion, mip generation and Windows/DX12 texture cooking.",
+      "introduce_at": "M2",
+      "required_for_v01": true,
+      "license_summary": "MIT license, as documented by Microsoft.",
+      "sources": [
+        "https://github.com/microsoft/DirectXTex",
+        "https://github.com/microsoft/DirectXTex/blob/main/LICENSE"
+      ],
+      "caveats": [
+        "Upstream describes the full processing library as primarily intended for tools.",
+        "Current upstream requires Windows 11 SDK 22000 or later for Visual Studio builds.",
+        "Select a minimal runtime cooked-texture loader separately; do not ship the full cooker by default."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "sdk",
+        "editor"
+      ]
+    },
+    {
+      "id": "d3d12ma",
+      "name": "D3D12 Memory Allocator",
+      "role": "GPU heap suballocation and resource allocation bookkeeping.",
+      "introduce_at": "M2",
+      "required_for_v01": true,
+      "license_summary": "MIT license.",
+      "sources": [
+        "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator",
+        "https://gpuopen-librariesandsdks.github.io/D3D12MemoryAllocator/html/"
+      ],
+      "caveats": [
+        "Allocation support does not replace engine fences, resource lifetime tracking, descriptors or resource barriers.",
+        "Query real device budgets and track the engine's own GPU allocations.",
+        "Pin compile-time options and integrate behind the renderer allocation interface."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "player",
+        "sdk"
+      ]
+    },
+    {
+      "id": "jolt",
+      "name": "Jolt Physics",
+      "role": "Rigid bodies, collision queries, triggers and character-controller foundation.",
+      "introduce_at": "M1",
+      "required_for_v01": true,
+      "license_summary": "MIT license.",
+      "sources": [
+        "https://github.com/jrouwe/JoltPhysics",
+        "https://jrouwe.github.io/JoltPhysics/"
+      ],
+      "caveats": [
+        "Current README specifies VS2022+, Clang16+ or GCC12+ and uses C++17.",
+        "Use a bounded fixed-step update and explicit physics/world ownership.",
+        "Determinism has documented limits; do not claim cross-platform replay equivalence automatically.",
+        "Select CPU instruction baseline, precision and build options before recording reproducibility evidence."
+      ],
+      "selected_version": "5.6.0",
+      "integration_status": "VERIFIED",
+      "installation_status": "VERIFIED",
+      "existing_source_integration_status": "VERIFIED",
+      "ships_in": [
+        "player",
+        "sdk"
+      ],
+      "pin_record": "engine/cmake/JoltDependency.lock.json",
+      "implemented_scope": "Matching quaternion-oriented static boxes, grounded capsule with20/30degree supported slopes and60degree reject/sliding, fixed ticks, swept camera spheres; Debug/Release installed SDK and native motherboard obstacle course verified.",
+      "remaining_scope": "Moving/rotating bodies, dynamic rigid bodies, triggers, vehicles, fluids, terrain and broader planned physics roles remain unimplemented.",
+      "evidence": [
+        "engine/PHYSICS_SLICE.md",
+        "engine/MOVEMENT_COURSE.md",
+        "engine/out/debug06-consolidated.log",
+        "engine/out/release06-consolidated.log",
+        "engine/out/obstacle_course_verification.json"
+      ],
+      "milestone_reconciliation": "Current BUILD_ROADMAP M1 supersedes historical M3 introduction label for this integration; other historical stage labels in this registry are not the active queue."
+    },
+    {
+      "id": "miniaudio",
+      "name": "miniaudio",
+      "role": "Device playback, mixing, spatial audio and Adam dialogue playback.",
+      "introduce_at": "M3",
+      "required_for_v01": true,
+      "license_summary": "Choice of public-domain dedication or MIT No Attribution; proposed selection is MIT-0.",
+      "sources": [
+        "https://miniaud.io/docs/manual/index.html",
+        "https://github.com/mackron/miniaudio/blob/master/LICENSE"
+      ],
+      "caveats": [
+        "Current manual describes including miniaudio.h and compiling miniaudio.c, or linking a library; do not assume historical header-only packaging.",
+        "ABI compatibility is not guaranteed between versions, including bugfix releases.",
+        "Audio callbacks must avoid blocking inference, file I/O and engine locks."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "player",
+        "sdk"
+      ]
+    },
+    {
+      "id": "sqlite",
+      "name": "SQLite",
+      "role": "Versioned save-state storage behind the engine persistence service.",
+      "introduce_at": "M2",
+      "required_for_v01": true,
+      "license_summary": "Core SQLite library is public domain; ancillary distribution scripts can have separate terms.",
+      "sources": [
+        "https://www.sqlite.org/copyright.html",
+        "https://www.sqlite.org/docs.html"
+      ],
+      "caveats": [
+        "Existing Python sqlite3 use does not establish the native adapter or game-save schema.",
+        "Use bounded asynchronous writes and a declared single-writer policy.",
+        "Keep game state in namespaced tables and support portable standalone saves without requiring an AI-BS backend process."
+      ],
+      "selected_version": "3.54.1",
+      "integration_status": "VERIFIED",
+      "installation_status": "VERIFIED",
+      "existing_source_integration_status": "VERIFIED_PYTHON_USE_ONLY",
+      "ships_in": [
+        "player",
+        "sdk"
+      ],
+      "existing_source_evidence": [
+        {
+          "path": "C:\\AI-BS\\native_studio\\engine.py",
+          "line": 17,
+          "observation": "Imports Python sqlite3; this is not a compiled native-engine integration."
+        }
+      ],
+      "pin_record": "engine/cmake/SQLiteDependency.lock.json",
+      "implemented_scope": "Pinned static SQLite, scoped atomic components/events/receipts, bounded worker/world publication, native FirstBoot HUD/live retry/reload/close, offline outcome recall and validated non-destructive original-save import; verified source/installed SDK and Studio92 player.",
+      "remaining_scope": "Full-history startup replay/whole-world copies remain alpha limits. Future schema migrations, streamed recovery and broader campaign/creator systems remain later work.",
+      "evidence": [
+        "engine/GAMEPLAY_CONTRACT.md",
+        "engine/NATIVE_DURABLE_WORLD.md",
+        "engine/out/debug07-native-final.log",
+        "engine/out/release07-native-final.log",
+        "engine/out/durable_world_verification.json",
+        "engine/out/packaged92-durable-world/durable_world_verification.json"
+      ],
+      "milestone_reconciliation": "Current M2 supersedes the historical M3 introduction label; most other registry entries remain proposed."
+    },
+    {
+      "id": "pyqt6",
+      "name": "Existing PyQt6 editor shell",
+      "role": "Integrate engine project tools with the existing native AI-BS studio.",
+      "introduce_at": "M4",
+      "required_for_v01": true,
+      "license_summary": "PyQt is GPLv3 or Riverbank Commercial License; PyQt itself is not LGPL. Qt has separate distribution terms.",
+      "sources": [
+        "https://www.riverbankcomputing.com/software/pyqt/intro"
+      ],
+      "caveats": [
+        "Retain the existing editor shell while the runtime owns its event loop and renderer.",
+        "Standalone player excludes PyQt6, Python and editor-only components.",
+        "Verify selected distribution terms for editor packaging without asserting overall project license compatibility."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "VERIFIED_EXISTING_IMPORT",
+      "ships_in": [
+        "editor"
+      ],
+      "existing_source_evidence": [
+        {
+          "path": "C:\\AI-BS\\native_studio\\engine.py",
+          "line": 27,
+          "observation": "Imports PyQt6.QtCore for the existing desktop task bus; new engine/editor integration remains unverified."
+        }
+      ]
+    },
+    {
+      "id": "lua",
+      "name": "Lua",
+      "role": "Later mission/gameplay scripting through registered engine capabilities.",
+      "introduce_at": "later",
+      "required_for_v01": false,
+      "license_summary": "MIT license.",
+      "sources": [
+        "https://www.lua.org/license.html",
+        "https://www.lua.org/manual/"
+      ],
+      "caveats": [
+        "Defer until the component schema and validated gameplay command interface work.",
+        "Specify API exposure, execution budgets, error handling and reload semantics.",
+        "Embedded scripting does not automatically provide isolation or unrestricted engine-memory access policies."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "player",
+        "sdk"
+      ]
+    },
+    {
+      "id": "ktx2",
+      "name": "KTX2 texture workflow",
+      "role": "Later portable/supercompressed texture workflow when asset requirements justify it.",
+      "introduce_at": "later",
+      "required_for_v01": false,
+      "license_summary": "Khronos format/specification terms and separate licenses for the selected encoder/transcoder implementation.",
+      "sources": [
+        "https://github.com/KhronosGroup/KTX-Software",
+        "https://registry.khronos.org/KTX/specs/2.0/ktxspec.v2.html"
+      ],
+      "caveats": [
+        "KTX2 is a format, not a decoder implementation.",
+        "Select and pin the actual encoder/transcoder and preserve its bundled notices.",
+        "cgltf recognizing KHR_texture_basisu does not perform transcoding.",
+        "Keep the initial Windows texture cooker focused on the selected DX12 runtime format."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "sdk",
+        "editor"
+      ]
+    },
+    {
+      "id": "agility",
+      "name": "DirectX Agility SDK",
+      "role": "Optional later Direct3D runtime deployment for features beyond the selected OS baseline.",
+      "introduce_at": "later",
+      "required_for_v01": false,
+      "license_summary": "Microsoft publisher terms; verify selected package and redistributable runtime components.",
+      "sources": [
+        "https://devblogs.microsoft.com/directx/directx12agility/"
+      ],
+      "caveats": [
+        "Not required for the initial renderer until a concrete feature needs it.",
+        "Record OS, driver and feature requirements with the selected package.",
+        "Do not add Agility deployment complexity solely to claim the newest SDK."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "player",
+        "sdk"
+      ]
+    },
+    {
+      "id": "pix",
+      "name": "PIX on Windows",
+      "role": "Development GPU/timing captures, memory analysis and DX12 diagnosis.",
+      "introduce_at": "M1",
+      "required_for_v01": false,
+      "license_summary": "Microsoft publisher terms; verify selected PIX and optional WinPixEventRuntime distributions.",
+      "sources": [
+        "https://devblogs.microsoft.com/pix/documentation/",
+        "https://devblogs.microsoft.com/pix/winpixeventruntime/"
+      ],
+      "caveats": [
+        "Development-only tool; installation or redistribution is not implied.",
+        "Optional instrumentation runtime has its own version and packaging decision.",
+        "Capture validation should use real engine execution and measured timings."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "development_only"
+      ]
+    },
+    {
+      "id": "renderdoc",
+      "name": "RenderDoc",
+      "role": "Alternative development frame capture and graphics inspection.",
+      "introduce_at": "M1",
+      "required_for_v01": false,
+      "license_summary": "MIT license for RenderDoc; preserve selected distribution notices if redistributing.",
+      "sources": [
+        "https://github.com/baldurk/renderdoc",
+        "https://github.com/baldurk/renderdoc/blob/v1.x/LICENSE.md"
+      ],
+      "caveats": [
+        "Official README documents D3D12, D3D11, Vulkan and OpenGL capture support.",
+        "Development-only tool, not a mandatory player dependency.",
+        "Validate the selected release against the engine's actual feature subset."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "development_only"
+      ]
+    },
+    {
+      "id": "recast_detour",
+      "name": "Recast Navigation and Detour",
+      "role": "Researched candidate for tiled navigation generation, runtime queries and construction-aware regional updates.",
+      "introduce_at": "M7",
+      "required_for_v01": false,
+      "selection_status": "RESEARCHED_CANDIDATE",
+      "license_summary": "Zlib license; verify selected distribution notices and build options.",
+      "sources": [
+        "https://github.com/recastnavigation/recastnavigation",
+        "https://github.com/recastnavigation/recastnavigation/blob/main/DetourTileCache/Include/DetourTileCache.h"
+      ],
+      "caveats": [
+        "Tiled mesh rebakes and temporary obstacle updates are distinct workflows.",
+        "New walkable surfaces such as constructed bridges require updated source geometry and rebaking or an appropriate explicit traversal link.",
+        "World edits need dirty bounds, tile generations, bounded queues and stale-result rejection; library selection alone does not implement these policies.",
+        "Pin and compile only when the navigation milestone requires it; no installation or player integration is claimed."
+      ],
+      "selected_version": null,
+      "integration_status": "UNVERIFIED",
+      "installation_status": "UNVERIFIED",
+      "existing_source_integration_status": "UNVERIFIED",
+      "ships_in": [
+        "player",
+        "sdk",
+        "editor"
+      ]
+    }
+  ]
+}

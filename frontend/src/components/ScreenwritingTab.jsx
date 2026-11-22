@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { paginateScreenplayBlocks } from '/utils/screenplayPagination.js';
+import { studioViewport, watchStudioViewport } from '/src/utils/studioViewport.js';
+import { useState, useEffect, useRef } from "react";
 import { createAuthenticatedEventSource } from '/src/utils/authenticatedEventSource.js';
+import { validateAdaptationAcceptance, monitorAdaptation, isAdaptationTerminal, isAdaptationComplete } from '/src/utils/screenplayAdaptation.js';
 import { createScreenplayDraftCoordinator } from '/src/utils/screenplayDraftCoordinator.js';
 import { Fountain } from 'fountain-js';
 const fountainParser = new Fountain();
@@ -7,14 +10,17 @@ import { useAppStore } from './useAppStore';
 import CharacterVaultModal from './CharacterVaultModal';
 import CoverageReportModal from './CoverageReportModal';
 import ScreenplayEditor from './ScreenplayEditor';
+import RichFDXEditor, { richRunStyle } from '/src/components/RichFDXEditor.jsx';
+import { cloneRichFDX, importRichFDX, richFDXProjection, prepareRichFDXWrite } from '/src/utils/richFdxDraft.js';
 import ScreenplayViewer from './ScreenplayViewer';
 import AdaptationStatusBar from './AdaptationStatusBar';
 import ScriptAssistantDrawer from './ScriptAssistantDrawer';
 import ProjectAudioPlayer from './ProjectAudioPlayer';
-import { parseFDX } from '/utils/FDXParser.js';
-import { serializeFDX } from '/utils/FDXSerializer.js';
-import { fountainToAST, astToFountain } from '/utils/FountainAdapter.js';
-import { logTeamActivity } from './collaborationService';
+import { fountainToAST, astToFountain, fountainTitleHeader } from '/utils/FountainAdapter.js';
+import { readScreenplayHandoff, validateScreenplayRead, sourceScreenplayAST, importPdfScreenplay, screenplayErrorMessage, validateScreenplayExport, screenplayExportFilename } from '/src/utils/screenplayHandoff.js';
+import { chatAuthHeaders } from '/src/utils/chatAuth.js';
+import { launchNativeScreenplay } from '/src/utils/nativeScreenplayHandoff.js';
+import "./collaborationService";
 import ScriptToBookNovelizerModal from './ScriptToBookNovelizerModal';
 import ScreenplayTableReadModal from './ScreenplayTableReadModal';
 import AnalyticsOverlay from './AnalyticsOverlay';
@@ -23,7 +29,8 @@ import StagePlayBreakdownModal from './StagePlayBreakdownModal';
 import ScriptTelemetryModal from './ScriptTelemetryModal';
 import './StagePlayBreakdownModal.css';
 
-const StoryboardModal = ({ isOpen, onClose, storyboards, backendUrl = '' }) => {
+/** @param {{"isOpen": boolean, "onClose"?: () => void, "storyboards": Array<{"action": string, "image_url": string}>, "backendUrl"?: string}} props */
+(/** @param {{isOpen: boolean; onClose?: () => void; storyboards: {action: string; image_url: string}[]; backendUrl?: string}} props */ ({ isOpen, onClose, storyboards, backendUrl = '' }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
@@ -52,7 +59,7 @@ const StoryboardModal = ({ isOpen, onClose, storyboards, backendUrl = '' }) => {
       </div>
     </div>
   );
-};
+});
 
 const GUIDE_DATA = [
   // Category 0: 8-Step Production Workflow
@@ -73,9 +80,9 @@ const GUIDE_DATA = [
   { cat: 1, title: "⚡ Thoughts & Pages Telemetry", badge: "Action Bar • Row 2B", badgeColor: "#0284c7", desc: "Opens the comprehensive Script Telemetry & Analytics modal displaying estimated screen time, dialogue vs. action percentage, character lines, and three-act pacing curves.", steps: ["Click '⚡ Thoughts & Pages Telemetry'.", "Review the Dialogue/Action ratio meter (industry sweet spot is 30%-45% dialogue).", "Inspect character dialogue distribution and unique location counts."], tip: "Clicking this button also automatically reveals the '🎮 3D & Previs' pipeline ribbon deck in Row 3." },
   { cat: 1, title: "📥 Import", badge: "Action Bar • Row 2B", badgeColor: "#34d399", desc: "Imports existing screenplays from industry standard file formats with automatic scene slugline and character cue parsing.", steps: ["Click '📥 Import' to open the import dropdown menu.", "Select your file format: Final Draft (.fdx), Fountain (.fountain), Screenplay PDF (.pdf), or Plain Text (.txt).", "Choose your file in the file browser; the studio parses scenes and pagination instantly."], tip: "Fountain is an open, plain-text format that preserves all screenplay formatting across any operating system." },
   { cat: 1, title: "🔍 Find & Replace", badge: "Action Bar • Row 2B", badgeColor: "#a855f7", desc: "Toggles the inline search and replace bar located directly above the manuscript canvas.", steps: ["Click '🔍 Find & Replace' or press Ctrl+F.", "Enter search text in 'Find text...' and replacement text in 'Replace with...'.", "Click 'Find Next' to cycle through occurrences, or 'Replace All' to update the entire manuscript."], tip: "Press Escape or click the '✕' close button on the right to dismiss the inline search bar." },
-  { cat: 1, title: "📄 Export FDX", badge: "Action Bar • Row 2B", badgeColor: "#38bdf8", desc: "Exports the manuscript into industry-standard Final Draft XML (.fdx) and Fountain (.fountain) file formats.", steps: ["Click '📄 Export FDX' to open the export format dropdown.", "Choose 'Export Final Draft (.fdx)' or 'Export Fountain Script (.fountain)'.", "Choose your save location; the file is saved with full scene, character, and dialogue XML tags intact."], tip: "Final Draft (.fdx) files exported here are 100% compatible with Final Draft 12/13, WriterDuet, and StudioBinder." },
-  { cat: 1, title: "📑 Export PDF", badge: "Action Bar • Row 2B", badgeColor: "#f87171", desc: "Renders a print-ready, industry-standard formatted screenplay PDF complete with title page, page headers, numbers, and optional call sheets.", steps: ["Click '📑 Export PDF' to open the PDF export options.", "Select 'Export Screenplay PDF (.pdf)' for the full manuscript.", "Select 'Export Call Sheet & Shooting Schedule PDF' to generate daily production call sheets."], tip: "PDFs are generated using standard Courier 11pt font with exact 1-inch top/bottom/right margins and 1.5-inch left margins." },
-  { cat: 1, title: "💾 Save / 🟢 Autosaved", badge: "Action Bar • Row 2B", badgeColor: "#22c55e", desc: "Real-time autosave status badge and manual commit button. Persists the current screenplay draft into both the local filesystem and the SQLite sovereign vault.", steps: ["The studio automatically saves edits in the background, updating the timestamp badge.", "Click '💾 Save' at any time to execute an immediate hard write and vault checkpoint."], tip: "Scripts are encrypted and archived in 'stehouwer_vault.db' under the 'screenplay_projects' table." },
+  { cat: 1, title: "📄 Export FDX", badge: "Action Bar • Row 2B", badgeColor: "#38bdf8", desc: "Exports the manuscript into industry-standard Final Draft XML (.fdx) and Fountain (.fountain) file formats.", steps: ["Click '📄 Export FDX' to open the export format dropdown.", "Choose 'Export Final Draft (.fdx)' or 'Export Fountain Script (.fountain)'.", "Choose your save location; the file is saved with full scene, character, and dialogue XML tags intact."], tip: "FDX exports retain validated XML script roles, a separate title page and recorded manual breaks. Pagination and compatibility in an external writing application require a separate check." },
+  { cat: 1, title: "📑 Export PDF", badge: "Action Bar • Row 2B", badgeColor: "#f87171", desc: "Renders a print-ready, industry-standard formatted screenplay PDF complete with title page, page headers, numbers, and optional call sheets.", steps: ["Click '📑 Export PDF' to open the PDF export options.", "Select 'Export Screenplay PDF (.pdf)' for the full manuscript.", "Select 'Export Call Sheet & Shooting Schedule PDF' to generate daily production call sheets."], tip: "Preserve-source PDF mode retains the supported original page layout (the supplied screenplay uses Courier 12pt). Reflow mode lays out edited content again and can change page count." },
+  { cat: 1, title: "💾 Save / 🟢 Autosaved", badge: "Action Bar • Row 2B", badgeColor: "#22c55e", desc: "Autosave status and manual save for the current project file. The server checks the loaded revision before accepting a write.", steps: ["The studio automatically saves edits in the background, updating the timestamp badge.", "Click '💾 Save' to save the current draft. If saving fails, keep the local draft and use the recovery controls."], tip: "Browser recovery copies can be downloaded from this studio. Save does not create a SQLite vault checkpoint." },
 
   // Category 2: 5 Dynamic Ribbon Decks
   { cat: 2, title: "Deck 0: ✍️ Write Ribbon", badge: "Ribbon Deck 0 • Editing", badgeColor: "#facc15", desc: "Houses primary text formatting, lexical tools, clipboard operations, and AI dialogue revision tools.", steps: ["↶ Undo / ↷ Redo: Navigate backward and forward through text edit history (Ctrl+Z / Ctrl+Y).", "✂️ Cut / 📋 Copy / 📋 Paste: Standard clipboard operations.", "B / I / U: Toggle Bold (slugline emphasis), Italic (sound effects / vocal inflection), and Underline.", "📝 Spell: Scans the active screenplay against the Hollywood lexicon to flag spelling mistakes.", "📖 Thesaurus: Highlights synonyms for the selected word to enrich action descriptions.", "✨ Alt-Take: Generates 3 AI alternative takes (Subtextual, Raw Emotional, Pragmatic) for any selected dialogue line."], tip: "Use Bold on scene sluglines (e.g. **INT. WAREHOUSE - NIGHT**) for modern, punchy production readability." },
@@ -85,11 +92,11 @@ const GUIDE_DATA = [
   { cat: 2, title: "Deck 4: 🚀 Production & CMS Ribbon", badge: "Ribbon Deck 4 • Production & Budget", badgeColor: "#4ade80", desc: "Professional film and theatrical production management, script coverage, budgeting, colored revisions, and CMS publishing.", steps: ["🎭 Character Vault: Cast roster displaying line counts, dialogue frequency, and actor assignments.", "📊 Script Coverage: AI Script Doctor analyzing premise, structure, character arcs, dialogue, and commercial viability.", "📈 Analytics: Telemetry graphs showing pacing, act breaks, dialogue vs. action, and location counts.", "🎬 Film Budget: 4-tab suite with 50-State Tax Credit calculator, stripboard, and DOOD matrix.", "🎭 Theatrical Budget: Stage play capitalization and weekly operating budget suite.", "⚪ Revision Mode & Colors: Industry revision tracking (Blue, Pink, Yellow, Green revision pages).", "📄 Title Page: Configures script title, author, draft date, and WGA contact info.", "🚀 Publish to CMS: Archives the verified draft directly in the Stehouwer Publications CMS Vault."], tip: "Always engage Revision Mode before starting second-draft rewrites to highlight altered scenes with industry standard revision colors." },
 
   // Category 3: Navigation, Sidebar & Layout
-  { cat: 3, title: "View Mode Switchers (Editor, Page View, Split, Beat Board)", badge: "Row 4 • Navigation Strip", badgeColor: "#38bdf8", desc: "Four distinct view modes tailored for every stage of writing and reviewing.", steps: ["Editor: High-performance distraction-free typing in Courier 11pt with live scene highlighting.", "Page View: Paginated 8.5\" x 11\" paper view showing exact Hollywood page boundaries and page numbers.", "Split: Side-by-side split screen with manuscript editor on the left and live formatted page preview on the right.", "Beat Board: Story index card canvas displaying beats grouped with day/night badges and emotional arc icons."], tip: "Switch to Page View before exporting to ensure dialogue blocks do not awkwardly break across page bottoms." },
+  { cat: 3, title: "View Mode Switchers (Editor, Page View, Split, Beat Board)", badge: "Row 4 • Navigation Strip", badgeColor: "#38bdf8", desc: "Four distinct view modes tailored for every stage of writing and reviewing.", steps: ["Editor: Editable screenplay blocks with scene highlighting; the editor view is separate from the preserved source PDF.", "Page View: Editor pagination uses retained manual source boundaries when available, otherwise a layout estimate; export pagination is checked separately.", "Split: Side-by-side split screen with manuscript editor on the left and live formatted page preview on the right.", "Beat Board: Story index card canvas displaying beats grouped with day/night badges and emotional arc icons."], tip: "Switch to Page View before exporting to ensure dialogue blocks do not awkwardly break across page bottoms." },
   { cat: 3, title: "Pagination Controls (First, Prev, Next, Last)", badge: "Row 4 • Navigation Strip", badgeColor: "#94a3b8", desc: "Instant page navigation and jump controls.", steps: ["⏮ First: Jump immediately to Page 1.", "◀ Prev: Go to previous page.", "Page X of Y: Dynamic label indicating active page and total script length.", "Next ▶: Go to next page.", "Last ⏭: Jump immediately to the final page of the manuscript."], tip: "You can also use the 'Jump to Page' box in the bottom telemetry strip to type any specific page number directly." },
   { cat: 3, title: "🟣 Review Pg X Format Doctor", badge: "Row 4 • Navigation Strip", badgeColor: "#a855f7", desc: "Intelligent side-by-side page proofing engine that audits the active 54-line page slice against standard Hollywood formatting rules.", steps: ["Click '🟣 Review Pg X' to open the Format Doctor for the active page.", "The engine checks 54-line height limits, orphaned cues, and improper sluglines.", "Click '✨ Apply Proof & Advance' to commit the clean formatted text and automatically advance to the next page."], tip: "Run Review Pg X across all pages before submitting to talent agencies, festivals, or production companies." },
   { cat: 3, title: "Scene Selector Dropdown", badge: "Row 4 • Navigation Strip", badgeColor: "#eab308", desc: "Dynamic dropdown menu listing every detected scene slugline in the screenplay along with its estimated page number.", steps: ["Click the 'Scene: Select Scene...' dropdown in Row 4.", "Select any scene header (e.g. '3. INT. SUBURBAN LIVING ROOM - DAY... (p.2)').", "The editor immediately scrolls and positions the cursor at that exact scene header."], tip: "Selecting a scene also updates the 8.5x11 page viewer to display that scene's page." },
-  { cat: 3, title: "Left Sidebar (Scenes, Outlines, Projects, Branches, Writing Sprint)", badge: "Row 5 • Left Panel", badgeColor: "#22c55e", desc: "Hierarchical project navigator and writing productivity tools.", steps: ["Scenes List: Searchable list of all scenes in chronological order; clicking any scene jumps directly to it.", "Outlines 1 & 2: Toggle between parallel plot outlines without altering the manuscript.", "Projects Tree: Switch between project folders and import reference files.", "Branches: Version control branches (e.g. main vs alt-ending).", "15-Minute Writing Sprint: Built-in timer that tracks words written and words-per-minute (WPM) during timed writing sprints."], tip: "Click 'Start Sprint' to initiate a focused 15-minute drafting block. The timer automatically calculates your WPM upon completion." },
+  { cat: 3, title: "Left Sidebar (Scenes, Outlines, Projects, Branches, Writing Sprint)", badge: "Row 5 • Left Panel", badgeColor: "#22c55e", desc: "Hierarchical project navigator and writing productivity tools.", steps: ["Scenes List: Searchable list of all scenes in chronological order; clicking any scene jumps directly to it.", "Outlines 1 & 2: Toggle between parallel plot outlines without altering the manuscript.", "Projects Tree: Switch between project folders and import reference files.", "Branches: Creation and switching are currently unavailable; the controls are disabled.", "Writing Sprints: Persistent sprint tracking is currently unavailable; the controls are disabled."], tip: "Use the project save and recovery controls to preserve your writing. Branch and sprint persistence remain unavailable." },
   { cat: 3, title: "Hollywood Monospace Layout Specifications", badge: "Core Typography & Geometry", badgeColor: "#f87171", desc: "Exact mathematical specifications of the Hollywood screenplay format standard.", steps: ["Font: Courier New, 11 point size, monospace (10 characters per inch).", "Line Height: 1.4 spacing, exactly 55 lines maximum per 8.5\" x 11\" page.", "Margins: Top 1.0\", Bottom 1.0\", Right 1.0\", Left 1.5\" (allows for standard 3-hole punch brass brad binding).", "Character Cues: Uppercase, indented 3.7 inches from left margin.", "Dialogue: Indented 2.5 inches from left margin, maximum 3.5 inches wide.", "Parentheticals: Indented 3.1 inches from left margin."], tip: "These strict rules guarantee that one page of screenplay translates to exactly one minute of screen time on set." },
   { cat: 3, title: "Bottom Script Telemetry Strip", badge: "Row 6 • Footer Strip", badgeColor: "#38bdf8", desc: "Live status telemetry displaying page count, screen time, dialogue-to-action ratio, role counts, scene counts, and zoom controls.", steps: ["Displays: 'SCRIPT TELEMETRY: 31 Pages (~31m screen time) • 28% Dialogue / 72% Action • 10 Roles • 136 Scenes'.", "Jump to Page: Input box to jump instantly to any page number.", "Zoom Slider: Adjusts canvas scaling between 75% and 150%."], tip: "The Dialogue vs. Action percentage alerts you if your script is becoming overly talky or lacking visual action." },
 
@@ -105,6 +112,7 @@ const GUIDE_DATA = [
   { cat: 5, title: "Theatrical Stage Play Capitalization & Operating Suite", badge: "Theatrical Budget Modal", badgeColor: "#ec4899", desc: "Comprehensive theatrical financial suite for Broadway, Off-Broadway, and regional stage productions.", steps: ["Capitalization: Physical production costs (Scenery, Costumes, Lighting, Sound) + rehearsal salaries and advance advertising.", "Weekly Operating Costs: Theater rent, actor/crew weekly salaries, royalties, and ongoing advertising.", "Recoupment Timeline: Interactive model calculating weeks to 100% investor payback based on weekly box office gross percentage."], tip: "Off-Broadway productions typically aim for recoupment within 18 to 26 weeks at 70% average box office capacity." }
 ];
 
+/** @param {{"isOpen": boolean, "onClose"?: () => void}} props */
 const ScreenwritingHelpGuideModal = ({ isOpen, onClose }) => {
   const [activeCategory, setActiveCategory] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
@@ -150,7 +158,8 @@ const ScreenwritingHelpGuideModal = ({ isOpen, onClose }) => {
               type="text"
               placeholder="🔍 Search any tool, button, or shortcut..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={
+( e) => setSearchQuery(e.target.value)}
               className="bg-[#060a12] border border-[#334155] focus:border-[#38bdf8] text-sm text-gray-200 px-3 py-1.5 rounded-lg outline-none w-64"
             />
             <button onClick={onClose} className="text-gray-400 hover:text-white text-2xl font-bold px-2 py-1 leading-none">&times;</button>
@@ -246,6 +255,7 @@ const ScreenwritingHelpGuideModal = ({ isOpen, onClose }) => {
 
 import './ScreenwritingTab.css';
 
+/** @param {{"backendUrl": string, "sharedContent"?: string | null, "setSharedContent"?: (value: string) => void, "sharedActiveDoc"?: string | null, "onSendToVideoStudio"?: (arg0: string) => void}} props */
 export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedContent, sharedActiveDoc, onSendToVideoStudio }) {
   const storeBackendUrl = useAppStore(state => state.BACKEND_URL);
   const BACKEND_URL = backendUrl || storeBackendUrl || 'http://127.0.0.1:8000';
@@ -261,7 +271,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     screenplayRef.current = screenplay;
     draftRevisionRef.current += 1;
   }
-  const setScreenplay = (content) => {
+  /** @param {string} content */
+const setScreenplay = ( content) => {
     screenplayRef.current = content;
     draftRevisionRef.current += 1;
     setLocalScreenplay(content);
@@ -270,13 +281,54 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       setSharedContent(content);
     }
   };
-  const [ast, setAst] = useState([]);
+  const [ast, setAst] = useState(/** @type {import("/types/domain").ScreenplayBlock[]} */ ([]));
   const [isInternalChange, setIsInternalChange] = useState(false);
-  const [parsed, setParsed] = useState(null);
-  const [liveHtml, setLiveHtml] = useState('');
-  const [projectMetadata, setProjectMetadata] = useState(null);
-  const [animatingBeats, setAnimatingBeats] = useState({});
+  const richDocumentRef=useRef(/** @type {any} */(null));
+  const [richEditorEpoch,setRichEditorEpoch]=useState(0);
+  const richAckEpochRef=useRef(0);
+  const astRef=useRef(ast);astRef.current=ast;
+  const [richWorkingDraft,setRichWorkingDraft]=useState(/** @type {string|null} */(null));
+  const currentRichDocument=()=>richDocumentRef.current?{...cloneRichFDX(richDocumentRef.current),blocks:cloneRichFDX(astRef.current)}:undefined;
+  const [parsed, setParsed] = useState(/** @type {import("/types/screenwriting").ParsedScreenplay | null} */ (null));
+  const [, setLiveHtml] = useState('');
+  const [projectMetadata, setProjectMetadata] = useState(/** @type {{beat_videos?: Record<string,string>, source_fdx?: any, source_pdf?: {source_id:string,sha256:string,page_count:number,body_page_count?:number,title_page_count?:number,canonical_revision?:string,printed_page_labels?:(string|number|null)[]}} | null} */ (null));
+  const [exportLayout, setExportLayout] = useState('source');
+  const [exportReceipt, setExportReceipt] = useState(/** @type {Awaited<ReturnType<typeof validateScreenplayExport>> | null} */ (null));
+  const titleHeaderRef = useRef('');
+  const handoffLoadRef = useRef(/** @type {(() => void) | null} */ (null));
+  const [animatingBeats, setAnimatingBeats] = useState(/** @type {Record<string, boolean>} */ ({}));
   
+  // Responsive layout state never replaces the loaded draft or editor instance.
+  const [studioSize, setStudioSize] = useState(() => typeof window === 'undefined' ? studioViewport() : studioViewport({width:window.innerWidth,height:window.innerHeight,visualHeight:window.visualViewport?.height,offsetTop:window.visualViewport?.offsetTop}));
+  const compactStudio = studioSize.compact;
+  const [mobileFocus, setMobileFocus] = useState(true);
+  const [mobilePanel, setMobilePanel] = useState(/** @type {null|'tools'|'scenes'|'stats'} */(null));
+  const mobilePanelTrigger = useRef(/** @type {HTMLElement|null} */(null));
+  const studioRoot = useRef(/** @type {HTMLDivElement|null} */(null));
+  useEffect(() => watchStudioViewport(window,setStudioSize), []);
+  /** @param {"tools" | "scenes" | "stats"} panel @param {import('react').MouseEvent<HTMLElement>} [event] */
+const toggleMobilePanel = (panel, event) => {
+    mobilePanelTrigger.current=event?.currentTarget || (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    setMobilePanel(previous=>previous===panel?null:panel);
+  };
+  useEffect(() => {
+    if (!compactStudio || !mobilePanel) return;
+    const dialog=studioRoot.current?.querySelector('[role="dialog"]');
+    const first=dialog?.querySelector('button,select,input,[tabindex]');
+    if(first instanceof HTMLElement)first.focus();
+    return ()=>mobilePanelTrigger.current?.focus?.({preventScroll:true});
+  }, [compactStudio,mobilePanel]);
+  /** @param {import('react').KeyboardEvent<HTMLElement>} event */
+  /** @param {import('react').KeyboardEvent<HTMLElement>} event */
+const handleMobileDialogKey =  event => {
+    if(event.key==='Escape'){event.preventDefault();setMobilePanel(null);return;}
+    if(event.key!=='Tab')return;
+    const nodes=/** @type {HTMLElement[]} */([...event.currentTarget.querySelectorAll('button:not([disabled]),select,input,a[href],[tabindex="0"]')].filter(node=>node.getClientRects().length));
+    if(!nodes.length)return;
+    if(event.shiftKey&&document.activeElement===nodes[0]){event.preventDefault();nodes.at(-1)?.focus();}
+    else if(!event.shiftKey&&document.activeElement===nodes.at(-1)){event.preventDefault();nodes[0].focus();}
+  };
+
   // Layout State
   const [leftPanelVisible, setLeftPanelVisible] = useState(() => typeof window !== 'undefined' ? window.innerWidth >= 850 : true);
   const [navigatorVisible, setNavigatorVisible] = useState(false);
@@ -292,22 +344,11 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
 
 
   // Permanent Page Viewer Navigation State
-  const viewerRef = useRef(null);
+  const viewerRef = useRef(/** @type {import('react').ElementRef<typeof ScreenplayViewer> | null} */ (null));
   const [viewerCurrentPage, setViewerCurrentPage] = useState(1);
   const [viewerSearch, setViewerSearch] = useState('');
   const calculateTotalPages = () => {
-    if (!ast || ast.length === 0) return 1;
-    let lines = 0;
-    ast.forEach(b => {
-      const len = (b.text || '').length;
-      if (b.type === 'Scene Heading' || b.type === 'Action') lines += 1 + Math.ceil(Math.max(1, len) / 58);
-      else if (b.type === 'Character') lines += 1 + Math.ceil(Math.max(1, len) / 38);
-      else if (b.type === 'Parenthetical') lines += Math.ceil(Math.max(1, len) / 28);
-      else if (b.type === 'Dialogue') lines += Math.ceil(Math.max(1, len) / 38);
-      else if (b.type === 'Transition') lines += 1 + Math.ceil(Math.max(1, len) / 20);
-      else lines += 1;
-    });
-    return Math.max(1, Math.ceil(lines / 54));
+    return Math.max(1, paginateScreenplayBlocks(ast).length);
   };
   const totalScriptPages = calculateTotalPages();
 
@@ -371,51 +412,54 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   const [historyIndex, setHistoryIndex] = useState(0);
 
   const handleUndo = () => {
+    if(richDocumentRef.current){setSaveProblem({message:'Rich paragraph edits use the text field undo history. Structural/history replacement can be retained as a separate working copy.'});return;}
     if (historyIndex > 0) {
       const prevIdx = historyIndex - 1;
       setHistoryIndex(prevIdx);
       const prevAst = history[prevIdx];
       setAst(prevAst);
       setIsInternalChange(true);
-      setScreenplay(astToFountain(prevAst));
+      setScreenplay(titleHeaderRef.current + astToFountain(prevAst));
     }
   };
 
   const handleRedo = () => {
+    if(richDocumentRef.current){setSaveProblem({message:'Rich paragraph edits use the text field redo history. Original XML remains retained.'});return;}
     if (historyIndex < history.length - 1) {
       const nextIdx = historyIndex + 1;
       setHistoryIndex(nextIdx);
       const nextAst = history[nextIdx];
       setAst(nextAst);
       setIsInternalChange(true);
-      setScreenplay(astToFountain(nextAst));
+      setScreenplay(titleHeaderRef.current + astToFountain(nextAst));
     }
   };
 
   // Branch & Sprint State
-  const [branches, setBranches] = useState([]);
+  const [branches, setBranches] = useState(/** @type {Array<string>} */ ([]));
   const [currentBranch, setCurrentBranch] = useState('main');
-  const [sprints, setSprints] = useState([]);
-  const [activeSprint, setActiveSprint] = useState(null);
+  const [, setSprints] = useState([]);
+  const [activeSprint, setActiveSprint] = useState(/** @type {{"id": string, "name": string} | null} */ (null));
   const [sprintName, setSprintName] = useState('');
   const [newBranchName, setNewBranchName] = useState('');
   
   // Projects State
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState(/** @type {Array<string>} */ ([]));
   const [currentProject, setCurrentProjectState] = useState('');
   const currentProjectRef = useRef('');
-  const setCurrentProject = (project) => {
+  /** @param {typeof currentProject} project */
+const setCurrentProject = ( project) => {
     currentProjectRef.current = project;
     setCurrentProjectState(project);
   };
-  const [archivedProjects, setArchivedProjects] = useState([]);
+  const [archivedProjects, setArchivedProjects] = useState(/** @type {Array<{"archive_id": string, "project_name": string}>} */ ([]));
   const [showArchivedProjects, setShowArchivedProjects] = useState(false);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
   
   const [isLoading, setIsLoading] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
   const reorderInFlightRef = useRef(false);
-  const saveCoordinatorRef = useRef(null);
+  const saveCoordinatorRef = useRef(/** @type {ReturnType<typeof createScreenplayDraftCoordinator> | null} */ (null));
   const backendUrlRef = useRef(BACKEND_URL);
   backendUrlRef.current = BACKEND_URL;
   if (!saveCoordinatorRef.current) {
@@ -428,14 +472,17 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       return data;
     }});
   }
-  const [saveProblem, setSaveProblem] = useState(null);
+  const saveCoordinator = saveCoordinatorRef.current;
+  const [saveProblem, setSaveProblem] = useState(/** @type {import("/types/screenwriting").SaveProblem | null} */ (null));
+  const [isNativeLaunching,setIsNativeLaunching]=useState(false);
+  const [nativeLaunchMessage,setNativeLaunchMessage]=useState('');
   const manualReviewRef = useRef(new Set());
-  const [recoveryDrafts, setRecoveryDrafts] = useState([]);
-  const [incomingWorkspaceDraft, setIncomingWorkspaceDraft] = useState(null);
+  const [recoveryDrafts, setRecoveryDrafts] = useState(/** @type {import("/types/screenwriting").RecoveryDraft[]} */ ([]));
+  const [incomingWorkspaceDraft, setIncomingWorkspaceDraft] = useState(/** @type {{"project": string, "content": string} | null} */ (null));
   const transitionRef = useRef(false);
   const recoveryIdRef = useRef(`${Date.now()}-${Math.random().toString(36).slice(2)}`);
-  const editorRef = useRef(null);
-  const [draggedBeatIndex, setDraggedBeatIndex] = useState(null);
+  const editorRef = useRef(/** @type {HTMLElement | null} */ (null));
+  const [draggedBeatIndex, setDraggedBeatIndex] = useState(/** @type {number | null} */ (null));
   const [isProofing, setIsProofing] = useState(false);
 
   // Navigation & Workspace State
@@ -444,7 +491,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   const [activeRibbonTab, setActiveRibbonTab] = useState('write'); // 'write' | 'elements' | 'views' | 'unreal' | 'production'
   const [zenMode, setZenMode] = useState(false);
 
-  const handleJumpToScene = (beat) => {
+  /** @param {import("/types/domain").ScreenplayBeat} beat */
+const handleJumpToScene = ( beat) => {
     if (!beat) return;
     const cleanHeading = (beat.heading || '').trim().toUpperCase();
     const targetBlock = ast.find(b => b.type === 'Scene Heading' && cleanHeading && b.text.trim().toUpperCase().includes(cleanHeading.substring(0, 25)));
@@ -477,7 +525,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     }
   };
 
-  const handleJumpToPage = (pageNum) => {
+  /** @param {number} pageNum */
+const handleJumpToPage = ( pageNum) => {
     if (!pageNum || isNaN(pageNum)) return;
     const validPage = Math.max(1, Math.min(pageNum, totalScriptPages));
     setViewerCurrentPage(validPage);
@@ -502,7 +551,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   };
 
   useEffect(() => {
-    const handleGlobalKeyDown = (e) => {
+    /** @param {KeyboardEvent} e */
+const handleGlobalKeyDown = ( e) => {
       if (e.key === 'Escape' && zenMode) {
         setZenMode(false);
       }
@@ -528,22 +578,33 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
 
   // AI Adapter State
   const [showAdaptModal, setShowAdaptModal] = useState(false);
-  const [adaptFile, setAdaptFile] = useState(null);
+  const [adaptFile, setAdaptFile] = useState(/** @type {File | null} */ (null));
+  const [pdfImportMode, setPdfImportMode] = useState('screenplay');
   const [adaptProjectName, setAdaptProjectName] = useState('');
   const [adaptType, setAdaptType] = useState('Feature Film');
-  const [adaptProgress, setAdaptProgress] = useState(null);
+  const [adaptProgress, setAdaptProgress] = useState(/** @type {{"progress": number, "current_chunk": number, "total_chunks": number, "status": string} | null} */ (null));
   const [isAdapting, setIsAdapting] = useState(false);
+  const adaptationStartRef = useRef(false);
+  const adaptationMountedRef = useRef(true);
+  const adaptationMonitorRef = useRef(/** @type {(() => void) | null} */ (null));
+  useEffect(() => {
+    adaptationMountedRef.current = true;
+    return () => {
+      adaptationMountedRef.current = false;
+      adaptationMonitorRef.current?.();
+    };
+  }, []);
 
   // AI Ghostwriter State
   const [isGhostwriting, setIsGhostwriting] = useState(false);
   const [showCoverage, setShowCoverage] = useState(false);
-  const [showStoryboards, setShowStoryboards] = useState(false);
-  const [storyboards, setStoryboards] = useState([]);
-  const [generatingStoryboards, setGeneratingStoryboards] = useState(false);
-  const [coverageData, setCoverageData] = useState(null);
+  const [] = useState(false);
+  const [] = useState([]);
+  const [] = useState(false);
+  const [coverageData, setCoverageData] = useState(/** @type {{logline?: string, genre?: string, budget_tier?: string, budget_estimate_usd?: number, characters?: string[], locations?: string[], props?: string[]} | null} */ (null));
   const [isGeneratingCoverage, setIsGeneratingCoverage] = useState(false);
   const [showCharacterVault, setShowCharacterVault] = useState(false);
-  const [characters, setCharacters] = useState([]);
+  const [characters, setCharacters] = useState(/** @type {import("/types/screenwriting").Character[]} */ ([]));
 
   // Professional Features State
   const [isRevisionMode, setIsRevisionMode] = useState(false);
@@ -601,7 +662,7 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
         alert(`Failed to create project: ${data.detail || data.message || 'Unknown error'}`);
       }
     } catch (err) {
-      alert(`Error creating project: ${err.message}`);
+      alert(`Error creating project: ${(err instanceof Error ? err.message : String(err))}`);
     } finally { transitionRef.current = false; setIsLoading(false); }
   };
 
@@ -616,7 +677,7 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     }
     if (transitionRef.current) return;
     setIsLoading(true);
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current ?? undefined);
     const projectToArchive = currentProject;
     transitionRef.current = true;
     try {
@@ -638,8 +699,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       await loadScreenplay(data.current || 'Default Project');
       if (showArchivedProjects) await loadArchivedProjects();
     } catch (err) {
-      setSaveProblem({ project: projectToArchive, message: err.message });
-      alert(`Error archiving project: ${err.message}`);
+      setSaveProblem({ project: projectToArchive, message: (err instanceof Error ? err.message : String(err)) });
+      alert(`Error archiving project: ${(err instanceof Error ? err.message : String(err))}`);
     } finally {
       transitionRef.current = false;
       setIsLoading(false);
@@ -652,10 +713,11 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || 'Could not load archived projects.');
       setArchivedProjects(data.archives || []);
-    } catch (err) { alert(err.message); }
+    } catch (err) { alert((err instanceof Error ? err.message : String(err))); }
   };
 
-  const handleRestoreProject = async (archiveId) => {
+  /** @param {string} archiveId */
+const handleRestoreProject = async ( archiveId) => {
     if (transitionRef.current) return;
     transitionRef.current = true;
     setIsLoading(true);
@@ -672,13 +734,14 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       await loadScreenplay(data.current);
       await loadArchivedProjects();
     } catch (err) {
-      alert(err.message);
+      alert((err instanceof Error ? err.message : String(err)));
     }
     finally { transitionRef.current = false; setIsLoading(false); }
   };
 
   // Parse Screenplay helper
-  const parseScreenplay = async (contentToParse) => {
+  /** @param {string} [contentToParse] */
+const parseScreenplay = async ( contentToParse) => {
     const sequence = screenplayLoadSequenceRef.current;
     const draft = contentToParse ?? screenplayRef.current;
     try {
@@ -703,7 +766,7 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
 
   // Instantaneous parse effect
   useEffect(() => {
-    if (!isInternalChange && screenplay) {
+    if (!isInternalChange && screenplay && !richDocumentRef.current) {
         setAst(fountainToAST(screenplay));
     }
     setIsInternalChange(false);
@@ -714,10 +777,20 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     }
   }, [screenplay]);
 
-  const handleAstChange = (newAst) => {
+  /** @param {typeof ast} newAst */
+const handleAstChange = ( newAst) => {
+    if(richDocumentRef.current){
+      const old=richDocumentRef.current.blocks;
+      if(newAst.length!==old.length||newAst.some((block,index)=>block.id!==old[index].id)){
+        const content=titleHeaderRef.current+astToFountain(newAst);setRichWorkingDraft(content);
+        preserveDraft({project:currentProjectRef.current,content,fdx_document:currentRichDocument()});
+        manualReviewRef.current.add(currentProjectRef.current);setSaveProblem({reviewOnly:true,message:'This operation changes rich FDX structure. The unsaved working text and original XML were retained. Create a separate working copy to continue.'});return;
+      }
+      setAst(newAst);astRef.current=newAst;setIsInternalChange(true);setScreenplay(richFDXProjection({...richDocumentRef.current,blocks:newAst}));return;
+    }
     setAst(newAst);
     setIsInternalChange(true);
-    setScreenplay(astToFountain(newAst));
+    setScreenplay(titleHeaderRef.current + astToFountain(newAst));
     setHistory(prev => {
       const upToCurrent = prev.slice(0, historyIndex + 1);
       const updated = [...upToCurrent, newAst];
@@ -740,7 +813,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
 
   const loadedProjectRef = useRef('');
   const screenplayLoadSequenceRef = useRef(0);
-  const loadScreenplay = async (targetProj, { reload = false } = {}) => {
+  /** @param {string} [targetProj] @param {{reload?: boolean, handoff?: {project:string,revision:string,source_sha256:string}}} [options] */
+const loadScreenplay = async ( targetProj = '', { reload = false, handoff } = {}) => {
     // Fetch first, then replace the visible draft only if no edit happened while
     // saving or loading. Failed reads leave the existing editor/project intact.
     if (reorderInFlightRef.current) return false;
@@ -757,10 +831,13 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       if (!res.ok) throw new Error(`Project load failed (${res.status})`);
       const data = await res.json();
       if (sequence !== screenplayLoadSequenceRef.current) return false;
+      if (handoff) validateScreenplayRead(data,handoff);
+      const sourceAst = sourceScreenplayAST(data);
       if ((captured && !draftStillCurrent(captured)) || draftRevisionRef.current !== initialEdit) {
         throw new Error('Your draft changed during loading. It is still open; retry the project change when ready.');
       }
-      saveCoordinatorRef.current.load(data.project, data.content, data.revision);
+      saveCoordinator.load(data.project, data.content, data.revision, undefined, data.fdx_document);
+      richDocumentRef.current=cloneRichFDX(data.fdx_document);richAckEpochRef.current++;setRichWorkingDraft(null);setRichEditorEpoch(epoch=>epoch+1);
       manualReviewRef.current.delete(data.project);
       loadedProjectRef.current = data.project;
       setCurrentProject(data.project);
@@ -769,8 +846,13 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       setShowCharacterVault(false);
       setDraggedBeatIndex(null);
       const content = hasSharedDraft ? initialDraft : data.content;
+      titleHeaderRef.current = fountainTitleHeader(content);
+      setExportLayout('source');
+      setExportReceipt(null);
       setScreenplay(content);
-      setAst(fountainToAST(content));
+      if (data.fdx_document && content===data.content) {setIsInternalChange(true);setAst(data.fdx_document.blocks);astRef.current=data.fdx_document.blocks;}
+      else if (sourceAst && content === data.content) { setIsInternalChange(true); setAst(sourceAst); }
+      else setAst(fountainToAST(content));
       setLastSavedTime(null);
       setAutoSaveStatus(content === data.content ? 'saved' : 'unsaved');
       // A shared-workspace draft has no historical disk baseline. Keep it visible,
@@ -788,22 +870,15 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       await loadCharacters(data.project);
       return true;
     } catch (err) {
-      setSaveProblem({ project: loadedProjectRef.current || targetProj, message: err.message });
+      setSaveProblem({ project: loadedProjectRef.current || targetProj, message: (err instanceof Error ? err.message : String(err)) });
       return false;
     }
   };
 
   const loadBranches = async () => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/screenwriting/branches`);
-      const data = await res.json();
-      setBranches(data.branches || []);
-      setCurrentBranch(data.current || 'main');
-    } catch (err) {
-      console.error('Failed to load branches:', err);
-    }
+    // Branch persistence/switching is unavailable; do not request a fake list.
+    setBranches([]);
   };
-
 
   const loadCharacters = async (targetProject = loadedProjectRef.current) => {
     const project = targetProject;
@@ -820,36 +895,47 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   };
 
   const loadSprints = async () => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/screenwriting/sprints`);
-      const data = await res.json();
-      setSprints(data.sprints || []);
-    } catch (err) {
-      console.error('Failed to load sprints:', err);
-    }
+    // Persistent sprint endpoints are unavailable.
+    setSprints([]);
   };
 
   // Initial Load
+  handoffLoadRef.current = () => {
+    try {
+      const handoff = readScreenplayHandoff(window.location.search);
+      if (handoff) void loadScreenplay(handoff.project,{handoff});
+    } catch(error) { setSaveProblem({project:loadedProjectRef.current,message:error instanceof Error?error.message:String(error)}); }
+  };
   useEffect(() => {
     loadProjects();
-    loadScreenplay();
+    try {
+      const handoff = readScreenplayHandoff(window.location.search);
+      if (handoff) void loadScreenplay(handoff.project,{handoff});
+      else void loadScreenplay();
+    } catch(error) { setSaveProblem({project:loadedProjectRef.current,message:error instanceof Error?error.message:String(error)}); }
     loadBranches();
     loadSprints();
+    const followHandoff = () => handoffLoadRef.current?.();
+    window.addEventListener('popstate',followHandoff);
+    return () => window.removeEventListener('popstate',followHandoff);
   }, []);
 
-  const autoSaveTimerRef = useRef(null);
+  const autoSaveTimerRef = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
   const [autoSaveStatus, setAutoSaveStatus] = useState('saved');
-  const [lastSavedTime, setLastSavedTime] = useState(null);
+  const [lastSavedTime, setLastSavedTime] = useState(/** @type {string | null} */ (null));
 
+  /** @returns {import("/types/screenwriting").CapturedDraft | null} */
   const captureDraft = () => {
     const project = loadedProjectRef.current;
     if (!project || project !== currentProjectRef.current) return null;
-    return { project, content: screenplayRef.current, edit: draftRevisionRef.current, branch: currentBranch,
-      revision: saveCoordinatorRef.current.snapshot(project)?.revision };
+    return { project, content: richWorkingDraft??screenplayRef.current, edit: draftRevisionRef.current, branch: currentBranch,
+      revision: saveCoordinator.snapshot(project)?.revision, fdx_document:currentRichDocument() };
   };
-  const draftStillCurrent = draft => !draft || (loadedProjectRef.current === draft.project && currentProjectRef.current === draft.project &&
-    screenplayRef.current === draft.content && draftRevisionRef.current === draft.edit);
-  const preserveDraft = (draft, recoveryId = recoveryIdRef.current) => {
+  /** @param {import("/types/screenwriting").CapturedDraft | null} draft */
+const draftStillCurrent =  draft => !draft || (loadedProjectRef.current === draft.project && currentProjectRef.current === draft.project &&
+    (richWorkingDraft??screenplayRef.current) === draft.content && draftRevisionRef.current === draft.edit);
+  /** @param {import("/types/screenwriting").DraftContent | null} draft @param {string} [recoveryId] */
+  const preserveDraft = ( draft, recoveryId = recoveryIdRef.current) => {
     if (!draft) return false;
     try {
       const key = `aibs_script_recovery_${encodeURIComponent(draft.project)}_${recoveryId}`;
@@ -860,35 +946,48 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       return false;
     }
   };
-  const refreshRecoveryDrafts = project => {
+  /** @param {string} project */
+const refreshRecoveryDrafts =  project => {
     try {
       const prefix = `aibs_script_recovery_${encodeURIComponent(project)}_`;
       const entries = Object.keys(localStorage).filter(key => key.startsWith(prefix)).map(key => {
-        try { return { ...JSON.parse(localStorage.getItem(key)), key }; } catch { return null; }
+        try { return { ...JSON.parse(localStorage.getItem(key) ?? 'null'), key }; } catch { return null; }
       }).filter(item => item && typeof item.content === 'string');
-      setRecoveryDrafts(entries.sort((a,b) => b.savedAt.localeCompare(a.savedAt)));
+      setRecoveryDrafts(entries.sort((a,b) => (typeof b.savedAt === 'string' ? b.savedAt : '').localeCompare(typeof a.savedAt === 'string' ? a.savedAt : '')));
     } catch { setRecoveryDrafts([]); }
   };
+  /** @param {import("/types/screenwriting").DraftContent | null} [draft] */
   const downloadLocalDraft = (draft = captureDraft()) => {
     if (!draft) return;
-    const url = URL.createObjectURL(new Blob([draft.content], { type: 'text/plain;charset=utf-8' }));
+    const url = URL.createObjectURL(new Blob([draft.fdx_document?JSON.stringify({...draft,content:richWorkingDraft??draft.content},null,2):draft.content], { type: draft.fdx_document?'application/json':'text/plain;charset=utf-8' }));
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${draft.project}-recovered-${Date.now()}.fountain`;
+    link.download = `${draft.project}-recovered-${Date.now()}.${draft.fdx_document?'rich-fdx-draft.json':'fountain'}`;
     document.body.appendChild(link); link.click(); link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
-  const reportSaveFailure = (draft, error) => {
+  /** @param {import("/types/screenwriting").CapturedDraft | null} draft @param {unknown} error */
+const reportSaveFailure = ( draft,  error) => {
     if (draftStillCurrent(draft)) setAutoSaveStatus('error');
     preserveDraft(loadedProjectRef.current === draft?.project ? captureDraft() : draft);
-    setSaveProblem({ project: draft?.project, conflict: error.status === 409,
-      message: error.status === 409 ? 'Another tab or process changed this project. Your local draft is retained; saving has stopped to protect both versions.' : `${error.message} Your local draft is retained.` });
+    setSaveProblem({ project: draft?.project, conflict: (error !== null && typeof error === "object" && "status" in error && error.status === 409),
+      message: (error !== null && typeof error === "object" && "status" in error && error.status === 409) ? 'Another tab or process changed this project. Your local draft is retained; saving has stopped to protect both versions.' : `${error instanceof Error ? error.message : String(error)} Your local draft is retained.` });
   };
-  const saveCapturedDraft = async draft => {
+  /** @param {import("/types/screenwriting").CapturedDraft | null} draft */
+const saveCapturedDraft = async  draft => {
     if (!draft) throw new Error('Wait for the project to load before saving.');
-    if (saveCoordinatorRef.current.isDirty(draft.project, draft.content)) preserveDraft(draft);
+    if (saveCoordinator.isDirty(draft.project, draft.content, draft.fdx_document)) preserveDraft(draft);
     try {
-      const result = await saveCoordinatorRef.current.save(draft.project, draft.content, draft.branch);
+      if(richWorkingDraft!==null&&draft.project===loadedProjectRef.current)throw new Error('This visible rich FDX draft contains an unqualified edit. The full text is retained; return to a known state or create a separate working copy before saving.');
+      const result = await saveCoordinator.save(draft.project, draft.content, draft.branch, draft.fdx_document);
+      if(result.fdx_document){
+        const local=currentRichDocument();
+        const acknowledged=cloneRichFDX(result.fdx_document);
+        // Keep the exact acknowledged anchor even while newer edits remain visible.
+        // The write coordinator never rereads/rebases against an unknown server state.
+        const rebased=local?prepareRichFDXWrite(local,acknowledged):acknowledged;
+        richDocumentRef.current=acknowledged;richAckEpochRef.current++;astRef.current=rebased.blocks;setAst(rebased.blocks);
+      }
       if (draftStillCurrent(draft)) {
         setAutoSaveStatus('saved'); setSaveProblem(null);
         if (!result.unchanged) setLastSavedTime(new Date().toLocaleTimeString());
@@ -897,7 +996,7 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     } catch (error) { reportSaveFailure(draft, error); throw error; }
   };
   const flushDraftForTransition = async () => {
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current ?? undefined);
     if (reorderInFlightRef.current) throw new Error('Wait for scene reordering to finish before changing projects.');
     const draft = captureDraft();
     if (!draft) return null;
@@ -913,10 +1012,10 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     if (!confirm('Reload the saved version? Your current text will remain in browser recovery copies. Download it first if you want a separate file.')) return;
     // Retain this recovery snapshot even after the user edits the reloaded copy.
     recoveryIdRef.current = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current ?? undefined);
     transitionRef.current = true; setIsLoading(true);
     try {
-      await saveCoordinatorRef.current.idle();
+      await saveCoordinator.idle();
       if (draftStillCurrent(draft)) await loadScreenplay(draft.project, { reload: true });
     } finally { transitionRef.current = false; setIsLoading(false); }
   };
@@ -931,9 +1030,10 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   }, [sharedContent, sharedActiveDoc]);
 
   useEffect(() => {
-    const onUnload = event => {
+    /** @param {BeforeUnloadEvent} event */
+const onUnload =  event => {
       const draft = captureDraft();
-      if (draft && (saveCoordinatorRef.current.isDirty(draft.project, draft.content) || saveCoordinatorRef.current.snapshot(draft.project)?.blocked)) {
+      if (draft && (saveCoordinator.isDirty(draft.project, draft.content, draft.fdx_document) || saveCoordinator.snapshot(draft.project)?.blocked)) {
         preserveDraft(draft); event.preventDefault(); event.returnValue = '';
       }
     };
@@ -944,78 +1044,95 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   useEffect(() => {
     const draft = captureDraft();
     if (!draft) return;
-    if (!saveCoordinatorRef.current.isDirty(draft.project, draft.content)) return;
+    if (!saveCoordinator.isDirty(draft.project, draft.content, draft.fdx_document)) return;
     preserveDraft(draft);
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
-    if (isLoading || isReordering || transitionRef.current || reorderInFlightRef.current || saveCoordinatorRef.current.snapshot(draft.project)?.blocked || manualReviewRef.current.has(draft.project)) return;
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current ?? undefined);
+    if (isLoading || isReordering || transitionRef.current || reorderInFlightRef.current || saveCoordinator.snapshot(draft.project)?.blocked || manualReviewRef.current.has(draft.project)) return;
     setAutoSaveStatus('unsaved');
     autoSaveTimerRef.current = setTimeout(async () => {
       if (!draftStillCurrent(draft) || transitionRef.current || reorderInFlightRef.current) return;
       setAutoSaveStatus('saving');
       try { await saveCapturedDraft(draft); } catch { /* The visible recovery notice retains the error. */ }
     }, 1500);
-    return () => clearTimeout(autoSaveTimerRef.current);
-  }, [screenplay, currentProject, currentBranch, BACKEND_URL, isLoading, isReordering, saveProblem?.reviewOnly]);
+    return () => clearTimeout(autoSaveTimerRef.current ?? undefined);
+  }, [screenplay, ast, currentProject, currentBranch, BACKEND_URL, isLoading, isReordering, saveProblem?.reviewOnly]);
+
+  const handleOpenNativeScreenplay = async () => {
+    if(!adaptationMountedRef.current||transitionRef.current||isNativeLaunching||isLoading)return;
+    const backend=BACKEND_URL,source=projectMetadata?.source_pdf?.sha256||projectMetadata?.source_fdx?.sha256;
+    const loadSequence=screenplayLoadSequenceRef.current;
+    const contextCurrent=()=>adaptationMountedRef.current&&screenplayLoadSequenceRef.current===loadSequence&&backendUrlRef.current===backend;
+    transitionRef.current=true;setIsNativeLaunching(true);setNativeLaunchMessage('Saving before opening the native writer…');
+    try{
+      const draft=await flushDraftForTransition();
+      if(!draft||!source||(projectMetadata?.source_pdf&&projectMetadata?.source_fdx))throw Error('Load one verified PDF or FDX source project first. Your draft remains open.');
+      const saved=saveCoordinator.snapshot(draft.project);
+      await launchNativeScreenplay({backendUrl:backend,
+        handoff:{project:draft.project,revision:saved?.revision,source_sha256:source},
+        getFreshHeaders:()=>chatAuthHeaders({},'',{forceRefresh:true}),
+        isCurrent:()=>contextCurrent()&&draftStillCurrent(draft)&&loadedProjectRef.current===draft.project});
+      setNativeLaunchMessage('Native launch requested. Your browser project remains open.');
+    }catch(error){if(contextCurrent())setNativeLaunchMessage(error instanceof Error?error.message:'Native launch was not confirmed. Your draft remains open.');}
+    finally{transitionRef.current=false;if(adaptationMountedRef.current)setIsNativeLaunching(false);}
+  };
 
   const handleSaveScreenplay = async () => {
     if (transitionRef.current || reorderInFlightRef.current) return;
     const draft = captureDraft();
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current ?? undefined);
     setIsLoading(true); setAutoSaveStatus('saving');
     try {
       await saveCapturedDraft(draft);
-      manualReviewRef.current.delete(draft.project);
+      if (draft) manualReviewRef.current.delete(draft.project);
     }
     catch { /* Keep the local draft and visible recovery controls. */ }
     finally { setIsLoading(false); }
   };
 
-  const handleExportFDX = () => {
-    const xml = serializeFDX(ast);
-    const blob = new Blob([xml], { type: "text/xml" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${currentProject || 'screenplay'}.fdx`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
+  const handleExportFDX = () => downloadScreenplayExport('fdx');
 
-  const downloadScreenplayExport = async (format, watermark = '') => {
+  /** @param {string} format */
+const downloadScreenplayExport = async ( format, watermark = '') => {
     if (!currentProject || loadedProjectRef.current !== currentProject || isLoading) {
       alert('Wait for the selected project to finish loading before exporting.');
       return;
     }
     const project = currentProject;
+    if (exportLayout==='typed-professional' && format!=='pdf') {
+      alert('Typed professional mode exports PDF. Choose a preserved FDX mode to export XML.');
+      return;
+    }
     const draft = captureDraft();
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current ?? undefined);
     setIsLoading(true);
     try {
       if (manualReviewRef.current.has(project)) throw new Error('Review and save the local draft before exporting, or download it from the draft protection notice.');
-      await saveCapturedDraft(draft);
+      const saved = await saveCapturedDraft(draft);
       const query = new URLSearchParams({ project_name: project });
+      if (projectMetadata?.source_pdf || projectMetadata?.source_fdx) {
+        if (typeof saved.revision !== 'string' || !/^[a-f0-9]{64}$/.test(saved.revision)) throw new Error('Export requires the acknowledged current manuscript revision.');
+        query.set('layout',exportLayout); query.set('expected_revision',saved.revision);
+      }
       if (watermark) query.set('watermark', watermark);
       const response = await fetch(`${BACKEND_URL}/api/screenwriting/export/${format}?${query}`);
       if (!response.ok) {
         const error = await response.json().catch(() => ({}));
-        throw new Error(error.detail || `Export failed (HTTP ${response.status}).`);
+        throw new Error(screenplayErrorMessage(error,`Export failed (HTTP ${response.status}).`));
       }
       const blob = await response.blob();
-      if (format === 'pdf' && (await blob.slice(0, 5).text()) !== '%PDF-') {
-        throw new Error('The export service did not return a PDF.');
-      }
+      const receipt = await validateScreenplayExport(blob,{format,layout:projectMetadata?.source_pdf||projectMetadata?.source_fdx?exportLayout:'reflow',headers:response.headers});
+      if (!adaptationMountedRef.current || !draftStillCurrent(draft)) throw new Error('The draft or selected project changed during export. Your draft remains open; export again when ready.');
+      setExportReceipt(receipt);
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${project}.${format}`;
+      link.download = projectMetadata?.source_pdf||projectMetadata?.source_fdx ? screenplayExportFilename(project,format,exportLayout) : `${project}.${format}`;
       document.body.appendChild(link);
       link.click();
       link.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (error) {
-      alert(`Export failed: ${error.message}`);
+      alert(`Export failed: ${(error instanceof Error ? error.message : String(error))}`);
     } finally {
       setIsLoading(false);
     }
@@ -1079,16 +1196,19 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   };
 
   // Drag and Drop Beat Reordering
-  const handleDragStart = (e, index) => {
+  /** @param {import('react').DragEvent<HTMLElement>} e @param {typeof draggedBeatIndex} index */
+const handleDragStart = ( e,  index) => {
     setDraggedBeatIndex(index);
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  const handleDragOver = (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleDragOver = ( e) => {
     e.preventDefault();
   };
 
-  const handleDrop = async (e, targetIndex) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e @param {number} targetIndex */
+const handleDrop = async ( e,  targetIndex) => {
     e.preventDefault();
     if (draggedBeatIndex === null || draggedBeatIndex === targetIndex) return;
     const project = loadedProjectRef.current;
@@ -1097,12 +1217,12 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     const draft = screenplayRef.current;
     const revision = draftRevisionRef.current;
     const isCurrent = () => sequence === screenplayLoadSequenceRef.current && loadedProjectRef.current === project && currentProjectRef.current === project;
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current ?? undefined);
     reorderInFlightRef.current = true;
     setIsReordering(true);
     setIsLoading(true);
     try {
-      const data = await saveCoordinatorRef.current.mutate(project, draft, async payload => {
+      const data = await saveCoordinator.mutate(project, draft, async payload => {
         if (!isCurrent() || draftRevisionRef.current !== revision) throw new Error('The draft changed while waiting to reorder. Retry the move.');
         const res = await fetch(`${BACKEND_URL}/api/screenwriting/beats/reorder`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -1116,21 +1236,21 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       if (draftRevisionRef.current !== revision || screenplayRef.current !== draft) {
         // The remote order changed, while this editor has newer edits. Keep those
         // edits, block automatic saving, and require an explicit recovery decision.
-        const state = saveCoordinatorRef.current.snapshot(project);
+        const state = saveCoordinator.snapshot(project);
         manualReviewRef.current.add(project);
         setSaveProblem({ project, reviewOnly: true, message: 'Scene order was saved, but newer local edits are still open. Review them before saving or reload the saved order.' });
         preserveDraft({ project, content: screenplayRef.current, revision: state?.revision });
         return;
       }
       if (data.status === 'success' && typeof data.content === 'string') {
-        setParsed(data.parsed);
+        setParsed(data.parsed ?? null);
         setScreenplay(data.content);
         setAst(fountainToAST(data.content));
         if (data.warning) alert(`Beat order saved. ${data.warning}`);
       }
     } catch (err) {
       reportSaveFailure({ project, content: screenplayRef.current, edit: draftRevisionRef.current }, err);
-      if (isCurrent()) alert(err.message);
+      if (isCurrent()) alert((err instanceof Error ? err.message : String(err)));
     } finally {
       reorderInFlightRef.current = false;
       setIsReordering(false);
@@ -1141,7 +1261,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     }
   };
 
-  const handleSwitchProject = async (proj) => {
+  /** @param {string} proj */
+const handleSwitchProject = async ( proj) => {
     if (!proj || transitionRef.current || reorderInFlightRef.current) return;
     transitionRef.current = true; setIsLoading(true);
     try {
@@ -1153,11 +1274,12 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       await loadProjects();
       if (!draftStillCurrent(departingDraft)) throw new Error('Your draft changed during the switch. It remains open; retry when ready.');
       if (await loadScreenplay(proj)) { await loadBranches(); await loadSprints(); }
-    } catch (error) { setSaveProblem({ project: currentProjectRef.current, message: error.message }); }
+    } catch (error) { setSaveProblem({ project: currentProjectRef.current, message: (error instanceof Error ? error.message : String(error)) }); }
     finally { transitionRef.current = false; setIsLoading(false); }
   };
 
-  const handleAnimateBeat = async (beat) => {
+  /** @param {import("/types/domain").ScreenplayBeat} beat */
+const handleAnimateBeat = async ( beat) => {
       const project = loadedProjectRef.current;
       if (!project || currentProjectRef.current !== project || isLoading) return;
       const sequence = screenplayLoadSequenceRef.current;
@@ -1190,7 +1312,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       }
   };
 
-  const convertFdxToFountain = (xmlString) => {
+  /** @param {string} xmlString */
+(/** @param {string} xmlString */ ( xmlString) => {
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(xmlString, "text/xml");
       const paragraphs = xmlDoc.getElementsByTagName("Paragraph");
@@ -1231,13 +1354,24 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
           }
       }
       return fountain.trim();
+  });
+
+  const createRichWorkingCopy = async () => {
+    const draft=captureDraft();if(!draft?.fdx_document||isLoading)return;
+    const name=prompt('Create a separate plain-text working project (original rich FDX and metadata remain archived):',`${draft.project}_working`);if(!name)return;
+    setIsLoading(true);
+    try{preserveDraft(draft);const response=await fetch(`${BACKEND_URL}/api/screenwriting/projects/fdx-working-copy`,{method:'POST',headers:await chatAuthHeaders({'Content-Type':'application/json'}),body:JSON.stringify({project_name:draft.project,new_project_name:name,content:richWorkingDraft??draft.content,expected_revision:saveCoordinator.snapshot(draft.project)?.revision,request_id:crypto.randomUUID().replaceAll('-','')})});const result=await response.json();if(!response.ok)throw new Error(screenplayErrorMessage(result,'Working copy creation was not confirmed.'));
+      if(!draftStillCurrent(draft))throw new Error('Working copy created; newer edits remain open. Select the copy when ready.');
+      await loadProjects();await loadScreenplay(result.project,{reload:true});
+    }catch(error){setSaveProblem({message:error instanceof Error?error.message:String(error)});}finally{setIsLoading(false);}
   };
 
   const handleImportClick = () => {
       fileInputRef.current?.click();
   };
 
-  const handleFileChange = async (e) => {
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} e */
+const handleFileChange = async ( e) => {
       const file = e.target.files?.[0];
       if (!file) return;
       const sequence = screenplayLoadSequenceRef.current;
@@ -1254,7 +1388,26 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       
       const defaultName = currentProject || "Default Project";
       
-      // If it's a manuscript/book file, open the Hollywood Adaptation Modal
+      // Faithful PDF import is separate from explicitly selected book adaptation.
+      if (fileName.endsWith('.pdf') && pdfImportMode === 'screenplay') {
+        if (transitionRef.current) return;
+        transitionRef.current = true; setIsLoading(true);
+        try {
+          const departingDraft = await flushDraftForTransition();
+          const form = new FormData(); form.append('file',file);
+          const response = await fetch(`${BACKEND_URL}/api/chat/attach`,{method:'POST',headers:await chatAuthHeaders(),body:form});
+          const data = await response.json();
+          if (!response.ok || data.status !== 'success') throw new Error(screenplayErrorMessage(data,'PDF parsing was not confirmed.'));
+          const imported = await importPdfScreenplay({backendUrl:BACKEND_URL,file:data.file,
+            requestId:data.file.source_id,headers:() => chatAuthHeaders({'Content-Type':'application/json'})});
+          if (!isCurrent() || !draftStillCurrent(departingDraft)) return;
+          await loadProjects();
+          if (isCurrent()) await loadScreenplay(imported.project,{handoff:imported.handoff});
+        } catch(error) { setSaveProblem({project:loadedProjectRef.current,message:error instanceof Error?error.message:String(error)}); }
+        finally { transitionRef.current=false;setIsLoading(false);e.target.value=''; }
+        return;
+      }
+      // Manuscript/book formats retain the existing adaptation workflow.
       if (fileName.endsWith('.pdf') || fileName.endsWith('.docx') || fileName.endsWith('.doc') || fileName.endsWith('.epub') || fileName.endsWith('.rtf') || fileName.endsWith('.txt') || fileName.endsWith('.md') || fileName.endsWith('.markdown')) {
           setAdaptFile(file);
           setAdaptProjectName(defaultName);
@@ -1270,14 +1423,22 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
           return;
       }
       
+      if(fileName.endsWith('.fdx')){
+        if(!isCurrent()||transitionRef.current)return;
+        transitionRef.current=true;setIsLoading(true);
+        try{const departingDraft=await flushDraftForTransition();const imported=await importRichFDX({backendUrl:BACKEND_URL,file,project:projName,headers:()=>chatAuthHeaders()});
+          if(!isCurrent()||!draftStillCurrent(departingDraft)){setSaveProblem({message:'Rich FDX imported under its new project. Your newer draft remains open; select the imported project when ready.'});return;}
+          await loadProjects();if(isCurrent())await loadScreenplay(imported.project);
+        }catch(error){setSaveProblem({message:error instanceof Error?error.message:String(error)});}
+        finally{transitionRef.current=false;setIsLoading(false);e.target.value='';}return;
+      }
       const reader = new FileReader();
       reader.onload = async (ev) => {
-          let text = ev.target.result;
+          const result = ev.target?.result;
+          if (typeof result !== "string") return;
+          let text = result;
           
-          if (file.name.toLowerCase().endsWith('.fdx')) {
-              const newAst = parseFDX(text);
-              text = astToFountain(newAst);
-          }
+          // FDX was handled above using its original byte stream.
           
           if (!isCurrent() || transitionRef.current) return;
           transitionRef.current = true;
@@ -1304,7 +1465,7 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
           } catch(err) {
               console.error(err);
               if (isCurrent()) {
-                  alert(`Import failed: ${err.message}`);
+                  alert(`Import failed: ${(err instanceof Error ? err.message : String(err))}`);
                   setIsLoading(false);
               }
           } finally { transitionRef.current = false; setIsLoading(false); }
@@ -1313,94 +1474,74 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       e.target.value = '';
   };
 
-  const handleStartAdaptation = async (forceRestart = false) => {
-      if (!adaptFile || !adaptProjectName) return;
-      try { await flushDraftForTransition(); } catch (error) { alert(error.message); return; }
-      setIsAdapting(true);
-      setShowAdaptModal(false);
-      setAdaptProgress({ status: 'processing', progress: 0, current_chunk: 0, total_chunks: 0 });
-      
-      const formData = new FormData();
-      formData.append('file', adaptFile);
-      formData.append('project_name', adaptProjectName);
-      formData.append('adaptation_type', adaptType);
-      if (forceRestart) {
-        formData.append('force', 'true');
-      }
-      
+  const handleStartAdaptation = async () => {
+      if (!adaptFile || !adaptProjectName.trim() || adaptationStartRef.current) return;
+      const projectName = adaptProjectName.trim();
+      adaptationStartRef.current = true;
       try {
-          const res = await fetch(`${BACKEND_URL}/api/screenplay/adapt`, {
-              method: 'POST',
-              body: formData
-          });
-          const resData = await res.json();
-          if (res.status === 409 || resData.status === 'processing') {
-              const doForce = confirm(
-                `An adaptation job is already in progress for "${adaptProjectName}".\n\n` +
-                `• Click OK to FORCE RESTART from the beginning.\n` +
-                `• Click Cancel to attach to the live stream.`
-              );
-              if (doForce) {
-                handleStartAdaptation(true);
-                return;
-              }
-          } else if (!res.ok || resData.status === 'error') {
-              throw new Error(resData.message || `HTTP error! status: ${res.status}`);
+          await flushDraftForTransition();
+          if (!adaptationMountedRef.current) return;
+          adaptationMonitorRef.current?.();
+          setIsAdapting(true);
+          setAdaptProgress({ status: 'submitting', progress: 0, current_chunk: 0, total_chunks: 0 });
+          const capabilities = await fetch(`${BACKEND_URL}/api/screenplay/adapt/capabilities`);
+          const contract = await capabilities.json();
+          if (!capabilities.ok || contract.contract !== 'create-only-v1' || contract.create_only !== true) {
+              throw new Error('The backend must support protected, create-only adaptation before this action can run.');
           }
-          startAdaptationStream(adaptProjectName);
-      } catch (err) {
-          console.error('Adaptation error:', err);
+          const formData = new FormData();
+          formData.append('file', adaptFile);
+          formData.append('project_name', projectName);
+          formData.append('adaptation_type', adaptType);
+          const res = await fetch(`${BACKEND_URL}/api/screenplay/adapt`, { method: 'POST', body: formData });
+          const data = await res.json();
+          if (res.status === 409) {
+              throw new Error('That project already exists. Choose a new project name; existing manuscripts and jobs were preserved.');
+          }
+          if (!res.ok) throw new Error(data.detail || data.message || `Adaptation request returned HTTP ${res.status}.`);
+          const accepted = validateAdaptationAcceptance(data, projectName);
+          if (!adaptationMountedRef.current) return;
+          setShowAdaptModal(false);
+          startAdaptationStream(accepted.projectName, accepted.job_id);
+      } catch (error) {
+          if (!adaptationMountedRef.current) return;
           setIsAdapting(false);
           setAdaptProgress(null);
-          alert(`Adaptation note: ${err.message}`);
-      }
+          alert(`Adaptation note: ${error instanceof Error ? error.message : String(error)}`);
+      } finally { adaptationStartRef.current = false; }
   };
 
-  const startAdaptationStream = (projName) => {
-      const eventSource = createAuthenticatedEventSource(`${BACKEND_URL}/api/screenplay/adapt/stream?project_name=${encodeURIComponent(projName)}`);
-      let lastProgress = -1;
-
-      eventSource.onmessage = async (event) => {
-          try {
-              const data = JSON.parse(event.data);
-              if (data.status && data.status !== 'not_found') {
-                  setAdaptProgress(data);
-                  
-                  if (data.status === 'processing' && data.progress !== lastProgress) {
-                      lastProgress = data.progress;
-                      lastProgress = data.progress;
-                      // Progress never replaces the active draft or steals project focus.
-                  }
-
-                  if (data.status === 'complete' || data.status === 'error') {
-                      eventSource.close();
-                      setIsAdapting(false);
-                      setTimeout(() => setAdaptProgress(null), 3000);
-                      
-                      if (data.status === 'error') {
-                          alert(`AI Adaptation Failed: ${data.error || 'Unknown error'}`);
-                      }
-                      
-                      await loadProjects();
-                      if (currentProjectRef.current === projName) {
-                        manualReviewRef.current.add(projName);
-                        setSaveProblem({ project: projName, reviewOnly: true, message: 'Adaptation finished. Download any local edits, then use Reload saved version to view the generated manuscript.' });
-                      }
-                  }
+  /** @param {string} projectName @param {string} jobId */
+  const startAdaptationStream = (projectName, jobId) => {
+      adaptationMonitorRef.current?.();
+      adaptationMonitorRef.current = monitorAdaptation({ baseUrl: BACKEND_URL, projectName, jobId,
+          eventSourceFactory: createAuthenticatedEventSource,
+          onStatus: async data => {
+              if (!adaptationMountedRef.current) return;
+              setAdaptProgress(data);
+              if (!isAdaptationTerminal(data.status)) return;
+              setIsAdapting(false);
+              if (!isAdaptationComplete(data.status)) {
+                  alert(`Adaptation ended with status ${data.status}. Source and generated files are retained on the host.`);
+                  return;
               }
-          } catch(err) {
-              console.error(err);
-          }
-      };
-
-      eventSource.onerror = (err) => {
-          console.error("SSE Error:", err);
-          eventSource.close();
-          setIsAdapting(false);
-      };
+              await loadProjects();
+              if (adaptationMountedRef.current && currentProjectRef.current === projectName) {
+                  manualReviewRef.current.add(projectName);
+                  setSaveProblem({ project: projectName, reviewOnly: true,
+                      message: 'Adaptation finished. Download any local edits, then use Reload saved version to view the generated manuscript.' });
+              }
+          },
+          onError: error => {
+              if (!adaptationMountedRef.current) return;
+              setIsAdapting(false);
+              alert(`Adaptation progress is unverified: ${error instanceof Error ? error.message : String(error)}. Check job status before retrying; existing files are retained.`);
+          },
+      });
   };
 
-  const insertSyntax = (syntax) => {
+  /** @param {string} syntax */
+const insertSyntax = ( syntax) => {
     const { blockId } = getActiveEditorSelection();
     let insertIdx = ast.length;
     if (blockId) {
@@ -1456,7 +1597,7 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       isSubSelection = true;
       let node = selection.anchorNode;
       if (node && node.nodeType === 3) node = node.parentElement;
-      const blockEl = node?.closest('[id^="sw-block-"]');
+      const blockEl = node instanceof Element ? node.closest('[id^="sw-block-"]') : null;
       if (blockEl) {
         blockId = blockEl.id.replace('sw-block-', '');
       }
@@ -1464,13 +1605,14 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       const activeEl = document.activeElement?.closest('[id^="sw-block-"]');
       if (activeEl) {
         blockId = activeEl.id.replace('sw-block-', '');
-        text = activeEl.innerText.trim();
+        text = activeEl instanceof HTMLElement ? activeEl.innerText.trim() : (activeEl.textContent || "").trim();
       }
     }
     return { text, blockId, isSubSelection };
   };
 
-  const applyEditorReplacement = (blockId, oldText, newText, isSubSelection) => {
+  /** @param {string} blockId @param {string} oldText @param {string} newText @param {boolean} isSubSelection */
+const applyEditorReplacement = ( blockId,  oldText,  newText,  isSubSelection) => {
     if (!blockId && ast.length > 0) {
       blockId = ast[0].id;
     }
@@ -1488,7 +1630,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     handleAstChange(newAst);
   };
 
-  const handleClipboard = async (action) => {
+  /** @param {string} action */
+const handleClipboard = async ( action) => {
     const { text, blockId, isSubSelection } = getActiveEditorSelection();
     if (action === 'copy') {
       if (text) {
@@ -1511,7 +1654,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     }
   };
 
-  const handleFormat = (type) => {
+  /** @param {string} type */
+const handleFormat = ( type) => {
     const { text, blockId, isSubSelection } = getActiveEditorSelection();
     if (!text || !blockId) {
       alert("Please highlight text or click inside a block to format.");
@@ -1526,7 +1670,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     applyEditorReplacement(blockId, text, formatted, isSubSelection);
   };
 
-  const handleProofing = async (mode) => {
+  /** @param {string} mode */
+const handleProofing = async ( mode) => {
     const { text, blockId, isSubSelection } = getActiveEditorSelection();
     if (!text || !blockId) {
       alert("Please highlight text or click inside a block to run proofing.");
@@ -1553,7 +1698,7 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
         }
     } catch (err) {
         console.error(err);
-        alert("Proofing failed: " + err.message);
+        alert("Proofing failed: " + (err instanceof Error ? err.message : String(err)));
     } finally {
         setIsProofing(false);
     }
@@ -1572,7 +1717,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       return ctx;
   };
 
-  const handleGhostwriter = async (index) => {
+  /** @param {number} index */
+const handleGhostwriter = async ( index) => {
       // Get context from the recent AST blocks
       const contextBlocks = ast.slice(Math.max(0, index - 10), index + 1);
       const textToCursor = astToFountain(contextBlocks);
@@ -1622,7 +1768,8 @@ ${textToCursor}`;
   
   const [isExporting, setIsExporting] = useState(false);
 
-  const handleExportUnreal = async (type) => {
+  /** @param {string} type */
+const handleExportUnreal = async ( type) => {
       if (!screenplay || screenplay.trim() === '') {
           alert("No script to export!");
           return;
@@ -1723,7 +1870,7 @@ ${text}`;
       }
     } catch (err) {
       console.error('Alt-Take failed', err);
-      alert('Alt-Take failed: ' + err.message);
+      alert('Alt-Take failed: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setIsProofing(false);
     }
@@ -1760,44 +1907,9 @@ ${text}`;
     }
   };
 
-  const getPageBlocks = (targetPageNum) => {
-    if (!ast || ast.length === 0) return { blocks: [], startIndex: 0, endIndex: 0 };
-    const pages = [];
-    let currentBuildingPage = [];
-    let currentLines = 0;
-    const MAX_LINES = 54;
-
-    const estimateLines = (block) => {
-      const len = (block.text || '').length;
-      switch (block.type) {
-        case 'Scene Heading': return 2 + Math.ceil(Math.max(1, len) / 58);
-        case 'Action': return 1 + Math.ceil(Math.max(1, len) / 58);
-        case 'Character': return 1 + Math.ceil(Math.max(1, len) / 38);
-        case 'Dialogue': return Math.ceil(Math.max(1, len) / 38);
-        case 'Parenthetical': return Math.ceil(Math.max(1, len) / 28);
-        case 'Transition': return 2 + Math.ceil(Math.max(1, len) / 20);
-        default: return 1;
-      }
-    };
-
-    let pageStartIndex = 0;
-    for (let i = 0; i < ast.length; i++) {
-      const block = ast[i];
-      const lines = estimateLines(block);
-      if (currentLines + lines > MAX_LINES && currentBuildingPage.length > 0) {
-        pages.push({ blocks: currentBuildingPage, startIndex: pageStartIndex, endIndex: i });
-        currentBuildingPage = [block];
-        currentLines = lines;
-        pageStartIndex = i;
-      } else {
-        currentBuildingPage.push(block);
-        currentLines += lines;
-      }
-    }
-    if (currentBuildingPage.length > 0) {
-      pages.push({ blocks: currentBuildingPage, startIndex: pageStartIndex, endIndex: ast.length });
-    }
-
+  /** @param {number} targetPageNum */
+const getPageBlocks = ( targetPageNum) => {
+    const pages = paginateScreenplayBlocks(ast);
     const pageIndex = Math.max(0, Math.min(targetPageNum - 1, pages.length - 1));
     return pages[pageIndex] || { blocks: [], startIndex: 0, endIndex: 0 };
   };
@@ -1859,7 +1971,7 @@ ${origFountain}`;
       }
     } catch (err) {
       console.error('Page proofing error:', err);
-      setReviewStatusMessage(`Error analyzing page: ${err.message}`);
+      setReviewStatusMessage(`Error analyzing page: ${(err instanceof Error ? err.message : String(err))}`);
     } finally {
       setIsReviewingPage(false);
     }
@@ -1879,7 +1991,8 @@ ${origFountain}`;
     }
   };
 
-  const handleInsertScriptAssistantText = (textToInsert) => {
+  /** @param {string} textToInsert */
+const handleInsertScriptAssistantText = ( textToInsert) => {
     if (!textToInsert) return;
     const newBlocks = fountainToAST(textToInsert);
     const { blockId } = getActiveEditorSelection();
@@ -1895,7 +2008,8 @@ ${origFountain}`;
     handleAstChange([...ast, ...newBlocks]);
   };
 
-  const handleEditorWillMount = (monaco) => {
+  /** @param {{"languages": {"register": (arg0: {"id": string}) => void, "setMonarchTokensProvider": (arg0: string, arg1: {"tokenizer": {"root": Array<Array<string>>, "boneyard": Array<Array<string>>}}) => void}, "editor": {"defineTheme": (arg0: string, arg1: {"base": string, "inherit": boolean, "rules": Array<{"token": string, "foreground": string, "fontStyle": string}>, "colors": {"editor.background": string}}) => void}}} monaco */
+(/** @param {import("@monaco-editor/react").Monaco} monaco */ ( monaco) => {
     monaco.languages.register({ id: 'fountain' });
 
     monaco.languages.setMonarchTokensProvider('fountain', {
@@ -1953,7 +2067,7 @@ ${origFountain}`;
             'editor.background': '#0d1117'
         }
     });
-  };
+  });
 
   const handlePublishToCMS = async () => {
       if (!parsed || !parsed.html) {
@@ -1994,7 +2108,7 @@ ${origFountain}`;
   );
 
   return (
-    <div className="screenwriting-container" style={{ display: 'flex', flexDirection: 'column', height: '100%', maxHeight: '100%', width: '100%', minHeight: 0, overflow: 'hidden', flexWrap: 'nowrap' }}>
+    <div ref={studioRoot} data-compact={compactStudio ? "true" : "false"} data-focus={mobileFocus ? "true" : "false"} data-mobile-panel={mobilePanel || "none"} className="screenwriting-container" style={{ "--studio-viewport-height": `${studioSize.height}px`, "--studio-viewport-top": `${studioSize.top}px`, display: 'flex', flexDirection: 'column', height: '100%', maxHeight: '100%', width: '100%', minHeight: 0, overflow: 'hidden', flexWrap: 'nowrap' }}>
       {/* Coverage Modal */}
       {showCoverage && (
         <CoverageReportModal 
@@ -2034,6 +2148,7 @@ ${origFountain}`;
           {' '}<button type="button" onClick={() => downloadLocalDraft(incomingWorkspaceDraft)}>Download workspace draft</button>
         </div>
       )}
+      {projectMetadata?.source_fdx&&<div role="status" style={{padding:12,background:'#172033',color:'#e2e8f0'}}><strong>Preserved rich FDX source</strong><p>Original XML and prior versions are retained. Supported: existing paragraph text and type. Styles, revision attributes, notes, title/author, manual breaks, dual groups and unknown sections remain preserved; editing those structures requires a separate working copy. External pagination and vendor feature parity are unverified.</p><p>Retained XML sections (read only): {projectMetadata.source_fdx.preserved_sections?.join(', ')||'None beyond body/title'}</p>{projectMetadata.source_fdx.warnings?.map((/** @type {string} */ message,/** @type {number} */ index)=><p key={index}>{message}</p>)}<details><summary>Retained title and author</summary>{projectMetadata.source_fdx.title_page?.map((/** @type {any} */ block)=><p key={block.id}>{block.type}: {block.text}</p>)}</details><button type="button" onClick={createRichWorkingCopy} disabled={isLoading}>Create separate plain working copy</button></div>}
       {saveProblem && (
         <div role="alert" style={{ padding: '12px', background: '#422006', color: '#fef3c7', border: '1px solid #d97706' }}>
           <strong>Draft protection — {saveProblem.project || 'Screenwriting Studio'}</strong>
@@ -2046,8 +2161,9 @@ ${origFountain}`;
       {recoveryDrafts.length > 0 && (
         <details style={{ padding: '8px', background: '#172033', color: '#e2e8f0' }}>
           <summary>Browser recovery copies ({recoveryDrafts.length})</summary>
-          {recoveryDrafts.map(draft => <button type="button" key={draft.key} onClick={() => downloadLocalDraft(draft)}>
-            Download {draft.project} — {new Date(draft.savedAt).toLocaleString()}
+          {recoveryDrafts.map( 
+draft => <button type="button" key={draft.key} onClick={() => downloadLocalDraft(draft)}>
+            Download {draft.project} — {typeof draft.savedAt === 'string' && !Number.isNaN(new Date(draft.savedAt).getTime()) ? new Date(draft.savedAt).toLocaleString() : 'time unknown'}
           </button>)}
         </details>
       )}
@@ -2057,7 +2173,8 @@ ${origFountain}`;
           projectName={currentProject}
           backendUrl={BACKEND_URL}
           onClose={() => setShowCharacterVault(false)}
-          onCharactersUpdate={(chars, project) => {
+          onCharactersUpdate={
+/** @param {import("/types/screenwriting").Character[]} chars @param {string} project */ ( chars,  project) => {
              if (project === currentProjectRef.current && project === loadedProjectRef.current) setCharacters(chars);
           }}
         />
@@ -2081,10 +2198,12 @@ ${origFountain}`;
             </div>
 
             <label style={{ color: '#d1d5db', display: 'block', fontSize: '0.85rem', marginBottom: '4px', fontWeight: 'bold' }}>Project Name:</label>
-            <input type="text" value={adaptProjectName} onChange={e => setAdaptProjectName(e.target.value)} className="sw-panel-input" style={{ width: '100%', marginBottom: '16px', boxSizing: 'border-box' }} />
+            <input type="text" value={adaptProjectName} onChange={ 
+e => setAdaptProjectName(e.target.value)} className="sw-panel-input" style={{ width: '100%', marginBottom: '16px', boxSizing: 'border-box' }} />
             
             <label style={{ color: '#d1d5db', display: 'block', fontSize: '0.85rem', marginBottom: '4px', fontWeight: 'bold' }}>Hollywood & Director Format Target:</label>
-            <select value={adaptType} onChange={e => setAdaptType(e.target.value)} className="sw-panel-input" style={{ width: '100%', marginBottom: '10px', boxSizing: 'border-box', background: '#111827', color: '#fff' }}>
+            <select value={adaptType} onChange={ 
+e => setAdaptType(e.target.value)} className="sw-panel-input" style={{ width: '100%', marginBottom: '10px', boxSizing: 'border-box', background: '#111827', color: '#fff' }}>
               <option value="Feature Film (Spec Script)">🎬 Feature Film (3-Act Hollywood Spec Script)</option>
               <option value="TV Pilot (1-Hour Drama)">📺 TV Pilot (1-Hour Network/Streaming Drama)</option>
               <option value="TV Pilot (30-Minute Comedy/Sitcom)">🎭 TV Pilot (30-Minute Comedy / Sitcom)</option>
@@ -2109,12 +2228,34 @@ ${origFountain}`;
             
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
               <button onClick={() => setShowAdaptModal(false)} style={{ background: 'transparent', border: '1px solid #555', color: '#fff', padding: '6px 14px', cursor: 'pointer', borderRadius: '4px' }}>Cancel</button>
-              <button onClick={handleStartAdaptation} style={{ background: '#facc15', color: '#000', border: 'none', padding: '6px 14px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px' }}>🚀 Start Adaptation</button>
+              <button onClick={() => handleStartAdaptation()} style={{ background: '#facc15', color: '#000', border: 'none', padding: '6px 14px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px' }}>🚀 Start Adaptation</button>
             </div>
           </div>
         </div>
       )}
 
+      {compactStudio && <>
+        <header className="sw-mobile-header">
+          <button type="button" onClick={()=>setMobileFocus(value=>!value)} aria-label={mobileFocus?'Show app navigation':'Focus writing studio'}>{mobileFocus?'App':'Focus'}</button>
+          <select aria-label="Screenplay project" value={currentProject} onChange={ 
+event=>handleSwitchProject(event.target.value)}>
+            {projects.map( 
+project=><option key={project} value={project}>{project}</option>)}
+          </select>
+          <span role="status" className="sw-mobile-save-state" title={saveProblem?.message || lastSavedTime || ''}>{saveProblem || autoSaveStatus==='error'?'Save paused':autoSaveStatus==='saving'?'Saving…':autoSaveStatus==='unsaved'?'Unsaved':'Saved'}</span>
+          <button type="button" className="sw-save-btn" onClick={handleSaveScreenplay} disabled={isLoading}>Save</button>
+        </header>
+        <nav className="sw-mobile-toolbar" aria-label="Writing controls">
+          <button type="button" aria-pressed={activeView==='editor'} onClick={()=>{setActiveView('editor');setSplitMode('none');setMobilePanel(null);}}>Write</button>
+          <button type="button" aria-pressed={activeView==='preview'} onClick={()=>{setActiveView('preview');setSplitMode('none');setMobilePanel(null);}}>Preview</button>
+          <button type="button" aria-expanded={mobilePanel==='scenes'} onClick={ 
+event=>toggleMobilePanel('scenes',event)}>Scenes</button>
+          <button type="button" aria-expanded={mobilePanel==='tools'} onClick={ 
+event=>toggleMobilePanel('tools',event)}>Tools</button>
+        </nav>
+      </>}
+      <section className="sw-tools-area" role={compactStudio&&mobilePanel==='tools'?'dialog':undefined} aria-modal={compactStudio&&mobilePanel==='tools'?true:undefined} aria-label={compactStudio?'Writing tools':undefined} onKeyDown={handleMobileDialogKey}>
+      {compactStudio && <button type="button" className="sw-mobile-panel-close" onClick={()=>setMobilePanel(null)}>Close tools</button>}
       {/* 1. Consolidated Studio Header & Breadcrumbs */}
       {zenMode ? (
         <div style={{ position: 'fixed', top: '12px', right: '16px', zIndex: 9999, display: 'flex', gap: '8px', background: 'rgba(17, 24, 39, 0.9)', padding: '6px 14px', borderRadius: '20px', border: '1px solid #374151', backdropFilter: 'blur(8px)', boxShadow: '0 4px 16px rgba(0,0,0,0.5)' }}>
@@ -2134,7 +2275,8 @@ ${origFountain}`;
             <span style={{ color: '#4b5563' }}>/</span>
             <select 
               value={currentProject} 
-              onChange={(e) => handleSwitchProject(e.target.value)} 
+              onChange={
+( e) => handleSwitchProject(e.target.value)} 
               style={{ background: '#1f2937', color: '#facc15', border: '1px solid #374151', borderRadius: '4px', padding: '2px 8px', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer' }}
             >
               {projects.map(p => <option key={p} value={p}>{p}</option>)}
@@ -2210,15 +2352,30 @@ ${origFountain}`;
             <button onClick={handleImportClick} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #34d399', color: '#34d399', padding: '4px 8px', fontSize: '0.8rem' }}>
               📥 Import
             </button>
+            <select aria-label="PDF import purpose" value={pdfImportMode} onChange={e=>setPdfImportMode(e.target.value)} style={{background:'#111827',color:'#d1fae5',fontSize:'0.8rem'}}>
+              <option value="screenplay">PDF: preserve screenplay</option>
+              <option value="adaptation">PDF: adapt book (AI)</option>
+            </select>
             <button onClick={() => setShowFindReplace(!showFindReplace)} className="sw-ribbon-btn" style={{ background: showFindReplace ? 'rgba(168, 85, 247, 0.3)' : 'transparent', border: '1px solid #a855f7', color: '#a855f7', padding: '4px 8px', fontSize: '0.8rem' }}>
               🔍 Find & Replace
             </button>
-            <button onClick={handleExportFDX} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #38bdf8', color: '#38bdf8', padding: '4px 8px', fontSize: '0.8rem' }}>
+            <button onClick={handleExportFDX} disabled={exportLayout==='typed-professional'} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #38bdf8', color: '#38bdf8', padding: '4px 8px', fontSize: '0.8rem' }}>
               📄 Export FDX
             </button>
-            <button onClick={handleExportPDF} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #e11d48', color: '#e11d48', padding: '4px 8px', fontSize: '0.8rem' }}>
+            <button onClick={handleExportPDF} disabled={Boolean(projectMetadata?.source_fdx && !['typed-professional','reflow'].includes(exportLayout))} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #e11d48', color: '#e11d48', padding: '4px 8px', fontSize: '0.8rem' }}>
               📄 Export PDF
             </button>
+            {projectMetadata?.source_fdx&&<><select aria-label="Rich FDX export mode" value={exportLayout} onChange={e=>{setExportLayout(e.target.value);setExportReceipt(null);}}><option value="source">Current preserved FDX</option><option value="original">Original imported FDX</option><option value="typed-professional">Typed professional PDF: new layout</option><option value="reflow">Explicit legacy text reflow</option></select><span role="status">{exportLayout==='typed-professional'?'Typed roles and supported bold/italic/underline use Courier 12 and new pagination. Source layout, headers and fonts are replaced; unsupported features reject.':'Preserved FDX retains rich XML. For PDF choose Typed professional or explicit lossy legacy reflow.'}</span>{exportReceipt?.layout==='typed-professional'&&<span role="status">Typed professional PDF verified: {exportReceipt.pdf_page_count} pages. SHA-256: {exportReceipt.output_sha256}.</span>}</>}
+            {projectMetadata?.source_pdf && <>
+              <select aria-label="Screenplay export layout" value={exportLayout} onChange={e=>{setExportLayout(e.target.value);setExportReceipt(null);}} style={{background:'#111827',color:'#cbd5e1',fontSize:'0.8rem'}}>
+                <option value="source">Archival: preserve source pages</option>
+                <option value="professional">Professional U.S. spec: natural pages</option>
+                <option value="reflow">Legacy reflow: export edited draft</option>
+              </select>
+              <span role="status" style={{color:'#cbd5e1',fontSize:'0.75rem'}}>{exportLayout==='professional' ? 'Professional Courier 12 uses natural pagination; page count may change. No words-per-page quota or runtime guarantee. Available for the original imported draft; edited drafts can use Legacy reflow.' : exportLayout==='source' ? 'Archival mode retains the recorded source page boundaries; it is separate from professional reflow.' : 'Legacy reflow uses the existing formatter for edited content; it is separate from the professional preset.'}</span>
+              {exportReceipt?.layout==='professional' && <span role="status" style={{color:'#a7f3d0',fontSize:'0.75rem'}}>Professional profile confirmed: {exportReceipt.profile_id}. {exportReceipt.pdf_page_count ? `${exportReceipt.pdf_page_count} PDF pages generated. ` : 'FDX pagination requires review in the writing application. '}Output SHA-256: {exportReceipt.output_sha256}.</span>}
+              <span role="status" style={{color:'#cbd5e1',fontSize:'0.75rem'}}>Source PDF: {projectMetadata.source_pdf.page_count} pages ({projectMetadata.source_pdf.title_page_count ?? 1} title + {projectMetadata.source_pdf.body_page_count ?? projectMetadata.source_pdf.page_count-1} body). {projectMetadata.source_pdf.printed_page_labels?.length && projectMetadata.source_pdf.printed_page_labels.every(label=>label!==null) ? `Printed source labels: ${projectMetadata.source_pdf.printed_page_labels[0]}–${projectMetadata.source_pdf.printed_page_labels.at(-1)}. ` : ''}Editor pages are separate; external FDX pagination unverified.</span>
+            </>}
             <button 
               onClick={() => setShowHelpGuideModal(true)} 
               className="sw-ribbon-btn" 
@@ -2238,6 +2395,12 @@ ${origFountain}`;
             <button onClick={handleSaveScreenplay} disabled={isLoading} className="sw-save-btn" style={{ padding: '4px 12px', fontSize: '0.8rem' }}>
               {isLoading ? 'Saving...' : '💾 Save'}
             </button>
+            {(projectMetadata?.source_pdf?.sha256||projectMetadata?.source_fdx?.sha256) && <button type="button" className="sw-save-btn"
+              onClick={handleOpenNativeScreenplay} disabled={isLoading||isNativeLaunching}
+              title="Save this project and request the native writer on the local AI-BS computer">
+              {isNativeLaunching?'Opening…':'Save & open native'}
+            </button>}
+            {nativeLaunchMessage && <span role="status" style={{fontSize:'0.75rem'}}>{nativeLaunchMessage}</span>}
           </div>
         </div>
       )}
@@ -2249,14 +2412,16 @@ ${origFountain}`;
             type="text" 
             placeholder="Find text..." 
             value={findText} 
-            onChange={(e) => setFindText(e.target.value)} 
+            onChange={
+( e) => setFindText(e.target.value)} 
             style={{ background: '#0f172a', border: '1px solid #475569', color: '#fff', padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', width: '200px' }}
           />
           <input 
             type="text" 
             placeholder="Replace with..." 
             value={replaceText} 
-            onChange={(e) => setReplaceText(e.target.value)} 
+            onChange={
+( e) => setReplaceText(e.target.value)} 
             style={{ background: '#0f172a', border: '1px solid #475569', color: '#fff', padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', width: '200px' }}
           />
           <button 
@@ -2405,7 +2570,8 @@ ${origFountain}`;
                 {isRevisionMode && (
                   <select 
                     value={revisionColor} 
-                    onChange={e => setRevisionColor(e.target.value)} 
+                    onChange={ 
+e => setRevisionColor(e.target.value)} 
                     className="sw-panel-input" 
                     style={{ background: '#111827', color: '#fff', border: '1px solid #374151', padding: '2px 4px', fontSize: '0.8rem', borderRadius: '4px' }}
                   >
@@ -2438,7 +2604,8 @@ ${origFountain}`;
         <AdaptationStatusBar 
           backendUrl={BACKEND_URL}
           onSwitchToProject={handleSwitchProject}
-          onRefreshScreenplay={async (proj) => {
+          onRefreshScreenplay={
+async ( proj) => {
             if (proj === currentProject) {
               await loadScreenplay(proj);
             }
@@ -2576,7 +2743,8 @@ ${origFountain}`;
             min="1"
             max={totalScriptPages}
             value={viewerCurrentPage}
-            onChange={(e) => {
+            onChange={
+( e) => {
               const val = parseInt(e.target.value);
               if (!isNaN(val)) {
                 handleJumpToPage(val);
@@ -2633,7 +2801,8 @@ ${origFountain}`;
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>🎬 Scene:</span>
             <select 
-              onChange={(e) => {
+              onChange={
+( e) => {
                 const selectedIndex = parseInt(e.target.value);
                 if (!isNaN(selectedIndex) && parsed?.beats?.[selectedIndex]) {
                   const beat = parsed.beats[selectedIndex];
@@ -2663,8 +2832,10 @@ ${origFountain}`;
             <input 
               type="text" 
               value={viewerSearch} 
-              onChange={(e) => setViewerSearch(e.target.value)} 
-              onKeyDown={(e) => {
+              onChange={
+( e) => setViewerSearch(e.target.value)} 
+              onKeyDown={
+( e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
                   if (e.shiftKey) {
@@ -2677,9 +2848,9 @@ ${origFountain}`;
               placeholder="Search (Enter/Shift+Enter)..." 
               style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.8rem', width: '140px', outline: 'none' }}
             />
-            {viewerRef.current?.matchedCount > 0 && (
+            {(viewerRef.current?.matchedCount ?? 0) > 0 && (
               <span style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 'bold' }}>
-                {viewerRef.current.activeMatchIndex || 1}/{viewerRef.current.matchedCount}
+                {viewerRef.current?.activeMatchIndex || 1}/{viewerRef.current?.matchedCount}
               </span>
             )}
             {viewerSearch && (
@@ -2747,12 +2918,13 @@ ${origFountain}`;
         </div>
       </div>
 
+      </section>
       {/* 3. Main Workspace */}
       <div className="sw-workspace" style={{ flex: 1, width: '100%', height: 'calc(100% - 40px)', maxHeight: '100%', minHeight: 0, display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', overflow: 'hidden' }}>
         
         {/* Outline Panel (Left) */}
-        {leftPanelVisible && !zenMode && (
-          <div className="sw-left-panel" style={{ width: '220px', minWidth: '220px', flexShrink: 0, background: '#111827', borderRight: '1px solid #1f2937', padding: '12px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+        {(compactStudio ? mobilePanel==='scenes' : leftPanelVisible && !zenMode) && (
+          <div className="sw-left-panel" role={compactStudio?"dialog":undefined} aria-modal={compactStudio?true:undefined} aria-label={compactStudio?"Projects and scenes":undefined} onKeyDown={handleMobileDialogKey} style={{ width: '220px', minWidth: '220px', flexShrink: 0, background: '#111827', borderRight: '1px solid #1f2937', padding: '12px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
             <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
               <button className="sw-ribbon-btn" onClick={() => setOutlineMode('outline1')} style={{ background: outlineMode === 'outline1' ? '#1f2937' : 'transparent', flex: 1, border: '1px solid #1f2937' }}>Outline 1</button>
               <button className="sw-ribbon-btn" onClick={() => setOutlineMode('outline2')} style={{ background: outlineMode === 'outline2' ? '#1f2937' : 'transparent', flex: 1, border: '1px solid #1f2937' }}>Outline 2</button>
@@ -2770,7 +2942,7 @@ ${origFountain}`;
                   + New
                 </button>
                 <button 
-                  onClick={() => setLeftPanelVisible(false)} 
+                  onClick={() => compactStudio ? setMobilePanel(null) : setLeftPanelVisible(false)} 
                   style={{ background: '#374151', color: '#9ca3af', border: 'none', borderRadius: '4px', padding: '2px 6px', fontSize: '0.75rem', cursor: 'pointer' }}
                   title="Close Outline Drawer"
                 >
@@ -2781,7 +2953,8 @@ ${origFountain}`;
 
             <div style={{ marginBottom: '16px' }}>
               <div style={{ display: 'flex', gap: '4px', marginBottom: '6px' }}>
-                <select value={currentProject} onChange={(e) => handleSwitchProject(e.target.value)} className="sw-panel-input" style={{ flex: 1 }}>
+                <select value={currentProject} onChange={
+( e) => handleSwitchProject(e.target.value)} className="sw-panel-input" style={{ flex: 1 }}>
                   {projects.map(p => <option key={p} value={p}>{p}</option>)}
                 </select>
                 {currentProject !== 'Default Project' && (
@@ -2836,22 +3009,29 @@ ${origFountain}`;
             )}
 
             {/* Git Branching */}
+            <fieldset disabled aria-describedby="sw-branch-unavailable" style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
             <h4 className="sw-panel-header" style={{ color: '#4ade80', margin: '0 0 8px 0' }}>🌿 Branches</h4>
             <div style={{ marginBottom: '16px' }}>
-              <select value={currentBranch} onChange={(e) => setCurrentBranch(e.target.value)} className="sw-panel-input" style={{ width: '100%', marginBottom: '8px' }}>
+              <select value={currentBranch} onChange={
+( e) => setCurrentBranch(e.target.value)} className="sw-panel-input" style={{ width: '100%', marginBottom: '8px' }}>
                 {branches.map(b => <option key={b} value={b}>{b}</option>)}
               </select>
               <div style={{ display: 'flex', gap: '4px' }}>
-                <input type="text" value={newBranchName} onChange={(e) => setNewBranchName(e.target.value)} placeholder="New branch..." className="sw-panel-input" style={{ flex: 1 }} />
+                <input type="text" value={newBranchName} onChange={
+( e) => setNewBranchName(e.target.value)} placeholder="New branch..." className="sw-panel-input" style={{ flex: 1 }} />
                 <button onClick={handleCreateBranch} style={{ background: '#38bdf8', color: '#000', border: 'none', padding: '0 8px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '3px' }}>+</button>
               </div>
             </div>
 
+            </fieldset>
+            <p id="sw-branch-unavailable" role="status" style={{ fontSize: '0.75rem', color: '#cbd5e1' }}>Branch creation and switching are unavailable. Editing continues in the current project.</p>
             {/* Sprints */}
+            <fieldset disabled aria-describedby="sw-sprint-unavailable" style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
             <h4 className="sw-panel-header" style={{ color: '#38bdf8', margin: '0 0 8px 0' }}>⏱️ Sprints</h4>
             {!activeSprint ? (
               <div style={{ marginBottom: '16px' }}>
-                <input type="text" value={sprintName} onChange={(e) => setSprintName(e.target.value)} placeholder="Sprint name..." className="sw-panel-input" style={{ width: '100%', marginBottom: '4px', boxSizing: 'border-box' }} />
+                <input type="text" value={sprintName} onChange={
+( e) => setSprintName(e.target.value)} placeholder="Sprint name..." className="sw-panel-input" style={{ width: '100%', marginBottom: '4px', boxSizing: 'border-box' }} />
                 <button onClick={handleStartSprint} style={{ width: '100%', background: '#a78bfa', color: '#000', padding: '4px', border: 'none', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold', borderRadius: '3px' }}>Start Sprint</button>
               </div>
             ) : (
@@ -2861,6 +3041,8 @@ ${origFountain}`;
               </div>
             )}
             
+            </fieldset>
+            <p id="sw-sprint-unavailable" role="status" style={{ fontSize: '0.75rem', color: '#cbd5e1' }}>Persistent writing sprints are unavailable.</p>
             {/* Outline Scenes with Search & Direct Jump */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
               <h4 className="sw-panel-header" style={{ color: '#9ca3af', margin: 0 }}>🎬 Scenes ({filteredBeats.length})</h4>
@@ -2868,7 +3050,8 @@ ${origFountain}`;
             <input 
               type="text" 
               value={sceneSearch} 
-              onChange={(e) => setSceneSearch(e.target.value)} 
+              onChange={
+( e) => setSceneSearch(e.target.value)} 
               placeholder="🔍 Filter scenes..." 
               className="sw-panel-input" 
               style={{ width: '100%', marginBottom: '8px', boxSizing: 'border-box', fontSize: '0.75rem', padding: '4px 6px' }}
@@ -2878,7 +3061,7 @@ ${origFountain}`;
                     <div 
                       key={i} 
                       className="sw-scene-item" 
-                      onClick={() => handleJumpToScene(b)}
+                      onClick={() => { handleJumpToScene(b); if (compactStudio) setMobilePanel(null); }}
                       style={{ cursor: 'pointer', padding: '4px 6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', borderBottom: '1px solid #1f2937', transition: 'background 0.2s ease' }}
                     >
                         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '130px' }}>
@@ -2902,18 +3085,19 @@ ${origFountain}`;
             {/* Primary View (Editor) */}
             {(activeView === 'editor' || splitMode !== 'none') && (
                 <div className="sw-editor-container" style={{ flex: 1, height: '100%', maxHeight: '100%', minHeight: 0, display: 'flex', overflow: 'hidden', borderRight: splitMode === 'vertical' ? '1px solid #1f2937' : 'none', borderBottom: splitMode === 'horizontal' ? '1px solid #1f2937' : 'none' }}>
-                    <ScreenplayEditor
+                    {richDocumentRef.current ? <div style={{overflow:'auto',width:'100%'}}><RichFDXEditor key={`${currentProject}:${richEditorEpoch}`} blocks={ast} baselineBlocks={richDocumentRef.current.blocks} revision={`${richDocumentRef.current.document_sha256}:${richAckEpochRef.current}`} onChange={handleAstChange} onQualified={()=>{if(richWorkingDraft!==null){setRichWorkingDraft(null);manualReviewRef.current.delete(currentProjectRef.current);setSaveProblem(null);}}} onUnqualified={(blocks,message)=>{const content=richFDXProjection({...richDocumentRef.current,blocks});setRichWorkingDraft(content);preserveDraft({project:currentProjectRef.current,content,fdx_document:{...richDocumentRef.current,blocks}});manualReviewRef.current.add(currentProjectRef.current);setSaveProblem({reviewOnly:true,message});}}/></div> : <ScreenplayEditor
                         ast={ast}
                         onChange={handleAstChange}
                         zoomLevel={zoomLevel}
-                        onGhostwriter={(index) => handleGhostwriter(index)}
+                        onGhostwriter={
+( index) => handleGhostwriter(index)}
                         characters={characters}
                         currentPage={viewerCurrentPage}
                         onPageChange={(p) => setViewerCurrentPage(p)}
                         onProofPage={(p) => handleProofPage(p)}
                         isRevisionMode={isRevisionMode}
                         revisionColor={revisionColor}
-                    />
+                    />}
                 </div>
             )}
 
@@ -2921,8 +3105,9 @@ ${origFountain}`;
             {(activeView !== 'editor' || splitMode !== 'none') && (
                 <div className="sw-preview-container" style={{ flex: 1, height: '100%', background: '#0a0a0a', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                     {(activeView === 'preview' || (splitMode !== 'none' && activeView !== 'beats')) ? (
-                         <ScreenplayViewer
+                         richDocumentRef.current ? <div style={{overflow:'auto',padding:18,color:'#e2e8f0'}}><p>Rich FDX preview · external pagination unverified</p>{ast.map(block=><div key={block.id} style={{whiteSpace:'pre-wrap',marginBottom:16,fontFamily:'Courier New,monospace'}}><strong>{block.type}{block.dualGroup?` · dual ${block.dualSide}`:''}</strong><div>{block.runs?.map((run,index)=><span key={index} style={richRunStyle(run)}>{run.text}</span>)}</div></div>)}</div> : <ScreenplayViewer
                              ref={viewerRef}
+                             fitToWidth={compactStudio}
                              ast={ast}
                              beats={parsed?.beats || []}
                              zoomLevel={zoomLevel}
@@ -2930,7 +3115,8 @@ ${origFountain}`;
                              onPageChange={(p) => setViewerCurrentPage(p)}
                              searchQuery={viewerSearch}
                              showInternalHeader={false}
-                             onSwitchToEditor={(blockId) => {
+                             onSwitchToEditor={
+( blockId) => {
                                  setActiveView('editor');
                                  if (blockId) {
                                      setTimeout(() => {
@@ -2947,16 +3133,19 @@ ${origFountain}`;
                          <div className="sw-beat-board" style={{ padding: `${20 * (zoomLevel / 100)}px`, gap: `${20 * (zoomLevel / 100)}px` }}>
                             <div className="sw-beat-timeline" />
                             
-                            {(parsed?.beats || []).map((beat, idx) => {
+                            {(parsed?.beats || []).map(
+( beat, idx) => {
                                 const scale = zoomLevel / 100;
                                 const isDragging = draggedBeatIndex === idx;
                                 return (
                                     <div 
                                         key={idx} 
                                         draggable
-                                        onDragStart={(e) => handleDragStart(e, idx)}
+                                        onDragStart={
+( e) => handleDragStart(e, idx)}
                                         onDragOver={handleDragOver}
-                                        onDrop={(e) => handleDrop(e, idx)}
+                                        onDrop={
+( e) => handleDrop(e, idx)}
                                         onClick={() => handleJumpToScene(beat)}
                                         className="sw-beat-card"
                                         style={{
@@ -2989,7 +3178,8 @@ ${origFountain}`;
                                                 </div>
                                             ) : (
                                                 <button 
-                                                    onClick={(e) => { e.stopPropagation(); handleAnimateBeat(beat); }}
+                                                    onClick={
+( e) => { e.stopPropagation(); handleAnimateBeat(beat); }}
                                                     disabled={animatingBeats[beat.id]}
                                                     style={{ width: '100%', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px', fontSize: `${9 * scale}px`, padding: '2px', cursor: animatingBeats[beat.id] ? 'not-allowed' : 'pointer' }}
                                                 >
@@ -3018,7 +3208,8 @@ ${origFountain}`;
             <input 
               type="text" 
               value={sceneSearch} 
-              onChange={(e) => setSceneSearch(e.target.value)} 
+              onChange={
+( e) => setSceneSearch(e.target.value)} 
               placeholder="🔍 Search scenes & characters..." 
               className="sw-panel-input" 
               style={{ width: '100%', marginBottom: '12px', boxSizing: 'border-box', fontSize: '0.8rem', padding: '4px 8px' }}
@@ -3030,7 +3221,7 @@ ${origFountain}`;
                         key={i} 
                         className="sw-scene-item" 
                         style={{ cursor: 'pointer', padding: '8px', borderBottom: '1px solid #1f2937', display: 'flex', alignItems: 'center', gap: '8px', transition: 'background 0.2s ease', borderRadius: '4px' }}
-                        onClick={() => handleJumpToScene(b)}
+                        onClick={() => { handleJumpToScene(b); if (compactStudio) setMobilePanel(null); }}
                     >
                         <span style={{ fontSize: '1.2rem' }}>{b.emoji || '🎬'}</span>
                         <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
@@ -3051,11 +3242,14 @@ ${origFountain}`;
         )}
       </div>
 
+      {compactStudio && <footer className="sw-mobile-footer"><span>Page {viewerCurrentPage} of {totalScriptPages}</span><button type="button" aria-expanded={mobilePanel==='stats'} onClick={ 
+event=>toggleMobilePanel('stats',event)}>{mobilePanel==='stats'?'Close stats':'Stats'}</button></footer>}
       {/* 4. Bottom Status & Diagnostics Telemetry Panel */}
-      <div className="sw-bottom-panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 16px', background: '#111827', borderTop: '1px solid #1f2937', fontSize: '0.8rem', color: '#9ca3af' }}>
+      <div className="sw-bottom-panel" role={compactStudio&&mobilePanel==='stats'?"dialog":undefined} aria-modal={compactStudio&&mobilePanel==='stats'?true:undefined} aria-label={compactStudio?"Script statistics":undefined} onKeyDown={handleMobileDialogKey} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 16px', background: '#111827', borderTop: '1px solid #1f2937', fontSize: '0.8rem', color: '#9ca3af' }}>
         <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
+          {compactStudio && <button type="button" className="sw-mobile-panel-close" onClick={()=>setMobilePanel(null)}>Close stats</button>}
           <span style={{ color: '#fff', fontWeight: 'bold' }}>🎬 SCRIPT TELEMETRY:</span>
-          <span style={{ color: '#38bdf8', fontWeight: 'bold' }}>📜 {scriptDiag.pages} Pages (~{scriptDiag.runtimeStr} screen time)</span>
+          <span style={{ color: '#38bdf8', fontWeight: 'bold' }}>📜 {projectMetadata?.source_fdx?'Rich XML · pagination unverified':`${scriptDiag.pages} Pages (~${scriptDiag.runtimeStr} screen time)`}</span>
           <span style={{ color: '#4ade80' }}>⚖️ {scriptDiag.dialoguePct}% Dialogue / {scriptDiag.actionPct}% Action</span>
           <span style={{ color: '#facc15' }}>🎭 {scriptDiag.characterCount} Roles</span>
           <span style={{ color: '#e2e8f0' }}>🎬 {scriptDiag.sceneCount} Scenes</span>
@@ -3071,8 +3265,10 @@ ${origFountain}`;
             min="1" 
             max={totalScriptPages}
             value={pageJumpInput} 
-            onChange={(e) => setPageJumpInput(e.target.value)}
-            onKeyDown={(e) => {
+            onChange={
+( e) => setPageJumpInput(e.target.value)}
+            onKeyDown={
+( e) => {
               if (e.key === 'Enter') {
                 handleJumpToPage(parseInt(pageJumpInput));
               }
@@ -3095,7 +3291,8 @@ ${origFountain}`;
             type="range" 
             min="50" max="200" step="10" 
             value={zoomLevel} 
-            onChange={(e) => setZoomLevel(parseInt(e.target.value))} 
+            onChange={
+( e) => setZoomLevel(parseInt(e.target.value))} 
             style={{ width: '90px', cursor: 'pointer' }}
           />
         </div>
@@ -3129,7 +3326,8 @@ ${origFountain}`;
               <input 
                 type="text" 
                 value={newProjectName} 
-                onChange={(e) => setNewProjectName(e.target.value)} 
+                onChange={
+( e) => setNewProjectName(e.target.value)} 
                 placeholder="e.g. Neon Horizon, Untitled Feature"
                 style={{ width: '100%', padding: '8px 10px', background: '#111827', border: '1px solid #374151', borderRadius: '6px', color: '#fff', fontSize: '0.9rem', boxSizing: 'border-box' }} 
                 autoFocus
@@ -3143,7 +3341,8 @@ ${origFountain}`;
               <input 
                 type="text" 
                 value={newProjectAuthor} 
-                onChange={(e) => setNewProjectAuthor(e.target.value)} 
+                onChange={
+( e) => setNewProjectAuthor(e.target.value)} 
                 placeholder="Author Name"
                 style={{ width: '100%', padding: '8px 10px', background: '#111827', border: '1px solid #374151', borderRadius: '6px', color: '#fff', fontSize: '0.9rem', boxSizing: 'border-box' }} 
               />
@@ -3155,7 +3354,8 @@ ${origFountain}`;
               </label>
               <select 
                 value={newProjectTemplate} 
-                onChange={(e) => setNewProjectTemplate(e.target.value)} 
+                onChange={
+( e) => setNewProjectTemplate(e.target.value)} 
                 style={{ width: '100%', padding: '8px 10px', background: '#111827', border: '1px solid #374151', borderRadius: '6px', color: '#38bdf8', fontSize: '0.9rem', boxSizing: 'border-box' }}
               >
                 <option value="feature">🎬 Hollywood Feature Film (3-Act Spec Script)</option>
@@ -3275,7 +3475,8 @@ ${origFountain}`;
                 </div>
                 <textarea
                   value={reviewSuggestedFountain}
-                  onChange={(e) => setReviewSuggestedFountain(e.target.value)}
+                  onChange={
+( e) => setReviewSuggestedFountain(e.target.value)}
                   placeholder={isReviewingPage ? "Generating Hollywood formatted draft..." : "Formatted screenplay will appear here..."}
                   style={{
                     flex: 1, width: '100%', background: '#020617', color: '#f8fafc',
@@ -3347,19 +3548,19 @@ ${origFountain}`;
         isOpen={showTableReadModal}
         onClose={() => setShowTableReadModal(false)}
         screenplayText={screenplay}
-        projectName={currentProject?.name || currentProject || 'Active Script'}
+        projectName={currentProject || 'Active Script'}
       />
 
       {/* ── Live Writing & AI Thought Telemetry Modal ── */}
       <ScriptTelemetryModal
         isOpen={showScriptTelemetryModal}
         onClose={() => setShowScriptTelemetryModal(false)}
-        projectName={currentProject?.name || currentProject || 'The Mafia'}
+        projectName={currentProject || 'The Mafia'}
         screenplayText={screenplay}
         ast={ast}
         totalScriptPages={totalScriptPages}
         autoSaveStatus={autoSaveStatus}
-        lastSavedTime={lastSavedTime}
+        lastSavedTime={lastSavedTime ?? undefined}
         backendUrl={BACKEND_URL}
       />
 

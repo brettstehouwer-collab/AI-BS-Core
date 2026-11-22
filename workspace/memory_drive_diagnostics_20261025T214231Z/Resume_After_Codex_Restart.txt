@@ -1,0 +1,31 @@
+RESUME AFTER CODEX RESTART — saved before any termination
+Publishing task finished:
+https://stehouwer-publishing.com/ and https://www.stehouwer-publishing.com/ returned200; intended app boots with mainJS/CSS. Nginxmaster48724, loopback80, logon taskStehouwer-Publishing-Reviewed-Static-Origin.
+Source root C:/StehouwerPublishing.com/restoration_staging/20261025T205656Z/public;19reviewedfiles, originaldist unchanged; private/tracking files excluded.
+Same-tunnel connector configs reconciled; userconnector14588/APIconnector6720; pairedcore_bootCONFIG_SHA updated. SYSTEM/core peers unchanged.
+Restoration receipt:
+C:/AI-BS/workspace/network_publishing_diagnostics_20261025T205656Z/restoration/restoration_receipt.json
+Diagnostic five-file baseline:
+C:/AI-BS/workspace/network_publishing_diagnostics_20261025T205656Z/
+Livehandoff/architecturalledger were deliberately NOT appended under the user diagnostic brief.
+
+Immediate next authorized task is READ-ONLY post-restart memory/pagefile/disk recheck. No more major work first.
+Pre-restart culprit identity:33936, creation2026-10-25T05:47:46.594381Z, installedCodexapp-server below AppData/Local/OpenAI/Codex/bin/2993767bd1dfb009.
+At21:45UTCprivatecommit135.392GiB; systemcommit98.76percent; pagefileallocated129.961GiB/currentuse50.172GiB; laterfilemetadata132.656GiB.
+Compare fresh process identity/privatecommit, systemCommit/Limit, WMIpagefileAllocation/CurrentUsage andC:free. Don't infer disk recovery from working-set reduction alone.
+Do not delete activepagefile/models/cache/originals, change paging, reboot or kill unrelatedprocesses without separate authorization.
+Verify site/API still available; do not open beta monitoring page automatically (it can sync users/start capture/scan). Use approvedaggregate/read-onlymethods.
+Known site follow-ups remain documented:390pxoverflow135px; missinglibrarybackground;3samplePDFs; privacy-safeanalytics repair. These wait until resources are stabilized.
+
+
+NEW OPERATOR COMPUTER-RESTART CHECKPOINT
+SAVED FOR OPERATOR COMPUTER RESTART
+Saved 2026-10-25T22:10:56.790880+00:00 / 2026-10-25T18:10:56.790880-04:00
+Start with C:/AI-BS/docs/CODEX_HANDOFF.md Record99 and C:/AI-BS/docs/CODEX_TASKS.md current summary.
+Next: read-only memory/pagefile/disk snapshot; fresh process/config/listener identities; sign into footb for publishing logon tasks; verify root/www/APIhealth. No other major work first.
+Do not reuse any preboot PID, blindly run old pinned helpers, replay transcripts, deletepagefile/cache/models/originals, runlegacybroadcleanup or forcehistoricalICS.
+Latest observed21:59UTC: Codex70.14GiBprivate,systemcommit85.85%,Cfree124.69GiB. Compare new values; immediate pagefileshrink notguaranteed.
+Publishing origin/task/config, ingress/admission, rollback pointers and remaininggates are in Record99. Do not auto-openbeta monitor (canwrite/scan).
+Checkpoint source/config hashes are evidence; if changed, inspectratherthanoverwrite.
+No reboot/termination/cleanup performed by this save. Operator will restart.
+

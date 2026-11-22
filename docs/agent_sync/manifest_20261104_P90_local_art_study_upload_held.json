@@ -1,0 +1,49 @@
+{
+  "at": "2026-11-04T18:48:06.829067+00:00",
+  "status": "local_geometry_and_export_verified_cloud_upload_rejected",
+  "model": "E:\\AI_BS_Resources\\FirstBoot\\P90\\AdamMouthStudy\\adam-character-v27-mouth-width-study.blend",
+  "GLB": "E:\\AI_BS_Resources\\FirstBoot\\P90\\AdamMouthStudy\\adam-character-v27-mouth-width-candidate.glb",
+  "geometry": {
+    "status": "passed_separate_v27_geometry_preservation_checks",
+    "source_sha256": "c50cb058f81a3e597746a573e2a9c589bb48abe6e78aa05830762a47c310a1e0",
+    "changed_vertices": 2964,
+    "maximum_delta_m": 0.0033051147514740293,
+    "minimum_triangle_area_ratio": 0.8684010750198707,
+    "minimum_normal_dot": 0.9769216477870941,
+    "minimum_area_m2": 1.4407746941096805e-10,
+    "likeness_approved": false,
+    "native_export_or_render_verified": false,
+    "installed_model_changed": false,
+    "master_sha256": "df934816362b3ce612df3485059197c54f91730532a1a98a6fc1ffc918fc2029",
+    "contracts": {
+      "topology": "ec95c798816b90b4ed7b7633dc17cc126c4360f112cd60dce1db0495ee50cfe5",
+      "UV": "0943cacc847d70afa0056617cb1216a80fdac16f2af070d2e254933b4d71b02a",
+      "colors": "459019fee7ada837feacec6d6c9f93a12229edd69104499f7b899d33f0692d0d",
+      "weights": "f63e80d8f55433bf2af03f9a3b14f54b54aba2d3aa86f484d53a7529e79c3418",
+      "binds": "0554467b32516504802d3e4ddd2bbb1bfe0fc1dcb2cf64675c493c430d222872",
+      "actions": "aaaf04233ffb34a15ea55dd9cc4d9dd8b776d272d17881b5da4032f88b03da1e",
+      "images": [
+        [
+          "authored-hair-albedo-v26.png",
+          "2776f7e9ff48403a605df95128555a2c25d05f6a6a7d82d83665696ddee7e31d"
+        ],
+        [
+          "authored-head-albedo-v24c.png",
+          "01c52db42df0f8b2b41859fd70247b50ec969f5cc3d674d63d9f886df4a3f9b9"
+        ],
+        [
+          "authored-shirt-print.png",
+          "3e3ca8b112f38ac6fc51dac75da62ac50ed1fb581bf14e611fe5a1f8336625a4"
+        ]
+      ]
+    },
+    "topology_UV_colors_weights_binds_actions_images_exact": true,
+    "neck_eyes_hair_clothes_right_band_unchanged": true
+  },
+  "archive": "E:\\AI_BS_Resources\\FirstBoot\\P90\\AdamMouthStudy\\90A_Adam_v27_Geometry_And_Export.zip",
+  "drive_folder": "1kAMNTXWPZm1LrwYWwCfOl-pCD4DNCNOJ",
+  "cloud_backup_verified": false,
+  "upload_rejection": "Automatic approval review required explicit authorization for this personal family-derived likeness archive. Do not retry or bypass without user approval.",
+  "next_step": "Native0172cook/newassetUUID and matched front/quarter/profile/full-body/right-wrist previews plus animation checks. Preserve installed107/modelv20 and sourcev26. Seek explicit archive/destination upload approval separately.",
+  "goal_complete": false
+}

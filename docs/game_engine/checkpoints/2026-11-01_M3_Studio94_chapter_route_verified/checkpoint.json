@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "checkpoint": "Retained M3 Studio94 chapter route verified; M4 active",
+  "created_at": "2026-11-01T14:24:08.922959+00:00",
+  "goal_status": "active",
+  "installed_studio": "5.329.94",
+  "sdk": "0.8.0",
+  "milestones": {
+    "M0": "complete",
+    "M1": "complete",
+    "M2": "complete",
+    "M3": "complete",
+    "M4": "in_progress"
+  },
+  "verified": {
+    "Debug": "34/34 CTest + installedSDKconsumer1/1",
+    "Release": "34/34 CTest + installedSDKconsumer1/1",
+    "monitor_qt": "57/57",
+    "packaging": "13/13",
+    "packaged_chapter": "36nativeprocesses/27strictflags, actualGPU/POV/HUD, corrected intermediate guidance",
+    "packaged_M2_regression": "23nativeprocesses/13strictflags",
+    "frozen_package": "74Pythonmodules,14assets,4criticalmodulesCurrentSourceEquivalent; PE94; actualoffscreenQt/servicesoff",
+    "shortcuts": "5existingcanonicalDesktop/StartMenu links backedupthenreadback94",
+    "synthetic_relocated": "closed synthetic bypass/Pencil/outage world copied and reopened by actual packaged94player; saved state retained"
+  },
+  "package": {
+    "bytes": 556686188,
+    "files": 2261,
+    "path": "C:/AI-BS/native_studio/releases/v5.329.94/AI_BS_Studio/AI_BS_Studio.exe",
+    "retention": "keep_all_marked_milestones"
+  },
+  "previous_candidate": "Studio93 unchanged/unactivateddevelopment; superseded after actual hint RED/GREEN",
+  "evidence": [
+    "engine/out/m3-final94-debug.log",
+    "engine/out/m3-final94-release.log",
+    "engine/out/first_boot_chapter_verification.Debug.json",
+    "engine/out/first_boot_chapter_verification.Release.json",
+    "engine/out/packaged94-chapter-world/first_boot_chapter_verification.json",
+    "engine/out/packaged94-chapter-world/durable_world_verification.json",
+    "engine/out/native94-release-smoke.json",
+    "backups/native_game94_20261101_m3/static_package_verification.json",
+    "backups/native_game94_20261101_m3/shortcut_deployment.json",
+    "backups/native_game94_20261101_m3/milestone_release.json",
+    "docs/game_engine/m3_acceptance_audit.md"
+  ],
+  "actual_limits": [
+    "Mechanically playable proxy chapter, not complete20-30minuteprivatealpha",
+    "M4creator/editablechapterdefinitions/unifiedhistory/isolatedPlayStop remain",
+    "M5assets/audio/lighting/RTXcinema/settings/pacing/clean-machineevidence remain",
+    "Trusted nativeActor/clock; no arbitraryC++securitysandbox",
+    "Registry extension and availability install are separateatomictransactions; no downgrade/universalpowerlossclaim",
+    "Source/designstale banner may follow finaldocumentation changes; do notfake-retimestampproofs"
+  ],
+  "next": [
+    "Read BUILD_STATUS/milestone_queue/M4implementationnotes/currentworktree",
+    "Start S4.1 test-first native authoring host above CreatorSession: UUID+revision command contracts, metadata, grouped edits/undo/redo/save",
+    "Add managed boundedcreatorbridge andQtproject/outliner/inspector/historyworkspace",
+    "Then versioned editableChapterDefinition/runtime separation and isolatedPlayStop/dependency/savepreviews",
+    "Keep M5meaningful20-30minutecontent andRTXworld-lighting goal intact"
+  ],
+  "active_sessions": [],
+  "git": {
+    "branch": "codex/audit-v532976-20261031",
+    "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "working_tree": "Pre-existing unrelated changes preserved; no commit/reset and no whole-repository equivalence claimed."
+  },
+  "storage": {
+    "observed_at": "2026-11-01T14:21:16.614446+00:00",
+    "engine_storage": {
+      "generated": {
+        "bytes": 7811296376,
+        "file_count": 23503,
+        "partial": false
+      },
+      "installed": {
+        "bytes": 178962682,
+        "file_count": 756,
+        "partial": false
+      }
+    },
+    "drives": [
+      {
+        "drive": "C:/",
+        "free_bytes": 87632076800,
+        "total_bytes": 1796861837312
+      },
+      {
+        "drive": "D:/",
+        "free_bytes": 184193118208,
+        "total_bytes": 510770802688
+      },
+      {
+        "drive": "E:/",
+        "free_bytes": 146813599744,
+        "total_bytes": 899427594240
+      }
+    ],
+    "drive_quota": "unavailable_via_current_connector",
+    "pagefile_reported_bytes": 83720675328,
+    "note": "Paging-file size is a current observation, not attribution of the earlier full C: free-space decrease. No OS paging settings changed."
+  },
+  "drive_folder": {
+    "id": "1z6RJ7icc_SNWGtHtuLPzHYA68vQhcl69",
+    "url": "https://drive.google.com/drive/folders/1z6RJ7icc_SNWGtHtuLPzHYA68vQhcl69"
+  },
+  "source_snapshot": "Complete selected engine/native graph/design/evidence files; not the entire dirty AI-BS checkout. Binaries/fetcheddeps/models/originalmemoir/photos/userDBs excluded. SynthetictestDB separate.",
+  "formal_handoff": "Root master-ledger/hash manifest deferred to manual session close under AGENTS.md"
+}

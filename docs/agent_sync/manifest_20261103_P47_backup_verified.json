@@ -1,0 +1,72 @@
+{
+  "at": "2026-11-03T20:13:50.087356+00:00",
+  "classification": "progress",
+  "previous_goal_turn": "Progress: SDK0.16.5full126-test regression/install/consumer qualification, public SDK example version fix and46Averified backup.",
+  "goal_complete": false,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "source_sha256": {
+    "engine/tools/play_and_measure_opening.py": "33088fa25167c5fd466ded535eed7a45b0d9f89201848698de878b1aa768755f",
+    "engine/tools/gameplay_review_runtime.json": "20f74454cea73e66ac6bd0565b4d5eea858f1ad44d5c561ce23252e844d3f123",
+    "engine/tests/test_play_and_measure_opening.py": "a72e734885d44c4815a58d52bcbe088955a0542db002ed561d38740030b887ca",
+    "engine/COMBINED_OPENING_REVIEW.md": "1c1ffb30d949816b5a6528a1c279cf306652f342a2411f9c62eabb551c15daa0"
+  },
+  "verification": "D:\\AI-BS-Game-Resources\\P47\\CombinedOpeningReview\\verification.json",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\47A_Combined_Review_And_Launch_Diagnostics.zip",
+    "bytes": 1761172,
+    "sha256": "c3e1160c3dda41625ff5d123b5823387fc93a0dc0e795b70006d5181d1aa9ac0",
+    "members": 59,
+    "local_zip_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-03T20:13:50.087356+00:00",
+    "archive_and_every_member_size_sha_crc_exact_set_verified": true,
+    "drive_file_id": "1U1x5ilQB7dqMswdkuxdAr0E1NIvXvnqE",
+    "drive_folder_id": "1BsS60bnvu-PEaTqtvf9UE0V4IT14wCth",
+    "scope": "Combined review source, runtime pins, launcher, tests, native preparation evidence and early diagnostics design. No original family media, user saves, credentials/private Git/Master data or compiled binaries. Developer proof is not a user run.",
+    "post_seal_user_clarification": {
+      "at": "2026-11-03T20:13:50.087356+00:00",
+      "user_confirmed_launcher": "Run_20Second_Opening_Check.cmd",
+      "scope": "Stationary nook FPS check, not the chapter playthrough",
+      "known_saved_report": "D:/AI-BS-Game-Resources/PerformanceSessions/20261103T181529Z-93a0ea7c-2ccb-41b0-9be8-09f0665ca40e/performance.json",
+      "known_FPS": 59.99740211248853,
+      "newer_report_verified": false,
+      "manual_chapter_playthrough_verified": false,
+      "note": "Filename was confirmed after47A was sealed. The archived pending-filename snapshot remains correct for its earlier timestamp; this sidecar records the update. No claim that a new second run produced a result."
+    }
+  },
+  "all_owned_processes_joined": true,
+  "deployed_studio": "5.329.103",
+  "deployed_SDK": "0.16.4",
+  "qualified_SDK": "0.16.5",
+  "new_collector_launcher": "D:\\AI-BS-Game-Resources\\P47\\CombinedOpeningReview\\Play_And_Measure_First_Boot.cmd",
+  "user_clarification": {
+    "at": "2026-11-03T20:13:50.087356+00:00",
+    "user_confirmed_launcher": "Run_20Second_Opening_Check.cmd",
+    "scope": "Stationary nook FPS check, not the chapter playthrough",
+    "known_saved_report": "D:/AI-BS-Game-Resources/PerformanceSessions/20261103T181529Z-93a0ea7c-2ccb-41b0-9be8-09f0665ca40e/performance.json",
+    "known_FPS": 59.99740211248853,
+    "newer_report_verified": false,
+    "manual_chapter_playthrough_verified": false,
+    "note": "Filename was confirmed after47A was sealed. The archived pending-filename snapshot remains correct for its earlier timestamp; this sidecar records the update. No claim that a new second run produced a result."
+  },
+  "completed": [
+    "Combined user-started actual gameplay FPS plus unreviewed pacing feedback collector",
+    "Early preflight diagnostics and CMD bootstrap breadcrumbs",
+    "9new helper tests plus8legacy regressions, actualCMD inspection and SDKfactory/hidden1080p DX12 admission",
+    "47Aauthenticated raw restore all59members verified"
+  ],
+  "remaining": [
+    "Actual combined foreground gameplay run and report acceptance",
+    "First-time8\u201312minute pacing/clarity/satisfaction feedback",
+    "Personal v16likeness review/refinement",
+    "Deferred optional-original-recording caption review",
+    "Final Studio package/restart/walkthrough/launcher and complete source/art backup"
+  ],
+  "next_step": "Read any actual combined-review result if user starts it. Otherwise continue final Studio package preparation using qualified SDK0.16.5, preserving Studio103 and saves. Do not auto-start a manual user playthrough or force focus. Normal owned automated integration-test windows are authorized and distinct from the manual review.",
+  "disk_free_gib": {
+    "C": 60.86,
+    "D": 59.45,
+    "E": 136.73
+  }
+}

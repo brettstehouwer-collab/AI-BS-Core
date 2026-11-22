@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "roles": {
+    "capacitor": {
+      "directory": "packs/capacitor",
+      "asset_id": "89e133bc-979e-4ed0-9dba-ae69fce559b2",
+      "asset_sha256": "d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd",
+      "pack_sha256": "296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b"
+    },
+    "adam": {
+      "directory": "packs/adam",
+      "asset_id": "102b7f97-6cb6-47c4-95dc-5ef836d0b150",
+      "asset_sha256": "8779c9bb18e6c9ef09daef6d9c64e57be1dd1c1688c0f6d76a935f5c31201489",
+      "pack_sha256": "7eaf15f8c911f6a1d82e33fcf790c473ce8ccf415ba5b16fb348d10e42bfe193"
+    },
+    "nook": {
+      "directory": "packs/nook",
+      "asset_id": "f0739fd8-f772-470b-a0f2-58f348de43c3",
+      "asset_sha256": "b9a7569aa52897b55819afc84d4d7383e14ecfed1565fefb462d5d8924a774cd",
+      "pack_sha256": "ef68691bf5bffb0ee1182f70513c149aaf57a7b9fa57f8c19fdb2d7a9e414731"
+    },
+    "fault": {
+      "directory": "packs/fault",
+      "asset_id": "0c103c9c-6a88-42f1-bbb8-87919fa79b5b",
+      "asset_sha256": "29f1f3317961848edafd9b11697254cfc4cacfeef429eebecc496bfe3643d256",
+      "pack_sha256": "f95b2c82dba3e06d617e5e7cf981e8c5a65eb3e64baccf29627eff7498d6ebda"
+    },
+    "bypass": {
+      "directory": "packs/bypass",
+      "asset_id": "4b079cd2-8ace-4e17-a35b-a45eb8f3d1c2",
+      "asset_sha256": "c4dfcb03624113a73092a1cd6ff02cad3c4df9fc3d63d81a243fade865564243",
+      "pack_sha256": "dcee6ac797df49f2dcca15a59365ae8b6f8a69cc49c85e1e0d4926f8f8a4e907"
+    },
+    "shelter": {
+      "directory": "packs/shelter",
+      "asset_id": "eb94e6e1-36b9-4466-90ef-82ba371811d0",
+      "asset_sha256": "2a877bab9419b6cc44614ea39e1d2b1469379debfa796d0a4378c7ebafcdeeeb",
+      "pack_sha256": "d2d7384246f2721f795473e4e60e510b1e871c02b53332d5cf2e2df14e2c19f1"
+    }
+  }
+}

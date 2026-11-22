@@ -1,0 +1,19 @@
+
+services:
+  executor_sandbox:
+    build: 
+      context: .
+      dockerfile: Dockerfile.sandbox
+    container_name: aibs_airgapped_sandbox
+    # STRICT ISOLATION PROTOCOLS:
+    network_mode: "none" # Disables all external network access (Zero Hallucination Wipeout Risk)
+    read_only: true      # Prevents the executor from overwriting the host mount
+    mem_limit: 4g        # Increased for heavy tasks, well within system limits
+    cpus: "4.0"          # Utilizes 4 out of 32 threads for faster test parsing
+    pids_limit: 100      # Prevents fork-bombs from crashing the daemon
+    volumes:
+      # Mount ONLY a specific temporary scratch directory, NOT the C:\ drive
+      - ./sandbox_scratch:/sandbox/scratch:rw
+    tmpfs:
+      - /tmp
+    restart: "no"        # Fails safely on crash without looping

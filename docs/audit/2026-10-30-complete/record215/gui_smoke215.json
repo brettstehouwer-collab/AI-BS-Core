@@ -1,0 +1,32 @@
+{
+  "timestamp_utc": "2026-11-01T03:52:27.221415+00:00",
+  "gui_smoke": "PASS",
+  "ui_mode": "offscreen",
+  "config_unchanged": true,
+  "config_sha256": "889b4468162e93b12fb011637bb8e91ef0b1a9351c98516e90dae160ce7caf2f",
+  "config": {
+    "version": 1,
+    "enabled": true,
+    "screen_events": true,
+    "chat_enabled": false,
+    "channel": "brettstehouwer"
+  },
+  "overlay_status": {
+    "state": "waiting_for_broadcast"
+  },
+  "broadcast_status": {
+    "status": "stopped",
+    "process_running": false,
+    "controller_pid": 44076,
+    "encoder_pid": null
+  },
+  "public_broadcast_started": false,
+  "onnxruntime_version": "1.29.0",
+  "onnxruntime_providers": [
+    "TensorrtExecutionProvider",
+    "CUDAExecutionProvider",
+    "CPUExecutionProvider"
+  ],
+  "rapidocr_version": "1.4.4",
+  "live_trading_dispatch_enabled": false
+}

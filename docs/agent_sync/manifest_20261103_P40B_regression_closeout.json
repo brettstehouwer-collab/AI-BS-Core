@@ -1,0 +1,96 @@
+{
+  "at": "2026-11-03T17:24:11.097446+00:00",
+  "classification": "progress",
+  "goal_complete": false,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "source": {
+    "status": "passed_scoped_source_checks",
+    "files": [
+      {
+        "path": "engine/include/aibs/render.hpp",
+        "bytes": 6837,
+        "sha256": "d44cb33b8db910f9eb5452dcd8e84ba424994a554ad52f5cfa527f4be6590ba6",
+        "preimage_sha256": "04d6489aad6591b9e0c40ea3e9803903ae0bda50a98e92d6015424720c724bee"
+      },
+      {
+        "path": "engine/src/render_dx12.cpp",
+        "bytes": 54169,
+        "sha256": "b7dea9bfe5260dcab16cc9cfaa826e4277b9b023f74857d20bb2021662024cc0",
+        "preimage_sha256": "07006fd81448d3c52ba8a170688567952b1cb55ed12fc8f2ff5a3a2e2aeb69af"
+      },
+      {
+        "path": "engine/apps/durable_world.cpp",
+        "bytes": 143918,
+        "sha256": "036fa220624dc83b6141e5d5a2f1a33acf78b648835d0e63d9ac4f7ca992b213",
+        "preimage_sha256": "8788989a4504375f230f92764ac325351836258a20952dbbc269ce8960afe846"
+      },
+      {
+        "path": "engine/apps/performance_runtime.inl",
+        "bytes": 9782,
+        "sha256": "545aedb77c3ba68d9c04667e7dcae164d1718f558f736bf09d0c730430db981c",
+        "preimage_sha256": "73161d0cfa096a5142b4e005674d8a3a7992d668b3dd40134e9aa7dcc857ae27"
+      },
+      {
+        "path": "engine/CMakeLists.txt",
+        "bytes": 60783,
+        "sha256": "7d0ce47174bc2db2e6b16bbc9acd1c00fa65ccbea350b7d0812bc83e58d824bc",
+        "preimage_sha256": "c16f6f8ce1c5560e9a0a45b73bd71b0c6917a772987cddb7abbc08798656caa3"
+      },
+      {
+        "path": "engine/tests/render_validation_native.cpp",
+        "bytes": 2681,
+        "sha256": "5c6920afde76b7f60c098731e4a5ab6fc555c700f3bc8bdc9bf4f456e2119489",
+        "preimage_sha256": null
+      }
+    ],
+    "strong_credential_patterns_found": false,
+    "typescript_python_syntax": "not_applicable_no_runtime_Python_or_TypeScript_changed",
+    "cpp_syntax": "Actual fresh Debug/Release compiler outputs retained separately",
+    "scope": "Selected source only, not repository-wide audit or security certification"
+  },
+  "test_counts": {
+    "cpu-release-short-verification.json": 96,
+    "cpu-debug-verification.json": 96,
+    "validation-release-verification.json": 5,
+    "validation-debug-verification.json": 5,
+    "native-original-release-verification.json": 24,
+    "native-original-debug-verification.json": 24
+  },
+  "verified_evidence": [
+    "cpu-release-short-verification.json",
+    "cpu-debug-verification.json",
+    "validation-release-verification.json",
+    "validation-debug-verification.json",
+    "native-original-release-verification.json",
+    "native-original-debug-verification.json",
+    "readiness-hidden-verification.json"
+  ],
+  "all_owned_jobs_joined": true,
+  "installed_release_unchanged": "C:\\AI-BS\\native_studio\\releases\\v5.329.102\\AI_BS_Studio\\AI_BS_Studio.exe",
+  "known_retained_failure": "First long-root character cooker staging failed; unchanged tests pass in short D:/T40 root. Long paths not certified. Private harness quoting/path and UTC guard failures retained/corrected; no unrelated process or settings changes.",
+  "performance": "No new player-active sample or measured speedup; historical baseline46.599FPS below target",
+  "backup40A": {
+    "at": "2026-11-03T17:20:28.679184+00:00",
+    "status": "verified_authenticated_raw_restore_all_members",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\40A_Render_Validation_And_Readiness_Source_Checkpoint.zip",
+    "bytes": 467183,
+    "sha256": "1d2d1f0fe650158c34bc9a24fccc0733e1c52580c8cc93d0a1fb595c322e7b58",
+    "members": 87,
+    "drive_folder_id": "1y5taD3PtKLfBi9wUPltELJlroP52F3B9",
+    "scope": "incremental source and verification only",
+    "goal_complete": false,
+    "drive_file_id": "1xS0E0PY5aPx4E-8ay6trCyyAQWpuY9Jh",
+    "drive_url": "https://drive.google.com/file/d/1xS0E0PY5aPx4E-8ay6trCyyAQWpuY9Jh/view?usp=drivesdk",
+    "restored_cache": "D:\\AI-BS-Game-Resources\\cache\\1d2d1f0fe650158c34bc9a24fccc0733e1c52580c8cc93d0a1fb595c322e7b58.zip",
+    "binary_cloud_restore_verified": false
+  },
+  "backup40B": "local preparation; upload/raw restoration not yet verified",
+  "binary_cloud_restoration": "Unverified, prior39A provider block retained; Defender no-threat reports do not override provider classification",
+  "storage_GiB": {
+    "C": 63.55,
+    "D": 70.83,
+    "E": 136.73
+  },
+  "next_step": "Complete SDK0.16.4 candidate staging/installed-consumer audit and source-independent Studio packaging with the current Warm Beginning entry. Keep installed102 until frozen/runtime/restart acceptance passes. Add visible user-started profiling readiness before another active test; preserve8\u201312minute pacing, likeness, optional-recording caption and final-backup gates."
+}

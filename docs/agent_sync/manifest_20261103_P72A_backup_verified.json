@@ -1,0 +1,48 @@
+{
+  "at": "2026-11-04T02:24:38.126682+00:00",
+  "status": "VERIFIED",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "shared_dirty_checkout_preserved": true,
+  "git_status_local_only": "D:\\AI-BS-Game-Resources\\P72\\Adam_HeadAlbedoStudy\\local-worktree-status.txt",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\72A_Adam_v24c_Head_Albedo_And_Native_Views.zip",
+    "bytes": 74663588,
+    "sha256": "d29383073beab5352526c1d6947becaff88fe7f01027b28d8291dcefde2c55dc",
+    "members": 412,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-04T02:23:44.079992+00:00",
+    "drive_folder_id": "1m8lv23x9pMnc-3vLixEm8pyFZLqFQ9O7",
+    "drive_file_id": "1-Yiyb7_qDVu1RRU6D0dwpc0Wj62nqB0I",
+    "all_members_verified": true,
+    "goal_complete": false
+  },
+  "receipt_drive_id": "1Zc8LTcWEH1aYVW8rAXCLMgm0NZEzCXJk",
+  "verification": "D:\\AI-BS-Game-Resources\\P72\\Adam_HeadAlbedoStudy\\verification.json",
+  "gallery": "D:\\AI-BS-Game-Resources\\P72\\Adam_HeadAlbedoStudy\\Review\\Adam_v24c_Native_All_Sides.html",
+  "changed_project_files": {
+    "C:\\AI-BS\\docs\\game_engine\\AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "778c0975fd0d70dfe92a986c029368f491b096f5beef13123c9ec1e24c11c71f",
+    "C:\\AI-BS\\engine\\out\\warm_beginning\\monitor_summary.json": "2f3f8f853c8830903a6c60d46e36a711d08ce80a91abdee5aaeb06dc139a1a78",
+    "C:\\AI-BS\\docs\\game_engine\\ADAM_CHARACTER_REFERENCE_NOTES.md": "9a0acd58822af7623d0de8d25668702d6452383eb98ad93ca527451a9aaaf016",
+    "C:\\AI-BS\\docs\\game_engine\\ADAM_V24_HEAD_ALBEDO_STUDY.md": "3e89dfd30985500a8ffa1c973707f231a84ea318231b229236ebf91785584faf"
+  },
+  "installed_studio": "5.329.106",
+  "installed_model": "v20",
+  "new_study": "v24c, private and unapproved",
+  "all_owned_processes_joined": true,
+  "engine_source_or_SDK_changed": false,
+  "retained_art_revisions": [
+    "v24 first brow pigment was too faint",
+    "v24b brow readability improved; encoded byte-image background needed color correction",
+    "v24c final neutral encoded padding and native visual checks pass"
+  ],
+  "incomplete": [
+    "Naturalistic likeness including hair/clothing/skin shading and personal approval",
+    "Human8\u201312minute opening pacing and current active-play performance",
+    "Caption listening review deferred by user",
+    "Final packaged acceptance and verified final backup"
+  ],
+  "goal_complete": false,
+  "next_step": "Prioritize prepared user-started Studio106 opening review when submitted. Continue naturalistic hair, clothing and overall likeness in separate masters while retaining v23/v24c comparisons and pending personal feedback. Caption listening, human pacing/performance and final packaged acceptance remain required."
+}

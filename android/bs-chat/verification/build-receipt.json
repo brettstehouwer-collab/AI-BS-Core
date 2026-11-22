@@ -1,0 +1,22 @@
+{
+  "status": "VERIFIED_DEBUG_BUILD",
+  "apk": "C:/AI-BS/android/bs-chat/app/build/outputs/apk/debug/app-debug.apk",
+  "apk_bytes": 12617,
+  "apk_sha256": "F258061D89974EFC08FA1FC4C71111A99F93F0DFE599E37A88E057678EACFE83",
+  "apk_signature": "apksigner verify exit 0; v2 signature; debug signing only",
+  "apk_metadata": "com.stehouwerpublishing.bschat; version 1.0/1; minSdk 26; targetSdk 35; compileSdk 36; INTERNET permission",
+  "installed_or_launched": false,
+  "source_smoke": "12/12 source-policy checks passed; not compilation or device qualification",
+  "java": "C:/Users/footb/.gradle/jdks/eclipse_adoptium-17-amd64-windows.2 (17.0.19)",
+  "gradle": "8.14.3; direct retained executable; wrapper configured to same version",
+  "gradle_cache": "C:/AI-BS/runtime/android-bs-chat-gradle-20261114 (owned copy)",
+  "attempts": [
+    {"log": "build-debug.log", "exit_code": 1, "result": "Gradle 8.14.3 cannot analyze Java 25 class major 69"},
+    {"log": "build-debug-jdk25.log", "exit_code": 1, "result": "Gradle 9.7.1 offline plugin marker for AGP 8.13.0 unavailable"},
+    {"log": "build-debug-recovered.log", "exit_code": 1, "result": "PowerShell parsed unquoted dotted -P property incorrectly; SDK download disabling was already present in gradle.properties"},
+    {"log": "build-debug-recovered-v2.log", "exit_code": 0, "result": "BUILD SUCCESSFUL; 35 tasks executed; owned SDK and cache; SDK downloads disabled"}
+  ],
+  "sdk": "C:/AI-BS/runtime/android-bs-chat-sdk-20261114; owned copies of recovered platform 36, build tools 35/36, platform-tools and retained license; Windows.old originals untouched",
+  "required_next_step": "Device installation and Galaxy S25 Ultra behavior remain unperformed. Google embedded WebView authentication remains unqualified; no browser-cookie transfer is implemented.",
+  "boundaries": "No SDK download, license acceptance, signing credentials, device installation, provider activation or service restart"
+}

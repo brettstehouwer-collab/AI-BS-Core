@@ -1,0 +1,12 @@
+Public guest homepage smoke
+
+Actor: /root/asset_reconciliation
+Finalized UTC: 2026-10-25T21:40:18.352Z
+Target: https://stehouwer-publishing.com/
+Confidence: OBSERVED
+
+Both390px and1440px fresh guest contexts receivedHTTP200, rendered the intended Stehouwer branding, loaded the expectedmainJS/CSS, and had0uncaughtpageerrors and0requests for legacytracking/private resources. Cloudflare's injected Insights script was blocked separately before load. No forms, clicks, sign-in, API actions or saved profile were used.
+
+Remaining limits:390px body scrollWidth525px gives135px horizontal overflow; mobilelayout acceptance is NOT claimed. Both widths requested missing /images/library_bg.jpg and received404. Desktop body width1440px matched viewport. This smoke does not validate forms, APIs, livestreams, authenticated flows or physical devices.
+
+Metrics remain unchanged inpublic_metrics.json; theirSHA256 is recorded inpublic_guest_receipt.json. Viewport screenshots arepublic_390.png andpublic_1440.png. All owned contexts/browser were closed normally; no existing user browser or application was closed. No application source changes were made.

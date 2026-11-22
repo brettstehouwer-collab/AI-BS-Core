@@ -1,0 +1,9 @@
+KEK                              {8be4df61-93ca-11d2-aa0d-00e098032b8c}
+KEKDefault                       {8be4df61-93ca-11d2-aa0d-00e098032b8c}
+db                               {d719b2cb-3d3a-4596-a3bc-dad00e67656f}
+dbDefault                        {8be4df61-93ca-11d2-aa0d-00e098032b8c}
+dbx                              {d719b2cb-3d3a-4596-a3bc-dad00e67656f}
+dbxDefault                       {8be4df61-93ca-11d2-aa0d-00e098032b8c}
+PK                               {8be4df61-93ca-11d2-aa0d-00e098032b8c}
+PKDefault                        {8be4df61-93ca-11d2-aa0d-00e098032b8c}
+SecureBootEnable                 {f0a30bc7-af08-4556-99c4-001009c93a44}

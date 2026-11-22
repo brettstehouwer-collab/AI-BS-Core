@@ -6,14 +6,9 @@ from .memory_vault import SovereignMemoryVault
 from core.safety_guardrails import STEHOUWER_SAFETY_DIRECTIVE, inject_safety_directive, audit_prompt_safety
 
 class SovereignSwarmGauntlet:
-    """
-    Coordinates multi-model sequential consensus on RTX 4090 with NVMe paging,
-    Langevin energy relaxation, PUCT tree evaluation, and real-time streaming traces.
-    Features dynamic dual-port discovery (11434 & 11435) with automatic failover and self-healing.
-    """
+    """Explicit multi-model roles; heuristic scores are advisory, not verification."""
     CANDIDATE_PORTS = [11434, 11435]
     DEFAULT_BASE_URL = "http://127.0.0.1:11434"
-
     SPECIALIZED_FLEET = {
         "stehouwer_dolphin:latest": ("Subjective Cognitive Vector", 0.92),
         "stehouwer_qwen:latest": ("Clinical Empirical Model", 0.95),
@@ -29,246 +24,85 @@ class SovereignSwarmGauntlet:
     }
 
     @classmethod
-    async def get_active_base_url(cls, client: httpx.AsyncClient) -> str:
-        """
-        Probes candidate ports in order and returns the first healthy Ollama base URL.
-        If all fail, triggers self-healing auto-start and waits.
-        """
-        for port in cls.CANDIDATE_PORTS:
-            url = f"http://127.0.0.1:{port}"
-            try:
-                r = await client.get(f"{url}/api/tags", timeout=1.5)
-                if r.status_code == 200:
-                    return url
-            except Exception:
-                continue
-
-        # Self-healing attempt
-        try:
-            from .dispatcher import ensure_ollama_running
-            ensure_ollama_running()
-            await asyncio.sleep(3.0)
+    async def get_active_base_url(cls,client):
+        from core.local_chat_inference import LocalInferenceError
+        for cycle in range(2):
+            response_seen=False
             for port in cls.CANDIDATE_PORTS:
-                url = f"http://127.0.0.1:{port}"
                 try:
-                    r = await client.get(f"{url}/api/tags", timeout=2.0)
-                    if r.status_code == 200:
-                        return url
-                except Exception:
-                    continue
-        except Exception:
-            pass
-
-        return cls.DEFAULT_BASE_URL
+                    response=await client.get(f"http://127.0.0.1:{port}/api/tags",timeout=2)
+                    response_seen=True
+                    if response.status_code==200:return f"http://127.0.0.1:{port}"
+                except (httpx.ConnectError,httpx.ConnectTimeout):continue
+                except (httpx.HTTPError,ValueError):response_seen=True
+            if cycle==0 and not response_seen:
+                from .dispatcher import ensure_ollama_running
+                await asyncio.to_thread(ensure_ollama_running)
+            else:break
+        raise LocalInferenceError("local_inventory_unavailable")
 
     @classmethod
-    async def discover_all_models(cls, client: httpx.AsyncClient) -> list:
-        """
-        Aggregates models discovered across all active Ollama ports.
-        """
-        models = []
+    async def discover_all_models(cls,client):
+        models=[]
         for port in cls.CANDIDATE_PORTS:
-            url = f"http://127.0.0.1:{port}/api/tags"
             try:
-                tags_res = await client.get(url, timeout=3.0)
-                if tags_res.status_code == 200:
-                    for m in tags_res.json().get("models", []):
-                        name = m.get("name")
-                        if name and not name.startswith("nomic-embed") and name not in models:
-                            models.append(name)
-            except Exception:
-                continue
+                response=await client.get(f"http://127.0.0.1:{port}/api/tags",timeout=3)
+                if response.status_code!=200:continue
+                data=response.json()
+                for row in data.get('models',[]):
+                    name=row.get('name')
+                    if isinstance(name,str) and name and not name.startswith('nomic-embed') and name not in models:models.append(name)
+            except (httpx.HTTPError,ValueError,TypeError):continue
         return models
 
     @classmethod
-    async def call_single_model(cls, client: httpx.AsyncClient, model: str, prompt: str, timeout: float = 45.0, preferred_base: str = None, max_tokens: int = 160) -> str:
-        """
-        Executes single model inference with automatic dual-port failover and bounded token prediction.
-        """
-        payload = {
-            "model": model,
-            "prompt": prompt,
-            "system": STEHOUWER_SAFETY_DIRECTIVE,
-            "stream": False,
-            "keep_alive": 0,
-            "options": {
-                "num_predict": max_tokens,
-                "temperature": 0.4
-            }
-        }
-
-        urls = []
-        if preferred_base:
-            urls.append(f"{preferred_base}/api/generate")
-        for port in cls.CANDIDATE_PORTS:
-            candidate = f"http://127.0.0.1:{port}/api/generate"
-            if candidate not in urls:
-                urls.append(candidate)
-
-        for target_url in urls:
-            try:
-                resp = await client.post(target_url, json=payload, timeout=timeout)
-                if resp.status_code == 200:
-                    text = resp.json().get("response", "").strip()
-                    if text:
-                        return text
-            except Exception:
-                continue
-
-        return "Model convergence passed with baseline consistency."
+    async def call_single_model(cls,client,model,prompt,timeout=45.0,preferred_base=None,max_tokens=160,
+            *,source_context_bundle=None,role="gauntlet_specialist",requested_model=None,return_receipt=False,stages=None):
+        from core.local_chat_inference import complete_local,context_profile
+        urls=[f"http://127.0.0.1:{port}/api/generate" for port in cls.CANDIDATE_PORTS]
+        if preferred_base:urls=[preferred_base+'/api/generate']+[url for url in urls if url!=preferred_base+'/api/generate']
+        profile=context_profile(STEHOUWER_SAFETY_DIRECTIVE,source_context_bundle)
+        profile['system']+="\nPipeline role: "+role+". Give concise evidence-grounded conclusions, not private reasoning."
+        result=await complete_local(model=model,requested_model=requested_model or model,prompt=prompt,endpoints=urls,role=role,
+            keep_alive=0,options={"num_ctx":8192,"num_predict":max_tokens,"temperature":.4},timeout=timeout,
+            source_context_bundle=source_context_bundle,stages=stages,**profile)
+        return result if return_receipt else result['text']
 
     @classmethod
-    async def stream_gauntlet_execution(cls, prompt: str):
-        """
-        Asynchronously executes the multi-model gauntlet while yielding live THOUGHT stream blocks.
-        Resilient against transient network drops and port shifts across 11434 and 11435.
-        """
-        # Pre-Flight Safety Audit across S1, S3, S4
-        is_safe, refusal = audit_prompt_safety(prompt)
-        if not is_safe:
-            yield f"⚠️ **Sovereign Engine Refusal:** {refusal}\n"
-            return
-
-        async with httpx.AsyncClient() as client:
-            active_base = await cls.get_active_base_url(client)
-            context = await asyncio.to_thread(SovereignMemoryVault.get_unified_context, prompt)
-
-            anchor_system = (
-                f"You are Brett Stehouwer / Stehouwer Publishing AI Core. You own the room, speak with authentic brotherly banter, "
-                f"and deliver razor-sharp, practical solutions without corporate refusals or robotic hesitation.\n\n"
-                f"{context}\n\n"
-                f"Goal / User Query: '{prompt}'. Provide a direct, authoritative, sovereign baseline."
-            )
-            anchor_system = inject_safety_directive(anchor_system)
-
-            yield "> 💭 **[THOUGHT: Initializing Stage 1–6 NVMe FTS5 retrieval & Lexicon vector expansion...]**\n\n"
-            yield "> 💭 **[THOUGHT: Synthesizing baseline anchor draft via `stehouwer_llm:latest`...]**\n\n"
-
-            anchor_draft = await cls.call_single_model(client, "stehouwer_llm:latest", anchor_system, preferred_base=active_base, max_tokens=220)
-            SovereignMemoryVault.log_inference_telemetry("stehouwer_llm:latest (Anchor)", prompt, anchor_draft)
-
-            # Discover active local fleet across both ports
-            installed_models = await cls.discover_all_models(client)
-
-            swarm_targets = []
-            for m in installed_models:
-                if m in ["stehouwer_llm:latest", "stehouwer_llm"]:
-                    continue
-                role, prior = cls.SPECIALIZED_FLEET.get(m, ("Specialized Consensus Engine", 0.90))
-                swarm_targets.append((m, role, prior))
-
-            if not swarm_targets:
-                swarm_targets = [
-                    ("stehouwer_dolphin:latest", "Subjective Vector", 0.92),
-                    ("stehouwer_qwen:latest", "Clinical Vector", 0.95)
-                ]
-
-            # Prioritize top specialized models by PUCT prior and cap for low-latency responsiveness (<15s)
-            swarm_targets.sort(key=lambda x: x[2], reverse=True)
-            if len(swarm_targets) > 3:
-                swarm_targets = swarm_targets[:3]
-
-            yield f"> 💭 **[THOUGHT: Fleet discovered ({len(swarm_targets)} models). Initiating sequential VRAM offloading & PUCT tree evaluation...]**\n\n"
-
-            all_critiques = []
-            for idx, (model, role, prior_prob) in enumerate(swarm_targets):
-                puct_score = MathematicalAutogradOptimizer.compute_puct_score(
-                    q_value=0.9, prior_prob=prior_prob, parent_visits=idx+1, node_visits=1
-                )
-                yield f"> 🧠 **[SWARM PASS {idx+1}/{len(swarm_targets)}: {model}]** *(Role: {role} • PUCT: {puct_score:.3f})* loading weights into VRAM...\n\n"
-
-                critique_p = f"{role}\nAudit and refine this draft: '{anchor_draft}'\nOriginal User Goal: '{prompt}'"
-                critique_res = await cls.call_single_model(client, model, critique_p, preferred_base=active_base, max_tokens=140)
-                all_critiques.append(f"[{model} Perspective]:\n{critique_res}\n")
-                SovereignMemoryVault.log_inference_telemetry(model, critique_p, critique_res)
-
-                snippet = " ".join(critique_res.split()[:20]) + "..."
-                yield f"> ✅ **[CONVERGED]** Snippet: *\"{snippet}\"* — Weights unloaded.\n\n"
-
-            yield "> ⚡ **[THOUGHT: Multi-model consensus verified. Applying Autograd backpropagation into final Stehouwer AI Core synthesis...]**\n\n---\n\n"
-
-            synthesis_prompt = (
-                f"You are Brett Stehouwer / Stehouwer Publishing AI Core.\n"
-                f"{context}\n\n"
-                f"Original User Query: '{prompt}'\n"
-                f"Anchor Baseline Draft: '{anchor_draft}'\n\n"
-                f"Multi-Model Swarm Critiques ({len(all_critiques)} Fleet Perspectives):\n" + "\n".join(all_critiques) + "\n\n"
-                "Synthesize all model critiques and historical facts into the final, sovereign, authoritative answer in your authentic Stehouwer voice. "
-                "Directly answer the user with complete clarity and power. "
-                "Conclude with '\n\n---\n*Executed multi-model swarm backpropagation and verified 100% convergence across all local engines.*'"
-            )
-
-            # Stream final synthesis with multi-port failover protection
-            payload = {
-                "model": "stehouwer_llm:latest",
-                "prompt": synthesis_prompt,
-                "system": STEHOUWER_SAFETY_DIRECTIVE,
-                "stream": True,
-                "keep_alive": 0
-            }
-
-            candidate_urls = []
-            if active_base:
-                candidate_urls.append(f"{active_base}/api/generate")
-            for port in cls.CANDIDATE_PORTS:
-                c = f"http://127.0.0.1:{port}/api/generate"
-                if c not in candidate_urls:
-                    candidate_urls.append(c)
-
-            streamed_any = False
-            last_err = None
-
-            for target_url in candidate_urls:
-                try:
-                    async with client.stream("POST", target_url, json=payload, timeout=90.0) as response:
-                        if response.status_code == 200:
-                            async for line in response.aiter_lines():
-                                if line:
-                                    try:
-                                        chunk = json.loads(line)
-                                        content = chunk.get("response", "")
-                                        if content:
-                                            yield content
-                                            streamed_any = True
-                                    except json.JSONDecodeError:
-                                        continue
-                            if streamed_any:
-                                break
-                except Exception as stream_err:
-                    last_err = stream_err
-                    continue
-
-            # If all candidate endpoints failed, try self-healing recovery once
-            if not streamed_any:
-                try:
-                    from .dispatcher import ensure_ollama_running
-                    ensure_ollama_running()
-                    await asyncio.sleep(3.0)
-                    for port in cls.CANDIDATE_PORTS:
-                        target_url = f"http://127.0.0.1:{port}/api/generate"
-                        try:
-                            async with client.stream("POST", target_url, json=payload, timeout=60.0) as response:
-                                if response.status_code == 200:
-                                    async for line in response.aiter_lines():
-                                        if line:
-                                            try:
-                                                chunk = json.loads(line)
-                                                content = chunk.get("response", "")
-                                                if content:
-                                                    yield content
-                                                    streamed_any = True
-                                            except json.JSONDecodeError:
-                                                continue
-                                    if streamed_any:
-                                        break
-                        except Exception as retry_err:
-                            last_err = retry_err
-                            continue
-                except Exception:
-                    pass
-
-            if not streamed_any:
-                yield f"\n\n⚠️ **Sovereign Engine Notice:** Swarm consensus completed, but streaming synthesis was interrupted ({last_err}). Here is the converged baseline:\n\n{anchor_draft}"
-
-            SovereignMemoryVault.log_inference_telemetry("stehouwer_llm:latest (Final Synthesis)", prompt, "Streamed", 99.2)
-
+    async def stream_gauntlet_execution(cls,prompt,*,messages=None,primary_model=None,source_context_bundle=None,request_prompt=None,current_turn=None):
+        from core.local_chat_inference import LocalInferenceError,metadata_chunk,conversation_prompt,stream_local,context_profile
+        from core.local_ollama_http import local_ollama_client
+        safe,refusal=audit_prompt_safety(prompt)
+        if not safe:yield "Sovereign Engine Refusal: "+refusal+"\n";return
+        primary=primary_model or "stehouwer_llm:latest";user_request=conversation_prompt(prompt if request_prompt is None else request_prompt,messages,current_turn=prompt if current_turn is None else current_turn)
+        context=(await asyncio.to_thread(SovereignMemoryVault.get_unified_context,prompt) if source_context_bundle is None else '')
+        try:
+            hosts=[f"http://127.0.0.1:{port}" for port in cls.CANDIDATE_PORTS]
+            async with local_ollama_client(*hosts,timeout=5,client_factory=httpx.AsyncClient) as client:
+                active=await cls.get_active_base_url(client);installed=await cls.discover_all_models(client)
+            yield f"> Gauntlet anchor requested: `{primary}`. Fleet scores are advisory.\n\n"
+            anchor=await cls.call_single_model(None,primary,user_request+"\n"+context,preferred_base=active,max_tokens=220,
+                source_context_bundle=source_context_bundle,role="gauntlet_anchor",requested_model=primary,return_receipt=True)
+            yield metadata_chunk(anchor['receipt']);stages=anchor['receipt']['steps']
+            targets=[]
+            for model in installed:
+                if model in {primary,"stehouwer_llm","stehouwer_llm:latest"}:continue
+                role,prior=cls.SPECIALIZED_FLEET.get(model,("Specialized Consensus Engine",.90));targets.append((model,role,prior))
+            eligible_count=len(targets);targets.sort(key=lambda row:row[2],reverse=True);targets=targets[:3]
+            yield f"> Eligible installed specialist models: {eligible_count}; this existing cohort selects at most3 sequential roles, not all64registered profiles.\n\n"
+            critiques=[]
+            for index,(model,role,prior) in enumerate(targets):
+                score=MathematicalAutogradOptimizer.compute_puct_score(q_value=.9,prior_prob=prior,parent_visits=index+1,node_visits=1)
+                yield f"> Gauntlet specialist {index+1}/{len(targets)} requested: `{model}` ({role}; advisory PUCT {score:.3f}).\n\n"
+                request=user_request+"\n[ANCHOR PROPOSAL — unverified model output]\n"+anchor['text']+"\nReview the proposal against the supplied evidence, from this role: "+role
+                result=await cls.call_single_model(None,model,request,preferred_base=active,max_tokens=140,
+                    source_context_bundle=source_context_bundle,role="gauntlet_specialist",requested_model=primary,return_receipt=True,stages=stages)
+                yield metadata_chunk(result['receipt']);stages=result['receipt']['steps'];critiques.append("[UNVERIFIED MODEL PROPOSAL: "+model+"]\n"+result['text'])
+            yield f"> Final primary requested: `{primary}`. No mathematical or factual consensus verification is claimed.\n\n"
+            final=user_request+"\n[ANCHOR PROPOSAL]\n"+anchor['text']+"\n"+"\n".join(critiques)+"\nAnswer the current user request using source evidence; model agreement alone is not verification."
+            profile=context_profile(inject_safety_directive("Synthesize the evidence and bounded model proposals into a direct answer. "+context),source_context_bundle)
+            urls=[active+'/api/generate']+[host+'/api/generate' for host in hosts if host!=active]
+            async for chunk in stream_local(model=primary,requested_model=primary,prompt=final,endpoints=urls,role="primary",
+                    keep_alive=0,options={"num_ctx":8192,"num_predict":1024,"temperature":.7},source_context_bundle=source_context_bundle,stages=stages,swarm_cohort={"eligible_models":eligible_count,"selected_roles":len(targets),"role_cap":3},**profile):yield chunk
+        except LocalInferenceError as error:
+            yield metadata_chunk(error.receipt);yield "Gauntlet stage did not complete ("+error.code+"). Original evidence remains; no successful consensus is claimed.\n"

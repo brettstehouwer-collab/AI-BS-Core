@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
+import { useDriveMediaSession } from '/src/components/AuthenticatedDriveMedia.jsx';
 
 /**
  * VLCPreviewMonitor
@@ -8,25 +9,35 @@ import Hls from 'hls.js';
  * local video file opening/drag-and-drop, playlist switching, snapshot capture,
  * and opening streams in external native VLC Media Player (.m3u / vlc://).
  */
-export default function VLCPreviewMonitor({
-    streamUrl,
-    videoSrc,
-    videoPath,
-    title,
-    playlist = [],
-    backendUrl = '',
-    onRenderVideo
-}) {
-    const videoRef = useRef(null);
-    const fileInputRef = useRef(null);
-    const containerRef = useRef(null);
+/** @param {string} backendUrl @param {string} videoPath @param {AbortSignal} [signal] */
+export async function requestVideoMediaUrl(backendUrl, videoPath, signal) {
+    const response = await fetch(`${backendUrl}/api/video/media-ticket`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ video_path: videoPath }), signal,
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Administrator sign-in is required to open this video.');
+    const api = new URL(backendUrl || '/', window.location.href);
+    const url = new URL(data.url, api);
+    if (url.origin !== api.origin || url.username || url.password || url.pathname !== '/api/video/stream'
+        || !url.searchParams.get('path') || !url.searchParams.get('ticket')) {
+        throw new Error('The server returned an invalid video link.');
+    }
+    return url.href;
+}
+
+/** @param {{"streamUrl"?: string, "videoSrc"?: string, "videoPath"?: string, "title"?: string, "playlist"?: Array<{id: string, title: string, src: string, badge?: string, desc?: string, isLocal?: boolean}>, "backendUrl"?: string, "onRenderVideo"?: () => void}} props */
+export default function VLCPreviewMonitor({ streamUrl, videoSrc, videoPath, title, playlist = [], backendUrl = '' }) {
+    const videoRef = useRef(/** @type {HTMLVideoElement | null} */ (null));
+    const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
+    const containerRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
     // Active playlist selection
     const [activeVideoIndex, setActiveVideoIndex] = useState(0);
-    const [localUploadedVideos, setLocalUploadedVideos] = useState([]);
+    const [localUploadedVideos, setLocalUploadedVideos] = useState(/** @type {NonNullable<typeof playlist>} */ ([]));
     
     // Playback state
-    const [status, setStatus] = useState("Ready");
+    const [, setStatus] = useState("Ready");
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -34,16 +45,16 @@ export default function VLCPreviewMonitor({
     const [isMuted, setIsMuted] = useState(false);
     const [playbackRate, setPlaybackRate] = useState(1.0);
     const [isLooping, setIsLooping] = useState(true);
-    const [aspectRatio, setAspectRatio] = useState('contain'); // 'contain', 'cover', '16/9', '4/3'
-    const [videoError, setVideoError] = useState(null);
-    const [vlcLaunchToast, setVlcLaunchToast] = useState(null);
+    const [aspectRatio, setAspectRatio] = useState(/** @type {'contain' | 'cover' | 'fill'} */ ('contain')); // 'contain', 'cover', '16/9', '4/3'
+    const [videoError, setVideoError] = useState(/** @type {string | null} */ (null));
+    const [vlcLaunchToast, setVlcLaunchToast] = useState(/** @type {string | null} */ (null));
 
     // Python script state for Unreal Engine mode (backward compatibility)
-    const [scriptContent, setScriptContent] = useState('');
-    const [copied, setCopied] = useState(false);
-    const [loadingScript, setLoadingScript] = useState(false);
-    const [isExecutingUE5, setIsExecutingUE5] = useState(false);
-    const [ue5Result, setUe5Result] = useState(null);
+    const [, setScriptContent] = useState('');
+    const [] = useState(false);
+    const [, setLoadingScript] = useState(false);
+    const [] = useState(false);
+    const [, setUe5Result] = useState(null);
 
     // Resolve unified playlist
     const fullPlaylist = React.useMemo(() => {
@@ -53,7 +64,7 @@ export default function VLCPreviewMonitor({
                 list.push({
                     id: 'default',
                     title: title || "AI-BS Media Stream",
-                    src: videoSrc || (videoPath ? `${backendUrl}/api/video/stream?path=${encodeURIComponent(videoPath)}` : streamUrl),
+                    src: videoSrc || (videoPath ? `${backendUrl}/api/video/stream?path=${encodeURIComponent(videoPath)}` : streamUrl || ''),
                     badge: videoPath?.endsWith('.py') ? 'UE5 Script' : 'Active Stream'
                 });
             }
@@ -63,7 +74,29 @@ export default function VLCPreviewMonitor({
 
     const activeItem = fullPlaylist[activeVideoIndex] || fullPlaylist[0];
     const isPyScript = (activeItem?.src && activeItem.src.endsWith('.py')) || (videoPath && videoPath.endsWith('.py'));
-    const activeSrc = activeItem?.src;
+    const requestedSrc = activeItem?.src;
+    const mediaSession = useDriveMediaSession(backendUrl);
+    const sourceKey = JSON.stringify([requestedSrc, mediaSession.key]);
+    const [playbackSource, setPlaybackSource] = useState({ key: '', src: '' });
+    const activeSrc = playbackSource.key === sourceKey ? playbackSource.src : '';
+
+    useEffect(() => {
+        const controller = new AbortController();
+        if (!requestedSrc || isPyScript) return () => controller.abort();
+        (async () => {
+            const api = new URL(backendUrl || '/', window.location.href);
+            const url = new URL(requestedSrc, window.location.href);
+            // DOM/native players cannot attach administrator request headers.
+            // Use the existing HMAC mechanism through a video-only scoped endpoint.
+            const file = url.origin === api.origin && url.pathname === '/api/video/stream'
+                ? url.searchParams.get('path') : null;
+            const src = file ? await requestVideoMediaUrl(backendUrl, file, controller.signal) : requestedSrc;
+            if (!controller.signal.aborted && mediaSession.isCurrent()) setPlaybackSource({ key: sourceKey, src });
+        })().catch(error => {
+            if (!controller.signal.aborted && mediaSession.isCurrent()) setVideoError(error.message);
+        });
+        return () => controller.abort();
+    }, [requestedSrc, isPyScript, backendUrl, sourceKey, mediaSession]);
 
     // Load and attach video source
     useEffect(() => {
@@ -111,7 +144,7 @@ export default function VLCPreviewMonitor({
                 }
             });
 
-            hls.on(Hls.Events.ERROR, (event, data) => {
+            hls.on(Hls.Events.ERROR, (_event, data) => {
                 if (data.fatal) {
                     setStatus("Stream error, retrying...");
                     hls.startLoad();
@@ -129,15 +162,17 @@ export default function VLCPreviewMonitor({
             videoRef.current.play().then(() => {
                 setIsPlaying(true);
                 setStatus("Playing");
-            }).catch(e => {
+            }).catch( /** @param {string} _e */
+_e => {
                 setStatus("Ready (Click Play)");
             });
         }
     }, [activeSrc, isPyScript, videoPath, streamUrl, backendUrl]);
 
     // Handle local file upload
-    const handleFileUpload = (e) => {
-        const files = Array.from(e.target.files);
+    /** @param {import('react').ChangeEvent<HTMLInputElement>} e */
+const handleFileUpload = ( e) => {
+        const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
 
         const newItems = files.map((file, idx) => ({
@@ -170,22 +205,26 @@ export default function VLCPreviewMonitor({
         }
     };
 
-    const handleSkip = (seconds) => {
+    /** @param {number} seconds */
+const handleSkip = ( seconds) => {
         if (!videoRef.current) return;
         const newTime = Math.max(0, Math.min(duration, videoRef.current.currentTime + seconds));
         videoRef.current.currentTime = newTime;
         setCurrentTime(newTime);
     };
 
-    const handleSeek = (e) => {
-        const time = parseFloat(e.target.value);
+    /** @param {import('react').ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} e */
+const handleSeek = ( e) => {
+        if (!Number.isFinite(duration) || duration <= 0) return;
+        const time = Math.max(0, Math.min(duration, parseFloat(e.target.value)));
         if (videoRef.current) {
             videoRef.current.currentTime = time;
             setCurrentTime(time);
         }
     };
 
-    const handleVolumeChange = (e) => {
+    /** @param {import('react').ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} e */
+const handleVolumeChange = ( e) => {
         const val = parseFloat(e.target.value);
         setVolume(val);
         setIsMuted(val === 0);
@@ -202,7 +241,8 @@ export default function VLCPreviewMonitor({
         videoRef.current.muted = nextMuted;
     };
 
-    const handleRateChange = (rate) => {
+    /** @param {typeof playbackRate} rate */
+const handleRateChange = ( rate) => {
         setPlaybackRate(rate);
         if (videoRef.current) {
             videoRef.current.playbackRate = rate;
@@ -226,6 +266,7 @@ export default function VLCPreviewMonitor({
         canvas.width = video.videoWidth || 1280;
         canvas.height = video.videoHeight || 720;
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         
         const dataUrl = canvas.toDataURL('image/png');
@@ -252,11 +293,12 @@ export default function VLCPreviewMonitor({
         const vlcProtocolUrl = `vlc://${resolvedUrl}`;
         window.open(vlcProtocolUrl, '_blank');
 
-        setVlcLaunchToast("🔶 VLC Playlist downloaded & vlc:// triggered! Opening in VLC Media Player...");
+        setVlcLaunchToast("VLC playlist prepared and app handoff requested. Playback has not been confirmed.");
         setTimeout(() => setVlcLaunchToast(null), 4000);
     };
 
-    const formatTime = (secs) => {
+    /** @param {number} secs */
+const formatTime = ( secs) => {
         if (isNaN(secs) || secs === 0) return "00:00";
         const m = Math.floor(secs / 60);
         const s = Math.floor(secs % 60);
@@ -647,7 +689,8 @@ export default function VLCPreviewMonitor({
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                         {/* Playback Speed Selector */}
                         <div style={{ display: 'flex', background: '#0c0a09', borderRadius: '6px', padding: '2px', border: '1px solid #292524' }}>
-                            {[0.5, 1.0, 1.5, 2.0].map((rate) => (
+                            {[0.5, 1.0, 1.5, 2.0].map(
+( rate) => (
                                 <button
                                     key={rate}
                                     onClick={() => handleRateChange(rate)}
@@ -670,7 +713,7 @@ export default function VLCPreviewMonitor({
                         {/* Aspect Ratio Switcher */}
                         <button
                             onClick={() => {
-                                const modes = ['contain', 'cover', 'fill'];
+                                const modes = /** @type {const} */ (['contain', 'cover', 'fill']);
                                 const next = modes[(modes.indexOf(aspectRatio) + 1) % modes.length];
                                 setAspectRatio(next);
                             }}

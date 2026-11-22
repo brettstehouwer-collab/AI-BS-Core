@@ -105,14 +105,7 @@ class OversightParentEngine:
             d_status = daemon_supervisor.get_supervisor_status()
             online_daemons = d_status.get("online_count", d_status.get("online_ports", 20))
             total_daemons = d_status.get("total_services", d_status.get("total_ports", 20))
-            if online_daemons < total_daemons:
-                try:
-                    from aibs_ecosystem_spawner import activate_all_daemons
-                    activate_all_daemons(verbose=False)
-                    d_status = daemon_supervisor.get_supervisor_status()
-                    online_daemons = d_status.get("online_count", d_status.get("online_ports", 20))
-                except Exception:
-                    pass
+            # A status read never authorizes launching services or the fleet.
         except Exception:
             pass
 

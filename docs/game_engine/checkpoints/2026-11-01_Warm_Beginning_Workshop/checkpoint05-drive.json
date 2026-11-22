@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "verified_at": "2026-11-02T04:15:45.253100+00:00",
+  "drive_file_id": "18txL1q9Ngo97dwB3ZivwZmHFKsmksFEB",
+  "drive_url": "https://drive.google.com/file/d/18txL1q9Ngo97dwB3ZivwZmHFKsmksFEB/view?usp=drivesdk",
+  "bytes": 12806100,
+  "sha256": "1aeaab1de8bb14bd4170c162d1afcee688c1409a9052b8025d2d2a0c0b5adeea",
+  "files": 2085,
+  "source_manifest_sha256": "7880f64ce7dc39c52c905c4469554e2eb9def92e4bb4551780e3565f890b3094",
+  "cached_path": "D:\\AI-BS-Game-Resources\\cache\\1aeaab1de8bb14bd4170c162d1afcee688c1409a9052b8025d2d2a0c0b5adeea.zip",
+  "remote_full_byte_verification": "Authenticated retrieval exact length/SHA; cached ZIP CRC and source-manifest byte checksum also matched",
+  "runtime_inputs_still_exact": 246,
+  "runtime_source_sha256": "3e6c9ffd72123620f62564114e5fb2107ed179fc94efe3ae327675a6556eb87d",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "source_scope": "Incremental checkpoint05 authored lighting/power/restart and typed placement; full Warm Beginning and frozen release incomplete",
+  "memoir_unchanged_sha256": "b375b07d263931b90a6af836be7d798123fdae01e6c0b40016fe843dd6f06138",
+  "post_seal_annotations": [
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "engine/BUILD_STATUS.md",
+    "engine/milestone_queue.json",
+    "docs/game_engine/resource_catalog.json"
+  ],
+  "post_seal_new_receipts": [
+    "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint05-local.json",
+    "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint05-drive.json"
+  ],
+  "goal_status": "active; checkpoints3\u20138 full phase incomplete",
+  "free_bytes": {
+    "C": 90174283776,
+    "D": 183845765120,
+    "E": 146813599744
+  },
+  "cloud_quota": "Unavailable through current connector",
+  "monitor_observation": {
+    "status": "passed",
+    "stage": "warm-beginning-lighting-source-sdk-tested",
+    "source_freshness": {
+      "status": "current",
+      "file_count": 250,
+      "method": "Modification-time inventory; deletions and backdated edits require source-manifest verification"
+    },
+    "documentation_freshness": {
+      "status": "changed",
+      "file_count": 251
+    },
+    "source_changed_since_build": false
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "id": "recdebut_class2027_20261029T172331Z",
+  "utc": "20261029T172331Z",
+  "outgoing_agent": "OpenAI Codex /root",
+  "receiving_agent": "Gemini/Antigravity continuation",
+  "status": "PREPARED_AWAITING_RECEIVER_VERIFICATION",
+  "head": "e45f1b5075619bd3ae7f4bbb506c0ea021eb6732",
+  "branch": "main",
+  "source_manifest_sha256": "1df500946eae6dac7fe61905e931628e43fa45502d9ee4d977fcfda37c5d1764",
+  "source_files": {
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md": "d400f1ce981c0d54f1a92857377af452081d710e0adc1c2ee06e41ce5e886d85",
+    "backend/recdebut_campaign_links.py": "62bf6d5720e446ababf7bf828e9c4b9eb1623755b9f6fc818689152c6fed4714",
+    "backend/recdebut_delivery.py": "e02ad939d388f394c5085fe9882c69b14142bd5e392cb7c2daf1cad439f19fe1",
+    "backend/recdebut_email_unsubscribe.py": "1f95ac549de2464b0d33168f2ad36f650acd259a0af9285e31205e6c109521f2",
+    "backend/recdebut_workflow.py": "6ba2a19794181f88d4131ee5812e8325b644c48e0cc0604ff6a53a214557755d",
+    "backend/requirements.txt": "d96e43aa5f9dc9d760fca1415e43298913c529eef7b5d03baf42812ec2697bff",
+    "backend/security/recdebut_access.py": "57609d76a6685a68dbb6313e67b14469cedc9da6bb06f830a6be56bda32e368c",
+    "backend/tests/test_recdebut_campaign_links.py": "6d88f755610cf2199370dd388a780acbd46b316810bb248d2a24f453664a82ff",
+    "frontend/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "frontend/components/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "frontend/package-lock.json": "bb3878495850f0495e04340effe3280212f63df9822bc9e2eb17a81f5c95db10",
+    "frontend/package.json": "b33f0e79ace4e1700005e2f90f78b12aa0598c7ff73cf8ec35906282d342a699",
+    "frontend/src/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "frontend/src/components/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "package-lock.json": "6d26b9bd78be835469d37961ae62fba500f2cfc0802d7a813105eb4fec53447a",
+    "package.json": "cf727b6276d3436f25494d6c131705c17de62a84bf218df73647e02a0b5bece5",
+    "pyproject.toml": "3efe8f0a2049e82941ab9d38016b529b60bd3e9dd9debff67da9c19c319f763e",
+    "requirements.txt": "88929fc96893e0f7f93b2340e5886aa0f057952734fbbd9186fd529b5db89213",
+    "version.txt": "d4e06bc33a12ff4f7cfe450043fe58cbd3283f7e0d210eb2306bd52818bb4f7d"
+  },
+  "complete_source_snapshot": "backups/recdebut_email_20261029/source_20261029T170927Z",
+  "previous_manifest": "docs/agent_sync/manifest_recdebut_organizer_20261029T172004Z.json",
+  "source_inputs": {
+    "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\Athletes_Emails_Legal_Recruiting_2025_2027.csv": "43f9096963e4db09c9636ffa786d4c7bf369fbef0406065f70d9858abba74bb4",
+    "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\Athletes_Legal_Recruiting_2025_2027_Detailed.csv": "5888943af60857b6ad56880d5818c9a61619a953705a3ad9d1ef00c010907b4c",
+    "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\Athletes_Emails_HighSchool_2025_2029.csv": "fc8e35786b6664c279f4a5a558c0fd7f069a335ba103141eab7fc4b951c324ea",
+    "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\Athletes_HighSchool_2025_2029_Detailed.csv": "0f7a15aa4d4c92411b428466f20c8973e3300867766832eb1e1dd7fc807988c5"
+  },
+  "changed_paths": [
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_TASKS.md"
+  ],
+  "patch_references": {
+    "docs/CODEX_HANDOFF.md": "backups/recdebut_email_20261029/recdebut_class2027_20261029T172331Z/patches/docs__CODEX_HANDOFF.md.patch",
+    "docs/CODEX_JOURNAL.md": "backups/recdebut_email_20261029/recdebut_class2027_20261029T172331Z/patches/docs__CODEX_JOURNAL.md.patch",
+    "docs/CODEX_TASKS.md": "backups/recdebut_email_20261029/recdebut_class2027_20261029T172331Z/patches/docs__CODEX_TASKS.md.patch"
+  },
+  "document_hashes_before_append": {
+    "AGENTS.md": "46e5541ddef2e02f01ca6b21dae7db3882f458a12d421a8540fde55e3a7647a3",
+    "docs/CODEX_HANDOFF.md": "835cf83d6c346db083426e1565a352677ab237b8b2a688c3066e6d12296762f2",
+    "docs/CODEX_JOURNAL.md": "d4593532f9c7e5c7ed0ac9d430cbceede8195a642402008254165dda1791451d",
+    "docs/CODEX_DECISIONS.md": "81d784f78d99e0dc72db25b5d1aeff4091e534fb3b425f93da2e7b7b19f78348",
+    "docs/CODEX_TASKS.md": "163f854add6590a333b9e1cf8561bf9ec95ecfbbde16cf16bd028aa6f54c654a"
+  },
+  "document_hashes_at_checkpoint": {
+    "AGENTS.md": "46e5541ddef2e02f01ca6b21dae7db3882f458a12d421a8540fde55e3a7647a3",
+    "docs/CODEX_HANDOFF.md": "7192d62ed6a61ed5792e83dbd175ec31370c53ef5d9ec1af90b0e3feecd51ad0",
+    "docs/CODEX_JOURNAL.md": "f0bcaa53a6f3adc095abfd1887a04a7271ec26383fb160ff3814b94d9668b52b",
+    "docs/CODEX_DECISIONS.md": "81d784f78d99e0dc72db25b5d1aeff4091e534fb3b425f93da2e7b7b19f78348",
+    "docs/CODEX_TASKS.md": "ab4a8c940cdd64521df7124f232c480d09788ec09fb2af939bc67e5b4468d2fb"
+  },
+  "document_snapshot_before": "backups/recdebut_email_20261029/recdebut_class2027_20261029T172331Z/docs_before",
+  "document_snapshot_after": "backups/recdebut_email_20261029/recdebut_class2027_20261029T172331Z/docs_after",
+  "working_tree": {
+    "file": "backups/recdebut_email_20261029/recdebut_class2027_20261029T172331Z/git_status.z",
+    "sha256": "c0b2c02e0cdf9879823b78ea40815a88334b87b698f58f7d52e9d354d629b321",
+    "entries": 52713
+  },
+  "evidence": {
+    "backups/recdebut_email_20261029/tier_review_v2/tier_audit.json": "be6bb77ab30fafa0293773ea71d854edf68116d837fe6f3f1ba4e453601cf56e",
+    "backups/recdebut_email_20261029/tier_review_v2/README.txt": "fa7c77baf40f03dec776537ecea2e54871225f856fc1d299301552c93ed67356",
+    "backups/recdebut_email_20261029/portal_tier_worklog_receipt.json": "5794688ddc71f387b71cbf1b38f3af45e2e756ce68f391797cf62a328395befd",
+    "backups/recdebut_email_20261029/tier_review_attempt1_diagnostic.txt": "4eb5c15b958aa0f15116469ca2eaffb001734e54a605d84e180277879fc7369a",
+    "backups/recdebut_email_20261029/review_tier_lists.py": "1aa8f707ec5b0aea68df2cc6d93f38b0161fae7f31f49ecc85d41a926b39d78d",
+    "backups/recdebut_email_20261029/tier_review_v2/Tier1_UNSENT_HELD_Personalized_Review.csv": "308f7a17d0d9f266d5c7b420738f174f0b3cdc0f3eb48bd091e1f13f5e5270da",
+    "backups/recdebut_email_20261029/tier_review_v2/Tier2_UNSENT_HELD_Personalized_Review.csv": "d0e99b10de83abae24a93a11406e5d3d33dd8feb976503a70d62a45d51f19056",
+    "backups/recdebut_email_20261029/recdebut_organizer_20261029T172004Z/organizer_confirmation_assertion.json": "2431f30311ab17430b39d1a1e95d45d9ea7ab586e4ad50e4c1e7efde127a0c56",
+    "backups/recdebut_email_20261029/recdebut_organizer_20261029T172004Z/portal_organizer_worklog_receipt.json": "fa8db5fb404630fde659be5c943c960c1db93ca8bd2ee0582f4d9a5aab9d4302",
+    "backups/recdebut_email_20261029/checkpoint_organizer_confirmation.py": "78dde06a68f23a6f28a85d267989298629ec9806ca66faa1a98c8854848cf0ca",
+    "backups/recdebut_email_20261029/recdebut_class2027_20261029T172331Z/Class2027_UNSENT_HELD_Personalized_Review.csv": "b8c61d7d310cf4a3f8a4d79d53958eddc379ce79e53548eaf2619998e6981749",
+    "backups/recdebut_email_20261029/recdebut_class2027_20261029T172331Z/class2027_review_audit.json": "60819a27d973a72b5dc65cb6a84150fb9259030cfca424bce2523ea811a1e0c5",
+    "backups/recdebut_email_20261029/recdebut_class2027_20261029T172331Z/README.txt": "a47c4381eab63771c3ec1fb708280429604ce98e95cc996c3a378c972225cca8",
+    "backups/recdebut_email_20261029/recdebut_class2027_20261029T172331Z/portal_class2027_worklog_receipt.json": "216446ade88d763174125fd6b06fc1be23eec158821e1a9785e2547f91c1e7ca",
+    "backups/recdebut_email_20261029/prepare_class2027_review.py": "913a7bebb383b2a4c241adb176b3a8b711687eda48b35bd972221c9f411e882c"
+  },
+  "verification": {
+    "csv_counts_sets_hashes": "VERIFIED",
+    "original_sources_unchanged": "VERIFIED",
+    "rendered_script_and_video": "VERIFIED in 1,074 / 3,408 held drafts; no new backend source change",
+    "backend_tests": "Record178: 287 passed, 1 warning in 25.66s, source hashes still match",
+    "consent_provenance": "SUPPLIED_DENNIS_AUDIENCE_INSTRUCTION; REGISTRATION_PERMISSION_UNRESOLVED",
+    "identity_discrepancies": 2,
+    "new_athlete_sends": 0,
+    "live_tracking": "UNVERIFIED_NOT_LOADED",
+    "inbound_reply_forwarding": "OPEN_INACTIVE",
+    "portal_preparation_worklog_revision": 4,
+    "initial_campaign_cohort": {
+      "grad_year": 2027,
+      "unique_addresses": 1021,
+      "drafts": 1020,
+      "identity_blanks": 1
+    }
+  },
+  "decisions": [
+    "ADR-110 unchanged. Start review with class2027 only, retain permission and final review holds. Supplied quote specifies audience priority and contains no registration consent wording."
+  ],
+  "next_step": "Review held class2027 cohort and resolve one identity conflict; inspect source-permission wording and complete postal/sender/incoming-reply/runtime prerequisites before final review. No athlete send authorized by this checkpoint.",
+  "known_failures": [
+    "Initial graduation-year representation false positives retained in tier_review; use tier_review_v2."
+  ],
+  "receiving_agent_acknowledgement": null
+}

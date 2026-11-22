@@ -1,0 +1,775 @@
+{
+  "handoff_id": "network_hardening_20261030T220825Z",
+  "created_utc": "2026-10-30T22:46:22.290038+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Pending independent receiver",
+  "status": "SOURCE_TESTED; LOCAL_API_AND_HOSTING_VERIFIED; FINANCIAL_AND_UNTRUSTED_COMPUTE_DISPATCH_HELD",
+  "git": {
+    "commit": "9f7e1750a90ee491d8cbd191cb6f4c22f2d71214",
+    "branch": "main"
+  },
+  "version": "v5.329.74",
+  "source_manifest_checksum": "22b0dfa496269bffadd3d176542b29cdb8bb009d80972fdf46092e66eb3ec2d5",
+  "checksum_definition": "SHA256 compact sorted JSON path-to-after_sha256 map; manifest excluded",
+  "files": {
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md": {
+      "existed_before": true,
+      "before_sha256": "5d02db15cbb83f90d8bef26d89c663efcf7903303c78937beaa6128b6503678b",
+      "after_sha256": "694131e865fbc74593f8735ef2cbd490107a7c4f103fc1160d0b854fc9367943",
+      "changed": true,
+      "bytes": 1122807
+    },
+    "BroadcastStudioApp/package-lock.json": {
+      "existed_before": true,
+      "before_sha256": "d5298c6e7fb8df777366dd1a5eef287ac2a58d704ab0f40872eee4a68823d572",
+      "after_sha256": "57e75ee9d3f59df083eb7cbdc21eb87f5c8147756779b32f8d597b0f6f8aaa9d",
+      "changed": true,
+      "bytes": 222035
+    },
+    "BroadcastStudioApp/package.json": {
+      "existed_before": true,
+      "before_sha256": "1b8d252e05598411e78e40c9d4676bea3ca908809499ab87560ba307384bc164",
+      "after_sha256": "8e861040d34a05fd445b4949ec51dc09506c79069bf0ceaf5bdce53c5512ccf7",
+      "changed": true,
+      "bytes": 3011
+    },
+    "BroadcastStudioApp/src/version.js": {
+      "existed_before": true,
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "b5abcd8c23a1c6e9cf0629b243a298bcfa3928a0540140bf1191157164ba2c03",
+      "changed": true,
+      "bytes": 354
+    },
+    "MASTER_HISTORICAL_INDEX.md": {
+      "existed_before": true,
+      "before_sha256": "c1c6eb3f71d4ff59ab2ae950debf0120499667e2da894d4fe4d041959c5225e0",
+      "after_sha256": "cec4d60bae6466712ac3c42bde137e48d008fa833eab9b2e25fa7116d215c143",
+      "changed": true,
+      "bytes": 97251
+    },
+    "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md": {
+      "existed_before": true,
+      "before_sha256": "47e7a0b5872f27c54f7f597063e647d17aac0a35d4146300f6468e90a190caef",
+      "after_sha256": "eaafb5995f0f078320959f9c1b98d83a6f1625206dced0cf158f4f720ed03b81",
+      "changed": true,
+      "bytes": 82848
+    },
+    "MASTER_TASKS_CHRONOLOGY.md": {
+      "existed_before": true,
+      "before_sha256": "f6958c131f08b337c01e88f377a3aabdefa1b236061540fce0c8c12c1ddbb1ea",
+      "after_sha256": "19a838cf807b2c55f323d8cfb4e59bdaf6970cbbd48e682ffcf5dc5ecfa92b37",
+      "changed": true,
+      "bytes": 207793
+    },
+    "NotebookLM_Records/artifact_history.md": {
+      "existed_before": true,
+      "before_sha256": "e90648969efaa1a5d2ba7445f0149cfb5e0bfeee38c5fb9e12209d5b3fcccc6e",
+      "after_sha256": "d1b53c93961d61fbf5e6551176d56711c7adef2928f899d680fbedd51b60da69",
+      "changed": true,
+      "bytes": 145886
+    },
+    "backend/AI_BS_Backend.py": {
+      "existed_before": true,
+      "before_sha256": "8c521b678afdc8868dbe2f43ac0b0f6bcffb938c104d6b5a2d0140d8f06a7ce6",
+      "after_sha256": "8c521b678afdc8868dbe2f43ac0b0f6bcffb938c104d6b5a2d0140d8f06a7ce6",
+      "changed": false,
+      "bytes": 366948
+    },
+    "backend/commercial_gateway/gpu_network_router.py": {
+      "existed_before": true,
+      "before_sha256": "e30061e4a7db91a4ec4e8591e4b9f580ac979e11cebfcee52b38af1b681c66ca",
+      "after_sha256": "c2afb8a6f998a820a81a9ec994cf16f017a53671947b1dd6597d1c4c24db452f",
+      "changed": true,
+      "bytes": 3446
+    },
+    "backend/compute_orchestrator_agent.py": {
+      "existed_before": true,
+      "before_sha256": "c28acdcb68a2027824fcaf36d0535817b8c21d2e91dbc31194915892ba9dea88",
+      "after_sha256": "2ccfb24f672e83fe903082e6149e51e7aa4efe5a445f6829fdba89ff62d8e3f5",
+      "changed": true,
+      "bytes": 1115
+    },
+    "backend/core/cluster/vast_federation_daemon.py": {
+      "existed_before": true,
+      "before_sha256": "d7a0a06bdeb2ff37908badb2fd89e7faaf7f01fef9bc437a567d3367e519bea0",
+      "after_sha256": "06bfffaf355ce49a920b2e3f9361e7d6804fa9dd966767e25a015dc826b6c391",
+      "changed": true,
+      "bytes": 13661
+    },
+    "backend/modules/gpu_hardware_telemetry.py": {
+      "existed_before": true,
+      "before_sha256": "897bd492767e2e7664bed3dfea81f909601a9ebc7275493f52d3738d44a06664",
+      "after_sha256": "a22421b303441ae71b6c1fa9568ebac1f57083f1532798281d9ffcfbd27f4fae",
+      "changed": true,
+      "bytes": 13391
+    },
+    "backend/modules/network_telemetry.py": {
+      "existed_before": true,
+      "before_sha256": "1359c87a18959daef5fd44606d37bfed97d35ef60444442ba26c90ab740323c0",
+      "after_sha256": "698f2f8fdb618b7b486e5403f775dd143311c23588dff56b294fdf22b0baf268",
+      "changed": true,
+      "bytes": 52722
+    },
+    "backend/routers/gpu_telemetry_router.py": {
+      "existed_before": true,
+      "before_sha256": "3c608d2de7bbcc6c79a2a63c0526c11f6053fcaf091ecd8636f5e0065eb6ad95",
+      "after_sha256": "156d1f0eac9c412a3fe4bb0346cce0e52e93e4b93229af74fa8da288b67ec6c8",
+      "changed": true,
+      "bytes": 4053
+    },
+    "backend/routers/network_telemetry_router.py": {
+      "existed_before": true,
+      "before_sha256": "0a75752ba069c67a54c552d58fb1e2cae89f3410bb9c937505f25f42be27ef50",
+      "after_sha256": "55bf220e5f7d2ab594b4b27d62d04bc56f62d612b8a655d56cc074f18955594f",
+      "changed": true,
+      "bytes": 12179
+    },
+    "backend/security/financial_auth.py": {
+      "existed_before": true,
+      "before_sha256": "00e5c0f4a7c04ddc600b26f087a8eeb26fde42d810da6a76e8075f5e35ec8a23",
+      "after_sha256": "00e5c0f4a7c04ddc600b26f087a8eeb26fde42d810da6a76e8075f5e35ec8a23",
+      "changed": false,
+      "bytes": 793
+    },
+    "docs/CODEX_DECISIONS.md": {
+      "existed_before": true,
+      "before_sha256": "1cf227716cbc36699f4d51e66dbb7a638ba1f35ea5c56bf59bb574aa4bfc96a3",
+      "after_sha256": "11209122894dcad38447b3714012a55c5205f21b6e98e5a5d7d530cea98b2617",
+      "changed": true,
+      "bytes": 221174
+    },
+    "docs/CODEX_HANDOFF.md": {
+      "existed_before": true,
+      "before_sha256": "06985e47c6adf81d038a2278181c8d8ffac377f0cc90895be75dab569f9a9e7c",
+      "after_sha256": "82cee123542887c5cc033f81590f8156ae64af026edb998f2efd46552098a449",
+      "changed": true,
+      "bytes": 1105659
+    },
+    "docs/CODEX_JOURNAL.md": {
+      "existed_before": true,
+      "before_sha256": "39c366dfa3983bcc2b9607202fa00675a740c24a4eb8a1cd811dd712d213791a",
+      "after_sha256": "e4d03bb6f2ee83c1076975edeb91087d8bd300e8d9ad4c423be89d8c2d6cce62",
+      "changed": true,
+      "bytes": 731486
+    },
+    "docs/CODEX_TASKS.md": {
+      "existed_before": true,
+      "before_sha256": "35f19c44093c1dd33fd686819e7dd5adaef7b9a194daa5e029e881b88eba0caf",
+      "after_sha256": "626504ed1591bb3c4226509817514431b274d6e619c30bfd77ff75898055c806",
+      "changed": true,
+      "bytes": 327653
+    },
+    "docs/NETWORK_SECURITY_HARDENING_2026-10-30.md": {
+      "existed_before": false,
+      "before_sha256": null,
+      "after_sha256": "b3f46e63d8592ef4ffeb39ca2c945c540affc90246da8c58351bbf65918c741d",
+      "changed": true,
+      "bytes": 12078
+    },
+    "frontend/.firebaserc": {
+      "existed_before": true,
+      "before_sha256": "fce88e996dc77f317468dbc5c9d9ab4382d342b3939131fe59b75a63d4f97e60",
+      "after_sha256": "fce88e996dc77f317468dbc5c9d9ab4382d342b3939131fe59b75a63d4f97e60",
+      "changed": false,
+      "bytes": 57
+    },
+    "frontend/components/GpuHardwareTelemetryTab.jsx": {
+      "existed_before": true,
+      "before_sha256": "c953cddf1fe1f09259953bbe00688b986ffda069968b23a7476071d6e19868dd",
+      "after_sha256": "bc0d427215498766a2749d8c29308b68ee95500b7ba3a80caaa27735a43bb4ee",
+      "changed": true,
+      "bytes": 16922
+    },
+    "frontend/components/GpuNetworkTab.jsx": {
+      "existed_before": true,
+      "before_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "after_sha256": "99668e40ab9c6f36401d2496447048e34d4050e45875381eb5f61794a20dce9f",
+      "changed": true,
+      "bytes": 3639
+    },
+    "frontend/components/UnifiedCryptoHub.jsx": {
+      "existed_before": true,
+      "before_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "after_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "changed": false,
+      "bytes": 4772
+    },
+    "frontend/components/UniversalCreationSuite.jsx": {
+      "existed_before": true,
+      "before_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "after_sha256": "48244baaa4fd8730768a82b84ecad26b10f0a72ca5d3fabebee297fb2a9e4f72",
+      "changed": true,
+      "bytes": 14454
+    },
+    "frontend/components/components/GpuHardwareTelemetryTab.jsx": {
+      "existed_before": true,
+      "before_sha256": "c953cddf1fe1f09259953bbe00688b986ffda069968b23a7476071d6e19868dd",
+      "after_sha256": "bc0d427215498766a2749d8c29308b68ee95500b7ba3a80caaa27735a43bb4ee",
+      "changed": true,
+      "bytes": 16922
+    },
+    "frontend/components/components/GpuNetworkTab.jsx": {
+      "existed_before": true,
+      "before_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "after_sha256": "99668e40ab9c6f36401d2496447048e34d4050e45875381eb5f61794a20dce9f",
+      "changed": true,
+      "bytes": 3639
+    },
+    "frontend/components/components/UniversalCreationSuite.jsx": {
+      "existed_before": true,
+      "before_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "after_sha256": "48244baaa4fd8730768a82b84ecad26b10f0a72ca5d3fabebee297fb2a9e4f72",
+      "changed": true,
+      "bytes": 14454
+    },
+    "frontend/components/components/version.js": {
+      "existed_before": true,
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "b5abcd8c23a1c6e9cf0629b243a298bcfa3928a0540140bf1191157164ba2c03",
+      "changed": true,
+      "bytes": 354
+    },
+    "frontend/components/version.js": {
+      "existed_before": true,
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "b5abcd8c23a1c6e9cf0629b243a298bcfa3928a0540140bf1191157164ba2c03",
+      "changed": true,
+      "bytes": 354
+    },
+    "frontend/firebase.json": {
+      "existed_before": true,
+      "before_sha256": "db42d18af583f770481e93a3da7fc27936e24c0604665a1fed4ba4603687753b",
+      "after_sha256": "db42d18af583f770481e93a3da7fc27936e24c0604665a1fed4ba4603687753b",
+      "changed": false,
+      "bytes": 2479
+    },
+    "frontend/package-lock.json": {
+      "existed_before": true,
+      "before_sha256": "3c4046cc2db49a2444f35d77650d8d27bd3d2c746e4a35a34e8ff539c1ab6e06",
+      "after_sha256": "def4c17965716613c40066cea9c019378d35fb92e4757cbdd5467a6f2ef66b56",
+      "changed": true,
+      "bytes": 762043
+    },
+    "frontend/package.json": {
+      "existed_before": true,
+      "before_sha256": "ad2aa678454f94c66f867313379dc727930f63e53e8bb2a375e52682593dcdc5",
+      "after_sha256": "d1b4c5c56a3e1bdb15a8a18a66c09e89aee35cb3045e33fa4a92a15fe79da608",
+      "changed": true,
+      "bytes": 3299
+    },
+    "frontend/public/version.json": {
+      "existed_before": true,
+      "before_sha256": "8b3978e70e7966f5db9f895b545a9ce6f3e10b121da253810a3873f47d3c52fb",
+      "after_sha256": "1c2cb151dd66183ae601614525aed10d4946ff8aac3fdee6cf0e7610c271f2c4",
+      "changed": true,
+      "bytes": 194
+    },
+    "frontend/src/components/FinancialAccountBoundary.jsx": {
+      "existed_before": true,
+      "before_sha256": "73e0607a5ba7b77cc27f8211c4c527ba8a904e407e1d82e5d70e0b6f586af25b",
+      "after_sha256": "73e0607a5ba7b77cc27f8211c4c527ba8a904e407e1d82e5d70e0b6f586af25b",
+      "changed": false,
+      "bytes": 1799
+    },
+    "frontend/src/components/GpuHardwareTelemetryTab.jsx": {
+      "existed_before": true,
+      "before_sha256": "c953cddf1fe1f09259953bbe00688b986ffda069968b23a7476071d6e19868dd",
+      "after_sha256": "bc0d427215498766a2749d8c29308b68ee95500b7ba3a80caaa27735a43bb4ee",
+      "changed": true,
+      "bytes": 16922
+    },
+    "frontend/src/components/GpuNetworkTab.jsx": {
+      "existed_before": true,
+      "before_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "after_sha256": "99668e40ab9c6f36401d2496447048e34d4050e45875381eb5f61794a20dce9f",
+      "changed": true,
+      "bytes": 3639
+    },
+    "frontend/src/components/UnifiedCryptoHub.jsx": {
+      "existed_before": true,
+      "before_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "after_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "changed": false,
+      "bytes": 4772
+    },
+    "frontend/src/components/UniversalCreationSuite.jsx": {
+      "existed_before": true,
+      "before_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "after_sha256": "48244baaa4fd8730768a82b84ecad26b10f0a72ca5d3fabebee297fb2a9e4f72",
+      "changed": true,
+      "bytes": 14454
+    },
+    "frontend/src/components/components/GpuHardwareTelemetryTab.jsx": {
+      "existed_before": true,
+      "before_sha256": "c953cddf1fe1f09259953bbe00688b986ffda069968b23a7476071d6e19868dd",
+      "after_sha256": "bc0d427215498766a2749d8c29308b68ee95500b7ba3a80caaa27735a43bb4ee",
+      "changed": true,
+      "bytes": 16922
+    },
+    "frontend/src/components/components/GpuNetworkTab.jsx": {
+      "existed_before": true,
+      "before_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "after_sha256": "99668e40ab9c6f36401d2496447048e34d4050e45875381eb5f61794a20dce9f",
+      "changed": true,
+      "bytes": 3639
+    },
+    "frontend/src/components/components/UniversalCreationSuite.jsx": {
+      "existed_before": true,
+      "before_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "after_sha256": "48244baaa4fd8730768a82b84ecad26b10f0a72ca5d3fabebee297fb2a9e4f72",
+      "changed": true,
+      "bytes": 14454
+    },
+    "frontend/src/components/components/version.js": {
+      "existed_before": true,
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "b5abcd8c23a1c6e9cf0629b243a298bcfa3928a0540140bf1191157164ba2c03",
+      "changed": true,
+      "bytes": 354
+    },
+    "frontend/src/components/version.js": {
+      "existed_before": true,
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "b5abcd8c23a1c6e9cf0629b243a298bcfa3928a0540140bf1191157164ba2c03",
+      "changed": true,
+      "bytes": 354
+    },
+    "frontend/src/utils/accountingSession.js": {
+      "existed_before": true,
+      "before_sha256": "5db792af03e554fae6fab89e2d1efdf3ea52f1db2c49c1040e7d1468610ed26e",
+      "after_sha256": "5db792af03e554fae6fab89e2d1efdf3ea52f1db2c49c1040e7d1468610ed26e",
+      "changed": false,
+      "bytes": 3343
+    },
+    "frontend/src/utils/networkWorkspace.js": {
+      "existed_before": false,
+      "before_sha256": null,
+      "after_sha256": "f75696e0d121de6933a53aa76fb4be8a2cab8135ad43aaec022aab8e91376932",
+      "changed": true,
+      "bytes": 3317
+    },
+    "frontend/src/version.js": {
+      "existed_before": true,
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "b5abcd8c23a1c6e9cf0629b243a298bcfa3928a0540140bf1191157164ba2c03",
+      "changed": true,
+      "bytes": 354
+    },
+    "frontend/version.js": {
+      "existed_before": true,
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "b5abcd8c23a1c6e9cf0629b243a298bcfa3928a0540140bf1191157164ba2c03",
+      "changed": true,
+      "bytes": 354
+    },
+    "frontend/vite.config.js": {
+      "existed_before": true,
+      "before_sha256": "5f2ff937e8182c0013bf6335728b99cec2adc8e84f9b4fc9052cd734e20ff95b",
+      "after_sha256": "5f2ff937e8182c0013bf6335728b99cec2adc8e84f9b4fc9052cd734e20ff95b",
+      "changed": false,
+      "bytes": 4054
+    },
+    "package-lock.json": {
+      "existed_before": true,
+      "before_sha256": "f184b0d25fbb3be3b022f17081619a13ce7e2f9b298b4f33ae0bcf43586eb311",
+      "after_sha256": "13bdb660997517bc2dc100ad9ce66ef26cc3de5f0c88881e07346def650b5454",
+      "changed": true,
+      "bytes": 199
+    },
+    "package.json": {
+      "existed_before": true,
+      "before_sha256": "460cd293af78e8d864b198851914a8fa05f4b33a528bef5afed1a7f625a3f047",
+      "after_sha256": "8a98bd569335e21f9b0dcef1d4f979503be97b370253b123998d1f4516e6f639",
+      "changed": true,
+      "bytes": 429
+    },
+    "release.json": {
+      "existed_before": true,
+      "before_sha256": "f29c6fbcc8cb13261f522996d301adf5096e691ee43bdcb061c09e8420e7e0eb",
+      "after_sha256": "4383cfd6aaf1c58435be652f57b76a02ed6831157cdca9943fbae614ad9af970",
+      "changed": true,
+      "bytes": 193
+    },
+    "scripts/tests/test_network_adjacent_controls.py": {
+      "existed_before": false,
+      "before_sha256": null,
+      "after_sha256": "caff7873be18cc33085fee295323152bbadeae82412a96f82e2875e709bb32ff",
+      "changed": true,
+      "bytes": 8954
+    },
+    "scripts/tests/test_network_dispatch_containment.py": {
+      "existed_before": false,
+      "before_sha256": null,
+      "after_sha256": "2eaaaadca57f8f9722f90bb66a25783f05aeaaab4859e25eb42735819af59889",
+      "changed": true,
+      "bytes": 8922
+    },
+    "scripts/tests/test_network_hardware_evidence.py": {
+      "existed_before": false,
+      "before_sha256": null,
+      "after_sha256": "d7e1f99d499fbf9f0a3cba2b8cf1aa52108d5cab7a21df75d1a5b2a3a45ffe69",
+      "changed": true,
+      "bytes": 9866
+    },
+    "scripts/tests/test_network_telemetry_security.py": {
+      "existed_before": false,
+      "before_sha256": null,
+      "after_sha256": "e2a35cce8dc677f85c52075af4d063545cb4f0bbd8f472a2e77059d1c11b7808",
+      "changed": true,
+      "bytes": 16078
+    },
+    "scripts/tests/test_network_workspace_client.mjs": {
+      "existed_before": false,
+      "before_sha256": null,
+      "after_sha256": "4d3b9ff0c02bba57c82d88c1a7bb8bce22e923f29833274057cae9d41baa3ee6",
+      "changed": true,
+      "bytes": 17230
+    },
+    "version.txt": {
+      "existed_before": true,
+      "before_sha256": "be37839646f9ed0089924e2588e5ec17adb19f8894983c8621f1aec04dfdfe04",
+      "after_sha256": "c943f0faca29d0c2c584cd7af7237b3f898096d55ddab1f3488b43af726479bd",
+      "changed": true,
+      "bytes": 10
+    }
+  },
+  "patch": {
+    "path": "C:\\AI-BS\\backups\\network_hardening_20261030T220825Z\\session.diff",
+    "sha256": "a5dfc9ee8f919e22c8f4344c8bb08405bdd8f1f2caba8a0962defa62d3ce2cff"
+  },
+  "report": "docs/NETWORK_SECURITY_HARDENING_2026-10-30.md",
+  "evidence_directory": "C:\\AI-BS\\backups\\network_hardening_20261030T220825Z",
+  "verification": {
+    "version": "v5.329.74",
+    "python_tests": 133,
+    "python_subtests": 153,
+    "python_warnings": 5,
+    "client_tests": 39,
+    "local_runtime": {
+      "backend_listener_pid": 60140,
+      "backend_created": 1793399362.7183046,
+      "launcher_pid": 23528,
+      "flags": {
+        "AIBS_PAYMENT_MODE": "disabled",
+        "AI_BS_ALLOW_DESTRUCTIVE_ACTIONS": "false",
+        "AI_BS_DISCORD_NOTIFICATIONS_ENABLED": "false",
+        "AI_BS_BACKEND_BACKGROUND_ENABLED": "false",
+        "AI_BS_BACKEND_MANAGE_DAEMONS": "false",
+        "AI_BS_RECDEBUT_OUTBOUND_ENABLED": "false",
+        "RECDEBUT_REPLY_FORWARDING_ENABLED": "false",
+        "AI_BS_RECDEBUT_INBOUND_POLLING_ENABLED": "false"
+      },
+      "loopback_only": true,
+      "checks": [
+        {
+          "port": 8080,
+          "path": "/v1/network/nodes",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8080,
+          "path": "/v1/network/earnings/held-node",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8080,
+          "path": "/v1/network/treasury-status",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8080,
+          "path": "/api/network-telemetry/capture-mode",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8080,
+          "path": "/api/network-telemetry/summary",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8080,
+          "path": "/api/accounting/entries",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8080,
+          "path": "/v1/network/redeem-payout",
+          "method": "POST",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8080,
+          "path": "/v1/network/submit-job",
+          "method": "POST",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8080,
+          "path": "/api/v1/hardware/gpu/fan-control",
+          "method": "POST",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/v1/network/nodes",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/v1/network/earnings/held-node",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/v1/network/treasury-status",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/api/network-telemetry/capture-mode",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/api/network-telemetry/summary",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/api/accounting/entries",
+          "method": "GET",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/v1/network/redeem-payout",
+          "method": "POST",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/v1/network/submit-job",
+          "method": "POST",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/api/v1/hardware/gpu/fan-control",
+          "method": "POST",
+          "status": 403,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8080,
+          "path": "/v1/network/earnings/held-node",
+          "method": "GET",
+          "status": 200,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8080,
+          "path": "/v1/network/redeem-payout",
+          "method": "POST",
+          "status": 503,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8080,
+          "path": "/v1/network/submit-job",
+          "method": "POST",
+          "status": 503,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/v1/network/earnings/held-node",
+          "method": "GET",
+          "status": 200,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/v1/network/redeem-payout",
+          "method": "POST",
+          "status": 503,
+          "cache_control": "private, no-store"
+        },
+        {
+          "port": 8000,
+          "path": "/v1/network/submit-job",
+          "method": "POST",
+          "status": 503,
+          "cache_control": "private, no-store"
+        }
+      ],
+      "anonymous_denials": 18,
+      "authenticated_checks": "verified_unavailable_reads_and_held_invalid_body_dispatch",
+      "managed_daemons_all_inactive": true,
+      "actual_provider_payout_job_fan_capture_actions": false,
+      "raw_traffic_or_sensor_history_read": false,
+      "note": "Authenticated malformed-body requests prove dispatch is held before validation/provider work; no header values are retained in this receipt."
+    },
+    "hosting": {
+      "verified_utc": "2026-10-30T22:41:13.225497+00:00",
+      "url": "https://ai-bs-dashboard.web.app",
+      "resources": [
+        {
+          "path": "index.html",
+          "status": 200,
+          "bytes": 2881,
+          "sha256": "fd465a98ddc47aaedf2845a2dbe7f3539e1ff3487653db37814aeb4ea6c29ddf",
+          "matches_local": true,
+          "cache_control": "public, max-age=0, must-revalidate"
+        },
+        {
+          "path": "writer.html",
+          "status": 200,
+          "bytes": 1426,
+          "sha256": "bef3be86135866ccf32a7792492ef2edeea6b52908978c61797982ba977a418c",
+          "matches_local": true,
+          "cache_control": "public, max-age=0, must-revalidate"
+        },
+        {
+          "path": "version.json",
+          "status": 200,
+          "bytes": 194,
+          "sha256": "1c2cb151dd66183ae601614525aed10d4946ff8aac3fdee6cf0e7610c271f2c4",
+          "matches_local": true,
+          "cache_control": "public, max-age=0, must-revalidate",
+          "version": "v5.329.74"
+        },
+        {
+          "path": "js/main.BixADHUn.js",
+          "status": 200,
+          "bytes": 328362,
+          "sha256": "be927d72867afb93341d35c5b5aa049e5cff18a1c4fc57ed487d4ecb566a8a34",
+          "matches_local": true,
+          "cache_control": "public, max-age=31536000, immutable"
+        },
+        {
+          "path": "js/UniversalCreationSuite.sfrbpZrV.js",
+          "status": 200,
+          "bytes": 9181,
+          "sha256": "341f9b6a136b1e41b2db67b87e96b83cdda0e7baf98d02e60102763a7b4e83b3",
+          "matches_local": true,
+          "cache_control": "public, max-age=31536000, immutable"
+        },
+        {
+          "path": "js/UnifiedCryptoHub.C0BuKgIL.js",
+          "status": 200,
+          "bytes": 72550,
+          "sha256": "c04e87ee1a70ee53176c0192dec118b0e0df5c3f78b58cda81e39ef6d0c37b91",
+          "matches_local": true,
+          "cache_control": "public, max-age=31536000, immutable"
+        },
+        {
+          "path": "js/FinancialAccountBoundary.DKoPEfHK.js",
+          "status": 200,
+          "bytes": 2966,
+          "sha256": "ee074ef140c09bbcd5a5e7e87ee11356337343dc94553899479c2d3523186107",
+          "matches_local": true,
+          "cache_control": "public, max-age=31536000, immutable"
+        },
+        {
+          "path": "js/GpuHardwareTelemetryTab.DwklJMpK.js",
+          "status": 200,
+          "bytes": 12525,
+          "sha256": "064a979aa8ad356dea9572734585f2ab075d04ecb8d4593151c934e831e47cfd",
+          "matches_local": true,
+          "cache_control": "public, max-age=31536000, immutable"
+        }
+      ],
+      "all_match": true
+    },
+    "typecheck": {
+      "global_strict_typecheck": "failed",
+      "errors": 9588,
+      "owned_component_diagnostics": 64,
+      "unresolved_identifier_or_import_diagnostics": []
+    },
+    "mirrors": {
+      "GpuNetworkTab.jsx": {
+        "frontend/components/GpuNetworkTab.jsx": "99668e40ab9c6f36401d2496447048e34d4050e45875381eb5f61794a20dce9f",
+        "frontend/src/components/GpuNetworkTab.jsx": "99668e40ab9c6f36401d2496447048e34d4050e45875381eb5f61794a20dce9f",
+        "frontend/components/components/GpuNetworkTab.jsx": "99668e40ab9c6f36401d2496447048e34d4050e45875381eb5f61794a20dce9f",
+        "frontend/src/components/components/GpuNetworkTab.jsx": "99668e40ab9c6f36401d2496447048e34d4050e45875381eb5f61794a20dce9f"
+      },
+      "UniversalCreationSuite.jsx": {
+        "frontend/components/UniversalCreationSuite.jsx": "48244baaa4fd8730768a82b84ecad26b10f0a72ca5d3fabebee297fb2a9e4f72",
+        "frontend/src/components/UniversalCreationSuite.jsx": "48244baaa4fd8730768a82b84ecad26b10f0a72ca5d3fabebee297fb2a9e4f72",
+        "frontend/components/components/UniversalCreationSuite.jsx": "48244baaa4fd8730768a82b84ecad26b10f0a72ca5d3fabebee297fb2a9e4f72",
+        "frontend/src/components/components/UniversalCreationSuite.jsx": "48244baaa4fd8730768a82b84ecad26b10f0a72ca5d3fabebee297fb2a9e4f72"
+      },
+      "GpuHardwareTelemetryTab.jsx": {
+        "frontend/components/GpuHardwareTelemetryTab.jsx": "bc0d427215498766a2749d8c29308b68ee95500b7ba3a80caaa27735a43bb4ee",
+        "frontend/src/components/GpuHardwareTelemetryTab.jsx": "bc0d427215498766a2749d8c29308b68ee95500b7ba3a80caaa27735a43bb4ee",
+        "frontend/components/components/GpuHardwareTelemetryTab.jsx": "bc0d427215498766a2749d8c29308b68ee95500b7ba3a80caaa27735a43bb4ee",
+        "frontend/src/components/components/GpuHardwareTelemetryTab.jsx": "bc0d427215498766a2749d8c29308b68ee95500b7ba3a80caaa27735a43bb4ee"
+      }
+    },
+    "protected_hashes": {
+      "backend/core/crypto_execution_safety.py": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+      "backend/core/crypto_execution_controls.py": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+      "Crypto-Swarm/drip_ledger.json": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+      "backend/crypto_ledger.json": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd"
+    },
+    "dependency_trees_unchanged": true,
+    "ledger_original_prefixes_preserved": 9,
+    "whitespace_check_passed": true
+  },
+  "agent_checkpoints": [
+    "backups/network_workspace_frontend_20261030T220946Z",
+    "backups/network_workspace_frontend_20261030T220946Z/adjacent_controls",
+    "backups/network_hardware_evidence_20261030T222248Z"
+  ],
+  "completed": [
+    "verified network financial/code dispatch containment",
+    "admin-only redacted private host telemetry",
+    "truthful authenticated UI and explicit stale route",
+    "verified-admin fan request controls and sensor provenance",
+    "Vast offer-search credential handling",
+    "source tests, compile, local acceptance and Hosting release",
+    "append-only Record195/ADR-120/version metadata"
+  ],
+  "known_failures": [
+    "Broad strict-JS typecheck9588 diagnostics/64 scoped; no unresolved identifiers/imports",
+    "Two checkpoint-merge assumptions diagnosed before explicit verified schema adaptation; evidence retained"
+  ],
+  "limitations": [
+    "No live network financial/job activation",
+    "Physical fan enforcement/provider account validity and credential revocation unverified",
+    "Legacy history remains unverified; new observation write pruning not implemented",
+    "Vast provision/terminate CLI helpers are separate from offer-search missing-key hold",
+    "No native binary rebuild or Git commit/push"
+  ],
+  "architectural_decision": "ADR-120: contain unverifiable financial and untrusted compute interfaces; verified admin host diagnostics; explicit measured/unavailable records; user authorized fixes",
+  "next_step": "Retire exposed credentials if needed, address scoped typing, and build verified owner/compute/payment evidence plus durable recovery and approved isolated worker acceptance before activation."
+}

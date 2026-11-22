@@ -1,0 +1,3 @@
+nginx: the configuration file C:/StehouwerPublishing.com/restoration_staging/20261025T205656Z/nginx.static.conf syntax is ok
+nginx: [emerg] CreateDirectory() "C:/StehouwerPublishing.com/restoration_staging/20261025T205656Z/temp/client_body_temp" failed (3: The system cannot find the path specified)
+nginx: configuration file C:/StehouwerPublishing.com/restoration_staging/20261025T205656Z/nginx.static.conf test failed

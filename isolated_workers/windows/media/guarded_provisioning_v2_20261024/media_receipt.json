@@ -1,0 +1,10 @@
+{
+  "Volume": "AIBS_PROV",
+  "Bytes": 70418432,
+  "SHA256": "58D0224BB568169835D40963EED6DE1761151F62BC249CC6020DD47424523ECF",
+  "FileCount": 13,
+  "DirectoryPayloadReadbackPassed": true,
+  "Mounted": false,
+  "Executed": false,
+  "GuestInstallationVerified": false
+}

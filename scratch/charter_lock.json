@@ -1,0 +1,27 @@
+{
+  "charter_version": "1.0.0-FROZEN",
+  "as_of_utc": "2026-11-17T00:00:00Z",
+  "jurisdiction_scope": "Michigan, United States",
+  "primary_outcome": "net_strategy_equity_usd_mark",
+  "secondary_outcome": "cro_token_inventory_delta",
+  "frozen_artifacts": {
+    "daemon_script_path": "live_cro_usdt_trader.py",
+    "daemon_sha256": "3E6AFFC35DA73734F3BC9590E46081CAF6FABB7A7EDF3D3BA3D2FD83492D836E"
+  },
+  "pre_registered_acceptance_thresholds": {
+    "min_independent_chronological_blocks": 12,
+    "min_reconciled_round_trips": 60,
+    "bootstrap_confidence_level": 0.95,
+    "max_acceptable_drawdown_pct": 0.10,
+    "max_approved_per_trade_loss_usdt": 0.50,
+    "daily_loss_cutoff_usdt": 3.00,
+    "stressed_stop_slippage_pct": 0.0020,
+    "gap_stop_slippage_pct": 0.0050,
+    "verified_effective_maker_fee_pct": 0.0000,
+    "require_positive_edge_without_fee_credits": true
+  },
+  "benchmarks": {
+    "cash_on_venue": "100% uninvested USDT on identical Crypto.com Exchange account",
+    "buy_and_hold": "100% CRO entered at window start net of verified taker/maker entry fee"
+  }
+}

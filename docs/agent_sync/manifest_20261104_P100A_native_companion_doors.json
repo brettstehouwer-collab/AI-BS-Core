@@ -1,0 +1,40 @@
+{
+  "at": "2026-11-04T21:08:45.143515+00:00",
+  "status": "passed_native_companion_door_acceptance_consumer_matrix",
+  "cases": 4,
+  "native_runs_including_restart": 8,
+  "assertions": 418,
+  "evidence": "E:\\AI_BS_Resources\\FirstBoot\\P100\\CompanionDoorAcceptance\\qualification.json",
+  "backup_receipt": "docs/game_engine/checkpoints/100A-drive.json",
+  "monitor_status": "available",
+  "monitor_sha256": "310a42dee4b6dc506c047bd3f2f16523617acfeda2e8bb45107c097dbd65d2a6",
+  "canonical_native_source_changed": false,
+  "installed_release_changed": false,
+  "real_saves_or_family_originals_changed": false,
+  "free_GiB": {
+    "C": 204.36,
+    "D": 24.24,
+    "E": 42.57
+  },
+  "goal_complete": false,
+  "next_step": "Return to Adam v31 presentation: inspect the residual collar/neck topology and split-normal/material boundary against retained P95 diagnostics before making a separate master correction. Preserve user-selected v28 face direction and all rig/clip/wrist-band contracts. Final human pacing, current gameplay performance, caption review and exact final installed-package acceptance remain open.",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "private_worktree_snapshot": "E:\\AI_BS_Resources\\FirstBoot\\P100\\CompanionDoorAcceptance\\private-git-status.txt",
+  "worktree_status_sha256": "be56a65f03952b17519114aa2de5d33341f298827c61431b576583e628b12ee4",
+  "changed_paths": [
+    "docs/CODEX_HANDOFF.md",
+    "docs/game_engine/PROJECT_INDEX.md",
+    "docs/game_engine/WARM_BEGINNING_ACCEPTANCE_AUDIT.md",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "docs/game_engine/checkpoints/100A-drive.json",
+    "engine/out/warm_beginning/monitor_summary.json"
+  ],
+  "historical_scope_read": [
+    "Current AGENTS sectionXI",
+    "P98/P99 game index, handoff and acceptance entries",
+    "Existing guide_controller CPU tests, CompanionRuntime, current chapter proof/route sources",
+    "P96 acceptance-consumer build recipe"
+  ],
+  "private_git_uploaded": false
+}

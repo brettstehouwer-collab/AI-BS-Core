@@ -1,4 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+/** @typedef {{schema_title?: string; meta_description?: string; local_keywords?: string[]; headline?: string; body?: string; cta?: string; caption_hook?: string; hashtags?: string; hook_text?: string; script?: string; caption_keywords?: string; tweet?: string; card_title?: string; card_description?: string; pin_title?: string; pin_description?: string; rich_pin_price?: string; business_description?: string; category_tags?: string[]; special_offer?: string}} PlatformPost */
+/** @param {string} id */
+function formElement(id) {
+  const element = document.getElementById(id);
+  if (!(element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement)) throw new Error('Form control is unavailable: ' + id);
+  return element;
+}
+/** @param {string} url */
+function setGhostUrl(url) { document.getElementById('ghostWebviewFull')?.setAttribute('src', url); }
+import { useState, useEffect, useRef } from 'react';
 import ArtifactRenderer from './components/ArtifactRenderer';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, AreaChart, Area } from 'recharts';
 const DOCS = [
@@ -12,27 +21,45 @@ const DOCS = [
   },
 ];
 
+/**
+ * @typedef {Pick<import('/types/domain').AppStore, 'activeTab' | 'BACKEND_URL' | 'parseSources' | 'workflowMode' | 'isUploading' | 'kbSearchQuery' | 'setKbSearchQuery' | 'kbSearchResults' | 'mediaType' | 'setMediaType' | 'comfyuiStatus' | 'comfyuiModels' | 'selectedComfyModel' | 'setSelectedComfyModel' | 'mediaPrompt' | 'setMediaPrompt' | 'isEnhancingPrompt' | 'localAiNegativePrompt' | 'setLocalAiNegativePrompt' | 'localAiWidth' | 'setLocalAiWidth' | 'localAiHeight' | 'setLocalAiHeight' | 'localAiSteps' | 'setLocalAiSteps' | 'localAiCfgScale' | 'setLocalAiCfgScale' | 'localAiSeed' | 'setLocalAiSeed' | 'localSimMode' | 'setLocalSimMode' | 'localSimDuration' | 'setLocalSimDuration' | 'localSimTheme' | 'setLocalSimTheme' | 'mediaAspectRatio' | 'setMediaAspectRatio' | 'isCreatingMedia' | 'mediaError' | 'pollingStatusMsg' | 'localGenProgress' | 'mediaResultUrl' | 'setMediaResultUrl' | 'galleryMedia'> & {
+ * messages: import('/types/domain').ChatMessage[]; setMessages: (update: import('/types/domain').Update<import('/types/domain').ChatMessage[]>) => void;
+ * chatInput: string; setChatInput: (update: import('/types/domain').Update<string>) => void;
+ * handleSendMessage: () => void; toggleListening: () => void; isListening: boolean;
+ * useRag: boolean; setUseRag: (value: boolean) => void; useWebSearch: boolean; setUseWebSearch: (value: boolean) => void;
+ * useAgent: boolean; setUseAgent: (value: boolean) => void;
+ * messageFeedRef: import('react').RefObject<HTMLDivElement>; canvasRef: import('react').RefObject<HTMLCanvasElement>;
+ * handleDrop: import('react').DragEventHandler; handleDragOver: import('react').DragEventHandler;
+ * handlePaste: import('react').ClipboardEventHandler<HTMLTextAreaElement>;
+ * handleFileUpload: import('react').ChangeEventHandler<HTMLInputElement>;
+ * filteredDocs: string[]; handleOpenDocPreview: (doc: string) => void; handleDeleteDocument: (doc: string) => void;
+ * handleEnhancePrompt: () => void; handleCreateLocalAI: () => void; handleCreateLocalSimulation: () => void;
+ * handleCreateLocalImage: () => void; handleCreateMedia: () => void; handleDownloadMedia: (url: string) => void;
+ * setFrictionTask: (task: string | null) => void;
+ * }} KnowledgeSuiteProps
+ */
+/** @param {KnowledgeSuiteProps} props */
 export default function BullshitKnowledgeSuite(props) {
   const { 
-    activeTab, BACKEND_URL, messages, setMessages, chatInput, setChatInput, handleSendMessage,
+    activeTab, BACKEND_URL, messages,  chatInput, setChatInput, handleSendMessage,
     toggleListening, isListening, useRag, setUseRag, useWebSearch, setUseWebSearch, useAgent, setUseAgent,
     messageFeedRef, parseSources, handleDrop, handleDragOver, handlePaste, workflowMode,
-    isUploading, handleFileUpload, kbSearchQuery, setKbSearchQuery, kbSearchResults, filteredDocs, handleOpenDocPreview, handleDeleteDocument,
+      kbSearchQuery, setKbSearchQuery, kbSearchResults, filteredDocs, handleOpenDocPreview, handleDeleteDocument,
     mediaType, setMediaType, comfyuiStatus, comfyuiModels, selectedComfyModel, setSelectedComfyModel, mediaPrompt, setMediaPrompt,
-    isEnhancingPrompt, handleEnhancePrompt, localAiNegativePrompt, setLocalAiNegativePrompt, localAiWidth, setLocalAiWidth,
-    localAiHeight, setLocalAiHeight, localAiSteps, setLocalAiSteps, localAiCfgScale, setLocalAiCfgScale, localAiSeed, setLocalAiSeed,
-    localSimMode, setLocalSimMode, localSimDuration, setLocalSimDuration, localSimTheme, setLocalSimTheme, mediaAspectRatio, setMediaAspectRatio,
-    handleCreateLocalAI, handleCreateLocalSimulation, handleCreateLocalImage, handleCreateMedia, isCreatingMedia, mediaError,
-    canvasRef, pollingStatusMsg, localGenProgress, mediaResultUrl, setMediaResultUrl, handleDownloadMedia, galleryMedia, setFrictionTask
-  } = props;
+         
+           
+           setMediaAspectRatio,
+    handleCreateLocalAI,   handleCreateMedia, isCreatingMedia, mediaError,
+     pollingStatusMsg,  mediaResultUrl,  handleDownloadMedia,  } = props;
 
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
   const [isChatUploading, setIsChatUploading] = useState(false);
   const [vaultTarget, setVaultTarget] = useState("");
   const [isLocalKbUploading, setIsLocalKbUploading] = useState(false);
 
+  /** @param {import("react").ChangeEvent<HTMLInputElement>} event */
   const localHandleFileUpload = async (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files?.[0];
     if (!file) return;
     setIsLocalKbUploading(true);
     const formData = new FormData();
@@ -53,9 +80,10 @@ export default function BullshitKnowledgeSuite(props) {
       alert("Failed to upload document.");
     }
     setIsLocalKbUploading(false);
-    event.target.value = null; // reset input
+    event.target.value = ''; // reset input
   };
 
+  /** @param {File} file */
   const handleChatFileUpload = (file) => {
     if (!file) return;
     setIsChatUploading(true);
@@ -67,7 +95,7 @@ export default function BullshitKnowledgeSuite(props) {
     if (isTextFile) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const content = e.target.result;
+        const content = e.target?.result;
         setChatInput(prev => prev + `\n\n--- [FILE: ${file.name}] ---\n${content}\n-----------------------\n`);
         setIsChatUploading(false);
       };
@@ -92,17 +120,17 @@ export default function BullshitKnowledgeSuite(props) {
 
   // Advertising Tab State
   const [advSubTab, setAdvSubTab] = useState('leads');
-  const [leads, setLeads] = useState([]);
+  const [leads, setLeads] = useState(/** @type {{id: number; business: string; contact: string; status: string; value: string}[]} */ ([]));
   const [businessName, setBusinessName] = useState('');
   const [campaignGoal, setCampaignGoal] = useState('');
   const [generatedCopy, setGeneratedCopy] = useState('');
   const [isAdvGenerating, setIsAdvGenerating] = useState(false);
-  const [budgets, setBudgets] = useState([]);
+  const [budgets, setBudgets] = useState(/** @type {{id: number; event: string; spent: number | string; roi: number | string}[]} */ ([]));
   const [telemetryData, setTelemetryData] = useState({ total_reach: 6539017, platforms: [] });
   
   // Lead Action States
-  const [auditResults, setAuditResults] = useState({});
-  const [videoResults, setVideoResults] = useState({});
+  const [auditResults, setAuditResults] = useState(/** @type {Record<string, {visibility_deficits?: string[]; visibility_score: number}>} */ ({}));
+  const [videoResults, setVideoResults] = useState(/** @type {Record<string, {video_path: string}>} */ ({}));
 
   // Platform Post Generator State
   const [postBizName, setPostBizName] = useState('');
@@ -110,8 +138,8 @@ export default function BullshitKnowledgeSuite(props) {
   const [postIndustry, setPostIndustry] = useState('Local Business');
   const [postCounty, setPostCounty] = useState('Ottawa County');
   const [isGeneratingPosts, setIsGeneratingPosts] = useState(false);
-  const [generatedPosts, setGeneratedPosts] = useState(null);
-  const [copiedPlatform, setCopiedPlatform] = useState(null);
+  const [generatedPosts, setGeneratedPosts] = useState(/** @type {{[platform: string]: PlatformPost | string | undefined; error?: string} | null} */ (null));
+  const [copiedPlatform, setCopiedPlatform] = useState(/** @type {string | null} */ (null));
 
   // AIO Strategy State
   const [aioType, setAioType] = useState('schema'); // 'schema' or 'prompt'
@@ -150,7 +178,7 @@ export default function BullshitKnowledgeSuite(props) {
           setAioResult(`Error: ${data.message}`);
       }
     } catch (e) {
-      setAioResult(`Error: ${e.message}`);
+      setAioResult(`Error: ${(e instanceof Error ? e.message : String(e))}`);
     }
     setIsGeneratingAio(false);
   };
@@ -194,19 +222,21 @@ Return this exact JSON structure:
         setGeneratedPosts({ error: raw });
       }
     } catch (e) {
-      setGeneratedPosts({ error: e.message });
+      setGeneratedPosts({ error: (e instanceof Error ? e.message : String(e)) });
     }
     setIsGeneratingPosts(false);
   };
 
+  /** @param {string} platform @param {string} text */
   const handleCopyPost = (platform, text) => {
     navigator.clipboard.writeText(text);
     setCopiedPlatform(platform);
     setTimeout(() => setCopiedPlatform(null), 2000);
   };
-  const [loadingAudits, setLoadingAudits] = useState({});
-  const [loadingVideos, setLoadingVideos] = useState({});
+  const [loadingAudits, setLoadingAudits] = useState(/** @type {Record<string, boolean>} */ ({}));
+  const [loadingVideos, setLoadingVideos] = useState(/** @type {Record<string, boolean>} */ ({}));
 
+  /** @param {number | string} leadId @param {string} bizName */
   const handleAuditLead = async (leadId, bizName) => {
     setLoadingAudits(prev => ({ ...prev, [leadId]: true }));
     try {
@@ -224,6 +254,7 @@ Return this exact JSON structure:
     }
   };
 
+  /** @param {number | string} leadId @param {string} bizName */
   const handleGenerateLeadVideo = async (leadId, bizName) => {
     setLoadingVideos(prev => ({ ...prev, [leadId]: true }));
     try {
@@ -246,7 +277,7 @@ Return this exact JSON structure:
   
   // Auto-Tasker Agent State
   const [isAutoAgentRunning, setIsAutoAgentRunning] = useState(false);
-  const [autoAgentIndex, setAutoAgentIndex] = useState(0);
+  const [, setAutoAgentIndex] = useState(0);
 
   const socialPlatforms = [
     'https://www.google.com/maps/contrib/114475333646636636839/',
@@ -260,6 +291,7 @@ Return this exact JSON structure:
   ];
 
   useEffect(() => {
+    /** @type {ReturnType<typeof setInterval> | undefined} */
     let interval;
     if (isAutoAgentRunning) {
       interval = setInterval(() => {
@@ -267,9 +299,9 @@ Return this exact JSON structure:
           const nextIndex = (prev + 1) % socialPlatforms.length;
           const nextUrl = socialPlatforms[nextIndex];
           const webview = document.getElementById('ghostWebviewFull');
-          const input = document.getElementById('ghostBrowserUrlFull');
-          if (webview) webview.src = nextUrl;
-          if (input) input.value = nextUrl;
+          const input = formElement('ghostBrowserUrlFull');
+          if (webview) webview.setAttribute('src', nextUrl);
+          if (input instanceof HTMLInputElement) input.value = nextUrl;
           return nextIndex;
         });
       }, 60000); // 60 seconds
@@ -293,7 +325,7 @@ Return this exact JSON structure:
 
   // OmniDrive State
   const [odQuery, setOdQuery] = useState("");
-  const [odResults, setOdResults] = useState([]);
+  const [odResults, setOdResults] = useState(/** @type {{drive: string; filename: string; filepath: string}[]} */ ([]));
   const [odIsSearching, setOdIsSearching] = useState(false);
   const [odDestination, setOdDestination] = useState("");
 
@@ -301,11 +333,11 @@ Return this exact JSON structure:
   const [readerText, setReaderText] = useState("");
   const [isReaderPlaying, setIsReaderPlaying] = useState(false);
   const [readerVoice, setReaderVoice] = useState("brett");
-  const [spokenKeys, setSpokenKeys] = useState("");
-  const audioRef = useRef(null);
+  const [spokenKeys] = useState("");
+  const audioRef = useRef(/** @type {HTMLAudioElement | null} */ (null));
 
   // Live System State (Adapted for Advertising)
-  const [frictionTask, setFrictionTaskLocal] = useState(null);
+  const [frictionTask, setFrictionTaskLocal] = useState(/** @type {string | null} */ (null));
   const [frictionInput, setFrictionInput] = useState("");
   const [deployResult, setDeployResult] = useState("");
 
@@ -354,6 +386,7 @@ Return this exact JSON structure:
   }, [budgets]);
 
   useEffect(() => {
+    /** @type {ReturnType<typeof setInterval> | undefined} */
     let tInterval;
     if (activeTab === 'advertising' && advSubTab === 'telemetry') {
       const fetchTelemetry = async () => {
@@ -406,7 +439,7 @@ Return this exact JSON structure:
           })}
         </div>
         <div className="chat-input-area" onDrop={handleDrop} onDragOver={handleDragOver}>
-          <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={(e) => { if (e.target.files && e.target.files.length > 0) { handleChatFileUpload(e.target.files[0]); e.target.value = null; } }} />
+          <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={(e) => { if (e.target.files && e.target.files.length > 0) { handleChatFileUpload(e.target.files[0]); e.target.value = ''; } }} />
           <div className="chat-input-row">
             <textarea className="chat-input" placeholder={isChatUploading ? "Uploading file..." : "Send a message or paste a file..."} value={chatInput} onChange={(e) => setChatInput(e.target.value)} onPaste={handlePaste} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }} disabled={isChatUploading} />
             <button className="mic-button upload-btn" onClick={() => fileInputRef.current?.click()} title="Upload File" disabled={isChatUploading} style={{ marginRight: '8px' }}>📎</button>
@@ -429,8 +462,8 @@ Return this exact JSON structure:
     return (
       <div className="kb-container">
           <div className="upload-box" style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-            <div className="upload-icon" onClick={() => document.getElementById('kb-file-input').click()} style={{ cursor: 'pointer' }}>📄</div>
-            <h3 onClick={() => document.getElementById('kb-file-input').click()} style={{ cursor: 'pointer', margin: 0 }}>{isLocalKbUploading ? 'Ingesting Document...' : 'Upload Data to Vault (.jsonl, .pdf, .docx, .txt)'}</h3>
+            <div className="upload-icon" onClick={() => document.getElementById('kb-file-input')?.click()} style={{ cursor: 'pointer' }}>📄</div>
+            <h3 onClick={() => document.getElementById('kb-file-input')?.click()} style={{ cursor: 'pointer', margin: 0 }}>{isLocalKbUploading ? 'Ingesting Document...' : 'Upload Data to Vault (.jsonl, .pdf, .docx, .txt)'}</h3>
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
               <label style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Target Vault:</label>
@@ -790,7 +823,7 @@ Return this exact JSON structure:
                 <label>Target Info (Book Title, Author, Genre, ISBN, Themes, etc.)</label>
                 <textarea
                   className="matrix-input"
-                  rows="4"
+                  rows={4}
                   value={aioInput}
                   onChange={(e) => setAioInput(e.target.value)}
                   placeholder="e.g. Title: 'The Matrix Resurrections', Author: 'Lana Wachowski', Genre: 'Sci-Fi', Themes: 'Free Will, Reality, Love'"
@@ -856,7 +889,7 @@ Return this exact JSON structure:
                   </tr>
                 </thead>
                 <tbody>
-                  {leads.length === 0 && <tr><td colSpan="7" style={{textAlign:'center', color:'var(--text-muted)'}}>No leads found.</td></tr>}
+                  {leads.length === 0 && <tr><td colSpan={7} style={{textAlign:'center', color:'var(--text-muted)'}}>No leads found.</td></tr>}
                   {leads.map(lead => {
                     const audit = auditResults[lead.id];
                     const video = videoResults[lead.id];
@@ -908,6 +941,7 @@ Return this exact JSON structure:
           )}
 
           {advSubTab === 'platform-posts' && (() => {
+            /** @type {{key: string; label: string; icon: string; color: string; content: (post: PlatformPost) => string}[]} */
             const platforms = [
               { key: 'google',    label: 'Google Search',  icon: '🔍', color: '#4285F4', content: g => `📌 Title:\n${g?.schema_title || ''}\n\n📝 Meta Description:\n${g?.meta_description || ''}\n\n🔑 Keywords:\n${g?.local_keywords?.join(' · ') || ''}` },
               { key: 'facebook',  label: 'Facebook',       icon: '📘', color: '#1877F2', content: f => `💥 Headline:\n${f?.headline || ''}\n\n📣 Body:\n${f?.body || ''}\n\n👉 CTA: ${f?.cta || ''}` },
@@ -982,7 +1016,8 @@ Return this exact JSON structure:
                     </div>
                   )}
                   {platforms.map(({ key, label, icon, color, content }) => {
-                    const data = generatedPosts?.[key];
+                    const rawPost = generatedPosts?.[key];
+                    const data = rawPost && typeof rawPost === "object" ? rawPost : undefined;
                     const text = data ? content(data) : null;
                     const isEmpty = !data;
                     return (
@@ -1053,7 +1088,7 @@ Return this exact JSON structure:
 
                 <div style={{ marginBottom: '20px' }}>
                   <label style={{ display: 'block', marginBottom: '4px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>Campaign Objective</label>
-                  <textarea className="chat-input" rows="3" placeholder="Describe the goal of the ad campaign..." value={campaignGoal} onChange={e => setCampaignGoal(e.target.value)} style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px' }} />
+                  <textarea className="chat-input" rows={3} placeholder="Describe the goal of the ad campaign..." value={campaignGoal} onChange={e => setCampaignGoal(e.target.value)} style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px' }} />
                 </div>
                 
                 <div style={{ padding: '10px', background: 'rgba(124, 58, 237, 0.1)', border: '1px solid #7c3aed', borderRadius: '8px', marginBottom: '16px', textAlign: 'center' }}>
@@ -1103,7 +1138,7 @@ Return this exact JSON structure:
                       setGeneratedCopy(fullText);
                     }
                   } catch (err) {
-                    setGeneratedCopy(prev => prev + `\\n\\n[LIVE FAULT] Error contacting backend: ${err.message}`);
+                    setGeneratedCopy(prev => prev + `\\n\\n[LIVE FAULT] Error contacting backend: ${err instanceof Error ? err.message : String(err)}`);
                   } finally {
                     setIsAdvGenerating(false);
                   }
@@ -1209,14 +1244,14 @@ Return this exact JSON structure:
                   </button>
                 </div>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                  <button onClick={() => document.getElementById('ghostWebviewFull').src = 'https://www.google.com/maps/contrib/114475333646636636839/'} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>📍 Google Maps</button>
-                  <button onClick={() => document.getElementById('ghostWebviewFull').src = 'https://www.facebook.com/professional_dashboard/profile_insights/views/'} style={{ background: '#1877f2', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>📘 FB Insights</button>
-                  <button onClick={() => document.getElementById('ghostWebviewFull').src = 'https://www.instagram.com/'} style={{ background: '#e1306c', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>📸 Instagram</button>
-                  <button onClick={() => document.getElementById('ghostWebviewFull').src = 'https://x.com/'} style={{ background: '#000000', color: '#fff', border: '1px solid #333', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>✖️ X</button>
-                  <button onClick={() => document.getElementById('ghostWebviewFull').src = 'https://studio.youtube.com/'} style={{ background: '#ff0000', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>▶️ YouTube</button>
-                  <button onClick={() => document.getElementById('ghostWebviewFull').src = 'https://www.linkedin.com/'} style={{ background: '#0a66c2', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>💼 LinkedIn</button>
-                  <button onClick={() => document.getElementById('ghostWebviewFull').src = 'https://www.tiktok.com/'} style={{ background: '#000000', color: '#fff', border: '1px solid #333', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>🎵 TikTok</button>
-                  <button onClick={() => document.getElementById('ghostWebviewFull').src = 'https://www.pinterest.com/'} style={{ background: '#e60023', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>📌 Pinterest</button>
+                  <button onClick={() => setGhostUrl('https://www.google.com/maps/contrib/114475333646636636839/')} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>📍 Google Maps</button>
+                  <button onClick={() => setGhostUrl('https://www.facebook.com/professional_dashboard/profile_insights/views/')} style={{ background: '#1877f2', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>📘 FB Insights</button>
+                  <button onClick={() => setGhostUrl('https://www.instagram.com/')} style={{ background: '#e1306c', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>📸 Instagram</button>
+                  <button onClick={() => setGhostUrl('https://x.com/')} style={{ background: '#000000', color: '#fff', border: '1px solid #333', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>✖️ X</button>
+                  <button onClick={() => setGhostUrl('https://studio.youtube.com/')} style={{ background: '#ff0000', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>▶️ YouTube</button>
+                  <button onClick={() => setGhostUrl('https://www.linkedin.com/')} style={{ background: '#0a66c2', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>💼 LinkedIn</button>
+                  <button onClick={() => setGhostUrl('https://www.tiktok.com/')} style={{ background: '#000000', color: '#fff', border: '1px solid #333', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>🎵 TikTok</button>
+                  <button onClick={() => setGhostUrl('https://www.pinterest.com/')} style={{ background: '#e60023', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>📌 Pinterest</button>
                 </div>
               </div>
               
@@ -1228,12 +1263,12 @@ Return this exact JSON structure:
                   style={{ flex: 1, padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', borderRadius: '4px', fontSize: '1rem' }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
-                      document.getElementById('ghostWebviewFull').src = e.target.value;
+                      setGhostUrl(e.currentTarget.value);
                     }
                   }}
                 />
                 <button 
-                  onClick={() => document.getElementById('ghostWebviewFull').src = document.getElementById('ghostBrowserUrlFull').value}
+                  onClick={() => setGhostUrl(formElement('ghostBrowserUrlFull').value)}
                   style={{ background: '#10b981', color: '#fff', border: 'none', padding: '0 25px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem' }}>
                   GO
                 </button>
@@ -1306,9 +1341,9 @@ Return this exact JSON structure:
                     <input type="number" id="gen-days" defaultValue="365" style={{ width: '100%', padding: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', borderRadius: '6px' }} />
                   </div>
                   <button onClick={async () => {
-                    const email = document.getElementById('gen-email').value;
-                    const tier = document.getElementById('gen-tier').value;
-                    const days = document.getElementById('gen-days').value;
+                    const email = formElement('gen-email').value;
+                    const tier = formElement('gen-tier').value;
+                    const days = formElement('gen-days').value;
                     if (!email) return alert('Please enter a client email.');
                     
                     try {
@@ -1319,7 +1354,7 @@ Return this exact JSON structure:
                       });
                       const data = await res.json();
                       if (data.status === 'success') {
-                        document.getElementById('gen-output-key').value = data.license_key;
+                        formElement('gen-output-key').value = data.license_key;
                       }
                     } catch (e) {
                       alert('Failed to generate license key.');
@@ -1333,8 +1368,8 @@ Return this exact JSON structure:
                   <h4>Generated License Output</h4>
                   <textarea id="gen-output-key" readOnly placeholder="Generated key will appear here..." style={{ flex: 1, width: '100%', padding: '10px', background: 'rgba(0,0,0,0.4)', color: '#38bdf8', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', resize: 'none', fontFamily: 'monospace', fontSize: '0.8rem', marginBottom: '10px' }} />
                   <button onClick={() => {
-                    const copyText = document.getElementById('gen-output-key');
-                    copyText.select();
+                    const copyText = formElement('gen-output-key');
+                    if (copyText instanceof HTMLInputElement || copyText instanceof HTMLTextAreaElement) copyText.select();
                     document.execCommand('copy');
                     alert('Copied to clipboard!');
                   }} style={{ padding: '8px', background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '6px', cursor: 'pointer' }}>

@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "updated_utc": "2026-11-11T14:36:28.215907+00:00",
+  "status": "HELD_CANDIDATE_SCOPED_GATES_PASS_RELEASE_OPEN",
+  "version": "5.329.140",
+  "summary": "Studio 5.329.140 held unsigned candidate: static source/PYZ/assets qualification passed (427 files, 216036556 bytes); actual frozen hub passed; default bundled chapter host and two fresh players closed normally with same saved head/timeline and unchanged source/journal. Normal MainWindow launched without smoke flags, Ctrl+K opened Game Engine Build, readable layout observed, Alt+F4 exited0. Isolated profile reported executive service unavailable; no account/provider workflow qualification. No installed107/default shortcut change.",
+  "next_step": "Qualify frozen authoring Preview/Apply/Undo/Redo/Save/fresh reopen and actual bundled creator viewport UUID/rendering on a fresh LH copy: rebuilt140 tools differ from Creatorv05 SDK tools. Then isolated installed-layout and default-entry acceptance without replacing107 or existing shortcuts. Real-account creative/browser, ordinary human pacing, signing, hosted parity and Nsight injection remain separate open gates.",
+  "checks": {
+    "static": "C:\\AI-BS\\backups\\studio140_package_20261111_v01\\static-verification.json",
+    "frozen_hub": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\packaged140-hub-v01.json",
+    "frozen_default_chapter": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\packaged140-chapter-v01.json",
+    "normal_mainwindow": {
+      "pid": 37252,
+      "created": 1794407205.8686156,
+      "executable": "C:\\AI-BS\\native_studio\\releases\\v5.329.140\\AI_BS_Studio\\AI_BS_Studio.exe",
+      "profile": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Studio140_MainWindow_v01\\profile",
+      "flags_omitted_false": [
+        "AI_BS_NATIVE_MANAGE_DAEMONS",
+        "AI_BS_NATIVE_EXIT_PROCESS_CLEANUP",
+        "AI_BS_NATIVE_BACKGROUND_UPDATES"
+      ],
+      "normal_mainwindow_no_smoke_flags": true,
+      "retained_exact_handle": true,
+      "terminal": true,
+      "exit_code": 0,
+      "wall_seconds": 453.5
+    },
+    "normal_ui_evidence": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Studio140_MainWindow_v01\\game-build.jpg"
+  },
+  "preservation": {
+    "original_creator_source_unchanged": true,
+    "journal_unchanged": true,
+    "installed_launcher_changed": false
+  },
+  "limitations": [
+    "Not installed/default launcher qualification",
+    "No actual-account, provider-answer or paid inference test",
+    "No ordinary human repair/pacing or full release acceptance",
+    "Normal UI monitor displayed historical132 until this record update",
+    "Source test fixture resolve() change lacks independently captured exact preimage; current file retained, not byte-for-byte before attested"
+  ],
+  "failed_evidence": [
+    "backups/studio139_package_20261111_v01/dependency-boundary-diagnosis.json",
+    "runtime/native-package-20261111_v01",
+    "runtime/native-package-20261111_v02"
+  ],
+  "packaging_environment": "C:/Users/Administrator/AppData/Local/AI-BS/packaging_python_20261111_v03",
+  "test_result": "36 builder/frozen dependency tests passed; Windows temp alias normalized in test fixture only",
+  "previous_verified_checkpoint": "backups/nsight_diagnostic_20261111T135744Z/drive_verified.json",
+  "backup": {
+    "local_candidate": {
+      "path": "D:\\AI-BS-Game-Resources\\RTX_Local_Checkpoints\\Studio140_20261111T143628Z.zip",
+      "bytes": 91197722,
+      "sha256": "a7c8a4490ef16f2400703843ab47ff80b32b7bc17c23976c8467c88093b71fe9",
+      "members": 428,
+      "all_member_hashes_verified": true,
+      "filesystem_restore_executed": false,
+      "scope": "Complete new Studio140 package only"
+    },
+    "scoped_drive": {
+      "status": "VERIFIED_PRIVATE_SCOPED",
+      "receipt": "C:\\AI-BS\\backups\\studio140_checkpoint_20261111T143628Z\\drive_verified.json",
+      "archive_id": "18Fqqb8bJD3M2AS2eOZZRwKUQxz7YRh3y",
+      "members": 53,
+      "complete_selected_files": 30,
+      "scope": "source/progress overlay; prior base chain required"
+    },
+    "whole_project_backup": false
+  },
+  "independent_review": {
+    "reviewer": "/root/rtx_asset_next_gate",
+    "result": "No report overclaim found",
+    "next_gap": "Rebuilt bundled host/viewport not yet qualified for authoring mutations/rendering",
+    "owned_next_source": "native_studio/packaged_authoring_acceptance.py; not executed or packaged"
+  },
+  "postflight": "C:\\AI-BS\\backups\\studio140_checkpoint_20261111T143628Z\\postflight.json"
+}

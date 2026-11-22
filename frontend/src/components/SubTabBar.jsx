@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from "react";
 import { useAppStore } from './useAppStore';
 import {
   DndContext,
@@ -17,6 +17,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+/** @param {{"sub": {"key": string, "icon": string, "label": string}, "isActive": boolean, "onTabChange": (arg0: string) => void, "isEditingLayout": boolean}} props */
 const SortableSubTab = ({ sub, isActive, onTabChange, isEditingLayout }) => {
   const {
     attributes,
@@ -27,7 +28,8 @@ const SortableSubTab = ({ sub, isActive, onTabChange, isEditingLayout }) => {
     isDragging,
   } = useSortable({ id: sub.key, disabled: !isEditingLayout });
 
-  const style = {
+  /** @type {import('react').CSSProperties} */
+const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     zIndex: isDragging ? 10 : 1,
@@ -67,11 +69,12 @@ const SortableSubTab = ({ sub, isActive, onTabChange, isEditingLayout }) => {
   );
 };
 
+/** @param {{"activeTab": string, "onTabChange": (tab: string) => void}} props */
 export default function SubTabBar({ activeTab, onTabChange }) {
   const masterHubs = useAppStore((state) => state.navigationLayout);
   const reorderSubTabs = useAppStore((state) => state.reorderSubTabs);
   const isEditingLayout = useAppStore((state) => state.isEditingLayout);
-  const scrollRef = useRef(null);
+  const scrollRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -88,7 +91,8 @@ export default function SubTabBar({ activeTab, onTabChange }) {
     hub.subTabs.some((sub) => sub.key === activeTab)
   );
 
-  const handleDragEnd = (event) => {
+  /** @param {import('@dnd-kit/core').DragEndEvent} event */
+const handleDragEnd = ( event) => {
     const { active, over } = event;
     if (over && active.id !== over.id && currentHub) {
       const oldIndex = currentHub.subTabs.findIndex((sub) => sub.key === active.id);
@@ -97,13 +101,13 @@ export default function SubTabBar({ activeTab, onTabChange }) {
     }
   };
 
-  const handleScrollLeft = () => {
+  (() => {
     if (scrollRef.current) scrollRef.current.scrollBy({ left: -240, behavior: 'smooth' });
-  };
+  });
 
-  const handleScrollRight = () => {
+  (() => {
     if (scrollRef.current) scrollRef.current.scrollBy({ left: 240, behavior: 'smooth' });
-  };
+  });
 
   if (!currentHub || currentHub.subTabs.length <= 1) {
     return null;

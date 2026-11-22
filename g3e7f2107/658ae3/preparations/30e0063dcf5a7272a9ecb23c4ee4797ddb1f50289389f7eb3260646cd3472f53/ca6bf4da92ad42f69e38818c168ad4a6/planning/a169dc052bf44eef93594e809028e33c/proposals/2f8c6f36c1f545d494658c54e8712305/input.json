@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "ca6bf4da92ad42f69e38818c168ad4a6",
+  "plan_id": "a169dc052bf44eef93594e809028e33c",
+  "snapshot_sha256": "c797aead31280ac2efb8374f72163bc850229951f13e3fdded67ea60c4a31018",
+  "review_digest": "bf2dc306a55e5071a5fe2d2e55288b27d24ff9f82a8075b804d217a05f709c7d",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "2f8c6f36c1f545d494658c54e8712305",
+  "reviewed_plan_sha256": "377a2a6589ca8f81169ae0d277e738b5c1037be636b39e6d545aeea202e54c74",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 46028,
+    "created": 1794782629.4762163
+  },
+  "created_at_utc": "2026-11-15T22:43:54.800288+00:00",
+  "entry_sha256": "a6d7aa3cecbc6ef3493651056cb5d7c5e696f770bc5527292060d6dcd3a531ea"
+}

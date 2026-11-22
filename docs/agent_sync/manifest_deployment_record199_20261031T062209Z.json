@@ -1,0 +1,190 @@
+{
+  "handoff_id": "deployment_record199_20261031T062209Z",
+  "protocol": "AI-BS-UADP-1.0",
+  "utc": "2026-10-31T06:22:09Z",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next Codex or Antigravity executor",
+  "branch": "codex/audit-v532976-20261031",
+  "deployment_documentation_commit": "f18e6ad2910db5d00b8cea5fa80e050797ca0156",
+  "application_source_commit": "518dc77032dd3dcb63306ac28353c5c88b38ce90",
+  "release_metadata_parent": "5fc1a510e5143b93d2aad45378a0ce6596c705d0",
+  "version": "v5.329.77",
+  "source_manifest_sha256": "ec4ca560c58e870e1b74e434af414a8b6be30359f399718250bd4c6e141a799c",
+  "source_files": [
+    {
+      "path": "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+      "sha256": "3fbeba26dd5fe3bf11387fdf9e0a4accfc7c57266b1b4d6d49d1cf669a87faac",
+      "bytes": 1132140
+    },
+    {
+      "path": "MASTER_HISTORICAL_INDEX.md",
+      "sha256": "9be0e88690dfcc08162ebb4c1676725567e25df18bbc612a3f83991b967597b4",
+      "bytes": 106584
+    },
+    {
+      "path": "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+      "sha256": "a6f09fded89189b5f26ded8fe5dce525f19e40b120be9d46c5aea9e225bd8778",
+      "bytes": 92181
+    },
+    {
+      "path": "MASTER_TASKS_CHRONOLOGY.md",
+      "sha256": "686d7f7a077ff883b0fccdf5cd71830f3d57b6d77e18375412db674b0b3c9ddc",
+      "bytes": 217126
+    },
+    {
+      "path": "NotebookLM_Records/artifact_history.md",
+      "sha256": "291cdcaaa3f44d5441b0a66bab23dc4159fd951050c164c55cd7de3509cca91d",
+      "bytes": 155219
+    },
+    {
+      "path": "SAVED_CHECKPOINT.md",
+      "sha256": "564b75b6d88f6f2ab476b576c16141198c02564763bc768b1d71b6704b0f23c7",
+      "bytes": 11190
+    },
+    {
+      "path": "docs/CODEX_DECISIONS.md",
+      "sha256": "3347f758ebac09de254f66f5909ec0a452c50bc352bfab97f2f6c5f412b02cc2",
+      "bytes": 230786
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "sha256": "9acb1bef500a1347d29a7788fccd424c73e5cc2b43ca994d1067cc538c094989",
+      "bytes": 1114992
+    },
+    {
+      "path": "docs/CODEX_JOURNAL.md",
+      "sha256": "b11419ce2c273005cfc79c34c1749a209cba726135276d276eb58d1e911fc054",
+      "bytes": 740819
+    },
+    {
+      "path": "docs/CODEX_TASKS.md",
+      "sha256": "2bba7e79a6b95a1d3b9a424936c03b7dc5e6869c8de3044efe076f967c6313c5",
+      "bytes": 336986
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/DEPLOYMENT_v5.329.77.md",
+      "sha256": "b5d41cd92690586c7c5132c1d4e7d4146fc2a1e5745751736d4ab4d38db52578",
+      "bytes": 3463
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/README.md",
+      "sha256": "6a125c6166076d6410513c3b5526f7e7c07591f240b4e607d9d29b8b992a326b",
+      "bytes": 7677
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/coverage.json",
+      "sha256": "5ac14210024509d651e5c5714fabc2b978d71799624b65f4f13cee2b9d303e28",
+      "bytes": 9748
+    }
+  ],
+  "complete_history_files_preserved": true,
+  "ledger_prefixes_verified": 9,
+  "dirty_workspace": {
+    "status": "PRESERVED",
+    "raw_status_sha256": "76d43260925700cee4b10d2f8ad71618aab7dbc6ad882224c1bb6905985ba353",
+    "evidence": "record199_dirty_status.z"
+  },
+  "deployment": {
+    "record": 199,
+    "source_version": "v5.329.77",
+    "status": "VERIFIED_DEPLOYED",
+    "updated_utc": "2026-10-31T06:19:50Z",
+    "project": "ai-bs-dashboard",
+    "site": "ai-bs-dashboard",
+    "production_url": "https://ai-bs-dashboard.web.app",
+    "preview_url": "https://ai-bs-dashboard--audit-v77-ne4cs5ue.web.app",
+    "rollback_url": "https://ai-bs-dashboard--audit-pre-v77-yab6nfsi.web.app",
+    "rollback_version": "v5.329.76",
+    "preview_hosting_version": "b2f5e1cf834b5030",
+    "promotion": "hosting:clone ai-bs-dashboard:audit-v77 ai-bs-dashboard:live",
+    "source_commit": "518dc77032dd3dcb63306ac28353c5c88b38ce90",
+    "source_metadata_parent": "5fc1a510e5143b93d2aad45378a0ce6596c705d0",
+    "branch": "codex/audit-v532976-20261031",
+    "stage_files": 1127,
+    "stage_bytes": 921343788,
+    "preserved_public_artifacts": 983,
+    "new_compiled_files": 143,
+    "version_metadata_files": 1,
+    "preview_verification": {
+      "new_compiled_files": 143,
+      "version_metadata": true,
+      "preserved_public_samples": 12,
+      "all_sha256_match": true
+    },
+    "production_verification": {
+      "new_compiled_files": 143,
+      "version_metadata": true,
+      "preserved_public_samples": 12,
+      "all_sha256_match": true,
+      "static_requests": 157
+    },
+    "offline_preflight": {
+      "python_tests": 154,
+      "client_tests": 75,
+      "typescript_diagnostics": 0,
+      "version_paths": 16,
+      "all_passed": true
+    },
+    "safety": {
+      "live_trading": "DISABLED",
+      "port8007": "ABSENT",
+      "protected_crypto_ledger_hashes": 4,
+      "all_unchanged": true,
+      "application_source_paths_unchanged": 1230,
+      "backend_daemons_activated": false,
+      "payments_or_outreach_activated": false,
+      "database_changes": false
+    },
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "credentials_in_records": false,
+    "keys_uploaded": false,
+    "cli_note": "npx launcher hung before startup; verified cached official Firebase CLI15.34.2 used. Project-list access confirmed despite one Windows shutdown assertion. Hosting rollback, preview upload and promotion exited0. No login:list --json or auth token store dump used.",
+    "limits": [
+      "Hosting only; no Cloud Functions/Firestore/backend deployment. Existing backend dispatch holds remain.",
+      "Static-byte/header checks did not execute appJavaScript, provider/device workflows, or every UI action.",
+      "Root native Chroma32/34collection failure, provider credential rotation and remaining route/IPC/server identity audit stay open.",
+      "983preserved public artifacts hash-checked locally;12sampled remotely, not all983downloaded.",
+      "Prior version retained in audit-pre-v77 preview channel with7day expiry; not permanent backup."
+    ]
+  },
+  "verification": {
+    "preview": "VERIFIED",
+    "live": "VERIFIED",
+    "each_new_compiled_files": 143,
+    "each_version_metadata_files": 1,
+    "each_preserved_samples": 12,
+    "python_tests": 154,
+    "client_tests": 75,
+    "typescript_diagnostics": 0,
+    "version_paths": 16,
+    "application_code_changed": false,
+    "git_diff_check": "PASSED"
+  },
+  "safety": {
+    "live_trading": "DISABLED",
+    "8007": "ABSENT",
+    "protected_hashes_unchanged": 4,
+    "application_source_paths_unchanged": 1230,
+    "dispatch_activated": false
+  },
+  "recovery": {
+    "folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "before_package": "record199_before.aibs",
+    "after_package": "record199_after.aibs",
+    "evidence_package": "record199_deployment_evidence.aibs",
+    "keys_uploaded": false,
+    "status_at_manifest_creation": "Before package encrypted locally; post-commit source/evidence packages and remote verification receipts follow in restricted campaign and Drive index."
+  },
+  "decisions": [
+    "ADR-123 holds preserved; no application architecture change.",
+    "Promote only the exact hash-verified preview and preserve preceding live version in rollback channel.",
+    "Retain existing ledger prefixes and unrelated dirty workspace; Hosting-only release."
+  ],
+  "known_limits": [
+    "Full campaign IN_PROGRESS; native rootChroma traversal failure32/34, provider rotation, route/IPC/navigation/server identity and browser acceptance remain open.",
+    "Static verification executes no appJavaScript;143compiled/version fully fetched plus12preserved samples, not every983oldpublicartifact.",
+    "Rollback preview channels expire after7days; portable archives/history preserved separately.",
+    "Npx launcher hung; matching official cached CLI15.34.2 used. Project list shutdown assertion recorded; allHostingoperations exited0 and verified."
+  ],
+  "next_step": "Resume remaining audit against exact current repository/evidence; keep all trading/outreach/payment holds. Root native Chroma crash diagnosis must use new complete disposable clones and no repeated unchanged failing traversal."
+}

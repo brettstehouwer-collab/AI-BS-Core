@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 import './WordDocsPaperCanvas.css';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
 
+/** @param {{"value"?: string, "onChange"?: (arg0: string) => void, "filename"?: string, "onFilenameChange"?: (arg0: string) => void, "onSave"?: () => void, "autoSaveStatus"?: string | null, "lastSavedTime"?: string, "placeholder"?: string, "readOnly"?: boolean, "extraHeaderActions"?: import('react').ReactNode, "onClose"?: (() => void) | null}} props */
 export default function WordDocsPaperCanvas({
   value = '',
   onChange,
@@ -19,7 +20,7 @@ export default function WordDocsPaperCanvas({
   const [fontFamily, setFontFamily] = useState('Georgia');
   const [fontSize, setFontSize] = useState('15px');
   const [lineSpacing, setLineSpacing] = useState('1.6');
-  const [textAlign, setTextAlign] = useState('left');
+  const [textAlign, setTextAlign] = useState(/** @type {import('react').CSSProperties['textAlign']} */ ('left'));
   const [canvasTheme, setCanvasTheme] = useState('white_paper'); // 'white_paper' | 'dark_studio' | 'focus_sepia'
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
@@ -36,12 +37,12 @@ export default function WordDocsPaperCanvas({
   // Word Target Goal
   const [wordTarget, setWordTarget] = useState(1000);
 
-  const textareaRef = useRef(null);
+  const textareaRef = useRef(/** @type {HTMLTextAreaElement | null} */ (null));
 
   // Compute live stats
   const words = value.trim() ? value.trim().split(/\s+/).length : 0;
   const chars = value.length;
-  const estimatedPages = Math.max(1, Math.ceil(words / 350));
+  const estimatedPages = Math.ceil(words / 250);
   const readingTime = Math.max(1, Math.ceil(words / 200));
   const targetProgress = Math.min(100, Math.round((words / wordTarget) * 100));
 
@@ -88,7 +89,7 @@ export default function WordDocsPaperCanvas({
         alert('Failed to generate Word document.');
       }
     } catch (e) {
-      alert(`Export Word error: ${e.message}`);
+      alert(`Export Word error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsExportingWord(false);
     }
@@ -122,7 +123,7 @@ export default function WordDocsPaperCanvas({
         alert('Failed to generate Final Draft document.');
       }
     } catch (e) {
-      alert(`Export FDX error: ${e.message}`);
+      alert(`Export FDX error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsExportingFdx(false);
     }
@@ -182,7 +183,8 @@ export default function WordDocsPaperCanvas({
   };
 
   // Toolbar Formatting Helpers (Markdown / Text Insertion)
-  const insertFormatting = (prefix, suffix = '') => {
+  /** @param {string} prefix */
+const insertFormatting = ( prefix, suffix = '') => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
@@ -201,7 +203,9 @@ export default function WordDocsPaperCanvas({
     }, 10);
   };
 
-  const insertTemplateHeading = (level) => {
+  
+/** @param {number} level */
+const insertTemplateHeading = ( level) => {
     const hashes = '#'.repeat(level);
     insertFormatting(`\n${hashes} `, '\n');
   };
@@ -218,7 +222,7 @@ export default function WordDocsPaperCanvas({
     insertFormatting('\n> ', '\n');
   };
 
-  const insertHighlight = (color = '#fef08a') => {
+  const insertHighlight = (_color = '#fef08a') => {
     insertFormatting(`==`, `==`);
   };
 
@@ -232,7 +236,8 @@ export default function WordDocsPaperCanvas({
 
   // Keyboard Shortcuts (Ctrl+B, Ctrl+I, Ctrl+U, Ctrl+F, Ctrl+S)
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    /** @param {KeyboardEvent} e */
+const handleKeyDown = ( e) => {
       if (e.ctrlKey || e.metaKey) {
         if (e.key === 'b' || e.key === 'B') {
           e.preventDefault();
@@ -273,7 +278,8 @@ export default function WordDocsPaperCanvas({
               <input
                 type="text"
                 value={filename}
-                onChange={(e) => onFilenameChange(e.target.value)}
+                onChange={
+( e) => onFilenameChange(e.target.value)}
                 className="docs-filename-input"
                 placeholder="Untitled Document"
               />
@@ -387,7 +393,8 @@ export default function WordDocsPaperCanvas({
           <div className="toolbar-group">
             <select
               value={fontFamily}
-              onChange={(e) => setFontFamily(e.target.value)}
+              onChange={
+( e) => setFontFamily(e.target.value)}
               className="toolbar-select font-family"
               title="Font Family"
             >
@@ -402,7 +409,8 @@ export default function WordDocsPaperCanvas({
 
             <select
               value={fontSize}
-              onChange={(e) => setFontSize(e.target.value)}
+              onChange={
+( e) => setFontSize(e.target.value)}
               className="toolbar-select font-size"
               title="Font Size"
             >
@@ -516,7 +524,8 @@ export default function WordDocsPaperCanvas({
 
             <select
               value={lineSpacing}
-              onChange={(e) => setLineSpacing(e.target.value)}
+              onChange={
+( e) => setLineSpacing(e.target.value)}
               className="toolbar-select line-spacing"
               title="Line Spacing"
             >
@@ -570,7 +579,8 @@ export default function WordDocsPaperCanvas({
               <input
                 type="text"
                 value={findQuery}
-                onChange={(e) => setFindQuery(e.target.value)}
+                onChange={
+( e) => setFindQuery(e.target.value)}
                 placeholder="Search word or phrase..."
                 className="find-input"
                 autoFocus
@@ -583,7 +593,8 @@ export default function WordDocsPaperCanvas({
               <input
                 type="text"
                 value={replaceQuery}
-                onChange={(e) => setReplaceQuery(e.target.value)}
+                onChange={
+( e) => setReplaceQuery(e.target.value)}
                 placeholder="Replace with..."
                 className="find-input"
               />
@@ -613,7 +624,8 @@ export default function WordDocsPaperCanvas({
           <textarea
             ref={textareaRef}
             value={value}
-            onChange={(e) => onChange && onChange(e.target.value)}
+            onChange={
+( e) => onChange && onChange(e.target.value)}
             placeholder={placeholder}
             readOnly={readOnly}
             className="paper-content-textarea"
@@ -630,7 +642,7 @@ export default function WordDocsPaperCanvas({
       {/* ── 3. Bottom Status Bar (Word & Docs Live Metric Counter) ── */}
       <div className="word-docs-statusbar">
         <div className="statusbar-left">
-          <span>Page 1 of {estimatedPages}</span>
+          <span title="Word-count estimate; this editor uses a continuous canvas">~{estimatedPages} pages (250 words/page)</span>
           <span className="statusbar-separator">|</span>
           <span>{words.toLocaleString()} Words</span>
           <span className="statusbar-separator">|</span>
@@ -642,7 +654,8 @@ export default function WordDocsPaperCanvas({
             🎯 Goal:
             <select
               value={wordTarget}
-              onChange={(e) => setWordTarget(parseInt(e.target.value))}
+              onChange={
+( e) => setWordTarget(parseInt(e.target.value))}
               style={{ background: 'transparent', border: 'none', color: 'inherit', fontSize: 'inherit', cursor: 'pointer', fontWeight: 'bold' }}
             >
               <option value="500">500w</option>

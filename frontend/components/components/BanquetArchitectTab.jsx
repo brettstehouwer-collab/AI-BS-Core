@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+/** @typedef {{id:string,asset_name:string,package_path:string,asset_type?:string}} UnrealAsset */
+import { useState } from 'react';
 import UnrealPixelStreamBridge from './UnrealPixelStreamBridge';
 import { Camera, Box, Sparkles, SlidersHorizontal, Download } from 'lucide-react';
 
+/** @param {{backendUrl?: string}} props */
 export default function BanquetArchitectTab({ backendUrl }) {
   const baseUrl = backendUrl || import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
 
@@ -24,10 +26,10 @@ export default function BanquetArchitectTab({ backendUrl }) {
   const [isAssistantExpanded, setIsAssistantExpanded] = useState(true);
 
   // 3D Control States
-  const [tableCount, setTableCount] = useState(10);
+  const [tableCount, setTableCount] = useState(/** @type {number|string} */ (10));
   const [lightingRig, setLightingRig] = useState('Evening Warm');
   const [floralColor, setFloralColor] = useState('White/Cream');
-  const [spawnActors, setSpawnActors] = useState([]);
+  const [spawnActors, setSpawnActors] = useState(/** @type {{id:string,asset_keyword:string,asset_name:string,package_path:string,layout_mode:string}[]} */ ([]));
   const [materialOverride, setMaterialOverride] = useState('Hardwood');
   const [isSyncing3D, setIsSyncing3D] = useState(false);
   const [syncWarning, setSyncWarning] = useState('');
@@ -35,10 +37,10 @@ export default function BanquetArchitectTab({ backendUrl }) {
   
   // Asset Search State
   const [assetSearchTerm, setAssetSearchTerm] = useState('');
-  const [assetSearchResults, setAssetSearchResults] = useState([]);
-  const [isSearchingAssets, setIsSearchingAssets] = useState(false);
+  const [assetSearchResults, setAssetSearchResults] = useState(/** @type {UnrealAsset[]} */ ([]));
+  const [, setIsSearchingAssets] = useState(false);
 
-  const handleAssetSearch = async (term) => {
+  const handleAssetSearch = async (/** @type {string} */ term) => {
     setAssetSearchTerm(term);
     if (!term || term.length < 2) {
       setAssetSearchResults([]);
@@ -117,7 +119,7 @@ export default function BanquetArchitectTab({ backendUrl }) {
 
 
 
-  const toggleActor = (asset) => {
+  const toggleActor = (/** @type {UnrealAsset} */ asset) => {
     // Check if it's already in the list by package_path
     const exists = spawnActors.find(a => a.package_path === asset.package_path);
     if (exists) {
@@ -134,7 +136,7 @@ export default function BanquetArchitectTab({ backendUrl }) {
   };
 
   const handleMicClick = () => {
-    if (!('webkitSpeechRecognition' in window)) {
+    if (!window.webkitSpeechRecognition) {
       alert("Voice recognition is not supported by your browser.");
       return;
     }
@@ -232,16 +234,16 @@ export default function BanquetArchitectTab({ backendUrl }) {
           event_date: 'Saturday, November 14, 2026',
           event_time: '5:30 PM - 11:30 PM',
           room_name: 'Grand Ballroom & Tuscan Terrace',
-          guest_count: tableCount * 10,
+          guest_count: Number(tableCount) * 10,
           menu_package: 'Plated Prime Filet Mignon & Chilean Sea Bass',
           bar_service: 'Noto\'s Cellar Master Premium Wine Service & Open Bar',
           special_requests: `Custom 3D lighting rig (${lightingRig}), floral design: ${floralColor}.`,
-          subtotal: tableCount * 10 * 85.00,
-          service_charge: (tableCount * 10 * 85.00) * 0.20,
-          tax: (tableCount * 10 * 85.00) * 0.06,
-          total: (tableCount * 10 * 85.00) * 1.26,
+          subtotal: Number(tableCount) * 10 * 85.00,
+          service_charge: (Number(tableCount) * 10 * 85.00) * 0.20,
+          tax: (Number(tableCount) * 10 * 85.00) * 0.06,
+          total: (Number(tableCount) * 10 * 85.00) * 1.26,
           deposit_paid: 3500.00,
-          balance_due: ((tableCount * 10 * 85.00) * 1.26) - 3500.00
+          balance_due: ((Number(tableCount) * 10 * 85.00) * 1.26) - 3500.00
         })
       });
 
@@ -259,7 +261,7 @@ export default function BanquetArchitectTab({ backendUrl }) {
         alert('Could not generate Word BEO contract.');
       }
     } catch (e) {
-      alert(`BEO generation error: ${e.message}`);
+      alert(`BEO generation error: ${errorMessage(e)}`);
     } finally {
       setIsGeneratingBeo(false);
     }
@@ -559,7 +561,7 @@ export default function BanquetArchitectTab({ backendUrl }) {
                             GRAND BALLROOM • 2D SPATIAL DRAFT BLUEPRINT
                           </div>
                           <div style={{ fontSize: '11px', color: '#64748b' }}>
-                            Scale: 1 grid = 5 ft • Capacity: {tableCount * 8} Guests • Style: {stylePreset.toUpperCase()} • Lighting: {lightingRig}
+                            Scale: 1 grid = 5 ft • Capacity: {Number(tableCount) * 8} Guests • Style: {stylePreset.toUpperCase()} • Lighting: {lightingRig}
                           </div>
                         </div>
                       </div>
@@ -600,7 +602,7 @@ export default function BanquetArchitectTab({ backendUrl }) {
                       <text x="742" y="245" fill="#fca5a5" fontSize="10" fontWeight="bold" textAnchor="middle" transform="rotate(90 742 245)">BANQUET BAR B</text>
 
                       {/* Guest Round Tables (Dynamic Count) */}
-                      {Array.from({ length: Math.min(tableCount, 12) }).map((_, idx) => {
+                      {Array.from({ length: Math.min(Number(tableCount), 12) }).map((_, idx) => {
                         const col = idx % 4;
                         const row = Math.floor(idx / 4);
                         const cx = col < 2 ? 140 + col * 80 : 500 + (col - 2) * 80;
@@ -912,4 +914,10 @@ export default function BanquetArchitectTab({ backendUrl }) {
       `}</style>
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

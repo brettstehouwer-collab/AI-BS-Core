@@ -1,12 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Sparkles, Send, Mic, MicOff, Volume2, VolumeX, Trash2, 
-  Play, Square, Sliders, Music, Zap, Bot, User, CheckCircle2,
-  Clock, ArrowRight, RefreshCw, X
-} from 'lucide-react';
-import { theme } from '../../styles/theme';
+import { useState, useRef, useEffect } from "react";
+import { Send, Mic, MicOff, Volume2, VolumeX, Trash2, Bot, User, CheckCircle2, ArrowRight, RefreshCw, X } from "lucide-react";
+import "../../styles/theme";
 import { useDawStore } from './dawStore';
 
+/** @param {{drawerMode?: boolean; onClose?: (() => void) | null}} props */
 export const MusicAssistantChat = ({ drawerMode = false, onClose = null }) => {
   const bpm = useDawStore(state => state.bpm);
   const isPlaying = useDawStore(state => state.isPlaying);
@@ -23,8 +20,8 @@ export const MusicAssistantChat = ({ drawerMode = false, onClose = null }) => {
   const [voiceSpeechEnabled, setVoiceSpeechEnabled] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [engineInfo, setEngineInfo] = useState('Ollama (RTX 4090)');
-  const messagesEndRef = useRef(null);
-  const recognitionRef = useRef(null);
+  const messagesEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const recognitionRef = useRef(/** @type {import("/types/aibs").SpeechRecognitionController | null} */ (null));
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -79,6 +76,7 @@ export const MusicAssistantChat = ({ drawerMode = false, onClose = null }) => {
   };
 
   // Text to Speech
+  /** @param {string} text */
   const speakResponse = (text) => {
     if (!voiceSpeechEnabled || !window.speechSynthesis) return;
     try {
@@ -94,6 +92,7 @@ export const MusicAssistantChat = ({ drawerMode = false, onClose = null }) => {
     }
   };
 
+  /** @param {string | null} [customText] */
   const sendMessage = async (customText = null) => {
     const textToSend = (customText !== null ? customText : inputMessage).trim();
     if (!textToSend || isLoading) return;
@@ -160,7 +159,7 @@ export const MusicAssistantChat = ({ drawerMode = false, onClose = null }) => {
       // Fallback message
       addAssistantMessage({
         role: 'assistant',
-        content: `⚠️ Could not reach local chat engine: ${err.message}. Make sure AI-BS backend is active on Port 8080.`,
+        content: `⚠️ Could not reach local chat engine: ${(err instanceof Error ? err.message : String(err))}. Make sure AI-BS backend is active on Port 8080.`,
         suggestions: ["⏱ Set Tempo to 85 BPM", "🥁 Generate Trap Groove"]
       });
     } finally {
@@ -168,6 +167,7 @@ export const MusicAssistantChat = ({ drawerMode = false, onClose = null }) => {
     }
   };
 
+  /** @param {import("react").KeyboardEvent<HTMLInputElement>} e */
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -188,6 +188,7 @@ export const MusicAssistantChat = ({ drawerMode = false, onClose = null }) => {
     { label: "🛠️ Fix Vocal Cut", prompt: "How do I smooth out a cut in a song where instruments and vocals were removed?" }
   ];
 
+  /** @param {string} content */
   const renderFormattedContent = (content) => {
     if (!content) return null;
     const lines = content.split('\n');
@@ -457,10 +458,10 @@ export const MusicAssistantChat = ({ drawerMode = false, onClose = null }) => {
                         {act.type === 'SET_BPM' && `Locked ${act.bpm} BPM`}
                         {act.type === 'TOGGLE_PLAY' && `Playback Started`}
                         {act.type === 'STOP_PLAYBACK' && `Playback Stopped`}
-                        {act.type === 'SET_VIEW' && `Opened ${act.view.toUpperCase()}`}
+                        {act.type === 'SET_VIEW' && `Opened ${(act.view || "workspace").toUpperCase()}`}
                         {act.type === 'SEND_TO_STUDIO' && `Dispatched Stems to Studio Arranger`}
                         {act.type === 'LOAD_TO_STUDIO' && `Loaded Tracks into Studio`}
-                        {act.type === 'GENERATE_BEAT' && `Beat Programmed (${act.genre.toUpperCase()})`}
+                        {act.type === 'GENERATE_BEAT' && `Beat Programmed (${(act.genre || "selected genre").toUpperCase()})`}
                         {act.type === 'SET_VOLUME' && `Volume Set: ${act.volume}dB`}
                         {act.type === 'SET_FX' && `FX Enhanced (${act.fx})`}
                         {act.type === 'MUTE_CHANNEL' && `Channel Muted`}

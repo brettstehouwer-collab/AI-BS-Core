@@ -1,0 +1,233 @@
+--- a/engine/src/platform_win32.cpp
++++ b/engine/src/platform_win32.cpp
+@@ -14,6 +14,9 @@
+  HWND status = nullptr;
+  HWND crosshair = nullptr;
+  std::wstring status_text;
++ // Own fitted fonts for the window lifetime. Stable handles also keep the
++ // renderer's HUD raster cache from confusing a recycled GDI font identity.
++ std::array<HFONT,257> fitted_status_fonts{};
+  WindowInput actions;
+  std::uint32_t width = 0, height = 0;
+  bool closing = false, minimized = false, rotating = false, active = true;
+@@ -25,20 +28,40 @@
+   RECT client{};
+   if (!GetClientRect(handle, &client) || client.right <= 0 || client.bottom <= 0) return;
+   const int left = std::min(12, static_cast<int>(client.right) - 1);
+-  const int top = std::min(12, static_cast<int>(client.bottom) - 1);
+   const int available_width = std::max(1, static_cast<int>(client.right) - left - 12);
+-  const int available_height = std::max(1, static_cast<int>(client.bottom) - top - 12);
+   HDC dc = GetDC(status);
+   if (!dc) return;
+-  auto font = reinterpret_cast<HFONT>(SendMessageW(status, WM_GETFONT, 0, 0));
+-  if (!font) font = static_cast<HFONT>(GetStockObject(DEFAULT_GUI_FONT));
+-  const auto previous_font = SelectObject(dc, font);
+-  RECT measured{0, 0, available_width, 0};
+-  DrawTextW(dc, status_text.c_str(), -1, &measured, DT_CALCRECT | DT_WORDBREAK | DT_EXPANDTABS);
++  const auto stock = static_cast<HFONT>(GetStockObject(DEFAULT_GUI_FONT));
++  const auto previous_font = SelectObject(dc, stock);
++  const auto measure = [&](HFONT font) {
++   SelectObject(dc,font);RECT measured{0,0,available_width,0};
++   DrawTextW(dc,status_text.c_str(),-1,&measured,DT_CALCRECT|DT_WORDBREAK|DT_EXPANDTABS);
++   return static_cast<int>(measured.bottom-measured.top)+4;
++  };
++  auto selected = stock;
++  int needed = measure(stock);
++  // Preserve the normal font first, relieving vertical padding if necessary.
++  // Only smaller viewports need fitted fonts; never shrink below 12 pixels.
++  LOGFONTW description{};
++  if(needed>client.bottom&&GetObjectW(stock,sizeof(description),&description)==sizeof(description)) {
++   const int maximum = std::min(256,static_cast<int>(std::abs(description.lfHeight))-1);
++   for(int font_height=maximum;font_height>=12;--font_height) {
++    auto& font=fitted_status_fonts[static_cast<std::size_t>(font_height)];
++    if(!font){description.lfHeight=description.lfHeight<0?-font_height:font_height;font=CreateFontIndirectW(&description);}
++    if(!font)continue;
++    selected=font;needed=measure(font);
++    if(needed<=client.bottom)break;
++   }
++  }
+   SelectObject(dc, previous_font);
+   ReleaseDC(status, dc);
+-  const int panel_height = std::clamp(static_cast<int>(measured.bottom - measured.top) + 4, 1, available_height);
++  const auto old_font=reinterpret_cast<HFONT>(SendMessageW(status,WM_GETFONT,0,0));
++  if(old_font!=selected)SendMessageW(status,WM_SETFONT,reinterpret_cast<WPARAM>(selected),FALSE);
++  const int top = std::min(12,std::max(0,(static_cast<int>(client.bottom)-needed)/2));
++  const int available_height = std::max(1,static_cast<int>(client.bottom)-2*top);
++  const int panel_height = std::clamp(needed,1,available_height);
+   SetWindowPos(status, nullptr, left, top, available_width, panel_height, SWP_NOZORDER | SWP_NOACTIVATE);
++  if(old_font!=selected)InvalidateRect(status,nullptr,TRUE);
+  }
+  static LRESULT CALLBACK procedure(HWND window, UINT message, WPARAM wp, LPARAM lp) {
+   auto* state = reinterpret_cast<Impl*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+@@ -133,7 +156,11 @@
+  if (!impl_->handle) throw std::runtime_error("Could not create native PC window");
+  if (visible) { ShowWindow(impl_->handle, SW_SHOW); UpdateWindow(impl_->handle); }
+ }
+-NativeWindow::~NativeWindow() { if (impl_->handle) DestroyWindow(impl_->handle); }
++NativeWindow::~NativeWindow() {
++ if (impl_->handle) DestroyWindow(impl_->handle);
++ // Destroy STATIC children before releasing their owned fonts.
++ for(const auto font:impl_->fitted_status_fonts)if(font)DeleteObject(font);
++}
+ bool NativeWindow::poll() {
+  MSG message{};
+  while (PeekMessageW(&message, nullptr, 0, 0, PM_REMOVE)) {
+--- a/engine/tests/status_panel_tests.cpp
++++ b/engine/tests/status_panel_tests.cpp
+@@ -31,7 +31,8 @@
+  const int needed=required_height(children.status,expected,panel.right-panel.left);
+  std::cout<<label<<" client="<<client.right<<'x'<<client.bottom<<" panel="<<panel.left<<','<<panel.top<<' '<<panel.right-panel.left<<'x'<<panel.bottom-panel.top<<" needed="<<needed<<'\n';
+  require(panel.left>=0&&panel.top>=0&&panel.right<=client.right&&panel.bottom<=client.bottom,"Status panel must fit actual client bounds after creation/resize");
+- require(panel.left==12&&panel.top==12,"Normal HUD remains anchored twelve pixels from the client edge");
++ require(panel.left==12&&panel.top>=0&&panel.top<=12,"HUD keeps its horizontal anchor and bounded vertical inset");
++ if(needed+4<=client.bottom-24)require(panel.top==12,"Normal fitting HUD retains twelve-pixel inset");
+  require(panel.bottom-panel.top>=needed,"Actual font/wrapped HUD text must fit visible panel height");
+  require(crosshair.left==client.right/2-8&&crosshair.top==client.bottom/2-8&&crosshair.right-crosshair.left==16&&crosshair.bottom-crosshair.top==16,"Crosshair remains centered on actual resized client");
+ }
+@@ -42,8 +43,21 @@
+  L"Recorded (acknowledged): Physical arc contact and a safe return were recorded.\n"
+  L"UNSAVED / RETRY | visible 123 | durable 122\n"
+  L"Blocked: Action would leave no supported safe BS spawn; choose another placement.";
++// Retained real chapter HUD that exceeded the old 960x640 panel (629 > 616).
++const std::wstring retained_chapter=
++ L"WASD walk | Right-drag look | Space jump | V camera | F2 inspect | F5 retry | F9 reload\n"
++ L"E (centre): Move closer to read: Controller and turning | B relay | Delete dismantle | Ctrl+Y help / Ctrl+Z decline\n"
++ L"Find isolation switch: 23 m, behind-right (direction only; use a clear path).\n"
++ L"I'm here. This nook has reserve light, but we are still inside Jenison. Start with what still responds. "
++ L"Follow the west signal path to the supply, or look around before we go.\n"
++ L"F6 Follow | F7 Wait | F8 Recall: Adam is following. F7: Wait | F8: Recall.\n"
++ L"Authored Adam hint: The diagnostic probe is in the reserve nook. You choose when to pick it up.\n"
++ L"Recorded (acknowledged): No acknowledged chapter outcomes yet.\n"
++ L"SAVED | visible 0 | durable 0\n"
++ L"Jenison is not home. Follow what still responds.";
+ }
+ int main(){
++ SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+  unsigned failures=0;
+  for(const auto dimensions:{std::pair{960u,640u},std::pair{1440u,900u},std::pair{800u,600u}}){
+   try{aibs::NativeWindow window(dimensions.first,dimensions.second,L"AI-BS status panel measurement",false);window.set_status(chapter);check(window,chapter,"chapter");}
+@@ -59,6 +73,35 @@
+   window.set_status(original);check(window,original,"original mode shorter text");
+   window.set_status(chapter);check(window,chapter,"chapter longer text");
+  }catch(const std::exception& error){++failures;std::cerr<<"FAIL resize/text changes: "<<error.what()<<'\n';}
++ // Warm the measured-font path before lifetime accounting. An isolated
++ // diagnostic confirmed every owned HFONT deletes successfully and becomes
++ // invalid; the first GDI font-measurement path retains two process resources.
++ const auto resources_before_retained=GetGuiResources(GetCurrentProcess(),GR_GDIOBJECTS);
++ try{
++  aibs::NativeWindow window(960,640,L"AI-BS retained chapter HUD fit",false);
++  window.set_status(retained_chapter);check(window,retained_chapter,"retained960");
++  Children initial;EnumChildWindows(static_cast<HWND>(window.native_handle()),find_children,reinterpret_cast<LPARAM>(&initial));
++  require(reinterpret_cast<HFONT>(SendMessageW(initial.status,WM_GETFONT,0,0))==GetStockObject(DEFAULT_GUI_FONT),"Padding relief preserves original font at960");
++  window.set_size(640,480);check(window,retained_chapter,"retained640");
++  window.set_size(1440,900);check(window,retained_chapter,"retained1440");
++  Children children;EnumChildWindows(static_cast<HWND>(window.native_handle()),find_children,reinterpret_cast<LPARAM>(&children));
++  require(reinterpret_cast<HFONT>(SendMessageW(children.status,WM_GETFONT,0,0))==GetStockObject(DEFAULT_GUI_FONT),"Large window restores original stock font");
++  window.set_size(640,480);window.set_status(L"SAVED");check(window,L"SAVED","short text restores stock");
++  require(reinterpret_cast<HFONT>(SendMessageW(children.status,WM_GETFONT,0,0))==GetStockObject(DEFAULT_GUI_FONT),"Short text restores original stock font");
++  window.set_status(retained_chapter);check(window,retained_chapter,"long text refits");
++  LOGFONTW font{};const auto active=reinterpret_cast<HFONT>(SendMessageW(children.status,WM_GETFONT,0,0));
++  require(GetObjectW(active,sizeof(font),&font)==sizeof(font),"Actual fitted font is inspectable");
++  require(active==GetStockObject(DEFAULT_GUI_FONT)||std::abs(font.lfHeight)>=12,"Fitted font retains readable twelve-pixel floor");
++  const auto resources=GetGuiResources(GetCurrentProcess(),GR_GDIOBJECTS);
++  for(int n=0;n<20;++n){window.set_size(1440,900);window.set_status(L"SAVED");window.set_size(640,480);window.set_status(retained_chapter);check(window,retained_chapter,"repeated fit");}
++  require(GetGuiResources(GetCurrentProcess(),GR_GDIOBJECTS)==resources,"Repeated known resize/text cycle does not leak GDI fonts");
++ }catch(const std::exception& error){++failures;std::cerr<<"FAIL retained long chapter: "<<error.what()<<'\n';}
++ try{
++  for(int n=0;n<5;++n){aibs::NativeWindow window(640,480,L"AI-BS fitted font lifetime cycle",false);window.set_status(retained_chapter);check(window,retained_chapter,"fresh fitted window");window.set_size(1440,900);check(window,retained_chapter,"fresh stock restore");}
++ }catch(const std::exception& error){++failures;std::cerr<<"FAIL fresh font lifetime: "<<error.what()<<'\n';}
++ const auto resources_after_retained=GetGuiResources(GetCurrentProcess(),GR_GDIOBJECTS);
++ std::cout<<"GDI lifetime before="<<resources_before_retained<<" after="<<resources_after_retained<<'\n';
++ if(resources_after_retained!=resources_before_retained){++failures;std::cerr<<"FAIL owned HUD font destruction leaked GDI resources\n";}
+  if(!failures)std::cout<<"PASS: native STATIC font/wrap measurement, resize and crosshair layout\n";
+  return failures?1:0;
+ }
+--- a/engine/tests/owned_hud_tests.cpp
++++ b/engine/tests/owned_hud_tests.cpp
+@@ -3,6 +3,7 @@
+ #include <windows.h>
+ #include <aibs/render.hpp>
+ #include "owned_hud.hpp"
++#include <cstdlib>
+ #include <filesystem>
+ #include <fstream>
+ #include <iostream>
+@@ -12,9 +13,15 @@
+ void need(bool value,const char* message){++checks;if(!value)throw std::runtime_error(message);}
+ template<class F>void rejects(F action){bool failed=false;try{action();}catch(const std::invalid_argument&){failed=true;}need(failed,"Malformed/foreign HUD rejected");}
+ bool inside(const owned_hud::Snapshot& hud,UINT x,UINT y){for(std::size_t n=0;n<hud.count();++n){const auto& r=hud.region(n);if(x>=r.x&&y>=r.y&&x-r.x<r.width&&y-r.y<r.height)return true;}return false;}
++bool covered_later(const owned_hud::Snapshot& hud,std::size_t current,UINT x,UINT y){
++ for(std::size_t n=current+1;n<hud.count();++n){const auto& r=hud.region(n);if(x>=r.x&&y>=r.y&&x-r.x<r.width&&y-r.y<r.height)return true;}return false;
++}
+ std::uint64_t expected_pixels(const CapturedFrame& frame,const owned_hud::Snapshot& hud,bool match){
+  std::uint64_t glyphs=0,matched=0;
+  for(std::size_t n=0;n<hud.count();++n){const auto& r=hud.region(n);for(UINT y=0;y<r.height;++y)for(UINT x=0;x<r.width;++x){
++  // Long status panels overlap the centre crosshair. The renderer composes
++  // regions in order; validate each final pixel against its last opaque owner.
++  if(covered_later(hud,n,r.x+x,r.y+y))continue;
+   const auto from=static_cast<std::size_t>(r.offset)+static_cast<std::size_t>(y)*r.pitch+x*4u;
+   const auto to=((static_cast<std::size_t>(r.y)+y)*frame.width+r.x+x)*4;
+   if(match){need(frame.bgra[to]==hud.bytes()[from+2]&&frame.bgra[to+1]==hud.bytes()[from+1]&&frame.bgra[to+2]==hud.bytes()[from]&&frame.bgra[to+3]==std::byte{255},"GPU target contains exact opaque HUD raster");}
+@@ -24,10 +31,39 @@
+ }
+ WNDPROC prior=nullptr;
+ LRESULT CALLBACK test_proc(HWND window,UINT message,WPARAM w,LPARAM l){const auto result=CallWindowProcW(prior,window,message,w,l);if(message==WM_GETMINMAXINFO){auto* limits=reinterpret_cast<MINMAXINFO*>(l);limits->ptMaxTrackSize={9000,9000};}return result;}
++const std::wstring retained_chapter=
++ L"WASD walk | Right-drag look | Space jump | V camera | F2 inspect | F5 retry | F9 reload\n"
++ L"E (centre): Move closer to read: Controller and turning | B relay | Delete dismantle | Ctrl+Y help / Ctrl+Z decline\n"
++ L"Find isolation switch: 23 m, behind-right (direction only; use a clear path).\n"
++ L"I'm here. This nook has reserve light, but we are still inside Jenison. Start with what still responds. "
++ L"Follow the west signal path to the supply, or look around before we go.\n"
++ L"F6 Follow | F7 Wait | F8 Recall: Adam is following. F7: Wait | F8: Recall.\n"
++ L"Authored Adam hint: The diagnostic probe is in the reserve nook. You choose when to pick it up.\n"
++ L"Recorded (acknowledged): No acknowledged chapter outcomes yet.\n"
++ L"SAVED | visible 0 | durable 0\n"
++ L"Jenison is not home. Follow what still responds.";
++HFONT verify_full_status(HWND owner,const std::wstring& expected){
++ const auto status=FindWindowExW(owner,nullptr,L"STATIC",nullptr);need(status!=nullptr,"Actual owned status control");
++ const int length=GetWindowTextLengthW(status);std::wstring value(static_cast<std::size_t>(length)+1,L'\0');
++ GetWindowTextW(status,value.data(),length+1);value.resize(static_cast<std::size_t>(length));need(value==expected,"Full retained chapter text survives font fitting");
++ const auto font=reinterpret_cast<HFONT>(SendMessageW(status,WM_GETFONT,0,0));need(font!=nullptr,"Actual status font remains accessible");
++ RECT panel{},client{};need(GetWindowRect(status,&panel)&&GetClientRect(owner,&client),"Actual fitted status/client bounds");
++ MapWindowPoints(nullptr,owner,reinterpret_cast<POINT*>(&panel),2);
++ need(panel.left>=0&&panel.top>=0&&panel.right<=client.right&&panel.bottom<=client.bottom,"Fitted status is completely inside client");
++ HDC dc=GetDC(status);need(dc!=nullptr,"Actual fitted-font measurement DC");const auto previous=SelectObject(dc,font);
++ RECT measured{0,0,panel.right-panel.left,0};DrawTextW(dc,value.c_str(),-1,&measured,DT_CALCRECT|DT_WORDBREAK|DT_EXPANDTABS);
++ SelectObject(dc,previous);ReleaseDC(status,dc);
++ need(measured.bottom-measured.top<=panel.bottom-panel.top,"Full actual selected-font text fits visible HUD");
++ LOGFONTW description{};need(GetObjectW(font,sizeof(description),&description)==sizeof(description),"Actual selected font identity is inspectable");
++ need(font==GetStockObject(DEFAULT_GUI_FONT)||std::abs(description.lfHeight)>=12,"Fitted HUD retains twelve-pixel floor");
++ return font;
++}
+ int wmain(int argc,wchar_t** argv){try{
++ SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+  need(argc==3||argc==4,"Expected shader directory, new evidence directory, optional baseline-missing");
+  const bool baseline=argc==4&&std::wstring_view(argv[3])==L"baseline-missing";
+  const std::filesystem::path out=argv[2];need(!std::filesystem::exists(out),"Evidence scope must be new");std::filesystem::create_directories(out);
++ SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+  NativeWindow window(1280,720,L"AI-BS actual GPU HUD visibility diagnostic",true);window.poll();
+  const auto hwnd=static_cast<HWND>(window.native_handle());prior=reinterpret_cast<WNDPROC>(SetWindowLongPtrW(hwnd,GWLP_WNDPROC,reinterpret_cast<LONG_PTR>(test_proc)));need(prior!=nullptr,"Test-only window sizing override");
+  rejects([]{owned_hud::Snapshot rejected(GetDesktopWindow());});
+@@ -56,6 +92,22 @@
+  renderer.capture(out/L"changed-text.bmp");
+  for(const auto dimensions:{std::pair{1920u,1080u},std::pair{1280u,720u}}){window.set_size(dimensions.first,dimensions.second);window.poll();
+   renderer.render(camera);need(hud.refresh(window.width(),window.height()),"Resize updates HUD snapshot");need(renderer.capture_frame(frame)&&frame.width==dimensions.first&&frame.height==dimensions.second,"Resized completed target dimensions");expected_pixels(frame,hud,true);}
++ // Regression: the actual chapter's 629-pixel HUD was clipped to616 at960x640.
++ // At640x480 it needs the bounded fitted font; a larger resize restores stock.
++ window.set_status(retained_chapter);window.set_size(640,480);window.poll();
++ const auto fitted=verify_full_status(hwnd,retained_chapter);
++ need(fitted!=GetStockObject(DEFAULT_GUI_FONT),"Small retained-chapter fixture exercises actual font change");
++ need(hud.refresh(window.width(),window.height()),"Fitted font/geometry publishes a new actual HUD raster");
++ const auto fitted_version=hud.version();
++ for(unsigned n=0;n<5;++n){renderer.render(camera);need(renderer.capture_frame(frame)&&frame.width==640&&frame.height==480,"Fitted HUD actual GPU target640x480");expected_pixels(frame,hud,true);}
++ const auto& fitted_cross=hud.region(1);need(fitted_cross.x==312&&fitted_cross.y==232&&fitted_cross.width==16&&fitted_cross.height==16,"Fitted HUD keeps actual centre crosshair");
++ renderer.capture(out/L"retained-chapter-fitted640.bmp");
++ window.set_size(1440,900);window.poll();need(verify_full_status(hwnd,retained_chapter)==GetStockObject(DEFAULT_GUI_FONT),"Large resize restores original stock font without losing text");
++ need(hud.refresh(window.width(),window.height())&&hud.version()>fitted_version,"Restored actual font/geometry invalidates cached raster");
++ for(unsigned n=0;n<5;++n){renderer.render(camera);need(renderer.capture_frame(frame)&&frame.width==1440&&frame.height==900,"Restored HUD actual GPU target1440x900");expected_pixels(frame,hud,true);}
++ const auto& restored_cross=hud.region(1);need(restored_cross.x==712&&restored_cross.y==442&&restored_cross.width==16&&restored_cross.height==16,"Restored font keeps actual centre crosshair");
++ renderer.capture(out/L"retained-chapter-restored1440.bmp");
++ window.set_size(1280,720);window.set_status(L"SAVED 6");window.poll();hud.refresh(window.width(),window.height());renderer.render(camera);
+  window.minimize();window.poll();const auto frames=renderer.stats().frames;renderer.render(camera);need(renderer.stats().frames==frames&&!renderer.capture_frame(frame),"Minimized window fabricates no present/readback");
+  window.restore();window.poll();renderer.render(camera);need(renderer.capture_frame(frame),"Restored GPU target available");hud.refresh(window.width(),window.height());expected_pixels(frame,hud,true);
+  // Clip a partly off-client owned crosshair safely; no copy can escape target.

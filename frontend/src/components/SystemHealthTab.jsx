@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Terminal, Database, Activity, Search, AlertCircle, RefreshCw, Cpu, HardDrive, Zap } from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import { Terminal, Database, Activity, Search, AlertCircle, RefreshCw, Cpu } from "lucide-react";
 
+/** @param {{"backendUrl": string}} props */
 export default function SystemHealthTab({ backendUrl }) {
   const [activeTab, setActiveTab] = useState('live'); // 'live' or 'history'
   
   // GPU Hardware Telemetry
-  const [gpuTelemetry, setGpuTelemetry] = useState(null);
+  const [gpuTelemetry, setGpuTelemetry] = useState(/** @type {{"device_name": string, "total_vram_gb": number, "temperature_c": number, "utilization_gpu_pct": string, "ollama_online": string, "comfyui_online": string, "used_vram_gb": number, "free_vram_gb": number} | null} */ (null));
 
   // Live Stream State
-  const [liveLogs, setLiveLogs] = useState([]);
+  const [liveLogs, setLiveLogs] = useState(/** @type {Array<{"timestamp": string, "level": string, "name": string, "message": string}>} */ ([]));
   const [isStreaming, setIsStreaming] = useState(false);
-  const logsEndRef = useRef(null);
+  const logsEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   // History State
-  const [historyLogs, setHistoryLogs] = useState([]);
+  const [historyLogs, setHistoryLogs] = useState(/** @type {Array<{"id": string, "level": string, "timestamp": string, "name": string, "message": string}>} */ ([]));
   const [totalLogs, setTotalLogs] = useState(0);
   const [historyPage, setHistoryPage] = useState(0);
   const [filterLevel, setFilterLevel] = useState('ALL');
@@ -84,8 +85,8 @@ export default function SystemHealthTab({ backendUrl }) {
     setIsFetchingHistory(true);
     try {
       const url = new URL(`${backendUrl}/api/system/logs/history`);
-      url.searchParams.append('limit', limit);
-      url.searchParams.append('offset', historyPage * limit);
+      url.searchParams.append('limit', String(limit));
+      url.searchParams.append('offset', String(historyPage * limit));
       if (filterLevel !== 'ALL') url.searchParams.append('level', filterLevel);
       if (searchQuery) url.searchParams.append('search', searchQuery);
 
@@ -108,13 +109,15 @@ export default function SystemHealthTab({ backendUrl }) {
     }
   }, [activeTab, historyPage, filterLevel]);
 
-  const handleSearchSubmit = (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleSearchSubmit = ( e) => {
     e.preventDefault();
     setHistoryPage(0);
     fetchHistory();
   };
 
-  const getLogColor = (level) => {
+  /** @param {string} level */
+const getLogColor = ( level) => {
     switch (level) {
       case 'ERROR': return '#ef4444';
       case 'CRITICAL': return '#dc2626';
@@ -297,7 +300,8 @@ export default function SystemHealthTab({ backendUrl }) {
             <div style={{ padding: '16px', backgroundColor: '#161616', borderBottom: '1px solid #333', display: 'flex', gap: '16px', alignItems: 'center' }}>
               <select 
                 value={filterLevel} 
-                onChange={(e) => { setFilterLevel(e.target.value); setHistoryPage(0); }}
+                onChange={
+( e) => { setFilterLevel(e.target.value); setHistoryPage(0); }}
                 style={{ backgroundColor: '#111', color: '#f8fafc', border: '1px solid #333', padding: '8px 12px', borderRadius: '6px', outline: 'none' }}
               >
                 <option value="ALL">All Levels</option>
@@ -313,7 +317,8 @@ export default function SystemHealthTab({ backendUrl }) {
                   <input 
                     type="text" 
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={
+( e) => setSearchQuery(e.target.value)}
                     placeholder="Search logs by keyword..."
                     style={{ width: '100%', backgroundColor: '#111', color: '#f8fafc', border: '1px solid #333', padding: '8px 12px 8px 36px', borderRadius: '6px', outline: 'none' }}
                   />
@@ -346,7 +351,7 @@ export default function SystemHealthTab({ backendUrl }) {
                   ))}
                   {historyLogs.length === 0 && !isFetchingHistory && (
                     <tr>
-                      <td colSpan="4" style={{ padding: '32px', textAlign: 'center', color: '#64748b' }}>
+                      <td colSpan={4} style={{ padding: '32px', textAlign: 'center', color: '#64748b' }}>
                         <AlertCircle size={32} style={{ margin: '0 auto 12px', opacity: 0.5 }} />
                         No logs found matching your criteria.
                       </td>

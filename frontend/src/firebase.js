@@ -26,6 +26,7 @@ if (typeof window !== "undefined") {
 }
 
 export const googleProvider = new GoogleAuthProvider();
+/** @type {ReturnType<typeof getPerformance> | null} */
 export let perf = null;
 try {
   if (typeof window !== "undefined" && window.location.protocol === "https:" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
@@ -53,7 +54,9 @@ try {
 export const db = firestoreDb;
 
 // Initialize Firebase AI Logic (Gemini Developer API)
+/** @type {ReturnType<typeof getAI> | null} */
 export let ai = null;
+/** @type {ReturnType<typeof getGenerativeModel> | null} */
 export let model = null;
 try {
   ai = getAI(app);
@@ -90,6 +93,7 @@ if (typeof window !== "undefined") {
   });
 }
 
+/** @param {Record<string, unknown> | null | undefined} telemetrySnapshot */
 export const syncLiveTelemetryToFirestore = async (telemetrySnapshot) => {
   if (!db || !telemetrySnapshot) return;
   try {

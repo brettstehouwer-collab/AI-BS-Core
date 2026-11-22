@@ -1,0 +1,3000 @@
+{
+  "total_databases_checked": 215,
+  "healthy_databases": 213,
+  "lockfiles_found": [],
+  "chroma_vector_stores": {
+    "chroma_db": {
+      "exists": true,
+      "file_count": 28,
+      "files": [
+        "0b94477f-7a54-42dc-a93f-2fae5128340d",
+        "0f67d3e4-1cbf-4442-9772-b301830e313d",
+        "0f966d2b-b15d-40b9-bfdb-492f530e895e",
+        "107c6764-7e9f-4b72-b8b5-ed739668a643",
+        "1a1344af-96c1-4500-9a1c-058494a71b01",
+        "417ddd0d-3f9b-46a2-b90a-4df52dfd26ae",
+        "42faa421-85f4-4c4f-84b3-38f47238819f",
+        "47c9c83c-e3bd-43d3-ba25-7e581ba32d6a",
+        "4958b0a7-cc39-4c1c-ac24-26cdf7aa3502",
+        "4e6953f3-36a6-42d7-a02c-6bdf47403eae",
+        "56dfed30-574f-4057-903c-1f9ee11630e8",
+        "5edd863e-b8a5-4f16-b6fe-faf47afec0b0",
+        "85b225ba-8bfe-47c5-a533-abbb12320cac",
+        "8a2f8b33-b6d2-41b3-a4d2-55dde33a2793",
+        "914bde80-74be-4a90-accb-60710c3b24a2",
+        "95b44369-dc2b-41c4-9f33-cf3ad41f051e",
+        "a4434ba1-979f-45db-b2d8-403eb2dc7512",
+        "a7326fc4-ce5e-408e-8132-1b5fc14face3",
+        "b79de931-66bd-47e1-960b-16b5e79a3133",
+        "bf24aa9d-7cd7-46ba-945a-27a0a5413028",
+        "c2ab9e27-3aef-481c-95bc-f0fa8b8c43a1",
+        "c54b2dc7-1b2d-4a6b-a3a9-7b082dbda441",
+        "cc08f971-0b50-4b4e-b536-b8563fd3ff2f",
+        "chroma.sqlite3",
+        "e3dda3fd-3ebe-4c44-8197-2acbbf4ddc83",
+        "f0187b8f-1aaf-4f97-b2e2-41ccece4a2d0",
+        "f4b4735f-b8c3-49da-a04a-01e95f206b78",
+        "fc4009ee-d678-415a-a78c-985d02731cb3"
+      ]
+    },
+    "stehouwer_vector_memory": {
+      "exists": true,
+      "file_count": 22,
+      "files": [
+        ".personality_migration",
+        ".tmp",
+        "254f972a-3c3b-4c5e-ad9b-0692cef2b441",
+        "297a0ccb-62da-46c8-aadf-cb095676a2eb",
+        "903ad02e-c9d0-471b-8571-b9feda95e0d1",
+        "a0b7e8c3-778d-4533-99e1-66d6c8d11cfa",
+        "a2764db2-f4de-44f5-a159-475d72ebf37f",
+        "backup_before_sqlite_opt_20260709_223806",
+        "c6fc0ae8-b3c4-4b93-b09b-3c053774a468",
+        "chroma.sqlite3",
+        "d3b1a292-a171-4a7f-a6b2-ce1e25db96a5",
+        "d4edd74c-513d-4776-ae91-0b916249d701",
+        "d8ccc7d0-728d-4907-b000-02860b726e1c",
+        "e7c7faa6-077b-4eac-8567-84ec6f8fe4ba",
+        "goals_1.sqlite",
+        "installation_id",
+        "logs_2.sqlite",
+        "memories_1.sqlite",
+        "skills",
+        "state_5.sqlite",
+        "telemetry_checkpoint.sqlite",
+        "tmp"
+      ]
+    }
+  },
+  "databases": [
+    {
+      "file": "leads_store.db",
+      "size_kb": 20.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "joey_enriched_leads",
+        "client_crm_leads"
+      ]
+    },
+    {
+      "file": "prestige_powerwash.db",
+      "size_kb": 36.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 4,
+      "tables": [
+        "clients",
+        "jobs",
+        "fleet_units",
+        "fleet_wash_logs"
+      ]
+    },
+    {
+      "file": "backend\\aibs_master.db",
+      "size_kb": 2984.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 27,
+      "tables": [
+        "advertising_leads",
+        "growth_leads",
+        "client_profiles",
+        "client_email_requests",
+        "scheduled_posts_queue",
+        "user_credits",
+        "file_state",
+        "sqlite_sequence",
+        "omnidrive_index",
+        "campaign_subscribers"
+      ]
+    },
+    {
+      "file": "backend\\clients.db",
+      "size_kb": 28.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 5,
+      "tables": [
+        "ag_quotes",
+        "sqlite_sequence",
+        "ag_competitors",
+        "ag_outreach",
+        "ag_fleet"
+      ]
+    },
+    {
+      "file": "backend\\drip_ledger.db",
+      "size_kb": 16.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "trades",
+        "sqlite_sequence",
+        "ledger_state"
+      ]
+    },
+    {
+      "file": "backend\\leads_store.db",
+      "size_kb": 0.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 0,
+      "tables": []
+    },
+    {
+      "file": "backend\\lexicon_vault.db",
+      "size_kb": 88376.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 8,
+      "tables": [
+        "dictionary",
+        "sqlite_sequence",
+        "dictionary_fts_data",
+        "dictionary_fts_idx",
+        "dictionary_fts_docsize",
+        "dictionary_fts_config",
+        "sqlite_stat1",
+        "dictionary_fts"
+      ]
+    },
+    {
+      "file": "backend\\state.db",
+      "size_kb": 112.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "advertising_leads",
+        "growth_leads",
+        "client_profiles",
+        "client_email_requests",
+        "scheduled_posts_queue",
+        "user_credits",
+        "file_state",
+        "sqlite_sequence",
+        "omnidrive_index",
+        "campaign_subscribers"
+      ]
+    },
+    {
+      "file": "backend\\stehouwer_accounting.db",
+      "size_kb": 12.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "accounting_entries",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\stehouwer_vault.db",
+      "size_kb": 5520.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 7,
+      "tables": [
+        "vault_keys",
+        "vault_data",
+        "tenant_user_credits",
+        "leads_tracker",
+        "sqlite_sequence",
+        "media_vault",
+        "vault_items"
+      ]
+    },
+    {
+      "file": "backend\\system_logs.db",
+      "size_kb": 0.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 0,
+      "tables": []
+    },
+    {
+      "file": "backend\\unreal_assets.db",
+      "size_kb": 1352.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "assets",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\west_michigan.db",
+      "size_kb": 108.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 4,
+      "tables": [
+        "properties",
+        "ledger",
+        "sqlite_sequence",
+        "marketing_history"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.0.db",
+      "size_kb": 10468.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.1.db",
+      "size_kb": 9132.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.10.db",
+      "size_kb": 9144.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.11.db",
+      "size_kb": 9412.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.12.db",
+      "size_kb": 8848.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.13.db",
+      "size_kb": 8208.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.14.db",
+      "size_kb": 8216.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.15.db",
+      "size_kb": 8404.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.2.db",
+      "size_kb": 8024.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.3.db",
+      "size_kb": 9400.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.4.db",
+      "size_kb": 11432.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.5.db",
+      "size_kb": 9956.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.6.db",
+      "size_kb": 9464.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.7.db",
+      "size_kb": 9152.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.8.db",
+      "size_kb": 8316.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\.mypy_cache\\3.12\\cache.9.db",
+      "size_kb": 9132.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "files2"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\atomic_drip_ledger.db",
+      "size_kb": 16.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 3,
+      "tables": [
+        "ledger_state",
+        "trades",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\atomic_leads_store.db",
+      "size_kb": 20.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 2,
+      "tables": [
+        "leads",
+        "joey_enriched_leads"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\atomic_state.db",
+      "size_kb": 12.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 1,
+      "tables": [
+        "advertising_leads"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\chroma.sqlite3",
+      "size_kb": 5548.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "embeddings_queue",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "embeddings",
+        "embedding_metadata",
+        "max_seq_id"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\goals_1.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\logs_2.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\memories_1.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\state_5.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\telemetry_checkpoint.sqlite",
+      "size_kb": 10484.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\chroma.sqlite3",
+      "size_kb": 9404.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\goals_1.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\logs_2.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\memories_1.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\state_5.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "backend\\backups\\pre_update_20260723_150334\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\telemetry_checkpoint.sqlite",
+      "size_kb": 10484.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\chroma_db\\chroma.sqlite3",
+      "size_kb": 9564.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "backend\\commercial_gateway\\commercial_usage.db",
+      "size_kb": 52.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 4,
+      "tables": [
+        "api_keys",
+        "usage_logs",
+        "sqlite_sequence",
+        "billing_transactions"
+      ]
+    },
+    {
+      "file": "backend\\commercial_gateway\\learning_telemetry.db",
+      "size_kb": 48.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "request_outcomes",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\commercial_gateway\\site_analytics.db",
+      "size_kb": 1732.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "site_traffic_events",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\commercial_gateway\\social_intelligence_research.db",
+      "size_kb": 36.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "interaction_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\core\\stehouwer_vector_memory\\chroma.sqlite3",
+      "size_kb": 184.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "backend\\database\\aibs_personal_intelligence.db",
+      "size_kb": 84.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 9,
+      "tables": [
+        "user_profiles",
+        "memory_facts",
+        "sqlite_sequence",
+        "memory_facts_fts",
+        "memory_facts_fts_data",
+        "memory_facts_fts_idx",
+        "memory_facts_fts_docsize",
+        "memory_facts_fts_config",
+        "episodic_logs"
+      ]
+    },
+    {
+      "file": "backend\\database\\aibs_phone_repair.db",
+      "size_kb": 84.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 5,
+      "tables": [
+        "repair_guides",
+        "diagnostic_trees",
+        "repair_tickets",
+        "sqlite_sequence",
+        "ic_reference"
+      ]
+    },
+    {
+      "file": "backend\\database\\stehouwer_vault.db",
+      "size_kb": 1720.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 2,
+      "tables": [
+        "vault_items",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\chroma.sqlite3",
+      "size_kb": 514064.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "embeddings_queue",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "embeddings",
+        "embedding_metadata",
+        "max_seq_id"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\goals_1.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\logs_2.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\memories_1.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\state_5.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\telemetry_checkpoint.sqlite",
+      "size_kb": 10484.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\chroma.sqlite3",
+      "size_kb": 9404.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\goals_1.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\logs_2.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\memories_1.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\state_5.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "backend\\dist\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\telemetry_checkpoint.sqlite",
+      "size_kb": 10484.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\saved_data\\syndication_history.sqlite",
+      "size_kb": 832.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 2,
+      "tables": [
+        "broadcast_history",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "backend\\stehouwer_vector_memory\\chroma.sqlite3",
+      "size_kb": 184.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "chroma_db\\chroma.sqlite3",
+      "size_kb": 128256.0,
+      "integrity": "malformed inverted index for FTS5 table main.embedding_fulltext_search",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "ComfyUI\\ComfyUI\\user\\comfyui.db",
+      "size_kb": 148.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 6,
+      "tables": [
+        "alembic_version",
+        "assets",
+        "asset_reference_tags",
+        "asset_references",
+        "asset_reference_meta",
+        "tags"
+      ]
+    },
+    {
+      "file": "Crypto-Swarm\\trade_queue.db",
+      "size_kb": 28.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 4,
+      "tables": [
+        "messages",
+        "sqlite_sequence",
+        "twap_plans",
+        "drip_orders"
+      ]
+    },
+    {
+      "file": "data\\leads_store.db",
+      "size_kb": 12.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "leads"
+      ]
+    },
+    {
+      "file": "data\\reasoning_traces_pending.db",
+      "size_kb": 12.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "pending"
+      ]
+    },
+    {
+      "file": "data\\telemetry_checkpoint.sqlite",
+      "size_kb": 10600.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "data\\trade_queue.db",
+      "size_kb": 16.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "messages",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "data\\vision_sync_state.db",
+      "size_kb": 644.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "processed_images"
+      ]
+    },
+    {
+      "file": "database\\aibs_master.db",
+      "size_kb": 48.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 3,
+      "tables": [
+        "cdz_audit_ledger",
+        "sqlite_sequence",
+        "cdz_ledger_metadata"
+      ]
+    },
+    {
+      "file": "database\\audio_catalog.db",
+      "size_kb": 128328.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 13,
+      "tables": [
+        "audio_assets",
+        "sqlite_sequence",
+        "audio_assets_fts",
+        "audio_assets_fts_data",
+        "audio_assets_fts_idx",
+        "audio_assets_fts_docsize",
+        "audio_assets_fts_config",
+        "audio_corpus_fts",
+        "audio_corpus_fts_data",
+        "audio_corpus_fts_idx"
+      ]
+    },
+    {
+      "file": "database\\calendar.db",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "appointments",
+        "sqlite_sequence",
+        "calendar_action_tasks"
+      ]
+    },
+    {
+      "file": "database\\cro_quantitative_ledger.db",
+      "size_kb": 20.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 4,
+      "tables": [
+        "cro_trade_ledger",
+        "sqlite_sequence",
+        "cro_price_history",
+        "macro_events_log"
+      ]
+    },
+    {
+      "file": "database\\drip_ledger.db",
+      "size_kb": 16.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "ledger_state",
+        "trades",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "database\\leads_store.db",
+      "size_kb": 20.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "leads",
+        "joey_enriched_leads"
+      ]
+    },
+    {
+      "file": "database\\learning_data.db",
+      "size_kb": 8.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "learning_data"
+      ]
+    },
+    {
+      "file": "database\\LLM_CrossCheck_Ledger.db",
+      "size_kb": 644.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "crosscheck_ledger",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "database\\message_broker.db",
+      "size_kb": 16.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "broker_messages",
+        "sqlite_sequence",
+        "broker_stats"
+      ]
+    },
+    {
+      "file": "database\\model_state.db",
+      "size_kb": 4.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 0,
+      "tables": []
+    },
+    {
+      "file": "database\\personal_intelligence.db",
+      "size_kb": 0.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 0,
+      "tables": []
+    },
+    {
+      "file": "database\\reasoning_traces_pending.db",
+      "size_kb": 12.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "pending"
+      ]
+    },
+    {
+      "file": "database\\security_events.db",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 4,
+      "tables": [
+        "security_events",
+        "sqlite_sequence",
+        "ip_blacklist",
+        "admin_access_logs"
+      ]
+    },
+    {
+      "file": "database\\stehouwer_chronology.db",
+      "size_kb": 1156.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 8,
+      "tables": [
+        "sqlite_sequence",
+        "chronology_fts",
+        "chronology_fts_data",
+        "chronology_fts_idx",
+        "chronology_fts_content",
+        "chronology_fts_docsize",
+        "chronology_fts_config",
+        "chronology_meta"
+      ]
+    },
+    {
+      "file": "database\\telemetry_checkpoint.sqlite",
+      "size_kb": 10600.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "database\\vision_sync_state.db",
+      "size_kb": 644.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 1,
+      "tables": [
+        "processed_images"
+      ]
+    },
+    {
+      "file": "database\\ChromaDB_local\\chroma.sqlite3",
+      "size_kb": 6188.0,
+      "integrity": "malformed inverted index for FTS5 table main.embedding_fulltext_search",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "frontend\\build-output\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\chroma.sqlite3",
+      "size_kb": 9404.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "frontend\\build-output\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\goals_1.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "frontend\\build-output\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\logs_2.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "frontend\\build-output\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\memories_1.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "frontend\\build-output\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\state_5.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\database\\security_events.db",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 4,
+      "tables": [
+        "security_events",
+        "sqlite_sequence",
+        "ip_blacklist",
+        "admin_access_logs"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\chroma.sqlite3",
+      "size_kb": 514064.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "embeddings_queue",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "embeddings",
+        "embedding_metadata",
+        "max_seq_id"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\goals_1.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\logs_2.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\memories_1.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\state_5.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\telemetry_checkpoint.sqlite",
+      "size_kb": 10484.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\chroma.sqlite3",
+      "size_kb": 9404.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\goals_1.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\logs_2.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\memories_1.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\state_5.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "frontend\\desktop-build\\win-unpacked\\resources\\brain_backend\\_internal\\stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\telemetry_checkpoint.sqlite",
+      "size_kb": 10484.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "NoCo Vision\\chroma_db\\chroma.sqlite3",
+      "size_kb": 184.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T223749451507\\.agents\\skills\\stehouwer_vector_memory\\chroma.sqlite3",
+      "size_kb": 184.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T223749451507\\.vs\\slnx.sqlite",
+      "size_kb": 112.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 8,
+      "tables": [
+        "Setting",
+        "sqlite_sequence",
+        "FileSystemEntity",
+        "ProviderEntity",
+        "FileScannerCache",
+        "SymbolDefinition",
+        "FileSystemReference",
+        "FileSystemData"
+      ]
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T223749451507\\.vs\\AI-BS_Matrix\\CopilotIndices\\18.7.1225.11805\\CodeChunks.db",
+      "size_kb": 136.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 9,
+      "tables": [
+        "Document",
+        "sqlite_sequence",
+        "StoredJson",
+        "ChunkStoredJson",
+        "ChunkMapping",
+        "ChunkTokenFrequency",
+        "IndexedFile",
+        "Token",
+        "sqlite_stat1"
+      ]
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T223749451507\\.vs\\AI-BS_Matrix\\CopilotIndices\\18.7.1225.11805\\SemanticSymbols.db",
+      "size_kb": 116.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 9,
+      "tables": [
+        "Document",
+        "sqlite_sequence",
+        "Symbol",
+        "SymbolCompletion",
+        "SymbolCompletion_data",
+        "SymbolCompletion_idx",
+        "SymbolCompletion_docsize",
+        "SymbolCompletion_config",
+        "sqlite_stat1"
+      ]
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T223749451507\\.vs\\AI-BS_Matrix.slnx\\v18\\Browse.VC.db",
+      "size_kb": 2112.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 30,
+      "tables": [
+        "properties",
+        "parsers",
+        "code_item_kinds",
+        "projects",
+        "configs",
+        "project_refs",
+        "files",
+        "config_files",
+        "code_items",
+        "assoc_text"
+      ]
+    },
+    {
+      "file": "sandbox\\dry_run\\20260710T223749451507\\.vscode\\telemetry_checkpoint.sqlite",
+      "size_kb": 5024.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\air_sensor_telemetry.db",
+      "size_kb": 236.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "air_beacon_records",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\backend_lexicon_vault_20260827_132949.db",
+      "size_kb": 88376.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 8,
+      "tables": [
+        "dictionary",
+        "sqlite_sequence",
+        "dictionary_fts_data",
+        "dictionary_fts_idx",
+        "dictionary_fts_docsize",
+        "dictionary_fts_config",
+        "sqlite_stat1",
+        "dictionary_fts"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\backend_stehouwer_vault_20260827_132940.db",
+      "size_kb": 1260.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 5,
+      "tables": [
+        "vault_keys",
+        "vault_data",
+        "tenant_user_credits",
+        "leads_tracker",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\backend_stehouwer_vault_20260827_132949.db",
+      "size_kb": 1260.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 5,
+      "tables": [
+        "vault_keys",
+        "vault_data",
+        "tenant_user_credits",
+        "leads_tracker",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\Crypto-Swarm_trade_queue_20260827_132949.db",
+      "size_kb": 28.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 4,
+      "tables": [
+        "messages",
+        "sqlite_sequence",
+        "twap_plans",
+        "drip_orders"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\data_leads_store_20260827_132949.db",
+      "size_kb": 12.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 1,
+      "tables": [
+        "leads"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\data_reasoning_traces_pending_20260827_132949.db",
+      "size_kb": 12.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 1,
+      "tables": [
+        "pending"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\data_telemetry_checkpoint_20260827_132949.db",
+      "size_kb": 10600.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\data_trade_queue_20260827_132949.db",
+      "size_kb": 16.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 2,
+      "tables": [
+        "messages",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\leads_store_20260827_132934.db",
+      "size_kb": 20.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 2,
+      "tables": [
+        "joey_enriched_leads",
+        "client_crm_leads"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\leads_store_20260827_132949.db",
+      "size_kb": 20.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 2,
+      "tables": [
+        "joey_enriched_leads",
+        "client_crm_leads"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\lexicon_vault_20260827_132933.db",
+      "size_kb": 88376.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 8,
+      "tables": [
+        "dictionary",
+        "sqlite_sequence",
+        "dictionary_fts_data",
+        "dictionary_fts_idx",
+        "dictionary_fts_docsize",
+        "dictionary_fts_config",
+        "sqlite_stat1",
+        "dictionary_fts"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\prestige_powerwash_20260827_132934.db",
+      "size_kb": 36.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 4,
+      "tables": [
+        "clients",
+        "jobs",
+        "fleet_units",
+        "fleet_wash_logs"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\prestige_powerwash_20260827_132949.db",
+      "size_kb": 36.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 4,
+      "tables": [
+        "clients",
+        "jobs",
+        "fleet_units",
+        "fleet_wash_logs"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\reasoning_traces_pending_20260827_132934.db",
+      "size_kb": 12.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 1,
+      "tables": [
+        "pending"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\stehouwer_vault_20260827_132926.db",
+      "size_kb": 1260.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 5,
+      "tables": [
+        "vault_keys",
+        "vault_data",
+        "tenant_user_credits",
+        "leads_tracker",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\stehouwer_vault_20260827_132933.db",
+      "size_kb": 1260.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 5,
+      "tables": [
+        "vault_keys",
+        "vault_data",
+        "tenant_user_credits",
+        "leads_tracker",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\telemetry_checkpoint_20260827_132934.db",
+      "size_kb": 10600.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\backups\\trade_queue_20260827_132934.db",
+      "size_kb": 16.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 2,
+      "tables": [
+        "messages",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\db_backups\\pre_consolidation_20260907_172000\\clients.db",
+      "size_kb": 28.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 5,
+      "tables": [
+        "ag_quotes",
+        "sqlite_sequence",
+        "ag_competitors",
+        "ag_outreach",
+        "ag_fleet"
+      ]
+    },
+    {
+      "file": "saved_data\\db_backups\\pre_consolidation_20260907_172000\\drip_ledger.db",
+      "size_kb": 16.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "trades",
+        "sqlite_sequence",
+        "ledger_state"
+      ]
+    },
+    {
+      "file": "saved_data\\db_backups\\pre_consolidation_20260907_172000\\state.db",
+      "size_kb": 112.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "advertising_leads",
+        "growth_leads",
+        "client_profiles",
+        "client_email_requests",
+        "scheduled_posts_queue",
+        "user_credits",
+        "file_state",
+        "sqlite_sequence",
+        "omnidrive_index",
+        "campaign_subscribers"
+      ]
+    },
+    {
+      "file": "saved_data\\db_backups\\pre_consolidation_20260907_172000\\stehouwer_accounting.db",
+      "size_kb": 12.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "accounting_entries",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\db_backups\\pre_consolidation_20260907_172000\\stehouwer_vault.db",
+      "size_kb": 1268.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 6,
+      "tables": [
+        "vault_keys",
+        "vault_data",
+        "tenant_user_credits",
+        "leads_tracker",
+        "sqlite_sequence",
+        "media_vault"
+      ]
+    },
+    {
+      "file": "saved_data\\db_backups\\pre_consolidation_20260907_172000\\unreal_assets.db",
+      "size_kb": 1352.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "assets",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "saved_data\\db_backups\\pre_consolidation_20260907_172000\\west_michigan.db",
+      "size_kb": 108.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 4,
+      "tables": [
+        "properties",
+        "ledger",
+        "sqlite_sequence",
+        "marketing_history"
+      ]
+    },
+    {
+      "file": "scratch\\telemetry_checkpoint.sqlite",
+      "size_kb": 12.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\chroma.sqlite3",
+      "size_kb": 528732.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "embeddings_queue",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "embeddings",
+        "embedding_metadata",
+        "max_seq_id"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\goals_1.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\logs_2.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\memories_1.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\state_5.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\telemetry_checkpoint.sqlite",
+      "size_kb": 10484.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\chroma.sqlite3",
+      "size_kb": 9404.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\goals_1.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\logs_2.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\memories_1.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\state_5.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "stehouwer_vector_memory\\backup_before_sqlite_opt_20260709_223806\\telemetry_checkpoint.sqlite",
+      "size_kb": 10484.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "tests\\test_state.db",
+      "size_kb": 16.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "omnidrive_index",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "_archive_v1\\.agents\\skills\\stehouwer_vector_memory\\chroma.sqlite3",
+      "size_kb": 184.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "_archive_v1\\.vs\\slnx.sqlite",
+      "size_kb": 112.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 8,
+      "tables": [
+        "Setting",
+        "sqlite_sequence",
+        "FileSystemEntity",
+        "ProviderEntity",
+        "FileScannerCache",
+        "SymbolDefinition",
+        "FileSystemReference",
+        "FileSystemData"
+      ]
+    },
+    {
+      "file": "_archive_v1\\.vs\\AI-BS_Matrix\\CopilotIndices\\18.7.1225.11805\\CodeChunks.db",
+      "size_kb": 136.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 9,
+      "tables": [
+        "Document",
+        "sqlite_sequence",
+        "StoredJson",
+        "ChunkStoredJson",
+        "ChunkMapping",
+        "ChunkTokenFrequency",
+        "IndexedFile",
+        "Token",
+        "sqlite_stat1"
+      ]
+    },
+    {
+      "file": "_archive_v1\\.vs\\AI-BS_Matrix\\CopilotIndices\\18.7.1225.11805\\SemanticSymbols.db",
+      "size_kb": 116.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 9,
+      "tables": [
+        "Document",
+        "sqlite_sequence",
+        "Symbol",
+        "SymbolCompletion",
+        "SymbolCompletion_data",
+        "SymbolCompletion_idx",
+        "SymbolCompletion_docsize",
+        "SymbolCompletion_config",
+        "sqlite_stat1"
+      ]
+    },
+    {
+      "file": "_archive_v1\\.vs\\AI-BS_Matrix.slnx\\v18\\Browse.VC.db",
+      "size_kb": 2112.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 30,
+      "tables": [
+        "properties",
+        "parsers",
+        "code_item_kinds",
+        "projects",
+        "configs",
+        "project_refs",
+        "files",
+        "config_files",
+        "code_items",
+        "assoc_text"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\Browse.VC.db",
+      "size_kb": 2112.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 30,
+      "tables": [
+        "properties",
+        "parsers",
+        "code_item_kinds",
+        "projects",
+        "configs",
+        "project_refs",
+        "files",
+        "config_files",
+        "code_items",
+        "assoc_text"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\Browse.VC_1.db",
+      "size_kb": 2112.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 30,
+      "tables": [
+        "properties",
+        "parsers",
+        "code_item_kinds",
+        "projects",
+        "configs",
+        "project_refs",
+        "files",
+        "config_files",
+        "code_items",
+        "assoc_text"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\Browse.VC_2.db",
+      "size_kb": 2112.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 30,
+      "tables": [
+        "properties",
+        "parsers",
+        "code_item_kinds",
+        "projects",
+        "configs",
+        "project_refs",
+        "files",
+        "config_files",
+        "code_items",
+        "assoc_text"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\chroma.sqlite3",
+      "size_kb": 9404.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\chroma_1.sqlite3",
+      "size_kb": 184.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\chroma_2.sqlite3",
+      "size_kb": 9404.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\chroma_3.sqlite3",
+      "size_kb": 9404.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\chroma_4.sqlite3",
+      "size_kb": 184.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\chroma_5.sqlite3",
+      "size_kb": 9404.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\chroma_6.sqlite3",
+      "size_kb": 184.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\CodeChunks.db",
+      "size_kb": 136.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 9,
+      "tables": [
+        "Document",
+        "sqlite_sequence",
+        "StoredJson",
+        "ChunkStoredJson",
+        "ChunkMapping",
+        "ChunkTokenFrequency",
+        "IndexedFile",
+        "Token",
+        "sqlite_stat1"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\CodeChunks_1.db",
+      "size_kb": 136.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 9,
+      "tables": [
+        "Document",
+        "sqlite_sequence",
+        "StoredJson",
+        "ChunkStoredJson",
+        "ChunkMapping",
+        "ChunkTokenFrequency",
+        "IndexedFile",
+        "Token",
+        "sqlite_stat1"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\CodeChunks_2.db",
+      "size_kb": 136.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 9,
+      "tables": [
+        "Document",
+        "sqlite_sequence",
+        "StoredJson",
+        "ChunkStoredJson",
+        "ChunkMapping",
+        "ChunkTokenFrequency",
+        "IndexedFile",
+        "Token",
+        "sqlite_stat1"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\goals_1.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\goals_1_1.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\goals_1_2.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\goals_1_3.sqlite",
+      "size_kb": 24.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "_sqlx_migrations",
+        "thread_goals"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\logs_2.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\logs_2_1.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\logs_2_2.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\logs_2_3.sqlite",
+      "size_kb": 516.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "sqlite_sequence",
+        "logs"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\memories_1.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\memories_1_1.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\memories_1_2.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\memories_1_3.sqlite",
+      "size_kb": 40.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 3,
+      "tables": [
+        "_sqlx_migrations",
+        "stage1_outputs",
+        "jobs"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\reasoning_traces_pending.db",
+      "size_kb": 12.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 1,
+      "tables": [
+        "pending"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\SemanticSymbols.db",
+      "size_kb": 116.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 9,
+      "tables": [
+        "Document",
+        "sqlite_sequence",
+        "Symbol",
+        "SymbolCompletion",
+        "SymbolCompletion_data",
+        "SymbolCompletion_idx",
+        "SymbolCompletion_docsize",
+        "SymbolCompletion_config",
+        "sqlite_stat1"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\SemanticSymbols_1.db",
+      "size_kb": 116.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 9,
+      "tables": [
+        "Document",
+        "sqlite_sequence",
+        "Symbol",
+        "SymbolCompletion",
+        "SymbolCompletion_data",
+        "SymbolCompletion_idx",
+        "SymbolCompletion_docsize",
+        "SymbolCompletion_config",
+        "sqlite_stat1"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\SemanticSymbols_2.db",
+      "size_kb": 116.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 9,
+      "tables": [
+        "Document",
+        "sqlite_sequence",
+        "Symbol",
+        "SymbolCompletion",
+        "SymbolCompletion_data",
+        "SymbolCompletion_idx",
+        "SymbolCompletion_docsize",
+        "SymbolCompletion_config",
+        "sqlite_stat1"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\slnx.sqlite",
+      "size_kb": 112.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 8,
+      "tables": [
+        "Setting",
+        "sqlite_sequence",
+        "FileSystemEntity",
+        "ProviderEntity",
+        "FileScannerCache",
+        "SymbolDefinition",
+        "FileSystemReference",
+        "FileSystemData"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\slnx_1.sqlite",
+      "size_kb": 112.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 8,
+      "tables": [
+        "Setting",
+        "sqlite_sequence",
+        "FileSystemEntity",
+        "ProviderEntity",
+        "FileScannerCache",
+        "SymbolDefinition",
+        "FileSystemReference",
+        "FileSystemData"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\slnx_2.sqlite",
+      "size_kb": 112.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 8,
+      "tables": [
+        "Setting",
+        "sqlite_sequence",
+        "FileSystemEntity",
+        "ProviderEntity",
+        "FileScannerCache",
+        "SymbolDefinition",
+        "FileSystemReference",
+        "FileSystemData"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\state_5.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\state_5_1.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\state_5_2.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\state_5_3.sqlite",
+      "size_kb": 176.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 10,
+      "tables": [
+        "_sqlx_migrations",
+        "threads",
+        "sqlite_sequence",
+        "thread_dynamic_tools",
+        "backfill_state",
+        "agent_jobs",
+        "agent_job_items",
+        "thread_spawn_edges",
+        "remote_control_enrollments",
+        "external_agent_config_imports"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\telemetry_checkpoint.sqlite",
+      "size_kb": 5024.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\telemetry_checkpoint_1.sqlite",
+      "size_kb": 5024.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "_archive_v1\\AI-BS_Documents_Archive\\telemetry_checkpoint_2.sqlite",
+      "size_kb": 5024.0,
+      "integrity": "ok",
+      "journal_mode": "wal",
+      "table_count": 2,
+      "tables": [
+        "hardware_telemetry",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\github.com\\wailsapp\\mimetype@v1.4.1\\testdata\\sqlite.sqlite",
+      "size_kb": 8.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 1,
+      "tables": [
+        "asdasd"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\embed.db",
+      "size_kb": 8.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 1,
+      "tables": [
+        "t"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\embed2.db",
+      "size_kb": 8.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 1,
+      "tables": [
+        "u"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\testdata\\tcl\\dbfuzz2-seed1.db",
+      "size_kb": 3.5,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 4,
+      "tables": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\testdata\\tcl\\fuzzdata1.db",
+      "size_kb": 4318.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 3,
+      "tables": [
+        "db",
+        "xsql",
+        "readme"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\testdata\\tcl\\fuzzdata2.db",
+      "size_kb": 16623.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 3,
+      "tables": [
+        "db",
+        "xsql",
+        "readme"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\testdata\\tcl\\fuzzdata3.db",
+      "size_kb": 11571.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 3,
+      "tables": [
+        "db",
+        "xsql",
+        "readme"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\testdata\\tcl\\fuzzdata4.db",
+      "size_kb": 1974.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 3,
+      "tables": [
+        "db",
+        "xsql",
+        "readme"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\testdata\\tcl\\fuzzdata5.db",
+      "size_kb": 7029.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 4,
+      "tables": [
+        "db",
+        "xsql",
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\testdata\\tcl\\fuzzdata6.db",
+      "size_kb": 1744.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 3,
+      "tables": [
+        "db",
+        "xsql",
+        "readme"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\testdata\\tcl\\fuzzdata7.db",
+      "size_kb": 16425.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 3,
+      "tables": [
+        "db",
+        "xsql",
+        "readme"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\testdata\\tcl\\fuzzdata8.db",
+      "size_kb": 4136.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 3,
+      "tables": [
+        "db",
+        "xsql",
+        "readme"
+      ]
+    },
+    {
+      "file": "_archive_v1\\go\\pkg\\mod\\modernc.org\\sqlite@v1.53.0\\testdata\\tcl\\sessionfuzz-data1.db",
+      "size_kb": 252.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 1,
+      "tables": [
+        "sqlar"
+      ]
+    },
+    {
+      "file": "__pycache__\\stehouwer_vector_memory\\chroma.sqlite3",
+      "size_kb": 184.0,
+      "integrity": "ok",
+      "journal_mode": "delete",
+      "table_count": 21,
+      "tables": [
+        "migrations",
+        "acquire_write",
+        "collection_metadata",
+        "segment_metadata",
+        "tenants",
+        "databases",
+        "collections",
+        "maintenance_log",
+        "segments",
+        "embeddings"
+      ]
+    }
+  ]
+}

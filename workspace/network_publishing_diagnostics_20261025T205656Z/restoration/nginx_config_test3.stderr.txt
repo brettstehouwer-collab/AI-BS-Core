@@ -1,0 +1,2 @@
+nginx: the configuration file C:/StehouwerPublishing.com/restoration_staging/20261025T205656Z/nginx.static.conf syntax is ok
+nginx: configuration file C:/StehouwerPublishing.com/restoration_staging/20261025T205656Z/nginx.static.conf test is successful

@@ -1,0 +1,379 @@
+{
+  "record": 210,
+  "utc": "2026-10-31T21:22:09.669827+00:00",
+  "version": "5.329.86",
+  "base_commit": "1c5b058acacf387198c72ed397e13e2110dfcff3",
+  "branch": "codex/audit-v532976-20261031",
+  "source_commit_reference": "docs/agent_sync/manifest_record210_v532986.json",
+  "report": "docs/audit/2026-10-30-complete/NATIVE_PREVIEW_CONTROLS_v5.329.86_RECORD210.md",
+  "status": "VERIFIED_V86_INSTALLED_LIVE_GAME_PREVIEW_CONTROLS_AND_SAME_PIPELINE",
+  "findings": [
+    {
+      "id": "R210-PREVIEW-CONTROL",
+      "severity": "MEDIUM",
+      "status": "REPAIRED_FOCUSED_FULL_GUARDED_AND_ACTUAL_V86_GUI_VERIFIED",
+      "finding": "The prominent Studio Mode button toggled cosmetic A/B state without enabling the actual decoder and could misstate output mode. It now controls the same Program preview flag as the checkbox; OFF survives polling and empty canvas labels distinguish OFF/held/buffering/stale."
+    },
+    {
+      "id": "R210-CORE-DIAGNOSIS",
+      "severity": "INFORMATIONAL",
+      "status": "NO_PERSISTENT_CORE_DEFECT_REPRODUCED",
+      "finding": "Initial coordinator stopped/held correctly. After root Start, real core accepted73QImages from222rawQt frames in8.453seconds, no errors/audio. Actual85GUI later showed delayed live video. The earlier unavailable state was warmup, not a demonstrated persistent network/decoder defect."
+    }
+  ],
+  "source_receipts": [
+    "backups/native_preview210_fix/ui/completion.json",
+    "backups/native_preview210_fix/core/completion_core210.json"
+  ],
+  "verification": {
+    "focused_ui_tests": 15,
+    "focused_guard_denials": 0,
+    "full_guarded": {
+      "tests": 356,
+      "groups": 29,
+      "failures": 0,
+      "errors": 0,
+      "guard_denials": 0,
+      "receipt": "backups/native_broadcast207_work/guarded_native/run_1793481267647551300/receipt.json",
+      "stdlib_self_pipe_allowance": {
+        "socket.__new__": 24,
+        "socket.bind": 12,
+        "socket.connect": 12
+      }
+    },
+    "version_mirrors": {
+      "version": "5.329.86",
+      "count": 16,
+      "status": "PARENT_INDEPENDENT_CHECK_PASS_NO_DRIFT",
+      "checkpoint": "backups/release_versioning/20261031T211519172Z_native-preview-controls210_192f61a2"
+    },
+    "native_build": {
+      "receipt": "backups/native_preview_v86_20261031_record210/build_verification/build_independent_verification210.json",
+      "result": {
+        "status": "VERIFIED_WINDOWS_V86_PE_PYZ_FROZEN_INPUTS_PACKAGE_BOUNDARY",
+        "utc": "2026-10-31T21:17:44.203680+00:00",
+        "exe": "backups\\native_preview_v86_20261031_record210\\stage1\\dist\\AI_BS_Studio\\AI_BS_Studio.exe",
+        "exeSha256": "089e154b13f960f88c63db4540f590c06a14ab0e3523fcc3e837610ab1737b23",
+        "fileVersion": "5.329.86.0",
+        "packageFiles": 2256,
+        "packageBytes": 552599546,
+        "frozenInputCount": 82,
+        "frozenInputsAllUnchanged": true,
+        "canonicalMappingCounts": {
+          "canonical_native_or_version": 72,
+          "canonical_frontend_public_asset": 2,
+          "retained_v81_distribution_metadata": 7,
+          "generated_native_build_metadata": 1
+        },
+        "allNativeModulesCompiledSourceEquivalent": 71,
+        "requiredHelpers": {
+          "native_studio.broadcast_ipc": {
+            "compiledSourceEquivalent": true,
+            "matchingOptimizationLevels": [
+              0,
+              1
+            ]
+          },
+          "native_studio.broadcast_preview": {
+            "compiledSourceEquivalent": true,
+            "matchingOptimizationLevels": [
+              0,
+              1
+            ]
+          },
+          "native_studio.broadcast_secondary_control": {
+            "compiledSourceEquivalent": true,
+            "matchingOptimizationLevels": [
+              0,
+              1
+            ]
+          }
+        },
+        "backendModuleCount": 0,
+        "sensitiveRuntimeFilenameMatches": [],
+        "sensitiveDataScope": "Filename/data-boundary check plus previously recorded prebuild source-key scan; no live credential values read or printed",
+        "applicationExecuted": false,
+        "desktopOrCursorControl": false,
+        "runtimeChanges": false,
+        "fullGuiCertification": false,
+        "knownLimits": [
+          "Explicit screen sharing held/unsupported",
+          "Audio generated silence only"
+        ]
+      }
+    },
+    "native_installation": {
+      "receipt": "backups/native_preview_v86_20261031_record210/installation210.json",
+      "result": {
+        "status": "VERIFIED_WINDOWS_V86_INSTALLED",
+        "utc": "2026-10-31T21:17:47Z",
+        "exe": "C:\\AI-BS\\native_studio\\releases\\v5.329.86\\AI_BS_Studio\\AI_BS_Studio.exe",
+        "exe_sha256": "089e154b13f960f88c63db4540f590c06a14ab0e3523fcc3e837610ab1737b23",
+        "file_version": "5.329.86.0",
+        "package_files": 2256,
+        "package_bytes": 552599546,
+        "all_package_bytes_match_stage": true,
+        "new_release_acl": "CurrentUser and SYSTEM only; old releases unchanged",
+        "shortcuts": [
+          {
+            "path": "C:\\Users\\footb\\Desktop\\AI-BS Sovereign Studio.lnk",
+            "before": {
+              "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.85\\AI_BS_Studio\\AI_BS_Studio.exe",
+              "arguments": ""
+            },
+            "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.86\\AI_BS_Studio\\AI_BS_Studio.exe",
+            "preimage_sha256": "986b93760cef89e323b6344dc9a41afe0fb7c45b021ae97d674e17ade976137d",
+            "after_sha256": "04c7fc7ba554344d3ee00ecca2f71b6e8428644ac913944653b98481acf01bf0"
+          },
+          {
+            "path": "C:\\Users\\footb\\Desktop\\AI-BS Executive Studio.lnk",
+            "before": {
+              "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.85\\AI_BS_Studio\\AI_BS_Studio.exe",
+              "arguments": ""
+            },
+            "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.86\\AI_BS_Studio\\AI_BS_Studio.exe",
+            "preimage_sha256": "fb4ffe3b43bf22e4cc759f71d078cfaa0ec6c459053f391cea6b86d0c750389b",
+            "after_sha256": "30eae8996782c6e07ae66796c5936dc39d782a6e7407d86937b16c898b0f0d6a"
+          },
+          {
+            "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AI-BS Sovereign Studio.lnk",
+            "before": {
+              "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.85\\AI_BS_Studio\\AI_BS_Studio.exe",
+              "arguments": ""
+            },
+            "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.86\\AI_BS_Studio\\AI_BS_Studio.exe",
+            "preimage_sha256": "7241167900ad5d48ca87584ec0c1ec3b0d240eeb1833974223818e3a20e284ba",
+            "after_sha256": "3cab3b591c51d5fb0f48495cdad432ff32baf93e1acc2cad258454acc214eb30"
+          },
+          {
+            "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AI-BS Sovereign Studio\\AI-BS Sovereign Studio.lnk",
+            "before": {
+              "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.85\\AI_BS_Studio\\AI_BS_Studio.exe",
+              "arguments": ""
+            },
+            "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.86\\AI_BS_Studio\\AI_BS_Studio.exe",
+            "preimage_sha256": "940d8141cbd25150fa596879208fd4cacc0a49ead88e2e8664d6152cc38178a7",
+            "after_sha256": "a0844a786596b86057aca9e46323783f70bc139aee95829ba24f0ad4787b276f"
+          }
+        ],
+        "running_stream_action": "NONE",
+        "audio_capture": "DISABLED",
+        "microphone_capture": "DISABLED",
+        "live_trading": "DISABLED"
+      }
+    },
+    "actual86GUI": {
+      "receipt": "backups/native_preview210_fix/ui/gui/actual_gui_acceptance210.json",
+      "result": {
+        "utc": "2026-10-31T21:20:42.351Z",
+        "version": "5.329.86",
+        "window": {
+          "app": "process:C:\\AI-BS\\native_studio\\releases\\v5.329.86\\AI_BS_Studio\\AI_BS_Studio.exe",
+          "id": 43780780,
+          "title": "AI-BS Sovereign Studio v5.329.86 [Windows 10/11 x64 Pure Native]"
+        },
+        "actual_fortnite_image_visible_in_installed_studio": true,
+        "preview_status": "delayed",
+        "prominent_control": "Program preview: ON",
+        "checkbox_enabled": true,
+        "off_state_verified": "Both controls OFF and canvas said Program preview is off",
+        "on_state_verified": "Checkbox ON synchronized prominent control and game picture returned",
+        "broadcast_stop_or_source_action_during_toggle": false,
+        "audio": "generated_silence",
+        "live_trading": "DISABLED",
+        "obs_controls_in_visible_studio": 0,
+        "images": [
+          {
+            "path": "C:/AI-BS/backups/native_preview210_fix/ui/gui/v86_preview_on_initial.png",
+            "bytes": 387199,
+            "sha256": "136a49f0385e7babd11c34ae597f3d25f1119ef72046d0545c8a74963adc306b",
+            "reviewed_no_credentials": true
+          },
+          {
+            "path": "C:/AI-BS/backups/native_preview210_fix/ui/gui/v86_preview_off.png",
+            "bytes": 352213,
+            "sha256": "420e8c5d6ade8db0f36472ea1600730f2aa283b09e92b2cd7615b2094b0ed2a2",
+            "reviewed_no_credentials": true
+          },
+          {
+            "path": "C:/AI-BS/backups/native_preview210_fix/ui/gui/v86_preview_on_final.png",
+            "bytes": 386627,
+            "sha256": "566d1bc5e38074a6d89f54a89bdc83274ac5c1f2b6bef5890d236aa6f9a514fb",
+            "reviewed_no_credentials": true
+          }
+        ]
+      }
+    },
+    "prior85_actual_GUI": "PARENT_VERIFIED_VISIBLE_DELAYED_VIDEO_ABOUT21:15UTC_IMAGE_PATH_PENDING",
+    "real_core_probe": "backups/native_preview210_fix/core/completion_core210.json",
+    "web35": "PRIOR_RECORD209_NOT_RERUN_OR_ADDED",
+    "before_upgrade_runtime": "backups/native_preview210_fix/runtime/before_upgrade210.json",
+    "after_upgrade": {
+      "receipt": "backups/native_preview210_fix/runtime/after_upgrade210.json",
+      "result": {
+        "record": 210,
+        "kind": "one fresh read-only sample after parent actualv86 GUI upgrade/toggle verification",
+        "utc": "2026-10-31T21:21:03.545715+00:00",
+        "status": {
+          "status": "running_unverified",
+          "active": true,
+          "can_select": true,
+          "protocol_version": 2,
+          "controller_pid": 51964,
+          "controller_create_time": 1793481150.965731,
+          "encoder_pid": 51940,
+          "encoder_create_time": 1793481151.637907,
+          "capture_state": "capturing",
+          "game_frame_verified": true,
+          "holding_reason": "VERIFIED_GAME",
+          "source_mode": "auto_game",
+          "frames_encoded": 15224,
+          "out_time_us": 507466667,
+          "audio_mode": "generated_silence"
+        },
+        "local_hls": {
+          "sequence": 247,
+          "mtime_age_seconds": 2.048576831817627,
+          "ended": false
+        },
+        "same_pipeline_as_before_upgrade": true,
+        "matches_expected_51964_51940": true,
+        "encoder_advanced_since_before": true,
+        "owned_game_capture_verified": true,
+        "crypto_pins": {
+          "backend/core/crypto_execution_safety.py": {
+            "sha256": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+            "baseline_sha256": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+            "matches_baseline": true
+          },
+          "backend/core/crypto_execution_controls.py": {
+            "sha256": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+            "baseline_sha256": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+            "matches_baseline": true
+          },
+          "Crypto-Swarm/drip_ledger.json": {
+            "sha256": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+            "baseline_sha256": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+            "matches_baseline": true
+          },
+          "backend/crypto_ledger.json": {
+            "sha256": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd",
+            "baseline_sha256": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd",
+            "matches_baseline": true
+          }
+        },
+        "all_four_crypto_pins_match": true,
+        "port8007_listeners": 0,
+        "obs_process_count": 0,
+        "parent_GUI_evidence": "Root reported actualv86 game visible/delayed preview; prominent OFF then checkbox ON synchronized both and game picture returned. Root leftv86 foregroundpreviewON; this agent performed no GUI interaction.",
+        "actions": {
+          "GUI": false,
+          "runtime_start_stop": false,
+          "source_dispatch": false,
+          "IPC_writes": false,
+          "new_capture": false,
+          "keys_read": false,
+          "raw_encoder_argv_read": false,
+          "E_access": false,
+          "source_edits": false,
+          "extra_tests": false
+        }
+      }
+    }
+  },
+  "operations": {
+    "prior_controller_pid": 51964,
+    "prior_encoder_pid": 51940,
+    "root_start_count": 1,
+    "start_context": "Prior coordinator was stopped; root started once after user explicitly allowed PC control.",
+    "PC_control_permission": "Earlier prohibition explicitly revoked by user about21:12UTC. Only root performs bounded GUI controls; this document agent performs none.",
+    "live_trading": "DISABLED",
+    "audio": "GENERATED_SILENCE_NO_MIC",
+    "source_or_broadcast_commands_by_document_agent": 0,
+    "E_access": false,
+    "cloud_actions_by_document_agent": 0,
+    "final_controller_pid": 51964,
+    "final_encoder_pid": 51940,
+    "same_pipeline_during_upgrade_and_preview_toggle": true,
+    "final_capture_state": "capturing",
+    "final_game_frame_verified": true,
+    "final_preview": "ON",
+    "final_app": "v5.329.86 foreground",
+    "port8007_listeners": 0,
+    "obs_process_count": 0,
+    "all_four_crypto_pins_match": true,
+    "no_source_or_stop_action_during_toggle": true
+  },
+  "timing": {
+    "user_PC_control_allowed_approx_utc": "2026-10-31T21:12Z",
+    "prior85_GUI_visible_approx_utc": "2026-10-31T21:15Z",
+    "real_core_probe_seconds": 8.453,
+    "build_seconds": 120.667513,
+    "active_model_time_or_task_cost": "UNAVAILABLE",
+    "build_start_utc": "2026-10-31T21:15:21.208525Z",
+    "build_end_utc": "2026-10-31T21:17:21.876038Z",
+    "installation_utc": "2026-10-31T21:17:47Z",
+    "actual86_GUI_utc": "2026-10-31T21:20:42.351Z",
+    "after_upgrade_utc": "2026-10-31T21:21:03.545715+00:00"
+  },
+  "limits": [
+    "No core source fix is currently needed or claimed.",
+    "No all-games/workflow or remote RTMP dashboard acceptance.",
+    "Transient tool BadRequest symptoms do not establish an OpenAI backend outage.",
+    "Record209 and all existing candidate/build/cloud history remain unchanged.",
+    "Encrypted full-source/binary cloud recovery remains blocked by prior E-key custody; no E retry or replacement key."
+  ],
+  "recovery": {
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "C_preimages": "backups/record210_close_work/preimages",
+    "full_source_cloud": "BLOCKED_EXISTING_E_KEY_CUSTODY",
+    "drive_index_update": "ROOT_FRESH_FETCH_REQUIRED_PRIOR26465BYTE_PIN_NOT_REUSED_BLINDLY"
+  },
+  "next_step": "Root commits scoped records and publishes sanitized allowlisted evidence to the existing single audit folder; preserve remaining limits.",
+  "unattributed_user_message": {
+    "payload": {
+      "detail": "Bad Request"
+    },
+    "classification": "UNATTRIBUTED_400_STYLE_WORDING",
+    "HTTP_status_confirmed": false,
+    "URL_tool_context_provided": false,
+    "preview_HTTP_fault_or_OpenAI_outage_proven": false,
+    "counterevidence": "Real fixed9011core playback and actual85GUI video succeeded once capture eligible; no GPU/backend hack or core source fix applied."
+  },
+  "proposed_source_paths": [
+    "native_studio/omni_broadcast_studio.py",
+    "scripts/tests/test_preview_ui210.py",
+    "scripts/verify_native_broadcast_offline.py"
+  ],
+  "proposed_version_paths": [
+    "version.txt",
+    "package.json",
+    "package-lock.json",
+    "frontend/package.json",
+    "frontend/package-lock.json",
+    "BroadcastStudioApp/package.json",
+    "BroadcastStudioApp/package-lock.json",
+    "release.json",
+    "frontend/public/version.json",
+    "frontend/version.js",
+    "frontend/src/version.js",
+    "frontend/components/version.js",
+    "frontend/components/components/version.js",
+    "frontend/src/components/version.js",
+    "frontend/src/components/components/version.js",
+    "BroadcastStudioApp/src/version.js"
+  ],
+  "evidence": [
+    "backups/native_preview210_fix/ui/completion.json",
+    "backups/native_preview210_fix/ui/red_receipt.json",
+    "backups/native_preview210_fix/ui/green_receipt.json",
+    "backups/native_preview210_fix/core/completion_core210.json",
+    "backups/native_broadcast207_work/guarded_native/run_1793481267647551300/receipt.json",
+    "backups/release_versioning/20261031T211519172Z_native-preview-controls210_192f61a2/verified.json",
+    "backups/native_preview_v86_20261031_record210/build_verification/build_independent_verification210.json",
+    "backups/native_preview_v86_20261031_record210/installation210.json",
+    "backups/native_preview210_fix/ui/gui/actual_gui_acceptance210.json",
+    "backups/native_preview210_fix/runtime/before_upgrade210.json",
+    "backups/native_preview210_fix/runtime/after_upgrade210.json"
+  ]
+}

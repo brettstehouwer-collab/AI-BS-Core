@@ -1,0 +1,106 @@
+[
+  {
+    "actor": "/root/asset_reconciliation",
+    "phase": "public",
+    "width": 390,
+    "utc": "2026-10-25T21:39:00.578Z",
+    "timezone": "UTC",
+    "confidence": "OBSERVED",
+    "target": "https://stehouwer-publishing.com",
+    "method": "Fresh Chrome guest context, entry navigation only; GET/HEAD guard; no forms or clicks",
+    "scope": "Public homepage smoke; not authenticated publishing, APIs, media playback or physical-device acceptance",
+    "http_status": 200,
+    "final_origin": "https://stehouwer-publishing.com",
+    "title": "Stehouwer Publishing L.L.C.",
+    "body_characters": 2476,
+    "root_children": 3,
+    "body_width": 525,
+    "viewport_width": 390,
+    "branding": true,
+    "fatal_error_shell": false,
+    "private_script_elements": 0,
+    "uncaught_page_errors": [],
+    "console_error_count": 2,
+    "dialogs": [],
+    "requests": {
+      "total": 7,
+      "blocked_non_read": 0,
+      "private_or_tracking_attempts": 0,
+      "expected_cf_beacon_blocks": 1,
+      "external_reads": 0,
+      "failed_reads": [],
+      "http_errors": [
+        {
+          "origin": "https://stehouwer-publishing.com",
+          "path": "/images/library_bg.jpg",
+          "status": 404
+        }
+      ],
+      "assets": [
+        {
+          "path": "/assets/index-DiVaW3ll.css",
+          "status": 200,
+          "kind": "css"
+        },
+        {
+          "path": "/assets/index-NQ4u1ogD.js",
+          "status": 200,
+          "kind": "js"
+        }
+      ]
+    },
+    "status": "pass"
+  },
+  {
+    "actor": "/root/asset_reconciliation",
+    "phase": "public",
+    "width": 1440,
+    "utc": "2026-10-25T21:39:02.680Z",
+    "timezone": "UTC",
+    "confidence": "OBSERVED",
+    "target": "https://stehouwer-publishing.com",
+    "method": "Fresh Chrome guest context, entry navigation only; GET/HEAD guard; no forms or clicks",
+    "scope": "Public homepage smoke; not authenticated publishing, APIs, media playback or physical-device acceptance",
+    "http_status": 200,
+    "final_origin": "https://stehouwer-publishing.com",
+    "title": "Stehouwer Publishing L.L.C.",
+    "body_characters": 2476,
+    "root_children": 3,
+    "body_width": 1440,
+    "viewport_width": 1440,
+    "branding": true,
+    "fatal_error_shell": false,
+    "private_script_elements": 0,
+    "uncaught_page_errors": [],
+    "console_error_count": 2,
+    "dialogs": [],
+    "requests": {
+      "total": 8,
+      "blocked_non_read": 0,
+      "private_or_tracking_attempts": 0,
+      "expected_cf_beacon_blocks": 1,
+      "external_reads": 0,
+      "failed_reads": [],
+      "http_errors": [
+        {
+          "origin": "https://stehouwer-publishing.com",
+          "path": "/images/library_bg.jpg",
+          "status": 404
+        }
+      ],
+      "assets": [
+        {
+          "path": "/assets/index-NQ4u1ogD.js",
+          "status": 200,
+          "kind": "js"
+        },
+        {
+          "path": "/assets/index-DiVaW3ll.css",
+          "status": 200,
+          "kind": "css"
+        }
+      ]
+    },
+    "status": "pass"
+  }
+]

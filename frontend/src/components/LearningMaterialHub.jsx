@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import AeoTracker from '../src/components/AeoTracker.jsx';
 import SeoOptimizer from '../src/clients/action_glass/SeoOptimizer.jsx';
 

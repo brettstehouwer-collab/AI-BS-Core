@@ -1,0 +1,10 @@
+{
+  "state": "FAILED",
+  "input_sha256": "494de87a698c0b7393506c72dff60917e4afc49b781fc1ccb8f700254503a909",
+  "proposal": null,
+  "error_code": "internal_planning_error",
+  "finished_at_utc": "2026-11-14T14:20:55.016902+00:00",
+  "elapsed_seconds": 0.016,
+  "error_type": "RuntimeError",
+  "entry_sha256": "504301042a6a485a879bf6cc1111f7689e4e0dd475047d6431119944527d6acc"
+}

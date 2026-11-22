@@ -1,0 +1,47 @@
+{
+  "ecosystem_path": "C:/AI-BS",
+  "services": {
+    "Go Matrix / FastAPI Gateway (Port 8000)": {
+      "status": "ONLINE",
+      "code": 404
+    },
+    "ComfyUI RTX 4090 (Port 8189)": {
+      "status": "ONLINE",
+      "code": 200
+    },
+    "Unreal Engine 5.8 Bridge (Port 8080)": {
+      "status": "ONLINE",
+      "code": 200
+    },
+    "Ollama Multi-Model Swarm Daemon (Port 11434)": {
+      "status": "ONLINE",
+      "code": 200
+    },
+    "Vite React Local Dev Server (Port 5173)": {
+      "status": "ONLINE",
+      "code": 200
+    }
+  },
+  "git_branch": "AI-BS",
+  "git_uncommitted_changes": 105,
+  "system_telemetry": {
+    "ram_total_gb": 61.65,
+    "ram_available_gb": 20.77,
+    "ram_usage_pct": 66.3,
+    "cpu_usage_pct": 10.6
+  },
+  "backend_endpoints": {
+    "http://127.0.0.1:8000/api/health": {
+      "status": "HEALTHY",
+      "status_code": 200
+    },
+    "http://127.0.0.1:8000/api/screenwriting/studio_voices": {
+      "status": "HEALTHY",
+      "status_code": 200
+    },
+    "http://127.0.0.1:11434/api/tags": {
+      "status": "HEALTHY",
+      "status_code": 200
+    }
+  }
+}

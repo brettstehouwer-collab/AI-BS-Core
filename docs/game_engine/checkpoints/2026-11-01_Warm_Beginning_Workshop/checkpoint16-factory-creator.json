@@ -1,0 +1,830 @@
+{
+  "status": "passed",
+  "master": "D:\\AI-BS-Game-Resources\\P16\\warm-opening-Release-final-current\\o9dced7de\\p",
+  "host": "D:\\AI-BS-Game-Resources\\Builds\\WarmBeginningOpening\\Release\\aibs_content_host.exe",
+  "host_sha256": "c2367bb54d5a7668be3c9eef615cb2694496d56595269950d919e48104f76a8a",
+  "proof_script_sha256": "641d437921623eead5505857a867e1ee8302ca8570664460f175e3658dd756dc",
+  "output": "D:\\AI-BS-Game-Resources\\P16\\factory-creator-eb1cc961-dc57-4c9d-87d9-c5a51e77f78e",
+  "checks": [
+    "Actual generated metadata and native Qt rows load seven complete inspection triples, v05 companion and six visual placements",
+    "Actual Save preserves exact complete AIBD3 and all seven lights/companion route graph/media absence",
+    "Distinct real owner restart preserves complete rows, history and exact role-tagged export; no viewport, Play or inference"
+  ],
+  "gpu_processes_requested": false,
+  "play_requested": false,
+  "inference_requested": false,
+  "original_media_read_or_played": false,
+  "master_before": [
+    {
+      "path": ".aibs-chapter-project.json",
+      "bytes": 120,
+      "sha256": "abefde3ebdfd839f626ac64d7d9780183c2a1d70cd1fce6ce65337e6f717efed"
+    },
+    {
+      "path": "assets/packs/16986c3f6840dfff24985105f165c474426c6a57d796169af97f3b496323fd21/b0c11f024cc4e8e5e312d718de3cada4d1f20b6300ffe0227b3ba85ea69fca61.aibchar",
+      "bytes": 10676983,
+      "sha256": "b0c11f024cc4e8e5e312d718de3cada4d1f20b6300ffe0227b3ba85ea69fca61"
+    },
+    {
+      "path": "assets/packs/16986c3f6840dfff24985105f165c474426c6a57d796169af97f3b496323fd21/catalog.aibcat",
+      "bytes": 194,
+      "sha256": "2dc1acb3797d341ad4244beb5885b669bcb92283f43fdad7f6f1b8aba58083c2"
+    },
+    {
+      "path": "assets/packs/16986c3f6840dfff24985105f165c474426c6a57d796169af97f3b496323fd21/LICENSE.txt",
+      "bytes": 855,
+      "sha256": "c0ec35a077f90fa1ce441d202d7b9b1d3f80af47d729d8887acad066802ad25d"
+    },
+    {
+      "path": "assets/packs/16986c3f6840dfff24985105f165c474426c6a57d796169af97f3b496323fd21/provenance.json",
+      "bytes": 2417,
+      "sha256": "6f953c43c5f786d53589177e2bada95ec3a3b1e571427064138ba63760b2c025"
+    },
+    {
+      "path": "assets/packs/296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b/catalog.aibcat",
+      "bytes": 184,
+      "sha256": "7da4d14e5c53b8e1fe06831998f0a13121c0e8b652f6077ed0de5225f3318164"
+    },
+    {
+      "path": "assets/packs/296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b/d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd.aibmesh",
+      "bytes": 50054,
+      "sha256": "d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd"
+    },
+    {
+      "path": "assets/packs/296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b/LICENSE.txt",
+      "bytes": 122,
+      "sha256": "0cb45a2e11180ca02e8153b5f5751d077a943a68a1ff141ac9267c395d84d171"
+    },
+    {
+      "path": "assets/packs/296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b/provenance.json",
+      "bytes": 943,
+      "sha256": "7c9792421e1e9720a092c39d35da1e15a3f8eefed13b3faf75290d13974983d6"
+    },
+    {
+      "path": "chapter.aiba",
+      "bytes": 36248,
+      "sha256": "5382f762b139d73a73a94b88a2b96076c15917f696fd54af86a69abd00039d20"
+    },
+    {
+      "path": "chapter.aiba.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opening-manifest.json",
+      "bytes": 2861,
+      "sha256": "452adca8414c514c1d6508a40b35415ed045485560b7c1165dc3d763cca0878f"
+    },
+    {
+      "path": "opening.aibd",
+      "bytes": 36054,
+      "sha256": "dbd64d82aa71380c3461c1239bf246bdb853deae3f257bc4e390ae121e7f81c2"
+    }
+  ],
+  "project": "D:\\AI-BS-Game-Resources\\P16\\factory-creator-eb1cc961-dc57-4c9d-87d9-c5a51e77f78e\\project",
+  "metadata": {
+    "project": "first-boot-warm-opening",
+    "branch": "warm-beginning-opening-v1",
+    "asset_profile": "warm-beginning"
+  },
+  "row_counts": {
+    "authoring.AssetPlacement": 6,
+    "authoring.ChapterSettings": 1,
+    "authoring.CompanionBinding": 1,
+    "authoring.Fixture": 48,
+    "authoring.Hardware": 56,
+    "firstboot.ChapterProgress": 1,
+    "firstboot.Door": 3,
+    "firstboot.NPCQuest": 1,
+    "firstboot.PowerFault": 1
+  },
+  "inspection_count": 7,
+  "light_count": 7,
+  "visual_placements": 6,
+  "memory_bindings": 0,
+  "original_recording_bound": false,
+  "fingerprint": "dbd64d82aa71380c3461c1239bf246bdb853deae3f257bc4e390ae121e7f81c2",
+  "export_sha256": "dbd64d82aa71380c3461c1239bf246bdb853deae3f257bc4e390ae121e7f81c2",
+  "export_bytes": 36054,
+  "old_owner_epoch": "d4f1d0e5-90ea-46a1-a8ba-2321d5b5e71a",
+  "new_owner_epoch": "4db62eba-7335-40e3-a489-115adbb88b99",
+  "saved_document_sha256": "d5636e147cb3ae04e318839191fba473ec712898ebcecd9047187245cab738f4",
+  "history": [
+    0,
+    0,
+    0
+  ],
+  "dependencies": [
+    [
+      0,
+      "89e133bc-979e-4ed0-9dba-ae69fce559b2",
+      "d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd",
+      "296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b"
+    ],
+    [
+      1,
+      "03f89b77-69e4-4f79-9557-e952c29ff26e",
+      "b0c11f024cc4e8e5e312d718de3cada4d1f20b6300ffe0227b3ba85ea69fca61",
+      "16986c3f6840dfff24985105f165c474426c6a57d796169af97f3b496323fd21"
+    ]
+  ],
+  "observations": {
+    "definition_id": "0c16d8cf-cc9c-4078-be05-61b806a0146a",
+    "world_id": "49ca310d-d149-4af3-a65e-da73028be073",
+    "binding_id": "f935277b-e582-4c38-9ebf-e2554f695410",
+    "revision": 0,
+    "role_record_sha256": [
+      "876a50ff734533a16f6365aa1a46269f56a507bbb0130f0c083e89f6ae5bd022",
+      "1cabfbab5b8e78b2aeb588f22fa725969a31eeb693dd59f082094f3d8963f472",
+      "b687072de368ed08cb01db0855d3caa501b413a71b96bd864e3ba09a410d5bd9",
+      "ca0a275bd6dc96221a96372735ddf2841af9c7991890da858fe1d2e78e88be04",
+      "11e7d08cd6ed3488c82871d48eb6ae7b33697707000f9a9ca06afa0fac84d091",
+      "500fff8d337590d865b6aa45b702a7aca04cdd19db84b02920285b8ebb098caa"
+    ],
+    "hints": {
+      "adam.bypass_open": "The service path is open. We can build from here. You can return through an opened door even when the supply changes.",
+      "adam.bypass_power": "That relay feed holds. The service door can open now. This path is one you built.",
+      "adam.danger": "Watch the arc. Step back toward the west path and isolate the supply before working on it.",
+      "adam.isolated": "The damaged feed is isolated. We can repair the main supply or build a relay at the bypass socket. You choose the connection.",
+      "adam.live_fault": "I'm here. This nook has reserve light, but we are still inside Jenison. Start with what still responds. Follow the west signal path to the supply, or look around before we go.",
+      "adam.pencil": "The page can stay blank. You can rest, return to what you built or look toward the distant RTX core. I'll follow your lead.",
+      "adam.repaired_connected": "That connection holds. Main power is back. Open the main entrance when you're ready, and watch the warm circuits answer.",
+      "adam.repaired_isolated": "Your repair holds. Reconnect the main feed at the isolation switch when you're ready; the bypass remains another option.",
+      "adam.shelter": "We reached shelter. This is different from the little reserve nook. There is a workbench, a quiet place to pause and the Pencil Room ahead. The lamp is yours to help with or leave for now.",
+      "inspect.042bef85-8583-4ca3-982d-2186b87cf01a.action": "read",
+      "inspect.042bef85-8583-4ca3-982d-2186b87cf01a.source": "Echos Within, XML paragraph 69, Never Felt More Pain. The red toy-truck memory is sourced; this keepsake and future vehicle connection are game adaptations.",
+      "inspect.042bef85-8583-4ca3-982d-2186b87cf01a.text": "Your writing keeps a happy fragment of Adam pushing you in a red electric toy truck. This little keepsake holds that fragment without asking you to revisit the painful events around it. Later, building vehicles can grow from this memory; here, you can simply look and continue when you want.",
+      "inspect.320d52c5-8a5c-4f7d-b86b-e6a2640b1bb1.action": "seat",
+      "inspect.320d52c5-8a5c-4f7d-b86b-e6a2640b1bb1.source": "Echos Within, XML paragraphs 270 and 1165: reflective imagining. Two seats and this optional quiet panel are authored adaptations. No historical dialogue is asserted.",
+      "inspect.320d52c5-8a5c-4f7d-b86b-e6a2640b1bb1.text": "Your reflective writing imagines Adam nearby. These two seats give that feeling a place inside the shelter. You may take a quiet reading pause here, ask Adam to wait, or carry on together. This is an imagined space made from your writing, not a claim that a conversation happened here. No response or emotional choice is required.",
+      "inspect.979c61b9-43e7-4e99-95f4-3ebcbc082e36.action": "read",
+      "inspect.979c61b9-43e7-4e99-95f4-3ebcbc082e36.source": "Echos Within, XML paragraphs 946-947, inform protection and making room. The Caretaker and lamp quest are fictional gameplay; no family member is represented by this NPC.",
+      "inspect.979c61b9-43e7-4e99-95f4-3ebcbc082e36.text": "Shelter becomes meaningful when there is room for someone else. The Caretaker's lamp is an optional task: offer help or decline through the existing choice controls. You can still reach the Pencil Room either way. This fictional character is here to give you a small, practical choice about the space you have restored.",
+      "inspect.9aafc2d9-700c-4602-a5fd-809048459216.action": "read",
+      "inspect.9aafc2d9-700c-4602-a5fd-809048459216.source": "Echos Within, XML paragraph 332, Adam My Brother Always. Pencil Room is a game adaptation named in the project, not a literal location in the memoir.",
+      "inspect.9aafc2d9-700c-4602-a5fd-809048459216.text": "In your writing, a pencil preserves memories of Adam and your cousin, carrying a value possessions cannot replace. This page stays blank. There is no invented final letter to discover and no answer you must write. You have reached a place you can return to, with Adam's memory beside you and a larger world still waiting to be built.",
+      "inspect.aa5b0367-f4ee-4f3c-a254-b676c1e414ba.action": "read",
+      "inspect.aa5b0367-f4ee-4f3c-a254-b676c1e414ba.source": "Authored engine instructions for the existing Build, repair, connect-bypass and door-latch mechanics. The restoration theme is informed by Echos Within, XML paragraph 1145.",
+      "inspect.aa5b0367-f4ee-4f3c-a254-b676c1e414ba.text": "A spare part can become a new path. Keep the damaged supply isolated. Aim down at the marked socket near the service entrance and use Build to create a relay; repair it if needed, then interact with the healthy relay to connect the bypass. You can dismantle and rebuild it. A door already opened stays a usable return route when power changes.",
+      "inspect.be12f535-4053-48ae-a623-5cab920fc31f.action": "read",
+      "inspect.be12f535-4053-48ae-a623-5cab920fc31f.source": "Echos Within, XML paragraph 682, Always Family Guy. Controller placement and gameplay guidance are authored adaptations, not a quotation from Adam.",
+      "inspect.be12f535-4053-48ae-a623-5cab920fc31f.text": "You wrote that Adam taught you to look and turn in games. Start by looking around this little reserve-lit corner. The motherboard is the world you will build, one connection at a time. Adam's memory can Follow, Wait or Recall; choosing your own pace remains yours.",
+      "inspect.faadd037-d9cc-412a-b261-e84c85dc8401.action": "read",
+      "inspect.faadd037-d9cc-412a-b261-e84c85dc8401.source": "Mechanical design adaptation. Echos Within, XML paragraph 1145, informs making something useful from damage; this electrical diagnostic is not a memoir event.",
+      "inspect.faadd037-d9cc-412a-b261-e84c85dc8401.text": "The fault station has two honest ways forward. Inspect the damaged supply, isolate it at the nearby switch, then either repair the main supply and reconnect it or build a relay at the bypass socket. Watch the current state and Adam's guidance. Neither route proves more about you; each changes how this opening records your first connection."
+    },
+    "placements": [
+      {
+        "uuid": "0ca72b4a-386d-4bf5-9181-8729881f0d6b",
+        "name": "Workshop capacitor",
+        "reference": {
+          "asset_id": "89e133bc-979e-4ed0-9dba-ae69fce559b2",
+          "asset_sha256": "d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd",
+          "pack_sha256": "296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b"
+        },
+        "center": [
+          -44.599998474121094,
+          0.0,
+          -4.5
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "selectable": false
+      },
+      {
+        "uuid": "1372ed30-80bd-4847-a2a8-3e09f6204e02",
+        "name": "Workshop capacitor",
+        "reference": {
+          "asset_id": "89e133bc-979e-4ed0-9dba-ae69fce559b2",
+          "asset_sha256": "d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd",
+          "pack_sha256": "296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b"
+        },
+        "center": [
+          -44.599998474121094,
+          0.0,
+          -6.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "selectable": false
+      },
+      {
+        "uuid": "2b09351f-9bb4-4d9e-a592-96ec2485a650",
+        "name": "Workshop capacitor",
+        "reference": {
+          "asset_id": "89e133bc-979e-4ed0-9dba-ae69fce559b2",
+          "asset_sha256": "d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd",
+          "pack_sha256": "296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b"
+        },
+        "center": [
+          -29.799999237060547,
+          0.029999999329447746,
+          6.800000190734863
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "selectable": false
+      },
+      {
+        "uuid": "715e83b8-eb6d-44b8-abd0-a81da4f0f744",
+        "name": "Workshop capacitor",
+        "reference": {
+          "asset_id": "89e133bc-979e-4ed0-9dba-ae69fce559b2",
+          "asset_sha256": "d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd",
+          "pack_sha256": "296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b"
+        },
+        "center": [
+          -29.799999237060547,
+          0.029999999329447746,
+          11.300000190734863
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "selectable": false
+      },
+      {
+        "uuid": "c9ee1ffe-b9ea-4b51-a155-53813343bcf7",
+        "name": "Workshop capacitor",
+        "reference": {
+          "asset_id": "89e133bc-979e-4ed0-9dba-ae69fce559b2",
+          "asset_sha256": "d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd",
+          "pack_sha256": "296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b"
+        },
+        "center": [
+          -30.0,
+          0.0,
+          -23.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "selectable": false
+      },
+      {
+        "uuid": "cba86938-84f8-45db-8627-bb7ec93e0158",
+        "name": "Workshop capacitor",
+        "reference": {
+          "asset_id": "89e133bc-979e-4ed0-9dba-ae69fce559b2",
+          "asset_sha256": "d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd",
+          "pack_sha256": "296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b"
+        },
+        "center": [
+          -34.5,
+          0.0,
+          -1.399999976158142
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "selectable": false
+      }
+    ],
+    "profile": 1,
+    "exposure": 1.0,
+    "companions": [
+      {
+        "uuid": "38f0c8f8-3094-484f-811a-523ad6a5402d",
+        "name": "Adam's memory",
+        "spawn": [
+          -30.0,
+          0.20000000298023224,
+          -25.0
+        ],
+        "follow": true,
+        "model": {
+          "asset_id": "03f89b77-69e4-4f79-9557-e952c29ff26e",
+          "asset_sha256": "b0c11f024cc4e8e5e312d718de3cada4d1f20b6300ffe0227b3ba85ea69fca61",
+          "pack_sha256": "16986c3f6840dfff24985105f165c474426c6a57d796169af97f3b496323fd21"
+        },
+        "nodes": [
+          {
+            "id": "nook",
+            "feet": [
+              -30.0,
+              0.20000000298023224,
+              -25.0
+            ]
+          },
+          {
+            "id": "nook-turn",
+            "feet": [
+              -33.5,
+              0.20000000298023224,
+              -25.0
+            ]
+          },
+          {
+            "id": "west",
+            "feet": [
+              -37.0,
+              0.20000000298023224,
+              -25.0
+            ]
+          },
+          {
+            "id": "west20",
+            "feet": [
+              -37.0,
+              0.20000000298023224,
+              -20.0
+            ]
+          },
+          {
+            "id": "west15",
+            "feet": [
+              -37.0,
+              0.20000000298023224,
+              -15.0
+            ]
+          },
+          {
+            "id": "west10",
+            "feet": [
+              -37.0,
+              0.20000000298023224,
+              -10.0
+            ]
+          },
+          {
+            "id": "fault",
+            "feet": [
+              -37.0,
+              0.20000000298023224,
+              -5.199999809265137
+            ]
+          },
+          {
+            "id": "approach",
+            "feet": [
+              -37.0,
+              0.20000000298023224,
+              -1.5
+            ]
+          },
+          {
+            "id": "junction",
+            "feet": [
+              -37.0,
+              0.20000000298023224,
+              1.899999976158142
+            ]
+          },
+          {
+            "id": "main-front",
+            "feet": [
+              -33.0,
+              0.20000000298023224,
+              1.899999976158142
+            ]
+          },
+          {
+            "id": "main-back",
+            "feet": [
+              -33.0,
+              0.25,
+              6.0
+            ]
+          },
+          {
+            "id": "service-front",
+            "feet": [
+              -41.0,
+              0.20000000298023224,
+              1.899999976158142
+            ]
+          },
+          {
+            "id": "service-back",
+            "feet": [
+              -41.0,
+              0.25,
+              6.0
+            ]
+          },
+          {
+            "id": "hub",
+            "feet": [
+              -37.0,
+              0.25,
+              8.0
+            ]
+          },
+          {
+            "id": "pencil-front",
+            "feet": [
+              -37.0,
+              0.25,
+              10.699999809265137
+            ]
+          },
+          {
+            "id": "pencil-back",
+            "feet": [
+              -37.0,
+              0.25,
+              15.0
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "from": "nook",
+            "to": "nook-turn",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "nook-turn",
+            "to": "west",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "west",
+            "to": "west20",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "west20",
+            "to": "west15",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "west15",
+            "to": "west10",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "west10",
+            "to": "fault",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "fault",
+            "to": "approach",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "approach",
+            "to": "junction",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "junction",
+            "to": "main-front",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "junction",
+            "to": "service-front",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "main-back",
+            "to": "hub",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "service-back",
+            "to": "hub",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "hub",
+            "to": "pencil-front",
+            "door": "",
+            "bidirectional": true
+          },
+          {
+            "from": "pencil-front",
+            "to": "pencil-back",
+            "door": "0e968a6c-9c46-453a-bd1a-a4b7d1a658ac",
+            "bidirectional": true
+          },
+          {
+            "from": "service-front",
+            "to": "service-back",
+            "door": "ab5de784-7588-4a6c-9283-5830dbd2ab92",
+            "bidirectional": true
+          },
+          {
+            "from": "main-front",
+            "to": "main-back",
+            "door": "c49a8aa4-0bc9-4e48-841d-db4a3ddb387e",
+            "bidirectional": true
+          }
+        ]
+      }
+    ],
+    "lights": [
+      {
+        "uuid": "0ad1c0fb-e170-4636-9ca3-374b63a87b34",
+        "name": "Jenison low reserve visibility",
+        "kind": 0,
+        "power": 0,
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "direction": [
+          0.4000000059604645,
+          -0.8944271802902222,
+          0.20000000298023224
+        ],
+        "color": [
+          0.3499999940395355,
+          0.44999998807907104,
+          0.6000000238418579
+        ],
+        "intensity": 0.18000000715255737,
+        "radius": 10.0
+      },
+      {
+        "uuid": "2e8a17d3-758a-41e4-a794-5c11ed70cf3e",
+        "name": "Shelter restored circuit",
+        "kind": 1,
+        "power": 1,
+        "position": [
+          -36.0,
+          2.799999952316284,
+          8.0
+        ],
+        "direction": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "color": [
+          1.0,
+          0.6700000166893005,
+          0.3199999928474426
+        ],
+        "intensity": 3.5,
+        "radius": 10.0
+      },
+      {
+        "uuid": "3829fc51-26a7-4f3e-a968-05740f48a8d6",
+        "name": "Pencil workbench restored circuit",
+        "kind": 1,
+        "power": 1,
+        "position": [
+          -39.0,
+          2.5,
+          17.0
+        ],
+        "direction": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "color": [
+          1.0,
+          0.800000011920929,
+          0.5
+        ],
+        "intensity": 3.0,
+        "radius": 8.0
+      },
+      {
+        "uuid": "9790f2f1-1d44-4f66-ad93-22e16e08edf8",
+        "name": "Nook restored circuit",
+        "kind": 1,
+        "power": 1,
+        "position": [
+          -32.0,
+          2.9000000953674316,
+          -25.0
+        ],
+        "direction": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "color": [
+          1.0,
+          0.6700000166893005,
+          0.3199999928474426
+        ],
+        "intensity": 2.4000000953674316,
+        "radius": 16.0
+      },
+      {
+        "uuid": "be603538-5b14-4647-aa10-755a20a997ab",
+        "name": "Nook emergency reserve",
+        "kind": 1,
+        "power": 0,
+        "position": [
+          -32.5,
+          3.0999999046325684,
+          -26.0
+        ],
+        "direction": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "color": [
+          1.0,
+          0.47999998927116394,
+          0.20000000298023224
+        ],
+        "intensity": 3.0,
+        "radius": 12.0
+      },
+      {
+        "uuid": "de24ffce-6a2f-456d-bc94-9f1950cdaa9e",
+        "name": "Fault warning reserve",
+        "kind": 1,
+        "power": 0,
+        "position": [
+          -34.0,
+          2.5999999046325684,
+          -5.0
+        ],
+        "direction": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "color": [
+          1.0,
+          0.25,
+          0.07999999821186066
+        ],
+        "intensity": 1.5,
+        "radius": 8.0
+      },
+      {
+        "uuid": "fc87d9ff-6ffc-4975-963a-c8dacd50c22b",
+        "name": "Distant RTX connection landmark",
+        "kind": 1,
+        "power": 1,
+        "position": [
+          0.0,
+          13.0,
+          22.0
+        ],
+        "direction": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "color": [
+          0.5,
+          0.8500000238418579,
+          1.0
+        ],
+        "intensity": 3.0,
+        "radius": 28.0
+      }
+    ],
+    "memories": []
+  },
+  "final_process_ids": [
+    {
+      "owner": 0,
+      "asset": 0,
+      "play": 0,
+      "viewport": 0
+    },
+    {
+      "owner": 0,
+      "asset": 0,
+      "play": 0,
+      "viewport": 0
+    }
+  ],
+  "owned_processes_joined": true,
+  "master_after": [
+    {
+      "path": ".aibs-chapter-project.json",
+      "bytes": 120,
+      "sha256": "abefde3ebdfd839f626ac64d7d9780183c2a1d70cd1fce6ce65337e6f717efed"
+    },
+    {
+      "path": "assets/packs/16986c3f6840dfff24985105f165c474426c6a57d796169af97f3b496323fd21/b0c11f024cc4e8e5e312d718de3cada4d1f20b6300ffe0227b3ba85ea69fca61.aibchar",
+      "bytes": 10676983,
+      "sha256": "b0c11f024cc4e8e5e312d718de3cada4d1f20b6300ffe0227b3ba85ea69fca61"
+    },
+    {
+      "path": "assets/packs/16986c3f6840dfff24985105f165c474426c6a57d796169af97f3b496323fd21/catalog.aibcat",
+      "bytes": 194,
+      "sha256": "2dc1acb3797d341ad4244beb5885b669bcb92283f43fdad7f6f1b8aba58083c2"
+    },
+    {
+      "path": "assets/packs/16986c3f6840dfff24985105f165c474426c6a57d796169af97f3b496323fd21/LICENSE.txt",
+      "bytes": 855,
+      "sha256": "c0ec35a077f90fa1ce441d202d7b9b1d3f80af47d729d8887acad066802ad25d"
+    },
+    {
+      "path": "assets/packs/16986c3f6840dfff24985105f165c474426c6a57d796169af97f3b496323fd21/provenance.json",
+      "bytes": 2417,
+      "sha256": "6f953c43c5f786d53589177e2bada95ec3a3b1e571427064138ba63760b2c025"
+    },
+    {
+      "path": "assets/packs/296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b/catalog.aibcat",
+      "bytes": 184,
+      "sha256": "7da4d14e5c53b8e1fe06831998f0a13121c0e8b652f6077ed0de5225f3318164"
+    },
+    {
+      "path": "assets/packs/296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b/d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd.aibmesh",
+      "bytes": 50054,
+      "sha256": "d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd"
+    },
+    {
+      "path": "assets/packs/296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b/LICENSE.txt",
+      "bytes": 122,
+      "sha256": "0cb45a2e11180ca02e8153b5f5751d077a943a68a1ff141ac9267c395d84d171"
+    },
+    {
+      "path": "assets/packs/296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b/provenance.json",
+      "bytes": 943,
+      "sha256": "7c9792421e1e9720a092c39d35da1e15a3f8eefed13b3faf75290d13974983d6"
+    },
+    {
+      "path": "chapter.aiba",
+      "bytes": 36248,
+      "sha256": "5382f762b139d73a73a94b88a2b96076c15917f696fd54af86a69abd00039d20"
+    },
+    {
+      "path": "chapter.aiba.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opening-manifest.json",
+      "bytes": 2861,
+      "sha256": "452adca8414c514c1d6508a40b35415ed045485560b7c1165dc3d763cca0878f"
+    },
+    {
+      "path": "opening.aibd",
+      "bytes": 36054,
+      "sha256": "dbd64d82aa71380c3461c1239bf246bdb853deae3f257bc4e390ae121e7f81c2"
+    }
+  ],
+  "published_master_unchanged": true,
+  "host_unchanged": true
+}

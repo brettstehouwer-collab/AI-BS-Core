@@ -1,0 +1,61 @@
+{
+  "at": "2026-11-04T22:09:29.253435+00:00",
+  "status": "source_fix_verified_focused_fullSDK_release_pending",
+  "source_SDK": "0.17.3",
+  "published_SDK": "0.17.2",
+  "installed_Studio": "5.329.107",
+  "held_Studio": "5.329.108",
+  "source_changes": [
+    {
+      "path": "engine/apps/workshop_tour_path.hpp",
+      "before_sha256": "eac30a47ee075ce633fc4b423483634f5a8849762ab59134bf81d6aea5f0aa34",
+      "after_sha256": "c1b9c30e7cce04f63d533add7e53df9e9ed4ec3dff5cb2603abe6f1692116001"
+    },
+    {
+      "path": "engine/tests/workshop_tour_path_tests.cpp",
+      "before_sha256": "8ba0e3c739bb00a32342033e6fdb75d0c12670729cf0023993c8f2b62acdabe9",
+      "after_sha256": "76307b92ee916fb03d4df234a7dd6bc437b4971426fb042dfccb51d432996eb3"
+    },
+    {
+      "path": "engine/CMakeLists.txt",
+      "before_sha256": "dba175062270b6c2b57c7475440ff9593b9901142d9c364ce39eb16844a876bf",
+      "after_sha256": "720a866f374963d2702967c718a72390b0d70f8b17121da57d922b3b4b1943af"
+    }
+  ],
+  "seeded_assertions": 592,
+  "recorded_assertions": 1185,
+  "native_tours": 4,
+  "backup_receipt": "docs/game_engine/checkpoints/104A-drive.json",
+  "monitor_status": "available",
+  "monitor_sha256": "395d6083427cea40edad7a9d5216c58412ec8f7fc301621fb6d6fbd4ab55cddd",
+  "launchers_or_releases_modified": false,
+  "real_saves_or_family_originals_modified": false,
+  "free_GiB": {
+    "C": 288.22,
+    "D": 24.12,
+    "E": 102.08
+  },
+  "goal_complete": false,
+  "next_step": "Qualify freshSDK0173Release/Debug and relocated consumers against source-after pins; publish new runtime only after complete qualification. Then build freshStudio109candidate withv33, repeat frozen route/control/save tests and verified backup before launcher updates. Preserve107/108and original refs/saves. Include exact PNG/test-asset closure and pinned client Python integration dependencies; distinguish frozen inputs from live pinned imports.",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "private_worktree_snapshot": "E:\\AI_BS_Resources\\FirstBoot\\P104\\ShelterReturnClearance\\private-git-status.txt",
+  "private_worktree_sha256": "ce1db97776e0ad8f6018d77bbb8839ced3376e429518329a3d8ecc2f4279c4fd",
+  "private_git_uploaded": false,
+  "history_scope": [
+    "AGENTS sectionXI",
+    "P103 current index/handoff/ledger pointers and retained route failure",
+    "Current planner/PlayerController/physics/picking/test source",
+    "P87qualification recipes read, not executed"
+  ],
+  "helpers": [
+    "route_clearance_review: geometry/code review, extra tilted/high-marker regressions and future closure review"
+  ],
+  "architecture_decision": {
+    "requirement": "C8.2 native route acceptance",
+    "original": "Accept cold dry-run eventual arrival",
+    "change": "Also require conservative rotation-aware capsule corridor, retain physical support/walk checks",
+    "compatibility": "Diagnostic traversal only; unchanged actor physics/save schemas; preserve old SDKs/releases",
+    "status": "implemented source; focused acceptance passed; fullSDK pending"
+  }
+}

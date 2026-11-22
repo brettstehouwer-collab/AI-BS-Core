@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import FinancialAccountBoundary from '/src/components/FinancialAccountBoundary.jsx';
+import { reportedHardwareValue, requestFanControl } from '/src/utils/networkWorkspace.js';
 import { 
   Activity, 
   Cpu, 
@@ -15,71 +17,93 @@ import {
   RotateCcw
 } from 'lucide-react';
 
-export default function GpuHardwareTelemetryTab() {
-  const [telemetry, setTelemetry] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [actionLoading, setActionLoading] = useState(false);
-  const [actionMessage, setActionMessage] = useState(null);
+/** @param {{backendUrl?:string}} props */
+export default function GpuHardwareTelemetryTab({ backendUrl }) {
+  return <FinancialAccountBoundary>{request => <GpuHardwareContent key={backendUrl || ''} backendUrl={backendUrl || ''} financialRequest={request} />}</FinancialAccountBoundary>;
+}
 
-  const fetchTelemetry = useCallback(async () => {
-    try {
-      const res = await fetch('http://127.0.0.1:8080/api/v1/hardware/gpu/telemetry');
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-      const data = await res.json();
-      if (data.status === 'success') {
-        setTelemetry(data.telemetry);
-        setHistory(data.history || []);
-        setError(null);
+/** @param {{backendUrl:string,financialRequest:ReturnType<typeof import("/src/utils/accountingSession.js").createAccountingSession>["request"]}} props */
+function GpuHardwareContent({ backendUrl, financialRequest }) {
+  const [telemetry, setTelemetry] = useState(/** @type {{nvml_online?:boolean,field_status?:Record<string,string>,gpu_name?:string,[key:string]:unknown}|null} */ (null));
+  const [history, setHistory] = useState(/** @type {{id?:string|number,timestamp:string,core_temp_c:number,fan_speed_pct:number,power_usage_w:number,memory_used_mb:number,status_flag:string}[]} */ ([]));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(/** @type {string|null} */ (null));
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionMessage, setActionMessage] = useState(/** @type {{kind:string,text:string}|null} */ (null));
+  const readGeneration = useRef(0);
+  const readPending = useRef(/** @type {Promise<void>|null} */ (null));
+  const actionPending = useRef(false);
+  const apiBase = backendUrl.replace(/\/$/, '');
+
+  const fetchTelemetry = useCallback(() => {
+    if (readPending.current) return readPending.current;
+    const generation = ++readGeneration.current;
+    setLoading(true);
+    readPending.current = (async () => {
+      try {
+        const response = await financialRequest(`${apiBase}/api/v1/hardware/gpu/telemetry`);
+        const data = await response.json();
+        if (data.status !== 'success' || !data.telemetry || typeof data.telemetry !== 'object' || !Array.isArray(data.history)) {
+          throw new Error('Hardware telemetry response is unavailable.');
+        }
+        if (generation === readGeneration.current) {
+          setTelemetry(data.telemetry); setHistory(data.history); setError(null);
+        }
+      } catch {
+        if (generation === readGeneration.current) {
+          setTelemetry(null); setHistory([]);
+          setError('Hardware telemetry is unavailable. Sign in with an authorized account or refresh to retry.');
+        }
+      } finally {
+        if (generation === readGeneration.current) { setLoading(false); readPending.current = null; }
       }
-    } catch (err) {
-      console.warn('GPU Telemetry fetch warning:', err.message);
-      setError('Live NVML Telemetry Gateway Offline (Port 8080)');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    })();
+    return readPending.current;
+  }, [apiBase, financialRequest]);
 
   useEffect(() => {
-    fetchTelemetry();
-    const interval = setInterval(fetchTelemetry, 2500);
-    return () => clearInterval(interval);
+    let active = true;
+    /** @type {ReturnType<typeof setTimeout>|undefined} */
+    let timer;
+    const poll = async () => {
+      await fetchTelemetry();
+      if (active) timer = setTimeout(poll, 2500);
+    };
+    poll();
+    return () => { active = false; clearTimeout(timer); readGeneration.current++; readPending.current = null; };
   }, [fetchTelemetry]);
 
+  /** @param {number} speed @param {boolean} auto */
   const handleFanControl = async (speed, auto) => {
-    setActionLoading(true);
-    setActionMessage(null);
+    if (actionPending.current) return;
+    actionPending.current = true; setActionLoading(true); setActionMessage(null);
     try {
-      const res = await fetch('http://127.0.0.1:8080/api/v1/hardware/gpu/fan-control', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ speed, auto })
-      });
-      const data = await res.json();
-      if (data.status === 'success' || data.status === 'warning') {
-        setActionMessage(data.result?.message || 'Fan setting updated successfully');
-        fetchTelemetry();
-      } else {
-        setActionMessage('Failed to update fan speed');
-      }
+      const result = await requestFanControl({ request: financialRequest, backendUrl: apiBase, speed, auto });
+      setActionMessage({ kind: result.enforcement_verified ? 'success' : result.success ? 'accepted' : 'warning',
+        text: `${result.message} ${result.enforcement_verified ? 'Enforcement verified by readback.' : result.success ? 'Request accepted; enforcement unverified.' : 'Request was not accepted.'}` });
+      fetchTelemetry();
     } catch (err) {
-      setActionMessage(`Error: ${err.message}`);
-    } finally {
-      setActionLoading(false);
-      setTimeout(() => setActionMessage(null), 4000);
-    }
+      setActionMessage({ kind: 'error', text: err instanceof Error ? err.message : 'Fan control is unavailable. Refresh telemetry before retrying.' });
+    } finally { actionPending.current = false; setActionLoading(false); }
   };
 
-  const temp = telemetry?.core_temp_c ?? 32;
-  const fanPct = telemetry?.fan_speed_pct ?? 100;
-  const memUsed = telemetry?.memory_used_mb ?? 4096;
-  const memTotal = telemetry?.memory_total_mb ?? 24564;
-  const memPct = memTotal > 0 ? Math.round((memUsed / memTotal) * 100) : 0;
-  const power = telemetry?.power_usage_w ?? 45.2;
-  const util = telemetry?.gpu_util_pct ?? 12;
+  // The current engine does not attest individual sensor/history provenance.
+  const reported = telemetry?.nvml_online === true ? telemetry : null;
+  /** @param {string} key */
+  const metric = (key, maximum = Infinity) => reportedHardwareValue(telemetry, key, maximum);
+  const temp = metric('core_temp_c', 150);
+  const fanPct = metric('fan_speed_pct', 100);
+  const memUsed = metric('memory_used_mb');
+  const memTotal = metric('memory_total_mb');
+  const memPct = memUsed !== null && memTotal !== null && memTotal > 0 ? Math.min(100, Math.round((memUsed / memTotal) * 100)) : null;
+  const power = metric('power_usage_w');
+  const util = metric('gpu_util_pct', 100);
+  /** @param {number|null} value */
+  const display = (value, unit = '') => value === null ? 'Unavailable' : `${value}${unit}`;
 
+  /** @param {number|null} t */
   const getTempColor = (t) => {
+    if (t === null) return 'text-slate-400 bg-slate-900 border-slate-800';
     if (t >= 75) return 'text-rose-400 bg-rose-500/10 border-rose-500/30';
     if (t >= 60) return 'text-amber-400 bg-amber-500/10 border-amber-500/30';
     return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30';
@@ -99,8 +123,8 @@ export default function GpuHardwareTelemetryTab() {
                 Sovereign GPU & Hardware Telemetry Hub
               </h1>
               <p className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
-                <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                NVIDIA GeForce RTX 4090 24GB VRAM • NVML Hardware Binding • SQLite Vault Sync
+                <span className="inline-block w-2 h-2 rounded-full bg-slate-400" />
+                Server-reported sensor values and history • Measurement provenance unverified
               </p>
             </div>
           </div>
@@ -138,14 +162,14 @@ export default function GpuHardwareTelemetryTab() {
 
       {/* Alert Notices */}
       {actionMessage && (
-        <div className="p-3.5 rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs flex items-center gap-2 animate-fade-in">
-          <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-          {actionMessage}
+        <div role={actionMessage.kind === 'error' ? 'alert' : 'status'} className="p-3.5 rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs flex items-center gap-2 animate-fade-in">
+          {actionMessage.kind === 'success' ? <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" /> : <ShieldAlert className="w-4 h-4 shrink-0" />}
+          {actionMessage.text}
         </div>
       )}
 
       {error && (
-        <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+        <div role="alert" className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
           <ShieldAlert className="w-4 h-4 text-rose-400 shrink-0" />
           {error}
         </div>
@@ -160,10 +184,10 @@ export default function GpuHardwareTelemetryTab() {
             <Thermometer className="w-4 h-4" />
           </div>
           <div className="text-3xl font-extrabold tracking-tight">
-            {temp}°C
+            {display(temp, '°C')}
           </div>
           <p className="text-[11px] mt-1.5 opacity-75">
-            {temp >= 70 ? 'High Thermal Load' : temp >= 50 ? 'Warm Operation' : 'Frosty / Optimal'}
+            {temp === null ? 'Sensor unavailable' : 'Server-reported temperature'}
           </p>
         </div>
 
@@ -174,10 +198,10 @@ export default function GpuHardwareTelemetryTab() {
             <Wind className="w-4 h-4 text-cyan-400" />
           </div>
           <div className="text-3xl font-extrabold text-cyan-400 tracking-tight">
-            {fanPct}%
+            {display(fanPct, '%')}
           </div>
           <p className="text-[11px] text-slate-400 mt-1.5">
-            {telemetry?.status_flag === 'FAN_LOCKED_100' ? 'Locked to 100%' : 'Driver Controlled'}
+            {fanPct === null ? 'Control state unavailable' : 'Server-reported fan speed'}
           </p>
         </div>
 
@@ -188,12 +212,12 @@ export default function GpuHardwareTelemetryTab() {
             <Database className="w-4 h-4 text-indigo-400" />
           </div>
           <div className="text-3xl font-extrabold text-indigo-400 tracking-tight">
-            {(memUsed / 1024).toFixed(1)} <span className="text-sm font-normal text-slate-400">/ 24.5 GB</span>
+            {memUsed === null || memTotal === null ? 'Unavailable' : `${(memUsed / 1024).toFixed(1)} / ${(memTotal / 1024).toFixed(1)} GB`}
           </div>
           <div className="w-full bg-slate-800 h-1.5 rounded-full mt-2.5 overflow-hidden">
             <div 
               className="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full transition-all duration-500" 
-              style={{ width: `${memPct}%` }}
+              style={{ width: `${memPct ?? 0}%` }}
             />
           </div>
         </div>
@@ -205,10 +229,10 @@ export default function GpuHardwareTelemetryTab() {
             <Zap className="w-4 h-4 text-amber-400" />
           </div>
           <div className="text-3xl font-extrabold text-amber-400 tracking-tight">
-            {power} <span className="text-sm font-normal text-slate-400">W</span>
+            {display(power, ' W')}
           </div>
           <p className="text-[11px] text-slate-400 mt-1.5">
-            Target Cap: 450W Limit
+            Power limit: Unavailable
           </p>
         </div>
 
@@ -219,10 +243,10 @@ export default function GpuHardwareTelemetryTab() {
             <Activity className="w-4 h-4 text-emerald-400" />
           </div>
           <div className="text-3xl font-extrabold text-emerald-400 tracking-tight">
-            {util}%
+            {display(util, '%')}
           </div>
           <p className="text-[11px] text-slate-400 mt-1.5">
-            Active Compute Pipeline
+            Server-reported utilization
           </p>
         </div>
       </div>
@@ -239,34 +263,34 @@ export default function GpuHardwareTelemetryTab() {
           <div className="space-y-3 text-xs">
             <div className="flex justify-between py-2 border-b border-slate-800/60">
               <span className="text-slate-400">Device Target</span>
-              <span className="font-semibold text-slate-200">{telemetry?.gpu_name || 'NVIDIA GeForce RTX 4090'}</span>
+              <span className="font-semibold text-slate-200">{reported?.field_status?.gpu_name === 'measured' && typeof reported.gpu_name === 'string' ? reported.gpu_name : 'Unavailable'}</span>
             </div>
 
             <div className="flex justify-between py-2 border-b border-slate-800/60">
               <span className="text-slate-400">NVML Direct Access</span>
               <span className={`font-semibold ${telemetry?.nvml_online ? 'text-emerald-400' : 'text-amber-400'}`}>
-                {telemetry?.nvml_online ? '✓ Active (nvml.dll)' : 'Simulated / Standby'}
+                {telemetry?.nvml_online === true ? 'Reported online' : 'Unavailable'}
               </span>
             </div>
 
             <div className="flex justify-between py-2 border-b border-slate-800/60">
               <span className="text-slate-400">GPU Core Clock</span>
-              <span className="font-semibold text-cyan-400">{telemetry?.core_clock_mhz || 2520} MHz</span>
+              <span className="font-semibold text-cyan-400">{display(metric('core_clock_mhz'), ' MHz')}</span>
             </div>
 
             <div className="flex justify-between py-2 border-b border-slate-800/60">
               <span className="text-slate-400">Memory Clock</span>
-              <span className="font-semibold text-cyan-400">{telemetry?.memory_clock_mhz || 10501} MHz</span>
+              <span className="font-semibold text-cyan-400">{display(metric('memory_clock_mhz'), ' MHz')}</span>
             </div>
 
             <div className="flex justify-between py-2 border-b border-slate-800/60">
               <span className="text-slate-400">Thermal Guard Status</span>
-              <span className="font-semibold text-emerald-400">Active (Doctor Sentinel Enabled)</span>
+              <span className="font-semibold text-emerald-400">Unavailable</span>
             </div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-400 leading-relaxed">
-            💡 <strong className="text-slate-200">Thermal Protection:</strong> If GPU core temperature reaches 75°C, Matrix Doctor automatically locks fan speeds to 100% until core temperature cools below 50°C.
+            💡 <strong className="text-slate-200">Thermal Protection:</strong> Automatic protection is unverified in this view. Manual fan controls require an authorized account.
           </div>
         </div>
 
@@ -275,10 +299,10 @@ export default function GpuHardwareTelemetryTab() {
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
               <History className="w-4 h-4 text-cyan-400" />
-              SQLite Thermal History Vault (`gpu_thermal_logs`)
+              Server-reported thermal history (unverified)
             </div>
             <span className="text-xs text-slate-400">
-              Pruned to 500 records max
+              Record provenance unverified
             </span>
           </div>
 
@@ -317,7 +341,7 @@ export default function GpuHardwareTelemetryTab() {
                 ) : (
                   <tr>
                     <td colSpan={6} className="py-6 text-center text-slate-500 italic">
-                      No thermal history logged yet. Polling active...
+                      Thermal history unavailable or no records returned. This does not establish zero activity.
                     </td>
                   </tr>
                 )}

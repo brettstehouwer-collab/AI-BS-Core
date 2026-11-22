@@ -1,0 +1,82 @@
+{
+  "observed_utc": "2026-10-25T22:25:43.7928644Z",
+  "adapters": [
+    {
+      "Name": "Wi-Fi 5",
+      "ifIndex": 22,
+      "Status": "Not Present",
+      "LinkSpeed": "0 bps"
+    },
+    {
+      "Name": "Ethernet",
+      "ifIndex": 20,
+      "Status": "Up",
+      "LinkSpeed": "1 Gbps"
+    },
+    {
+      "Name": "Wi-Fi 4",
+      "ifIndex": 15,
+      "Status": "Up",
+      "LinkSpeed": "0 bps"
+    },
+    {
+      "Name": "Ethernet 2",
+      "ifIndex": 9,
+      "Status": "Up",
+      "LinkSpeed": "2.5 Gbps"
+    },
+    {
+      "Name": "Wi-Fi",
+      "ifIndex": 4,
+      "Status": "Disconnected",
+      "LinkSpeed": "0 bps"
+    }
+  ],
+  "ipv4": [
+    {
+      "InterfaceAlias": "Ethernet 2",
+      "InterfaceIndex": 9,
+      "IPAddress": "192.168.4.35",
+      "PrefixLength": 22,
+      "PrefixOrigin": 3
+    },
+    {
+      "InterfaceAlias": "Ethernet",
+      "InterfaceIndex": 20,
+      "IPAddress": "192.168.10.50",
+      "PrefixLength": 24,
+      "PrefixOrigin": 1
+    }
+  ],
+  "default_routes": [
+    {
+      "InterfaceAlias": "Ethernet 2",
+      "InterfaceIndex": 9,
+      "NextHop": "192.168.4.1",
+      "RouteMetric": 0
+    }
+  ],
+  "interface_metrics": [
+    {
+      "InterfaceAlias": "Ethernet 2",
+      "InterfaceMetric": 20,
+      "Dhcp": 1,
+      "Forwarding": 0
+    },
+    {
+      "InterfaceAlias": "Ethernet",
+      "InterfaceMetric": 25,
+      "Dhcp": 0,
+      "Forwarding": 0
+    }
+  ],
+  "ip_enable_router": 0,
+  "udp67": [
+    {
+      "LocalAddress": "192.168.137.1",
+      "LocalPort": 67,
+      "OwningProcess": 5736
+    }
+  ],
+  "changes_performed": false
+}

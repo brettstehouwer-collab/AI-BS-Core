@@ -1,0 +1,8 @@
+{
+  "TaskName": "AIBS-VM-ReadOnly-20261024T1549188947108Z",
+  "State": "Disabled",
+  "LastRunTime": "1999-11-30T00:00:00-05:00",
+  "LastResult": 267011,
+  "GuestStarted": false,
+  "CredentialsStored": false
+}

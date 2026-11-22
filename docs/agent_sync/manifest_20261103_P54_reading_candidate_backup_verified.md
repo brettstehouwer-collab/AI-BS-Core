@@ -1,0 +1,3 @@
+# P54 native reading source candidate
+
+Larger DPI-aware20px story font, charcoal/ivory display and exact optional Memory source. Same paused input/reload/save behavior.127Release contracts verified across120initialpasses and7fresh-fixture reruns; raw failure evidence retained.465warm driver checks/37actual game reading controls and both real-time v18routes/normal restarts pass.54A raw restore verified433members. Deployed104/public SDKs unchanged. Next:Debug with shortTEMP/fresh output roots, then new versioned runtime/Studio package. Final likeness/captions/human pacing/performance and accepted release remain incomplete.

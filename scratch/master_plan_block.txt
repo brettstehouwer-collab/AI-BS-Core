@@ -1,0 +1,150 @@
+activeSubTab === 'master_plan_23acres' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* Master Blueprints Display */}
+          <div style={{ background: theme.cardBg, border: theme.border, borderRadius: '12px', padding: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ color: theme.accentCyan, margin: 0 }}>MAP: MASTER PLAN: NoCo FARM & THEATRE — 23 ACRES</h3>
+              <span style={{ background: 'rgba(0, 255, 255, 0.15)', border: '1px solid #00FFFF', color: '#00FFFF', padding: '4px 12px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 700 }}>
+                Ithaca, New York · Finger Lakes Landscape
+              </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+              <div>
+                <img
+                  src="/noco_master_plan_23acres.jpg"
+                  alt="NoCo Farm & Theatre 23 Acres Master Plan"
+                  style={{ width: '100%', borderRadius: '8px', border: '1px solid rgba(0, 255, 255, 0.3)', boxShadow: '0 0 20px rgba(0, 255, 255, 0.2)' }}
+                />
+                <div style={{ color: theme.textMuted, fontSize: '0.8rem', textAlign: 'center', marginTop: '8px' }}>
+                  23-Acre Master Site Plan: Siheyuan Private Sanctuary (North), Serene Pond & Saunas (NE), 8 ÖÖD Pods Ring (West), Living Stage & Rehearsal Studios (Center), Outdoor Amphitheater & Permaculture (East).
+                </div>
+              </div>
+
+              <div>
+                <img
+                  src="/noco_master_plan_siheyuan.jpg"
+                  alt="NoCo Siheyuan Courtyard Blueprint Variant"
+                  style={{ width: '100%', borderRadius: '8px', border: '1px solid rgba(122, 40, 138, 0.4)', boxShadow: '0 0 20px rgba(122, 40, 138, 0.2)' }}
+                />
+                <div style={{ color: theme.textMuted, fontSize: '0.8rem', textAlign: 'center', marginTop: '8px' }}>
+                  Central Siheyuan Quadrangle Courtyard & Glass Enclosure Detail Variant: Outdoor Performance Venue (East), Serene Pond & Saunas (SE), Valais Sheep Pasture (West), Berry Plots & Torii Gate (South).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Phase III Conceptual Architectural Renderings & Vector Gallery */}
+          <div style={{ background: theme.cardBg, border: theme.border, borderRadius: '12px', padding: '20px' }}>
+            <h3 style={{ color: theme.accentGreen, marginTop: 0 }}>🎨 Phase III Conceptual Architectural Renderings & Vector Gallery</h3>
+            <p style={{ color: theme.textMuted, fontSize: '0.85rem', marginBottom: '16px' }}>
+              Full build-out vector illustrations across four seasons in the Finger Lakes landscape:
+            </p>
+
+            <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '16px' }}>
+              {Object.keys(renderViews).map(key => (
+                <button
+                  key={key}
+                  onClick={() => setActiveRenderView(key)}
+                  style={{
+                    background: activeRenderView === key ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                    border: activeRenderView === key ? '1px solid #10b981' : '1px solid rgba(255, 255, 255, 0.1)',
+                    color: activeRenderView === key ? '#10b981' : theme.textMuted,
+                    padding: '8px 14px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {renderViews[key].title.split(':')[0]}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', background: 'rgba(0, 0, 0, 0.6)', border: '1px solid #10b981', padding: '20px', borderRadius: '8px' }}>
+              <div>
+                <img
+                  src={renderViews[activeRenderView].imgSrc}
+                  alt={renderViews[activeRenderView].title}
+                  style={{ width: '100%', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.4)', boxShadow: '0 0 20px rgba(16, 185, 129, 0.2)' }}
+                />
+              </div>
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <h4 style={{ color: '#ffffff', margin: 0, fontSize: '1.1rem' }}>{renderViews[activeRenderView].title}</h4>
+                  <span style={{ background: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', color: '#10b981', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 700 }}>
+                    {renderViews[activeRenderView].badge}
+                  </span>
+                </div>
+                <div style={{ color: theme.accentCyan, fontSize: '0.85rem', fontWeight: 600, marginBottom: '8px' }}>
+                  LIGHTING & TIMING: {renderViews[activeRenderView].time}
+                </div>
+                <p style={{ color: theme.textMuted, fontSize: '0.9rem', margin: 0, lineHeight: 1.6 }}>
+                  {renderViews[activeRenderView].details}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Functionally Grouped Structure Matrix Table */}
+          <div style={{ background: theme.cardBg, border: theme.border, borderRadius: '12px', padding: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ color: theme.accentCyan, margin: 0 }}>📋 Functionally Grouped Structures & Facilities Matrix</h3>
+              
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {['all', 'Performance & Creative', 'Residential', 'Agricultural', 'Communal & Circulation'].map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveStructureCategory(cat)}
+                    style={{
+                      background: activeStructureCategory === cat ? 'rgba(0, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                      border: activeStructureCategory === cat ? '1px solid #00FFFF' : '1px solid rgba(255, 255, 255, 0.1)',
+                      color: activeStructureCategory === cat ? '#00FFFF' : theme.textMuted,
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '0.75rem',
+                      fontWeight: 600
+                    }}
+                  >
+                    {cat === 'all' ? 'All Structures' : cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', color: theme.textLight, fontSize: '0.85rem' }}>
+                <thead>
+                  <tr style={{ background: 'rgba(0, 255, 255, 0.1)', borderBottom: '1px solid #00FFFF', textAlign: 'left' }}>
+                    <th style={{ padding: '10px' }}>Category</th>
+                    <th style={{ padding: '10px' }}>Building / Structure</th>
+                    <th style={{ padding: '10px' }}>Specification</th>
+                    <th style={{ padding: '10px' }}>Spatial Location</th>
+                    <th style={{ padding: '10px' }}>Description & Function</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {structureMatrix
+                    .filter(item => activeStructureCategory === 'all' || item.category === activeStructureCategory)
+                    .map((row, idx) => (
+                      <tr key={idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: idx % 2 === 0 ? 'rgba(255, 255, 255, 0.02)' : 'transparent' }}>
+                        <td style={{ padding: '10px', color: theme.accentCyan, fontWeight: 600 }}>{row.category}</td>
+                        <td style={{ padding: '10px', color: '#ffffff', fontWeight: 700 }}>{row.name}</td>
+                        <td style={{ padding: '10px', color: theme.accentGreen }}>{row.spec}</td>
+                        <td style={{ padding: '10px', color: theme.accentViolet }}>{row.area}</td>
+                        <td style={{ padding: '10px', color: theme.textMuted }}>{row.desc}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SUB-TAB 1: GOVERNANCE & TROJAN HORSE STRATEGY */}
+      {

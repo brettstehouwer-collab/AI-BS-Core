@@ -1,0 +1,80 @@
+{
+  "at": "2026-11-04T18:59:11.164659+00:00",
+  "status": "verified_four_authored_clips_native_readback_and_software_backup",
+  "clips": [
+    {
+      "name": "idle",
+      "duration_seconds": 3.2,
+      "frames": 97,
+      "captured_phases": 9,
+      "changed_poses": 6,
+      "maximum_changed_pixels": 34111,
+      "root_fixed": true,
+      "boundary_pose_verified": true,
+      "immutable_resources_stable": true,
+      "gpu_errors": 0,
+      "gpu_warnings": 0
+    },
+    {
+      "name": "walk",
+      "duration_seconds": 1,
+      "frames": 31,
+      "captured_phases": 9,
+      "changed_poses": 6,
+      "maximum_changed_pixels": 69201,
+      "root_fixed": true,
+      "boundary_pose_verified": true,
+      "immutable_resources_stable": true,
+      "gpu_errors": 0,
+      "gpu_warnings": 0
+    },
+    {
+      "name": "catchup",
+      "duration_seconds": 0.733333,
+      "frames": 23,
+      "captured_phases": 9,
+      "changed_poses": 6,
+      "maximum_changed_pixels": 71020,
+      "root_fixed": true,
+      "boundary_pose_verified": true,
+      "immutable_resources_stable": true,
+      "gpu_errors": 0,
+      "gpu_warnings": 0
+    },
+    {
+      "name": "guidance",
+      "duration_seconds": 2.4,
+      "frames": 73,
+      "captured_phases": 9,
+      "changed_poses": 7,
+      "maximum_changed_pixels": 23199,
+      "root_fixed": true,
+      "boundary_pose_verified": true,
+      "immutable_resources_stable": true,
+      "gpu_errors": 0,
+      "gpu_warnings": 0
+    }
+  ],
+  "local_native_evidence": "E:\\T91",
+  "software_backup_receipt": "E:\\AI_BS_Resources\\FirstBoot\\P91\\FourClipVerification\\91A-drive.json",
+  "software_backup": {
+    "archive": "E:\\AI_BS_Resources\\FirstBoot\\P91\\FourClipVerification\\91A_Software_Only_Native_Animation_Verifier.zip",
+    "bytes": 12748,
+    "sha256": "256d76f7cbd3ac66d6daf6681737216e79686bcd52df7d4c8eb538c63e8e7faf",
+    "members": 21,
+    "kind": "software_only",
+    "art_backup_included": false,
+    "at": "2026-11-04T18:58:17.665349+00:00",
+    "drive_folder_id": "1UII3ryvhrPGxZPD40ReuYXbWfFDnfyPE",
+    "drive_file_id": "1xOi2PKnIPP2Lqp6dsEQYogKmlkYBkN4Q",
+    "drive_restore_verified": true,
+    "all_members_verified": true,
+    "goal_complete": false
+  },
+  "art_upload90A": "Held pending specific user authorization after automatic-review rejection. No personal assets included in91A.",
+  "code_content_scope": "Separate SDK0172 consumer only; canonical engine/installed107/model/sourcev26/user saves untouched.",
+  "visual_review": "Three sampled phases per clip inspected in contact sheet. Motions visible but rough figure/animation/art remain unapproved; samples are not human game-feel acceptance.",
+  "known_warning": "CMake unused CMAKE_POLICY_DEFAULT_CMP0141 warning retained; build successful. No GPU warnings/errors.",
+  "goal_complete": false,
+  "next_step": "Develop a separate store-photo anchored head-shape study addressing broad facial proportions and hair silhouette rather than claiming mouth-only changes finish likeness. Preserve stopped P73 neck attempts. Human8-12minute playthrough, captions, current gameplay performance, final package matrix and verified final backup remain incomplete."
+}

@@ -1,0 +1,30 @@
+{
+    "State":  "READY",
+    "Session":  "b6e37d8b-dcfa-4f69-be12-2bb681ae46ba",
+    "PID":  365880,
+    "ProcessCreationUTC":  "2026-10-24T17:05:16.7459552Z",
+    "SID":  "S-1-5-21-2133766663-4066672948-2456486318-1005",
+    "VMUUID":  "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+    "Disk":  "cddcb90b-9ea3-42d2-90a5-49de79b7dc0e",
+    "Snapshot":  "afda1952-6c48-4086-9590-897c21323990",
+    "StartedUTC":  "2026-10-24T17:08:03.7241808Z",
+    "NextSequence":  1,
+    "LastFrameSHA256":  "",
+    "Phase4Accepted":  false,
+    "GeneratedExecutionEnabled":  false,
+    "Commands":  [
+                     {
+                         "Step":  1,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "ExitCode":  0,
+                         "TimedOut":  false
+                     }
+                 ],
+    "UpdatedUTC":  "2026-10-24T17:08:05.4792007Z",
+    "FrameUTC":  "",
+    "Publication":  3
+}

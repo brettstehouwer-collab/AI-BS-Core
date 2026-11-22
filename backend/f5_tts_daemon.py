@@ -314,3 +314,145 @@ def process_audio_mastering(payload: MasteringPayload):
         "true_peak_dbfs": payload.true_peak_dbfs or -1.0,
         "vocoding": "BigVGAN v2 44.1kHz"
     }
+
+
+class ScreenplayNarrationPayload(BaseModel):
+    title: str
+    content: str
+    mode: Optional[str] = "screenplay"  # "screenplay" or "audiobook"
+    default_narrator: Optional[str] = "Professional_Anchor"
+
+
+@router.post("/creative/narrate")
+def narrate_creative_work(payload: ScreenplayNarrationPayload):
+    """
+    Parses screenplay or audiobook scenes and generates seamless narrated audio.
+    Detects speaker cues e.g. [NARRATOR], [BRETT], [JULIE] or dialogue headers.
+    """
+    lines = payload.content.strip().split("\n")
+    clean_text = " ".join([l.strip() for l in lines if l.strip()])
+    if not clean_text:
+        clean_text = f"Beginning reading for {payload.title}."
+
+    audio_bytes, mime_type, ext = synthesize_real_speech(clean_text, payload.default_narrator or "Professional_Anchor")
+    
+    hash_id = hashlib.sha256(clean_text.encode('utf-8')).hexdigest()[:12]
+    filename = f"creative_{payload.mode}_{hash_id}.{ext}"
+    out_path = os.path.join(GENERATED_AUDIO_DIR, filename)
+
+    with open(out_path, "wb") as f:
+        f.write(audio_bytes)
+
+    audio_data_url = f"data:{mime_type};base64," + base64.b64encode(audio_bytes).decode("utf-8")
+    
+    return {
+        "status": "success",
+        "title": payload.title,
+        "mode": payload.mode,
+        "filename": filename,
+        "audio_url": f"/media/generated/{filename}",
+        "audio_data_url": audio_data_url,
+        "duration_words": len(clean_text.split())
+    }
+
+
+@router.post("/voicestudio/launch")
+def launch_voicestudio():
+    """Launches the native VoiceStudio desktop app on the workstation."""
+    exe_path = r"C:\Users\Administrator\AppData\Local\Programs\VoiceStudio\VoiceStudio.exe"
+    if os.path.exists(exe_path):
+        import subprocess
+        subprocess.Popen([exe_path], shell=False)
+        return {"status": "launched", "exe_path": exe_path}
+    return {"status": "error", "message": "VoiceStudio executable not found at specified path."}
+
+
+@router.get("/screenplays/list")
+def list_screenplay_projects():
+    """Lists all screenplay projects and historical scenes from screenplay_projects and screenplay_archive."""
+    projects = []
+    projects_dir = r"C:\AI-BS\screenplay_projects"
+    if os.path.exists(projects_dir):
+        for entry in os.listdir(projects_dir):
+            ep = os.path.join(projects_dir, entry)
+            if os.path.isdir(ep):
+                sample_file = None
+                for fname in ["screenplay.fountain", f"{entry}.fdx", "script.txt"]:
+                    cand = os.path.join(ep, fname)
+                    if os.path.exists(cand):
+                        sample_file = cand
+                        break
+                projects.append({
+                    "id": entry,
+                    "title": entry,
+                    "source": "screenplay_projects",
+                    "has_script": sample_file is not None,
+                    "file_path": sample_file
+                })
+    return {"status": "success", "total": len(projects), "projects": sorted(projects, key=lambda x: x["title"])}
+
+
+@router.get("/screenplays/load")
+def load_screenplay_content(project_id: str):
+    """Safely loads screenplay text or scene dialogue for audio narration."""
+    projects_dir = r"C:\AI-BS\screenplay_projects"
+    proj_path = os.path.join(projects_dir, project_id)
+    if not os.path.exists(proj_path):
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    content = ""
+    for fname in ["screenplay.fountain", f"{project_id}.fdx", "script.txt", "project.json"]:
+        cand = os.path.join(proj_path, fname)
+        if os.path.exists(cand):
+            try:
+                with open(cand, "r", encoding="utf-8", errors="ignore") as f:
+                    content = f.read(50000) # Read up to 50KB scene text
+                break
+            except Exception:
+                pass
+
+    if not content:
+        content = f"SCENE START: {project_id.upper()}\n\nNARRATOR\nBeginning narration for {project_id}."
+
+    return {
+        "status": "success",
+        "project_id": project_id,
+        "content": content
+    }
+
+
+@router.get("/comfy_workflows/list")
+def list_comfy_workflows():
+    """Lists all saved ComfyUI workflows and prompt graphs."""
+    wf_dirs = [
+        r"C:\AI-BS\backend\comfyui_workflows",
+        r"C:\AI-BS\Workflows for comfy ui"
+    ]
+    workflows = []
+    seen = set()
+    for wd in wf_dirs:
+        if os.path.exists(wd):
+            for fn in os.listdir(wd):
+                if fn not in seen and (fn.endswith(".json") or fn.endswith(".png") or fn.endswith(".mp4")):
+                    seen.add(fn)
+                    workflows.append({
+                        "name": fn,
+                        "type": "workflow_graph" if fn.endswith(".json") else "preview_media",
+                        "path": os.path.join(wd, fn)
+                    })
+    return {"status": "success", "total": len(workflows), "workflows": workflows}
+
+
+@router.get("/api/comfyui/workflows")
+def list_comfyui_workflows_compat():
+    """Compatibility route for ComfyUIStudio.jsx."""
+    wd = r"C:\AI-BS\backend\comfyui_workflows"
+    wf_names = []
+    if os.path.exists(wd):
+        for fn in os.listdir(wd):
+            if fn.endswith(".json"):
+                wf_names.append(fn)
+    return {"workflows": wf_names}
+
+
+

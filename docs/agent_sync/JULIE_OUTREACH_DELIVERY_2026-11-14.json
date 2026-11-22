@@ -1,0 +1,19 @@
+{
+  "checked_utc": "2026-11-14T22:12:11.183399+00:00",
+  "campaign": "julie_film_tv_202611",
+  "provider_accepted": 163,
+  "submission_failed": 2,
+  "confirmed_delivery_failures": 51,
+  "submitted_without_observed_failure": 112,
+  "remaining_delivery_status": "Unconfirmed: no delivery or read guarantee",
+  "categories": {
+    "missing_or_disabled_recipient": 33,
+    "destination_domain_or_routing": 17,
+    "recipient_server_relay_rejection": 1
+  },
+  "original_csv_modified": false,
+  "messages_resent": 0,
+  "dns_or_mail_security_changes": false,
+  "private_evidence": "C:\\AI-BS\\state\\julie_outreach_20261114\\campaign-delivery-review.json",
+  "contact_data_shared": false
+}

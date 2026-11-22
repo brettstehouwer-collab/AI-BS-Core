@@ -1,0 +1,6 @@
+# AI-BS Sovereign Native Code & Prompt Scratchpad
+# Press '⚡ Run Script (PowerShell)' to execute this program instantly!
+import sys, platform
+print(f'AI-BS Python Engine: {sys.version}')
+print(f'Platform: {platform.platform()}')
+print('Ready to build sovereign programs in BS-Chat!')

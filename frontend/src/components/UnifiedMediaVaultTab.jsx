@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import './UnifiedMediaVaultTab.css';
 
 const AUTHORIZED_EMAILS = [
@@ -23,11 +23,12 @@ const JULIE_EMAILS = [
   'julie@stehouwer-publishing.com'
 ];
 
+/** @param {{"backendUrl": string, "currentUser": import('firebase/auth').User | null}} props */
 export default function UnifiedMediaVaultTab({ backendUrl, currentUser }) {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(/** @type {Array<{"name": string, "files": Array<{"type": string, "url": string, "filename": string, "size": number}>}>} */ ([]));
   const [activeCategory, setActiveCategory] = useState('');
   const [loading, setLoading] = useState(true);
-  const [lightboxMedia, setLightboxMedia] = useState(null);
+  const [lightboxMedia, setLightboxMedia] = useState(/** @type {{"type": string, "url": string, "filename": string, "size": number} | null} */ (null));
 
   // Determine if running locally or on local home network (LAN)
   const isLocalDev = typeof window !== 'undefined' && (
@@ -48,45 +49,8 @@ export default function UnifiedMediaVaultTab({ backendUrl, currentUser }) {
   // Allowed operators: Julie, Brett, LocalDev, footballstar0325
   const isAuthorizedOperator = isLocalDev || isJulie || AUTHORIZED_EMAILS.includes(userEmail);
 
-  // Check persistent authorization or session unlock (Julie is ALWAYS unlocked with zero password prompt)
-  const [isUnlocked, setIsUnlocked] = useState(() => {
-    if (isJulie) return true;
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('aibs_media_vault_unlocked') === 'true';
-    }
-    return false;
-  });
-
-  const [enteredPassword, setEnteredPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-
-  const handlePasswordUnlock = (e) => {
-    e?.preventDefault();
-    setPasswordError('');
-    if (!enteredPassword.trim()) {
-      setPasswordError('Please enter the vault security password.');
-      return;
-    }
-
-    // Secure vault access password check
-    if (enteredPassword.trim() === 'jssdbdAS2631') {
-      setIsUnlocked(true);
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('aibs_media_vault_unlocked', 'true');
-      }
-    } else {
-      setPasswordError('Invalid security password. Access denied.');
-    }
-  };
-
-  const handleLockVault = () => {
-    setIsUnlocked(false);
-    setEnteredPassword('');
-    setPasswordError('');
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem('aibs_media_vault_unlocked');
-    }
-  };
+  // Password prompt removed 2026-11-22: it was client-side only; backend auth is the real gate.
+  const isUnlocked = true;
 
   useEffect(() => {
     if (isAuthorizedOperator && isUnlocked) {
@@ -112,7 +76,8 @@ export default function UnifiedMediaVaultTab({ backendUrl, currentUser }) {
     }
   };
 
-  const formatSize = (bytes) => {
+  /** @param {number} bytes */
+const formatSize = ( bytes) => {
     if (bytes === 0) return '0 B';
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
@@ -120,7 +85,8 @@ export default function UnifiedMediaVaultTab({ backendUrl, currentUser }) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const handleMediaClick = (media) => {
+  /** @param {typeof lightboxMedia} media */
+const handleMediaClick = ( media) => {
     setLightboxMedia(media);
   };
 
@@ -153,44 +119,6 @@ export default function UnifiedMediaVaultTab({ backendUrl, currentUser }) {
     );
   }
 
-  // Security Barrier 2: Password Challenge
-  if (!isUnlocked) {
-    return (
-      <div className="media-vault-container media-vault-auth-guard">
-        <div className="media-vault-lock-box">
-          <div className="vault-lock-shield pulse-shield">🔐</div>
-          <h2 className="vault-lock-title">Unified Media Vault — Password Required</h2>
-          <p className="vault-lock-subtitle">
-            Identity Verified: <span className="vault-verified-user">{isLocalDev ? 'LocalDev' : userEmail}</span>. Enter the master vault security password to unlock media assets.
-          </p>
-          <form onSubmit={handlePasswordUnlock} className="vault-password-form">
-            <div className="vault-input-group">
-              <input
-                type="password"
-                className="vault-password-input"
-                placeholder="Enter Vault Password"
-                value={enteredPassword}
-                onChange={(e) => setEnteredPassword(e.target.value)}
-                autoFocus
-              />
-              <button type="submit" className="vault-unlock-btn">
-                Unlock Gallery 🔓
-              </button>
-            </div>
-            {passwordError && (
-              <div className="vault-auth-error">
-                ⚠️ {passwordError}
-              </div>
-            )}
-          </form>
-          <div className="vault-security-note">
-            🛡️ Encrypted media store with session-scoped authentication.
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="media-vault-container">
       <div className="media-vault-header">
@@ -203,9 +131,6 @@ export default function UnifiedMediaVaultTab({ backendUrl, currentUser }) {
             <span className="vault-operator-badge">
               🟢 {isLocalDev ? 'LocalDev Operator' : userEmail}
             </span>
-            <button className="vault-relock-btn" onClick={handleLockVault} title="Lock Vault">
-              🔒 Lock Vault
-            </button>
           </div>
         </div>
       </div>
@@ -236,10 +161,12 @@ export default function UnifiedMediaVaultTab({ backendUrl, currentUser }) {
                       src={`${backendUrl}${file.url}`}
                       muted
                       loop
-                      onMouseEnter={(e) => e.target.play()}
-                      onMouseLeave={(e) => {
-                        e.target.pause();
-                        e.target.currentTime = 0;
+                      onMouseEnter={
+( e) => e.currentTarget.play()}
+                      onMouseLeave={
+( e) => {
+                        e.currentTarget.pause();
+                        e.currentTarget.currentTime = 0;
                       }}
                     />
                   ) : (
@@ -260,7 +187,8 @@ export default function UnifiedMediaVaultTab({ backendUrl, currentUser }) {
 
       {lightboxMedia && (
         <div className="vault-lightbox-overlay" onClick={closeLightbox}>
-          <div className="vault-lightbox-content" onClick={(e) => e.stopPropagation()}>
+          <div className="vault-lightbox-content" onClick={
+( e) => e.stopPropagation()}>
             <button className="vault-lightbox-close" onClick={closeLightbox}>&times;</button>
             {lightboxMedia.type === 'video' ? (
               <video className="vault-lightbox-media-vid" src={`${backendUrl}${lightboxMedia.url}`} controls autoPlay loop />

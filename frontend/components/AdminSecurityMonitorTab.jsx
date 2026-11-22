@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import SHMTelemetryWidget from './SHMTelemetryWidget';
 
 
@@ -16,6 +16,7 @@ const AUTHORIZED_ADMIN_EMAILS = [
   'devin@feexpress.com'
 ];
 
+/** @param {{currentUser?: import("firebase/auth").User | null}} props */
 export default function AdminSecurityMonitorTab({ currentUser }) {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
   const userEmail = (currentUser?.email || '').toLowerCase().trim();
@@ -24,11 +25,11 @@ export default function AdminSecurityMonitorTab({ currentUser }) {
   const [activeSubPage, setActiveSubPage] = useState('threat_monitor'); // 'threat_monitor', 'billing_paypal', 'dev_portal', 'tunnel_status'
 
   // Telemetry State
-  const [telemetry, setTelemetry] = useState({
+  const [telemetry, setTelemetry] = useState(/** @type {{security_events:{id:string|number,event_type:string,severity:string,timestamp:number,ip_address:string,details:string}[],active_ip_bans:{ip_address:string,reason:string}[],live_stream:{id:string|number,ip_address:string,key_prefix:string,timestamp:number,endpoint:string,status_code:number,response_time_ms:number}[]}} */ ({
     security_events: [],
     active_ip_bans: [],
     live_stream: []
-  });
+  }));
   
   // Billing Simulator State
   const [clientName, setClientName] = useState('');
@@ -36,7 +37,7 @@ export default function AdminSecurityMonitorTab({ currentUser }) {
   const [payProvider, setPayProvider] = useState('paypal');
   const [payTier, setPayTier] = useState('pro');
   const [payAmount, setPayAmount] = useState('29.99');
-  const [billingResult, setBillingResult] = useState(null);
+  const [billingResult, setBillingResult] = useState(/** @type {{api_key_details:{raw_key:string,tier:string,daily_quota:number,client_name:string}}|null} */ (null));
   const [isSimulating, setIsSimulating] = useState(false);
 
   // Manual IP Ban State
@@ -47,7 +48,7 @@ export default function AdminSecurityMonitorTab({ currentUser }) {
   // Authorized Auditor Passkey State
   const [testerEmail, setTesterEmail] = useState('');
   const [testerIps, setTesterIps] = useState('127.0.0.1');
-  const [testerProfile, setTesterProfile] = useState(null);
+  const [testerProfile, setTesterProfile] = useState(/** @type {{tester_email:string,secret_header_name:string,secret_header_value:string,tester_api_passkey:string,window_start:string,window_end:string}|null} */ (null));
   const [isGeneratingTester, setIsGeneratingTester] = useState(false);
 
   const fetchTelemetry = async () => {
@@ -65,6 +66,7 @@ export default function AdminSecurityMonitorTab({ currentUser }) {
     }
   };
 
+  /** @param {import("react").FormEvent} e */
   const handleGenerateTesterPasskey = async (e) => {
     e.preventDefault();
     if (!testerEmail.trim()) return;
@@ -102,6 +104,7 @@ export default function AdminSecurityMonitorTab({ currentUser }) {
     }
   }, [isAuthorized]);
 
+  /** @param {import("react").FormEvent} e */
   const handleManualBan = async (e) => {
     e.preventDefault();
     if (!manualIp) return;
@@ -124,10 +127,11 @@ export default function AdminSecurityMonitorTab({ currentUser }) {
         setStatusMsg(`Error: ${data.detail?.message || 'Ban failed.'}`);
       }
     } catch (err) {
-      setStatusMsg(`Exception: ${err.message}`);
+      setStatusMsg(`Exception: ${errorMessage(err)}`);
     }
   };
 
+  /** @param {import("react").FormEvent} e */
   const handleSimulatePayment = async (e) => {
     e.preventDefault();
     if (!clientName || !clientEmail) return alert('Please enter client name and email.');
@@ -152,7 +156,7 @@ export default function AdminSecurityMonitorTab({ currentUser }) {
         alert('Payment Simulation Error: ' + JSON.stringify(data));
       }
     } catch (err) {
-      alert('Simulation Exception: ' + err.message);
+      alert('Simulation Exception: ' + errorMessage(err));
     } finally {
       setIsSimulating(false);
     }
@@ -638,3 +642,9 @@ cloudflared tunnel --url http://localhost:8000
   );
 }
 
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}

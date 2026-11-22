@@ -1,0 +1,194 @@
+{
+  "timestamp_utc": "2026-11-02T04:26:46.136767+00:00",
+  "status": "VERIFIED_SOURCE_INTEGRATION",
+  "coordinated_thread": "01a19491-7a5c-71e0-a6ba-0dc4a3f58f44",
+  "coordination": "Other chat confirmed overview/cockpit views/styles free; it owns C++ engine/adapters.",
+  "paths": [
+    {
+      "path": "native_studio/executive_cockpit_full.py",
+      "bytes": 23965,
+      "sha256": "905094082208a035b55cc51bc50835c816f8f14eb2cc50518d40c2f9fd5925d8"
+    },
+    {
+      "path": "frontend/src/components/ExecutiveCockpitTab.jsx",
+      "bytes": 69565,
+      "sha256": "a77e08d66d5a2282804664d1593a542e113a01e5c03fe4a0a3732f0d44a37b19"
+    },
+    {
+      "path": "frontend/components/ExecutiveCockpitTab.jsx",
+      "bytes": 69565,
+      "sha256": "a77e08d66d5a2282804664d1593a542e113a01e5c03fe4a0a3732f0d44a37b19"
+    },
+    {
+      "path": "frontend/src/components/components/ExecutiveCockpitTab.jsx",
+      "bytes": 69565,
+      "sha256": "a77e08d66d5a2282804664d1593a542e113a01e5c03fe4a0a3732f0d44a37b19"
+    },
+    {
+      "path": "frontend/components/components/ExecutiveCockpitTab.jsx",
+      "bytes": 69565,
+      "sha256": "a77e08d66d5a2282804664d1593a542e113a01e5c03fe4a0a3732f0d44a37b19"
+    },
+    {
+      "path": "native_studio/chat_recovery.py",
+      "bytes": 14951,
+      "sha256": "c687eed66fa5368c2b21d75dce55f16c8b290aeadea871276f4ec84c68a1b9b1"
+    },
+    {
+      "path": "ui_modernization/tokens.json",
+      "bytes": 810,
+      "sha256": "37815fe939fad0178e482b7c90cd4f3cdfb7d7ce52f5cebcd8e8d1e18bbf66b9"
+    },
+    {
+      "path": "ui_modernization/schema.json",
+      "bytes": 2500,
+      "sha256": "819ce1be27d8af0157bcd9301a3f98683fd8b9f0326ed8c4bd8f4048e0f7f76b"
+    },
+    {
+      "path": "ui_modernization/compiler.py",
+      "bytes": 10393,
+      "sha256": "43e90972f9065c4dc68b8b825c1711377d0b30febf67ac8efe6e44c5dc02be95"
+    },
+    {
+      "path": "ui_modernization/compile_overview.py",
+      "bytes": 3940,
+      "sha256": "524e2d80e99ef85daecabc33a2bb6ee1485c1c8a5674b0e06c40a81ba602197f"
+    },
+    {
+      "path": "ui_modernization/generated/studio_overview.py",
+      "bytes": 3360,
+      "sha256": "129b7a03350f05cde307d677243c4de43fb952fe6ef17e4b8702d278ef144f5b"
+    },
+    {
+      "path": "ui_modernization/generated/studio_overview.qss",
+      "bytes": 3237,
+      "sha256": "219e6f40fa44ff0b47a117726c8fcc1b72c9e039e294d11b4e56b08dc11bd9e3"
+    },
+    {
+      "path": "frontend/src/components/StudioOverview.css",
+      "bytes": 5350,
+      "sha256": "dd5b93b55942db70e91d7693794e65f6cdc22bd0e85b1d0a0ba643e548fed987"
+    },
+    {
+      "path": "frontend/src/components/StudioOverview.tokens.css",
+      "bytes": 514,
+      "sha256": "f33503d1217cb8cb939f6de79e550ad4c775cf289ae5e7c0a181fef41d46a991"
+    },
+    {
+      "path": "frontend/components/StudioOverview.css",
+      "bytes": 5350,
+      "sha256": "dd5b93b55942db70e91d7693794e65f6cdc22bd0e85b1d0a0ba643e548fed987"
+    },
+    {
+      "path": "frontend/components/StudioOverview.tokens.css",
+      "bytes": 514,
+      "sha256": "f33503d1217cb8cb939f6de79e550ad4c775cf289ae5e7c0a181fef41d46a991"
+    },
+    {
+      "path": "frontend/src/components/components/StudioOverview.css",
+      "bytes": 5350,
+      "sha256": "dd5b93b55942db70e91d7693794e65f6cdc22bd0e85b1d0a0ba643e548fed987"
+    },
+    {
+      "path": "frontend/src/components/components/StudioOverview.tokens.css",
+      "bytes": 514,
+      "sha256": "f33503d1217cb8cb939f6de79e550ad4c775cf289ae5e7c0a181fef41d46a991"
+    },
+    {
+      "path": "frontend/components/components/StudioOverview.css",
+      "bytes": 5350,
+      "sha256": "dd5b93b55942db70e91d7693794e65f6cdc22bd0e85b1d0a0ba643e548fed987"
+    },
+    {
+      "path": "frontend/components/components/StudioOverview.tokens.css",
+      "bytes": 514,
+      "sha256": "f33503d1217cb8cb939f6de79e550ad4c775cf289ae5e7c0a181fef41d46a991"
+    },
+    {
+      "path": "scripts/tests/test_executive_status_truth204.cjs",
+      "bytes": 3408,
+      "sha256": "6c6ca4e85a4badc7ce2821e40a2371d475ee0557dba17338e9b034c7965694a5"
+    }
+  ],
+  "old_paths": [
+    {
+      "path": "native_studio/executive_cockpit_full.py",
+      "sha256": "7388cf2e577c025c040a61e11d71b05ca62be827d5544ee8283467f7eed6a669",
+      "bytes": 21165
+    },
+    {
+      "path": "frontend/src/components/ExecutiveCockpitTab.jsx",
+      "sha256": "2e45901a88de1c672117e91c65602063b12a372c7f76c8ef355c0e35288c2cd3",
+      "bytes": 67072
+    },
+    {
+      "path": "frontend/components/ExecutiveCockpitTab.jsx",
+      "sha256": "2e45901a88de1c672117e91c65602063b12a372c7f76c8ef355c0e35288c2cd3",
+      "bytes": 67072
+    },
+    {
+      "path": "frontend/src/components/components/ExecutiveCockpitTab.jsx",
+      "sha256": "2e45901a88de1c672117e91c65602063b12a372c7f76c8ef355c0e35288c2cd3",
+      "bytes": 67072
+    },
+    {
+      "path": "frontend/components/components/ExecutiveCockpitTab.jsx",
+      "sha256": "2e45901a88de1c672117e91c65602063b12a372c7f76c8ef355c0e35288c2cd3",
+      "bytes": 67072
+    },
+    {
+      "path": "native_studio/chat_recovery.py",
+      "sha256": "6e1b348424a5fabece9c54a2c1ace216db928a7450854bcde8cc466f459e05a7",
+      "bytes": 14634
+    },
+    {
+      "path": "scripts/tests/test_executive_status_truth204.cjs",
+      "sha256": "57991bba2c89569dd3bfabafb61f62cffdaeed3b5870eac7bbee1a72eb68bc02",
+      "bytes": 3246
+    }
+  ],
+  "service_changes": [],
+  "dependency_changes": [],
+  "version_changes": [],
+  "deployments": [],
+  "runtime_restarts": [],
+  "id": "studio_overview_20261102T042646Z",
+  "requirement": "UI-OVERVIEW-001",
+  "decision": "Accepted by direct user request",
+  "canonical_branch": "codex/audit-v532976-20261031",
+  "canonical_head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "review_branch": "codex/ui-modernization",
+  "review_commit": "8908661aecd77740eb663ab18cc7fff88ec275f7",
+  "verification": {
+    "focused_tests": 42,
+    "overview_tests": 5,
+    "executive_regression": 17,
+    "chat_recovery": 14,
+    "web_truth": 6,
+    "native_checks": 495,
+    "web_checks": 210,
+    "typescript_exit": 0,
+    "web_event_bindings_preserved": 17,
+    "native_signal_bindings_preserved": true,
+    "web_mirrors_identical": true
+  },
+  "crypto_execution_status": {
+    "dispatch_enabled": false,
+    "reconciliation_required": true,
+    "halt_marker_present": false,
+    "reason": "Reconciliation required: fills, fees, slippage and shared risk limits are unverified."
+  },
+  "canonical_index_modified_by_this_task": false,
+  "limits": [
+    "Packaged executable not rebuilt",
+    "Firebase not deployed",
+    "No live actions or microphone tests"
+  ],
+  "next_step": "Include the reviewed overview source in the next coordinated native/web release",
+  "drive_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "storage": {
+    "new_source_bytes": 47696,
+    "C_free_GiB": 82.8
+  },
+  "source_manifest_sha256": "00ab4333d9f3727cfa22abb1375ba2b38d62d00ceeb06e47b802791c34a018eb"
+}

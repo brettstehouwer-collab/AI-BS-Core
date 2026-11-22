@@ -1,0 +1,88 @@
+{
+  "kind": "project_preparation",
+  "request_id": "2200191dd8f447cdb3b3678007ee445a",
+  "owner": "firebase:fixture:alice",
+  "plan": {
+    "request_id": "2200191dd8f447cdb3b3678007ee445a",
+    "repository_id": "ai-bs",
+    "objective": "Prepare current code without executing it.",
+    "files": [
+      {
+        "relative_path": "src/UI.jsx",
+        "role": "editable"
+      },
+      {
+        "relative_path": "package.json",
+        "role": "dependency"
+      },
+      {
+        "relative_path": "package-lock.json",
+        "role": "dependency"
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "jsx",
+        "profile": "npm_script",
+        "targets": [
+          "test"
+        ]
+      }
+    ],
+    "limits": {
+      "check_seconds": 30,
+      "total_seconds": 180,
+      "output_bytes": 262144
+    }
+  },
+  "plan_sha256": "b9144ab8c4f33b6411bd66a7d74189099fe840a021ba49ac43a1f3713077fbb3",
+  "repository_policy_sha256": "a299c645c5b23f5bc655d8ddfd0487b7c8123e116af721a0b088eb11b9b01e39",
+  "snapshot": {
+    "schema_version": 1,
+    "state": "SNAPSHOT_ONLY",
+    "authorized": false,
+    "executed": false,
+    "commit": "8117f08e8e9d6921b1fdc047feeec07250d93197",
+    "files": [
+      {
+        "relative_path": "src/UI.jsx",
+        "role": "editable",
+        "length": 41,
+        "sha256": "9d6f65a735f0a64805f5282d50a07ae3abbb753008fd0519d468240495364295"
+      },
+      {
+        "relative_path": "package.json",
+        "role": "dependency",
+        "length": 37,
+        "sha256": "0d0ab98503da8f39fbef4ba5d6321a4dc0c39307cd2c5abfa97f05e42d6d2914"
+      },
+      {
+        "relative_path": "package-lock.json",
+        "role": "dependency",
+        "length": 21,
+        "sha256": "2086223f909ecaf4b063cfc7e8187ab73e8e8a24ec7029d54e0403dee55a3265"
+      }
+    ],
+    "byte_count": 99,
+    "captured_at_utc": "2026-11-14T14:20:45.431170+00:00",
+    "snapshot_sha256": "59a40da95cf8531539042ef0913403775e6195b5bd3e67e316441b130e1469e9"
+  },
+  "checks": [
+    {
+      "check_id": "jsx",
+      "argv": [
+        "npm",
+        "run",
+        "test"
+      ]
+    }
+  ],
+  "review_digest": "00cd5c1b8161dd97f383a6a0aee8e1b851056f13fde2b0212e22f70650030ba2",
+  "state": "PREPARING",
+  "worker": {
+    "pid": 44020,
+    "created": 1794666041.825013
+  },
+  "created_at_utc": "2026-11-14T14:20:45.431687+00:00",
+  "entry_sha256": "0036a829a0591c10e60fffd5f7c83dcf53c66803492ba833dcb9386d7064dc4b"
+}

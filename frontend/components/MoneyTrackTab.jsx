@@ -1,119 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import 'react';
 
+// No current owned evidence contract exists for these provider and host metrics.
+// Missing records remain unavailable; this view performs no financial or daemon actions.
 const MoneyTrackTab = () => {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
-
-  const [exchangeMetrics] = useState({
-    totalBalance: '$13.93',
-    dayPnL: '-0.01%',
-    activeTrades: 0,
-    freeMargin: '$13.93'
-  });
-
-  const [chiaMetrics, setChiaMetrics] = useState({
-    totalPlots: 'Loading...',
-    farmSize: 'Loading...',
-    xchBalance: 'Loading...',
-    estTimeToWin: 'Loading...',
-    status: 'Checking...',
-    connection_error: false
-  });
-
-  useEffect(() => {
-    const fetchChia = async () => {
-      try {
-        const res = await fetch('https://ai-bs.brettstehouwer.live/api/chia-stats', { mode: 'cors' }).catch(() => null);
-        if (res && res.ok) {
-          const data = await res.json();
-          if (data.status !== 'Error') {
-            setChiaMetrics({
-              totalPlots: data.total_plots,
-              farmSize: data.plot_size,
-              xchBalance: data.total_chia_farmed + ' XCH',
-              estTimeToWin: data.estimated_time_to_win,
-              status: data.status,
-              connection_error: data.connection_error
-            });
-          }
-        } else {
-          setChiaMetrics(prev => ({ ...prev, status: 'Standby / Local Mode', farmSize: '4.2 TB', xchBalance: '0.0 XCH' }));
-        }
-      } catch (e) {
-        // Quiet fallback without console flooding
-      }
-    };
-    fetchChia();
-    const interval = setInterval(fetchChia, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const startChiaDaemon = async () => {
-    try {
-      await fetch('https://ai-bs.brettstehouwer.live/api/chia-start', { method: 'POST' });
-      setChiaMetrics(prev => ({ ...prev, status: 'Starting...' }));
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const [saladMetrics] = useState({
-    dayEarnings: '+$1.07',
-    totalBalance: '$12.17',
-    workload: 'Container - Active Compute Job',
-    gpuTemp: 'Chopping Power 4/5'
-  });
-
-  const formatTxTime = (minutesAgo) => {
-    const d = new Date(Date.now() - minutesAgo * 60000);
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  };
-
-  const [recentBots] = useState([
-    { id: 'ORD-5', date: formatTxTime(4), bot: 'Crypto.com', pair: 'DOGE/USD', action: 'SELL', amount: '~ 7.05 USD (95 DOGE)', status: 'Filled' },
-    { id: 'ORD-4', date: formatTxTime(18), bot: 'Crypto.com', pair: 'SOL/USD', action: 'SELL', amount: '~ 3.35 USD (0.045 SOL)', status: 'Filled' },
-    { id: 'ORD-3', date: formatTxTime(42), bot: 'Crypto.com', pair: 'SOL/USD', action: 'BUY', amount: '~ 3.41 USD (0.046 SOL)', status: 'Filled' },
-    { id: 'ORD-2', date: formatTxTime(85), bot: 'Crypto.com', pair: 'DOGE/USD', action: 'BUY', amount: '6.96 USD (95 DOGE)', status: 'Filled' },
-    { id: 'ORD-1', date: formatTxTime(140), bot: 'Crypto.com', pair: 'DOGE/USD', action: 'SELL', amount: '~ 1.87 USD (25 DOGE)', status: 'Filled' },
-  ]);
-
-  const [minerMetrics, setMinerMetrics] = useState({
-    hashrate: '51.2 MH/s',
-    algo: 'KawPow (unMineable)',
-    targetWallet: 'DOGE (Crypto.com)',
-    gpuTemp: '58°C | 315W | 62% Fan',
-    status: 'Mining (Active)'
-  });
-
-  useEffect(() => {
-    const fetchMiner = async () => {
-      if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-        try {
-          const res = await fetch(`${backendUrl}/api/proxy/4067/summary`);
-          const data = await res.json();
-          if (data && data.gpus && data.gpus[0]) {
-            const gpu = data.gpus[0];
-            const mhs = (data.hashrate / 1000000).toFixed(1);
-            setMinerMetrics({
-              hashrate: `${mhs} MH/s`,
-              algo: `${data.algorithm || 'KawPow'} (unMineable)`,
-              targetWallet: 'DOGE (Crypto.com)',
-              gpuTemp: `${gpu.temperature}°C | ${gpu.power}W | ${gpu.fan_speed}% Fan`,
-              status: 'Mining (Active)'
-            });
-          }
-        } catch (e) {
-          // Keeps default active state if offline or CORS
-        }
-      }
-    };
-    fetchMiner();
-    const interval = setInterval(fetchMiner, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  const exchangeMetrics = { totalBalance: 'Unavailable', dayPnL: 'Unavailable', activeTrades: 'Unavailable', freeMargin: 'Unavailable' };
+  const chiaMetrics = { totalPlots: 'Unavailable', farmSize: 'Unavailable', xchBalance: 'Unavailable', estTimeToWin: 'Unavailable', status: 'Unavailable' };
+  const saladMetrics = { dayEarnings: 'Unavailable', totalBalance: 'Unavailable', workload: 'Unavailable', gpuTemp: 'Unavailable' };
+  const minerMetrics = { hashrate: 'Unavailable', algo: 'Unavailable', targetWallet: 'Unavailable', gpuTemp: 'Unavailable', status: 'Unavailable' };
+  /** @type {{id:string,date:string,bot:string,pair:string,action:string,amount:string,status:string}[]} */
+  const recentBots = [];
 
   return (
     <div style={{ padding: '20px', color: '#c9d1d9', fontFamily: 'monospace' }}>
       
+      <p role="status" style={{ color: '#fbbf24', marginTop: 0 }}>
+        Unavailable: no verified owned records are connected. Trading and daemon actions are disabled.
+      </p>
       {/* EXCHANGE & BOT ROW */}
       <h3 style={{ margin: '0 0 16px 0', color: '#00ffff' }}>⚡ Crypto.com Exchange & Matrix Bots</h3>
       <div style={{ display: 'flex', gap: '20px', marginBottom: '40px' }}>
@@ -126,16 +28,16 @@ const MoneyTrackTab = () => {
       {/* DIRECT RTX 4090 GPU MINER ROW */}
       <div style={{ marginBottom: '40px', background: '#0a0a0a', border: '1px solid #238636', borderRadius: '6px', padding: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h3 style={{ margin: 0, color: '#3fb950' }}>⛏️ Direct RTX 4090 GPU Mining (0% Fee - Direct to Crypto.com)</h3>
+          <h3 style={{ margin: 0, color: '#3fb950' }}>⛏️ GPU Mining</h3>
           <span style={{ 
             fontSize: '0.85rem', 
             padding: '4px 12px', 
             borderRadius: '12px', 
-            background: '#238636',
+            background: '#854d0e',
             color: '#fff',
             fontWeight: 'bold'
           }}>
-            🟢 {minerMetrics.status}
+            {minerMetrics.status}
           </span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '15px' }}>
@@ -161,17 +63,7 @@ const MoneyTrackTab = () => {
               }}>
                 {chiaMetrics.status}
               </span>
-              {chiaMetrics.connection_error && (
-                <button 
-                  onClick={startChiaDaemon}
-                  style={{
-                    background: '#238636', color: '#fff', border: 'none', 
-                    padding: '4px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem'
-                  }}
-                >
-                  Start Daemon
-                </button>
-              )}
+
             </div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
@@ -197,7 +89,7 @@ const MoneyTrackTab = () => {
       {/* RECENT BOT TRANSACTIONS */}
       <div style={{ background: '#0a0a0a', border: '1px solid #333', borderRadius: '4px', overflow: 'hidden' }}>
         <div style={{ padding: '16px', borderBottom: '1px solid #333', background: '#111' }}>
-          <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#e6edf3' }}>Live Matrix Activity</h3>
+          <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#e6edf3' }}>Order Activity</h3>
         </div>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
@@ -212,6 +104,9 @@ const MoneyTrackTab = () => {
             </tr>
           </thead>
           <tbody>
+            {recentBots.length === 0 && <tr><td colSpan={7} style={{ padding: '16px', color: '#94a3b8' }}>
+              Unavailable: no verified owned order records. Missing history does not mean there were no trades.
+            </td></tr>}
             {recentBots.map((tx, idx) => (
               <tr key={tx.id} style={{ 
                 borderTop: '1px solid #222',
@@ -246,6 +141,7 @@ const MoneyTrackTab = () => {
   );
 };
 
+/** @param {{title:string,value:import("react").ReactNode,color:string}} props */
 const MetricCard = ({ title, value, color }) => (
   <div style={{
     flex: 1,
@@ -266,6 +162,7 @@ const MetricCard = ({ title, value, color }) => (
   </div>
 );
 
+/** @param {{title:string,value:import("react").ReactNode,color?:string}} props */
 const MiniCard = ({ title, value, color = '#e6edf3' }) => (
   <div style={{
     background: '#111',

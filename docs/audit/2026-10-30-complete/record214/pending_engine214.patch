@@ -1,0 +1,71 @@
+--- before/backend/aibs_broadcast_daemon.py
++++ draft/backend/aibs_broadcast_daemon.py
+@@ -661,7 +661,7 @@
+             # payloads cannot supply providers or authorize a desktop fallback.
+             capture = getattr(self, "_capture_provider_override", None)
+             if (getattr(self, "_secondary_outputs", False) is not True or capture is None
+-                    or len(active_sources) != 1 or selected_source.get("type") != "game"
++                    or len(game_sources) != 1 or len(active_sources) != 1 + len(audio_sources) or selected_source.get("type") != "game"
+                     or selected_hwnd is not None):
+                 self.telemetry["capture_error_code"] = "internal_follow_provider_unavailable"
+                 return False
+@@ -775,6 +775,7 @@
+ 
+         # 3. Ingest Audio Sources (Microphone, DAW, WASAPI) - Deduplicated
+         ingested_audio_devs = set()
++        audio_gains = {}
+         default_mic_resolved = False
+         default_mic = None
+         if audio_sources:
+@@ -782,6 +783,21 @@
+                 if not src.get("enabled", True):
+                     continue
+                 audio_dev = src.get("deviceId", "")
++                gain = src.get('gain', 1.0)
++                if type(gain) not in (int, float) or not 0 <= gain <= 2:
++                    self.telemetry['capture_error_code'] = 'invalid_audio_gain'
++                    return False
++                if audio_dev == '__wasapi_pcm__' and getattr(self, '_secondary_outputs', False):
++                    provider = getattr(self, '_audio_provider_overrides', {}).get(src.get('type'))
++                    if provider is None:
++                        self.telemetry['capture_error_code'] = 'audio_capture_unavailable'
++                        return False
++                    ffmpeg_cmd.extend(['-thread_queue_size', '8', '-f', 'f32le', '-ar', str(provider.rate),
++                                       '-ac', str(provider.channels), '-i', provider.path])
++                    audio_gains[input_idx] = float(gain)
++                    audio_inputs.append(input_idx)
++                    input_idx += 1
++                    continue
+                 if audio_dev == "anullsrc":
+                     continue
+                 if not audio_dev or audio_dev == "default":
+@@ -796,6 +812,7 @@
+                 if audio_dev in ingested_audio_devs:
+                     continue
+                 ingested_audio_devs.add(audio_dev)
++                audio_gains[input_idx] = float(gain)
+                 ffmpeg_cmd.extend(["-thread_queue_size", "2048", "-f", "dshow", "-i", f"audio={audio_dev}"])
+                 audio_inputs.append(input_idx)
+                 input_idx += 1
+@@ -919,17 +936,18 @@
+         a_outs_mix = []
+         a_outs_iso = []
+         for i, a_idx in enumerate(audio_inputs):
++            audio_filter = f'aresample=async=1:first_pts=0,aformat=sample_rates=48000:channel_layouts=stereo,volume={audio_gains.get(a_idx, 1.0)}'
+             if len(audio_inputs) > 1:
+-                a_filters.append(f"[{a_idx}:a]aresample=async=1:first_pts=0,asplit=2[a_stem_mix{i}][a_stem_iso{i}]")
++                a_filters.append(f"[{a_idx}:a]{audio_filter},asplit=2[a_stem_mix{i}][a_stem_iso{i}]")
+                 a_outs_mix.append(f"[a_stem_mix{i}]")
+                 a_outs_iso.append(f"[a_stem_iso{i}]")
+             else:
+-                a_filters.append(f"[{a_idx}:a]aresample=async=1:first_pts=0[a_master]")
++                a_filters.append(f"[{a_idx}:a]{audio_filter},alimiter=limit=0.95[a_master]")
+ 
+         # Mix all audio stems for Track 1 (Master Output)
+         if len(audio_inputs) > 1:
+             a_mix_in = "".join(a_outs_mix)
+-            a_filters.append(f"{a_mix_in}amix=inputs={len(audio_inputs)}:duration=longest[a_master]")
++            a_filters.append(f"{a_mix_in}amix=inputs={len(audio_inputs)}:duration=longest:normalize=0,alimiter=limit=0.95[a_master]")
+ 
+         filter_complex = ";".join(v_filters + a_filters)
+ 

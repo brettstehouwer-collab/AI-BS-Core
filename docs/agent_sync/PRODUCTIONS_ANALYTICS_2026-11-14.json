@@ -1,0 +1,57 @@
+{
+  "status": "VERIFIED_LIVE",
+  "checked_utc": "2026-11-14T22:40:56.815847+00:00",
+  "site": "https://stehouwerproductions.com/",
+  "dashboard": "http://localhost:5173/?tab=beta",
+  "site_id": "stehouwer_productions",
+  "hosting": "Existing Cloudflare Pages project stehouwer-productions, dashboard direct upload",
+  "browser_ingestion_http_status": 204,
+  "database_events_at_first_verification": 3,
+  "database_browser_sessions_at_first_verification": 1,
+  "current_event_count": 17,
+  "current_session_count": 2,
+  "event_types": {
+    "engagement": 6,
+    "page_exit": 5,
+    "pageview": 6
+  },
+  "dashboard_verified": {
+    "recorded_events": 3,
+    "browser_sessions": 1,
+    "screenshot": "work/productions-analytics-20261114/dashboard-live.jpg"
+  },
+  "local_checks": {
+    "collector_and_dashboard": 13,
+    "bridge": 14,
+    "result": "pass"
+  },
+  "backend_modified_or_restarted": false,
+  "private_reports_authentication_preserved": true,
+  "privacy": [
+    "DNT/GPC respected",
+    "Session-only browser ID",
+    "Referrer origin only",
+    "Only safe UTM labels",
+    "No forms or hardware/network collection"
+  ],
+  "limitations": [
+    "Counts represent events, not pageviews",
+    "Sessions are not verified individual people",
+    "Legacy backend substitutes defaults for some unavailable diagnostics; those panels are hidden for Productions",
+    "Intake depends on existing AI-BS public backend availability",
+    "No offline delivery queue or historical backfill"
+  ],
+  "preserved_failure_evidence": [
+    "bridge-502-smoke.mjs",
+    "bridge-502-receipt.json",
+    "productions-analytics.zip",
+    "productions-analytics-diagnostic.zip",
+    "productions-analytics-status.zip"
+  ],
+  "resolved_failure": "Cloudflare Workers rejects redirect:error before fetching; corrected to manual and verified HTTP204 in real browser",
+  "bundle_sha256": "5d536fbab12c7d173a12b669cf4071559b4b445b33c92add9f4148604df38da8",
+  "sources": [
+    "https://developers.cloudflare.com/workers/runtime-apis/request/",
+    "https://developers.cloudflare.com/pages/get-started/direct-upload/"
+  ]
+}

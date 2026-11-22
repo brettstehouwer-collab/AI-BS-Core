@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "status": "drive_parts_full_roundtrip_verified",
+  "reason": "Drive connector per-file limit104857600 bytes; original sealed ZIP is112550990 bytes",
+  "archive_name": "14_Native_Memory_Audio_And_Character_Studies.zip",
+  "archive_bytes": 112550990,
+  "archive_sha256": "22a80eec6b57d78e89b7b667e5bf8710211f679a8f49b36f83bc35cd031c669c",
+  "parts": [
+    {
+      "name": "14_Native_Memory_Audio_And_Character_Studies.zip.part01of02",
+      "bytes": 56623104,
+      "sha256": "ac90c43f0e2b542a702be0ee369c2bde79529085ae57dcab908460020d964439",
+      "drive_file_id": "1JfaaEeDc0KEBg2DIyz7IACvzaAEmeQSb",
+      "drive_url": "https://drive.google.com/file/d/1JfaaEeDc0KEBg2DIyz7IACvzaAEmeQSb/view?usp=drivesdk",
+      "authenticated_full_download_verified": true
+    },
+    {
+      "name": "14_Native_Memory_Audio_And_Character_Studies.zip.part02of02",
+      "bytes": 55927886,
+      "sha256": "cbf2b722682cbd83515a76f047d33970a111ace3c8938827c1438118e5bb76c3",
+      "drive_file_id": "1E2M61Jd8s46O8gbBVkXxhtI-PKkcKBo7",
+      "drive_url": "https://drive.google.com/file/d/1E2M61Jd8s46O8gbBVkXxhtI-PKkcKBo7/view?usp=drivesdk",
+      "authenticated_full_download_verified": true
+    }
+  ],
+  "restore": "Concatenate binary part01 then part02 into archive_name; compare exact archive bytes and SHA256, then verify ZIP CRC and metadata/manifest.json member hashes before extracting.",
+  "original_archive_changed": false,
+  "original_family_media_included": false,
+  "private_master_ledger_contents_included": false,
+  "completed_at": "2026-11-02T10:38:54.656303+00:00",
+  "reassembled_cache_path": "D:\\AI-BS-Game-Resources\\cache\\22a80eec6b57d78e89b7b667e5bf8710211f679a8f49b36f83bc35cd031c669c.zip",
+  "crc_all_entries_passed": true,
+  "full_entry_sha256_readback_passed": true,
+  "selected_file_count": 1431,
+  "embedded_manifest_sha256": "5daae77e202ce5eac2297307bb372583e7aea3f400b181548e12ae6748772790",
+  "goal_complete": false,
+  "scope": "Source/SDK0.12 and private v03/v04/v05 character studies. Staged opening remains NOT_SHIPPED. Retained Studio98 repair is separate14B."
+}

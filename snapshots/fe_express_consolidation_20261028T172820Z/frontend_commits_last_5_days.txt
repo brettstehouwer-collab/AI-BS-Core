@@ -1,0 +1,3 @@
+0bdca059f5dcfc250f9da8927d7ca46d473387df 2026-10-28 05:12:54 -0400 feat(coding): connect isolated VM guest runner (wsl2_isolated + vbox_windows) under ADR-108 (Record 172)
+35d5e4ff961782b5c6a7838b55da1d74410f34a4 2026-10-28 03:30:03 -0400 Establish AI-BS-UADP-1.0 protocol, sync gateway, and Record 169-170 handoff
+71b593b3b05cd54c83900692e0a5214c25b1fbbc 2026-10-24 20:42:12 -0400 Auto-saved workspace before shutdown

@@ -1,0 +1,16 @@
+{
+  "utc": "2026-11-01T23:03:27.105574+00:00",
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_native95_restart\\AI_BS_Native95_Restart_Source.zip",
+  "bytes": 17836365,
+  "sha256": "f9cace1f6344fb5fbea2e77e092a490c97006827c38388d5981f29ef19666d02",
+  "files": 1480,
+  "changed_files": 59,
+  "crc_and_all_selected_sha256": "passed",
+  "local_free_bytes": {
+    "C": 111222206464,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_account_quota": "not exposed",
+  "drive_folder": "16Jo_c7Dwm8oZIjBqmb2NCJ9Lik3I30_E"
+}

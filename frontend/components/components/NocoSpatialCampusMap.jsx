@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 export default function NocoSpatialCampusMap() {
   const [selectedZone, setSelectedZone] = useState('zone0');
   const [activeOverlay, setActiveOverlay] = useState('all'); // 'none', 'audio', 'power', 'water', 'all'
-  const [searchQuery, setSearchQuery] = useState('');
-  const [mapZoom, setMapZoom] = useState(1);
+  const [] = useState('');
+  const [] = useState(1);
 
   // Campus Zones Definition
-  const zones = {
+  /** @type {Record<string, {"id": string, "name": string, "category": string, "size": string, "powerDraw": string, "audioRating": string, "waterUse": string, "occupancy": string, "status": string, "color": string, "details": string}>} */
+const zones = {
     zone0: {
       id: 'zone0',
       name: 'Zone 0 (The Core): "The Living Stage" Amphitheater',

@@ -1,0 +1,38 @@
+{
+  "state": "PROPOSAL_READY",
+  "input_sha256": "778e1b06cf6403c5b8591ed27861a989f020a012a62174f1c50b0c6180ab7126",
+  "proposal": {
+    "summary": "Selected implementations now return42.",
+    "files": [
+      {
+        "path": "src/app.py",
+        "base_sha256": "e143e5f6659bcb8a0a4d4122c60359c1d100a5e4d2a5bd7b8c3f8afa4efe76b7",
+        "proposed_sha256": "d6a0e509ba312382ebb3a1503bdef86d0eb50c040028eca9c1a24925ec2ca52f",
+        "content": "value = 42",
+        "diff": "--- a/src/app.py\n+++ b/src/app.py\n@@ -1 +1 @@\n-value = 1\n\\ No newline at end of file\n+value = 42\n\\ No newline at end of file\n"
+      }
+    ],
+    "diff": "--- a/src/app.py\n+++ b/src/app.py\n@@ -1 +1 @@\n-value = 1\n\\ No newline at end of file\n+value = 42\n\\ No newline at end of file\n"
+  },
+  "model_output": {
+    "summary": "Selected implementations now return42.",
+    "changes": [
+      {
+        "path": "src/app.py",
+        "base_sha256": "e143e5f6659bcb8a0a4d4122c60359c1d100a5e4d2a5bd7b8c3f8afa4efe76b7",
+        "hunks": [
+          {
+            "before": "value = 1",
+            "after": "value = 42"
+          }
+        ]
+      }
+    ]
+  },
+  "error_code": null,
+  "elapsed_seconds": 0.016,
+  "finished_at_utc": "2026-11-14T14:21:02.024043+00:00",
+  "response_sha256": "0f21f21001f994206cd59eb119b84b39d1dd9a5fd4480c9593e52e3e22d3bc55",
+  "response_bytes": 232,
+  "entry_sha256": "443f2fe0b42c278177212c4c6b967ae269e76ad57ea2424b1d6bddb68a42e295"
+}

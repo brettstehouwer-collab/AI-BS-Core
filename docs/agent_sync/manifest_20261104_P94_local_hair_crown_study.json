@@ -1,0 +1,66 @@
+{
+  "at": "2026-11-04T19:14:53.635928+00:00",
+  "status": "verified_separate_v29b_hair_study_unapproved",
+  "model": "E:\\AI_BS_Resources\\FirstBoot\\P94\\AdamHairCrownStudy\\finer\\adam-character-v29b-hair-silhouette-study.blend",
+  "export": "E:\\AI_BS_Resources\\FirstBoot\\P94\\AdamHairCrownStudy\\finer\\adam-character-v29b-hair-silhouette-candidate.glb",
+  "parent": "v27, not the pending v28face direction",
+  "geometry": {
+    "status": "passed_separate_v29b_hair_geometry_and_protected_contracts",
+    "changed_vertices": 2747,
+    "maximum_delta_m": 0.0023000240202356377,
+    "minimum_triangle_area_ratio": 0.9214052695936156,
+    "minimum_normal_dot": 0.9867892948677763,
+    "minimum_area_m2": 1.4407746941096805e-10,
+    "likeness_approved": false,
+    "installed_model_changed": false,
+    "master_sha256": "4a80b6393072125ab33896c8ce386ca80a3bb05781000de4d003bb3d0b9bd6b5",
+    "source_sha256": "df934816362b3ce612df3485059197c54f91730532a1a98a6fc1ffc918fc2029",
+    "face_neck_eyes_clothing_right_band_exact": true,
+    "topology_UV_colors_weights_binds_actions_exact": true,
+    "nonhair_images_exact": true,
+    "hair_scalar_roughness": 0.82,
+    "contracts": {
+      "topology": "ec95c798816b90b4ed7b7633dc17cc126c4360f112cd60dce1db0495ee50cfe5",
+      "UV": "0943cacc847d70afa0056617cb1216a80fdac16f2af070d2e254933b4d71b02a",
+      "colors": "459019fee7ada837feacec6d6c9f93a12229edd69104499f7b899d33f0692d0d",
+      "weights": "f63e80d8f55433bf2af03f9a3b14f54b54aba2d3aa86f484d53a7529e79c3418",
+      "binds": "0554467b32516504802d3e4ddd2bbb1bfe0fc1dcb2cf64675c493c430d222872",
+      "actions": "aaaf04233ffb34a15ea55dd9cc4d9dd8b776d272d17881b5da4032f88b03da1e",
+      "images": [
+        [
+          "authored-hair-albedo-v29b.png",
+          "7863479177f79a18cddba0b0de8589a37c0ce6d4cd42e5ffd518d7f62d06acfa"
+        ],
+        [
+          "authored-head-albedo-v24c.png",
+          "01c52db42df0f8b2b41859fd70247b50ec969f5cc3d674d63d9f886df4a3f9b9"
+        ],
+        [
+          "authored-shirt-print.png",
+          "3e3ca8b112f38ac6fc51dac75da62ac50ed1fb581bf14e611fe5a1f8336625a4"
+        ]
+      ]
+    }
+  },
+  "protected_native_comparison": {
+    "status": "passed_crown_variants_same_geometry_animation_and_nonhair_pixels",
+    "equal_GLTF_accessors_v29_v29b": 367,
+    "face_crop_exact_vs_v27": true,
+    "right_wrist_capture_exact_vs_v27": true,
+    "likeness_approved": false
+  },
+  "native_evidence_root": "E:/T94B",
+  "four_authored_clips_verified": true,
+  "private_chapter_admission": true,
+  "both_opening_routes_on_this_variant": false,
+  "visual_review": "Coarse v29 looked regularly striped. Finer v29b reduces regular striping while adding directional surface detail. Both remain cap-like and unapproved; no naturalistic likeness claim.",
+  "failure_retained": "R2normal-based displacement failed area ratio0.33687/normaldot0.56183, no model saved. Distinct crown-only Z recipe passed unchanged limits:area ratio0.9214/normaldot0.9868/max2.3mm. All prior preparation failures retained.",
+  "blender_failure_contract": "Actual owned fixtures prove --python-exit-code19 returns19 for exception and0 for success. Future strict driver prepared separately; executed driver/source and logs unchanged. Existing report-existence checks stopped earlier exit0 exceptions.",
+  "installed_release_changed": false,
+  "existing_saves_used": false,
+  "likeness_approved": false,
+  "cloud_backup_verified": false,
+  "backup_status": "Local masters and execution evidence preserved. Personal art upload held after automatic-review rejection pending specific user authorization. Latest91Averified software-only backup excludes personal assets.",
+  "goal_complete": false,
+  "next_step": "Keep v28face comparison pending; do not merge either unapproved study into installed content. Improve coherent cheek/neck surface using a new combined displacement/triangle-constrained approach rather than stopped P73recipes, and review likeness. Human8-12minute pacing, caption listening review, current1080p60gameplay, final package matrix and verified final backup remain required."
+}

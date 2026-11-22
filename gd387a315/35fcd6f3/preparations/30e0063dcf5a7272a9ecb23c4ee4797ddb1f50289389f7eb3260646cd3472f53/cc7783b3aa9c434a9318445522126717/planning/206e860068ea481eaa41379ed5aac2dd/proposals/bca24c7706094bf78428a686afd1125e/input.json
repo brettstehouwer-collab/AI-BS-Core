@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "cc7783b3aa9c434a9318445522126717",
+  "plan_id": "206e860068ea481eaa41379ed5aac2dd",
+  "snapshot_sha256": "ea6a0f52b2de249715611ca9f29845417e7b7a7491f47f89db0aaceaeb5eb7fb",
+  "review_digest": "b2ffe1e161285d3b351dc41ae4e8c6546ab9e6f77e247ae68a0506d3ed4e8a46",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "bca24c7706094bf78428a686afd1125e",
+  "reviewed_plan_sha256": "d74a6d3bd31aaa85b131148b1ea8eab1cf84eed5b9f1ac8c3c4b57119aa5176b",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 59156,
+    "created": 1794718679.0745277
+  },
+  "created_at_utc": "2026-11-15T04:58:05.161291+00:00",
+  "entry_sha256": "e071b28337618a1feab7216df2d61a7ab189803a117416178952ba374b02d666"
+}

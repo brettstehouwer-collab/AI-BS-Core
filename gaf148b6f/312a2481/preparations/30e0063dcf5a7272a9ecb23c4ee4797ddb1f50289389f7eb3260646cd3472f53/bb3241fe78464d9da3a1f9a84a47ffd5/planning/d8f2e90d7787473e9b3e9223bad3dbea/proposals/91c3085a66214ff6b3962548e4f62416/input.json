@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "bb3241fe78464d9da3a1f9a84a47ffd5",
+  "plan_id": "d8f2e90d7787473e9b3e9223bad3dbea",
+  "snapshot_sha256": "65c0961e8b4d2537614cddfa013ce703668a350e074a9ce3f6b96bb2a375af7d",
+  "review_digest": "b8b0d5065156011ddbda5b7311f1559be75bc13ab87b876b0a047348c84c2f80",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "91c3085a66214ff6b3962548e4f62416",
+  "reviewed_plan_sha256": "d538e0a1ab0926446630fb50f7c7fcfb4a70dfd493a1bed88e26d9b139962cba",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 40304,
+    "created": 1794782619.3812244
+  },
+  "created_at_utc": "2026-11-15T22:43:44.160075+00:00",
+  "entry_sha256": "d83c8968aa3342d3f37d38a03c03c8c9ce48d5a9dd539bd57ac82739b82336a4"
+}

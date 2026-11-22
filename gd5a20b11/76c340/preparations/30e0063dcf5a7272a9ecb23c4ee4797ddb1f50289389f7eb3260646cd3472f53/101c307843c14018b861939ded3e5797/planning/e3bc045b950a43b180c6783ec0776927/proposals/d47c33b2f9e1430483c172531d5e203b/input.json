@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "101c307843c14018b861939ded3e5797",
+  "plan_id": "e3bc045b950a43b180c6783ec0776927",
+  "snapshot_sha256": "2856dc3fcbf891dd8b3a5547b377dab57b8b49052b32c7eadd6a40dc329c60b3",
+  "review_digest": "b34a33149b316e25d49f451c17732f443d3be219d8f13eb704fbaee6e467b5a7",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "d47c33b2f9e1430483c172531d5e203b",
+  "reviewed_plan_sha256": "9af7927d678acd95568333cd4b19625221e9b4da4f248e6df5d1d4a869345cd4",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 29128,
+    "created": 1794666065.6990325
+  },
+  "created_at_utc": "2026-11-14T14:21:08.692042+00:00",
+  "entry_sha256": "82fb279b367f9e287a3ba7c1a3adde6d14e089d846db8cabf916cf1ed0600d25"
+}

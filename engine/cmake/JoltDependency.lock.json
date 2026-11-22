@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "name": "JoltPhysics",
+  "version": "5.6.0",
+  "repository": "https://github.com/jrouwe/JoltPhysics",
+  "release": "https://github.com/jrouwe/JoltPhysics/releases/tag/v5.6.0",
+  "commit": "e77f175595e64cb44218cc9d9d56fc365ad0e36a",
+  "source_url": "https://codeload.github.com/jrouwe/JoltPhysics/zip/e77f175595e64cb44218cc9d9d56fc365ad0e36a",
+  "archive_sha256": "ff13202d21a7a09efea72534a0a041cd4971cb9ac66b53262275881387cc6871",
+  "archive_bytes": 20254976,
+  "license": "MIT",
+  "documentation": "https://jrouwe.github.io/JoltPhysicsDocs/5.6.0/",
+  "build_profile": {
+    "linkage": "static",
+    "msvc_runtime": "DLL",
+    "x64_cpu_baseline": "SSE2",
+    "optional_x86_features": false,
+    "gpu_compute_backends": false,
+    "debug_renderer": false,
+    "profiler": false,
+    "lto": false
+  }
+}

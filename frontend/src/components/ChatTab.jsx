@@ -1,8 +1,23 @@
+/** @typedef {{status: string, message?: string, stdout?: string, stderr?: string, returncode?: number, execution_time_ms?: number, result?: unknown}} ExecutionResult */
+/** @typedef {{attempt: number, root_cause?: string, fix_explanation?: string, timestamp: string}} HealAttempt */
+/** @typedef {{display_name?: string, model?: string, device?: string, reason?: string, coding_task_id?: string, runtime_receipt_frame?: boolean, schema?: string, type?: string, provider?: string, request_id?: string, status?: string, generation_verified?: boolean, completion_verified?: boolean, completion_reason?: string, steps?: {id?: string, request_id?: string, name: string, model?: string, status?: string, generation_verified?: boolean, completion_verified?: boolean}[]}} CognitiveMeta */
+/** @typedef {{vram_used_gb?: number, vram_total_gb?: number, core_temp_c?: number, power_usage_w?: number, gpu_util_pct?: number, sys_ram_used_gb?: number, sys_ram_total_gb?: number, core_clock_mhz?: number, fan_speed_pct?: number, timestamp?: string}} CognitiveTelemetry */
+/** @typedef {{name: string, arguments?: {command?: string, timeout_seconds?: number, distro?: string, code?: string, script_path?: string, file_path?: string, content?: string, old_path?: string, new_name?: string, new_path?: string, dir_path?: string, action?: string, port?: number}}} ToolCall */
 import { useConversationMemory, ConversationMemoryStatus } from '/src/hooks/useConversationMemory.jsx';
-import { stageRagSource } from '/src/utils/ragSourceStage.js';
+import { stageRagSource, indexSavedRagSource, searchRagSources } from '/src/utils/ragSourceStage.js';
 import { archiveChatAndClear } from '/src/utils/chatArchive.js';
 import CodingPreparationPanel from './CodingPreparationPanel';
+import CodingModePanel from './CodingModePanel';
+import { codingModeEnabled } from '/src/utils/codingMode.js';
 import { readChatHttpResponse, chatResponseText } from '/src/utils/chatHttpResponse.js';
+import { chatAuthHeaders } from '/src/utils/chatAuth.js';
+import { ChatStreamParser, frameTextFor, stripMetadataFrames } from '/src/utils/chatStream.js';
+import { streamBSChatProvider } from '/src/utils/bsChatProvider.js';
+import { isOpenCodeWorkerCommand, requestOpenCodeWorker } from '/src/utils/opencodeWorkers.js';
+import { isLocalMaintenanceBuild, requestProjectBuild, waitForProjectMaintenance, pendingProjectMaintenance, projectMaintenanceReply } from '/src/utils/projectMaintenance.js';
+import { isComfyStatusQuery } from '/src/utils/chatRequestIntent.js';
+import { screenplayWorkflowIntent, isPdfAttachment, selectPdfSource, attachmentPromptContent, importPdfScreenplay, navigateToScreenplay, fetchScreenplayExport, downloadScreenplayBlob } from '/src/utils/screenplayHandoff.js';
+import { attachmentSourceReferences, sourceRetrievalSummary } from '/src/utils/attachedSources.js';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { SYSTEM_VERSION } from './version';
 import ReactMarkdown from 'react-markdown';
@@ -24,26 +39,27 @@ import ArtifactsAndToolsModal from './ArtifactsAndToolsModal';
 import EcosystemPortMonitorWidget from './EcosystemPortMonitorWidget';
 import TapToRunCanvas, { extractStagedPayloads } from './TapToRunCanvas';
 
-const CodeBlock = React.memo(function CodeBlock({ language, code }) {
-  const [activeCode, setActiveCode] = useState(code);
+const CodeBlock = React.memo(/** @param {{language: string, code: string}} props */
+function CodeBlock({ language, code }) {
+  const [activeCode, setActiveCode] = useState(typeof code === 'string' ? code : '');
   const [copied, setCopied] = useState(false);
   const [isExecutingUE, setIsExecutingUE] = useState(false);
-  const [ueResult, setUeResult] = useState(null);
+  const [ueResult, setUeResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [showViewport, setShowViewport] = useState(false);
   const [isExecutingScript, setIsExecutingScript] = useState(false);
-  const [scriptResult, setScriptResult] = useState(null);
+  const [scriptResult, setScriptResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [isValidatingSyntax, setIsValidatingSyntax] = useState(false);
-  const [syntaxResult, setSyntaxResult] = useState(null);
+  const [syntaxResult, setSyntaxResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [isPatching, setIsPatching] = useState(false);
-  const [patchResult, setPatchResult] = useState(null);
+  const [patchResult, setPatchResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [isMirrorSyncing, setIsMirrorSyncing] = useState(false);
-  const [mirrorResult, setMirrorResult] = useState(null);
+  const [mirrorResult, setMirrorResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [autoHealEnabled, setAutoHealEnabled] = useState(true);
   const [isAutoHealing, setIsAutoHealing] = useState(false);
-  const [healHistory, setHealHistory] = useState([]);
+  const [healHistory, setHealHistory] = useState(/** @type {HealAttempt[]} */ ([]));
 
   useEffect(() => {
-    setActiveCode(code);
+    setActiveCode(typeof code === 'string' ? code : '');
   }, [code]);
 
   const handleValidateSyntax = async () => {
@@ -78,7 +94,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         });
       }
     } catch (err) {
-      setSyntaxResult({ status: 'error', message: `Validation failed: ${err.message}` });
+      setSyntaxResult({ status: 'error', message: `Validation failed: ${errorMessage(err)}` });
     } finally {
       setIsValidatingSyntax(false);
     }
@@ -125,7 +141,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         setPatchResult({ status: 'error', message: `⚠️ Patch failed: ${toolRes.message || 'Verification failed'}` });
       }
     } catch (err) {
-      setPatchResult({ status: 'error', message: `Patch error: ${err.message}` });
+      setPatchResult({ status: 'error', message: `Patch error: ${errorMessage(err)}` });
     } finally {
       setIsPatching(false);
     }
@@ -170,7 +186,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         setMirrorResult({ status: 'error', message: `⚠️ Mirror sync failed: ${toolRes.message || 'Error'}` });
       }
     } catch (err) {
-      setMirrorResult({ status: 'error', message: `Mirror sync error: ${err.message}` });
+      setMirrorResult({ status: 'error', message: `Mirror sync error: ${errorMessage(err)}` });
     } finally {
       setIsMirrorSyncing(false);
     }
@@ -188,7 +204,8 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
     activeCode.includes('import ') || activeCode.includes('def ') || activeCode.includes('Get-') || activeCode.includes('pip install') || activeCode.includes('console.log(') || activeCode.includes('package main') || activeCode.includes('fn main()')
   );
 
-  const detectRuntimeType = (lang, snippet) => {
+  /** @param {string} lang @param {string} snippet */
+const detectRuntimeType = (lang, snippet) => {
     const s = typeof snippet === 'string' ? snippet : '';
     if (['powershell', 'ps1', 'ps'].includes(lang) || (!lang && s.includes('Get-'))) return 'powershell';
     if (['cmd', 'batch', 'bat'].includes(lang)) return 'cmd';
@@ -203,7 +220,8 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
   };
 
   // Autonomous Self-Healing Execution Loop (Up to 3 Retries on Stderr/Failure)
-  const handleExecuteScript = async (codeToRun = null, retryCount = 0) => {
+  /** @param {string | null} [codeToRun] @param {number} [retryCount] */
+const handleExecuteScript = async (codeToRun = null, retryCount = 0) => {
     let currentCode = codeToRun !== null ? codeToRun : activeCode;
     const runtimeType = detectRuntimeType(normLang, currentCode);
 
@@ -288,7 +306,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
 
       setScriptResult(data);
     } catch (err) {
-      setScriptResult({ status: 'error', message: err.message });
+      setScriptResult({ status: 'error', message: errorMessage(err) });
     } finally {
       setIsExecutingScript(false);
       setIsAutoHealing(false);
@@ -331,7 +349,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         alert(`Auto-heal warning: ${healData.message || 'Could not generate patch'}`);
       }
     } catch (err) {
-      alert(`Auto-heal error: ${err.message}`);
+      alert(`Auto-heal error: ${errorMessage(err)}`);
     } finally {
       setIsAutoHealing(false);
     }
@@ -354,7 +372,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         setUeResult({ status: 'error', message: `⚠️ ${data.message || 'Execution completed with warnings'}` });
       }
     } catch (e) {
-      setUeResult({ status: 'error', message: `❌ Error: ${e.message}` });
+      setUeResult({ status: 'error', message: `❌ Error: ${errorMessage(e)}` });
     } finally {
       setIsExecutingUE(false);
     }
@@ -370,7 +388,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
       const data = await res.json();
       alert(data.message || '🎮 Unreal Engine 5.8 Editor Launched on your Desktop!');
     } catch (e) {
-      alert(`Error launching Unreal Editor: ${e.message}`);
+      alert(`Error launching Unreal Editor: ${errorMessage(e)}`);
     }
   };
 
@@ -487,7 +505,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
                 const data = await res.json();
                 alert(`✅ Vibe-Checkpoint [${data.checkpoint}] created in ${data.elapsed_ms}ms.`);
               } catch (e) {
-                alert(`Checkpoint failed: ${e.message}`);
+                alert(`Checkpoint failed: ${errorMessage(e)}`);
               }
             }}
             style={{
@@ -815,6 +833,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
   );
 });
 
+/** @param {string} rawPath */
 function resolveHostCPath(rawPath) {
   if (!rawPath) return 'C:\\AI-BS\\scratch\\test_chat.txt';
   let p = String(rawPath).trim().replace(/^file:\/\/\/?/i, '');
@@ -828,6 +847,7 @@ function resolveHostCPath(rawPath) {
   return 'C:\\AI-BS\\' + p;
 }
 
+/** @param {string | undefined} str */
 function isLikelyHostFilePath(str) {
   if (!str || typeof str !== 'string') return false;
   const s = str.trim();
@@ -839,8 +859,9 @@ function isLikelyHostFilePath(str) {
   return false;
 }
 
+/** @param {{targetPath: string, displayLabel?: string, backendUrl: string}} props */
 function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
-  const [ctxMenu, setCtxMenu] = useState(null);
+  const [ctxMenu, setCtxMenu] = useState(/** @type {{x: number, y: number} | null} */ (null));
   const [toast, setToast] = useState('');
   const fullCPath = resolveHostCPath(targetPath);
   const apiBase = backendUrl || 'http://127.0.0.1:8080';
@@ -852,7 +873,8 @@ function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
     return () => window.removeEventListener('click', closeMenu);
   }, [ctxMenu]);
 
-  const handleOpenInIde = (e) => {
+  /** @param {import("react").MouseEvent<HTMLElement>} e */
+const handleOpenInIde = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -863,7 +885,8 @@ function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
     }));
   };
 
-  const handleShowInExplorer = async (e) => {
+  /** @param {import("react").MouseEvent<HTMLElement>} e */
+const handleShowInExplorer = async (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -890,7 +913,8 @@ function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
     setTimeout(() => setToast(''), 2500);
   };
 
-  const handleCopyPath = (e) => {
+  /** @param {import("react").MouseEvent<HTMLElement>} e */
+const handleCopyPath = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -1051,6 +1075,55 @@ function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
 }
 
 // ─── Cognitive Parser & Desktop Architecture Components ──────────────────────
+/** Merge successive server-reported frames; text inside a frame never grants tool authority.
+ * @param {string} text */
+function readCognitiveMetadata(text) {
+  if (typeof text !== 'string') return null;
+  let merged = null;
+  let runtimeReceiptFrame = false;
+  for (const match of text.matchAll(/<!--AI-BS-METADATA:([\s\S]*?)-->/g)) {
+    try {
+      const value = JSON.parse(match[1]);
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        const stages = new Map();
+        for (const row of [...(Array.isArray(merged?.steps) ? merged.steps : []), ...(Array.isArray(value.steps) ? value.steps : [])]) {
+          if (row && typeof row === 'object') stages.set(row.request_id || `${row.id || row.name}:${row.model || ''}`, row);
+        }
+        // Completion provenance belongs to a complete current protocol frame;
+        // unversioned legacy fragments cannot borrow an earlier pending schema.
+        if (['schema', 'type', 'provider', 'request_id', 'status', 'generation_verified', 'completion_verified', 'completion_reason', 'steps', 'model', 'actual_model']
+            .some(key => Object.prototype.hasOwnProperty.call(value, key))) {
+          runtimeReceiptFrame = value.schema === 'aibs.local_inference.v1' && value.type === 'aibs_cognitive_meta' && value.provider === 'local'
+            && typeof value.request_id === 'string' && /^[0-9a-f]{32}$/.test(value.request_id)
+            && typeof value.model === 'string' && !!value.model
+            && typeof value.generation_verified === 'boolean' && typeof value.completion_verified === 'boolean'
+            && ['pending', 'running', 'completed', 'error', 'cancelled'].includes(value.status);
+        }
+        merged = { ...(merged || {}), ...value, runtime_receipt_frame: runtimeReceiptFrame };
+        if (stages.size) merged.steps = [...stages.values()];
+      }
+    } catch (_) { /* An incomplete or malformed frame is not a receipt. */ }
+  }
+  return merged;
+}
+
+/** Legacy compatibility applies only when the stream route is absent, before any response evidence.
+ * @param {number} status @param {boolean} aborted @param {boolean} received */
+function canFallbackToLegacyStream(status, aborted, received) {
+  return !aborted && !received && (status === 404 || status === 405);
+}
+
+/** Preserve UTF8 over network boundaries; malformed terminal bytes are an interruption. */
+function createChatStreamDecoder() {
+  const decoder = new TextDecoder('utf-8', { fatal: true });
+  return {
+    /** @param {Uint8Array} value */
+    decode: value => decoder.decode(value, { stream: true }),
+    finish: () => decoder.decode(),
+  };
+}
+
+/** @param {string} rawContent */
 function parseCognitiveContent(rawContent) {
   if (typeof rawContent !== 'string') {
     return { meta: null, thought: null, body: rawContent, isThinking: false };
@@ -1059,16 +1132,9 @@ function parseCognitiveContent(rawContent) {
   let text = rawContent;
   let meta = null;
 
-  // 1. Extract metadata comment <!--AI-BS-METADATA:...-->
-  const metaMatch = /<!--AI-BS-METADATA:([\s\S]*?)-->/.exec(text);
-  if (metaMatch) {
-    try {
-      meta = JSON.parse(metaMatch[1]);
-    } catch (e) {
-      console.warn("Failed to parse AI-BS cognitive metadata", e);
-    }
-    text = text.replace(/<!--AI-BS-METADATA:[\s\S]*?-->/, '').trimStart();
-  }
+  // Report the latest stage/final frame while retaining earlier source provenance.
+  meta = readCognitiveMetadata(text);
+  text = stripMetadataFrames(text).trimStart();
 
   // 2. Extract <think>...</think> block (complete or in-progress stream)
   let thought = null;
@@ -1092,18 +1158,60 @@ function parseCognitiveContent(rawContent) {
   return { meta, thought, body, isThinking };
 }
 
+/** Present known local transport receipts without promoting legacy metadata or answer correctness.
+ * @param {CognitiveMeta | null} meta */
+function cognitiveStagePresentation(meta) {
+  const hasRuntimeReceipt = !!meta && meta.runtime_receipt_frame === true && meta.schema === 'aibs.local_inference.v1'
+    && meta.type === 'aibs_cognitive_meta' && meta.provider === 'local'
+    && typeof meta.request_id === 'string' && /^[0-9a-f]{32}$/.test(meta.request_id)
+    && typeof meta.model === 'string' && !!meta.model
+    && typeof meta.generation_verified === 'boolean' && typeof meta.completion_verified === 'boolean'
+    && ['pending', 'running', 'completed', 'error', 'cancelled'].includes(meta.status || '');
+  const finalStop = hasRuntimeReceipt && meta?.status === 'completed'
+    && meta.generation_verified === true && meta.completion_verified === true && meta.completion_reason === 'stop';
+  let summary = 'Completion not verified';
+  if (hasRuntimeReceipt) {
+    if (finalStop) summary = 'Final provider stop recorded';
+    else if (meta.status === 'pending' || meta.status === 'running') summary = 'Provider request in progress';
+    else if (meta.status === 'error') summary = 'Request failed; completion not verified';
+    else if (meta.status === 'cancelled') summary = 'Request cancelled; completion not verified';
+    else if (meta.generation_verified === true) summary = meta.completion_reason === 'length'
+      ? 'Output limit reached; completion not verified' : 'Output received; completion not verified';
+  }
+  const steps = (Array.isArray(meta?.steps) ? meta.steps : []).filter(step => step && typeof step === 'object').map(step => {
+    const stage = { id: step.request_id || step.id, name: step.name, status: 'unverified',
+      detail: 'Reported stage; no runtime completion receipt attached.' };
+    const known = hasRuntimeReceipt && typeof step.request_id === 'string' && /^[0-9a-f]{32}$/.test(step.request_id)
+      && typeof step.model === 'string' && !!step.model
+      && typeof step.generation_verified === 'boolean' && typeof step.completion_verified === 'boolean';
+    if (!known) return stage;
+    if (step.status === 'completed' && step.generation_verified === true && step.completion_verified === true
+        && (step.request_id !== meta.request_id || finalStop)) {
+      stage.status = 'done'; stage.detail = 'Provider stop recorded for this stage; answer content is not independently verified.';
+    } else if (step.status === 'completed' && step.generation_verified === true) {
+      stage.status = 'partial'; stage.detail = 'Output received; clean completion not verified.';
+    } else if (step.status === 'error') {
+      stage.status = 'error'; stage.detail = 'Stage failed; no completed generation recorded.';
+    } else if (step.status === 'cancelled') {
+      stage.status = 'cancelled'; stage.detail = 'Stage cancelled; received output may be partial.';
+    } else if (step.status === 'pending' || step.status === 'running') {
+      stage.status = 'active'; stage.detail = 'Stage in progress; no completed generation recorded.';
+    }
+    return stage;
+  });
+  return { steps, summary, hasRuntimeReceipt };
+}
+
+/** @param {{meta: CognitiveMeta | null}} props */
 function DesktopCognitiveMetaHeader({ meta }) {
   const [showWhy, setShowWhy] = useState(false);
   const [showStepper, setShowStepper] = useState(false);
 
   if (!meta) return null;
 
-  // Legacy inline metadata is a response claim, not an authenticated runtime receipt.
-  const t = null;
-  const steps = Array.isArray(meta.steps) ? meta.steps.map(step => ({
-    id: step.id, name: step.name, status: 'unverified',
-    detail: 'Reported stage; no runtime completion receipt attached.'
-  })) : [];
+  // Known transport evidence records provider completion; it does not grant tool authority.
+  const t = /** @type {CognitiveTelemetry | null} */ (null);
+  const { steps, summary, hasRuntimeReceipt } = cognitiveStagePresentation(meta);
 
   return (
     <div style={{ marginBottom: '10px', fontSize: '0.78rem' }}>
@@ -1258,7 +1366,7 @@ function DesktopCognitiveMetaHeader({ meta }) {
           </div>
           <div style={{ marginTop: '8px', fontSize: '0.72rem', color: '#94a3b8', display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-              <span>Inline metadata does not verify model execution, hardware use, memory retrieval, or sandbox checks.</span>
+              <span>{hasRuntimeReceipt ? 'Reported provider completion does not verify answer correctness, hardware use, memory retrieval or host actions.' : 'Inline metadata does not verify model execution, hardware use, memory retrieval, or sandbox checks.'}</span>
             </div>
             {t && (
               <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', color: '#64748b', fontSize: '0.7rem', marginTop: '2px' }}>
@@ -1285,7 +1393,7 @@ function DesktopCognitiveMetaHeader({ meta }) {
         }}>
           <div style={{ color: '#c084fc', fontWeight: 600, marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span>Reported pipeline stages</span>
-            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Completion not verified</span>
+            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>{summary}</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '8px' }}>
             {steps.map(step => (
@@ -1299,8 +1407,8 @@ function DesktopCognitiveMetaHeader({ meta }) {
                 gap: '8px',
                 fontSize: '0.75rem'
               }}>
-                <span style={{ color: step.status === 'done' ? '#34d399' : step.status === 'active' ? '#60a5fa' : '#94a3b8', fontWeight: 700 }}>
-                  {step.status === 'done' ? '✓' : step.status === 'active' ? '⟳' : '○'}
+                <span style={{ color: step.status === 'done' ? '#34d399' : step.status === 'active' ? '#60a5fa' : step.status === 'error' ? '#f87171' : step.status === 'partial' || step.status === 'cancelled' ? '#fbbf24' : '#94a3b8', fontWeight: 700 }}>
+                  {step.status === 'done' ? '✓' : step.status === 'active' ? '⟳' : step.status === 'error' ? '!' : '○'}
                 </span>
                 <div>
                   <div style={{ fontWeight: 600, color: step.status === 'done' ? '#f1f5f9' : '#cbd5e1' }}>
@@ -1321,6 +1429,7 @@ function DesktopCognitiveMetaHeader({ meta }) {
   );
 }
 
+/** @param {{thought: string | null, isThinking: boolean}} props */
 function DesktopCognitiveThoughtDrawer({ thought, isThinking }) {
   const [isOpen, setIsOpen] = useState(isThinking);
 
@@ -1419,28 +1528,35 @@ function DesktopCognitiveThoughtDrawer({ thought, isThinking }) {
   );
 }
 
-function FormattedMessageContent({ content, role }) {
+/** @param {{content: string, role: string}} props */
+function FormattedMessageContent({ content, role, meta: metaOverride }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
 
   if (role === 'user') {
     return <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{content}</div>;
   }
 
-  const { meta, thought, body, isThinking } = parseCognitiveContent(content);
+  const { meta: parsedMeta, thought, body, isThinking } = parseCognitiveContent(content);
+  const meta = metaOverride || parsedMeta;
   const hasRunToken = typeof body === 'string' && /\[Run\s+([^\]]+)\]/.test(body);
   const stagedPayloads = hasRunToken ? extractStagedPayloads(body) : null;
 
-  const renderMarkdownBlock = (markdownText, key) => (
+  /** @param {string} markdownText @param {string | number} key */
+const renderMarkdownBlock = (markdownText, key) => (
     <ReactMarkdown
       key={key}
       remarkPlugins={[remarkGfm]}
       components={{
-        code({ node, inline, className, children, ...props }) {
+        code({ node, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || '');
-          const codeString = String(children).replace(/\n$/, '');
+          const rawText = Array.isArray(children)
+            ? children.map(child => child == null ? '' : String(child)).join('')
+            : children == null ? '' : String(children);
+          const codeString = rawText.replace(/\n$/, '');
           const isMultiLine = codeString.includes('\n');
 
-          if (!inline && (match || isMultiLine)) {
+          if (match || isMultiLine) {
+            if (!codeString) return null;
             return (
               <CodeBlock
                 language={match ? match[1] : ''}
@@ -1483,7 +1599,7 @@ function FormattedMessageContent({ content, role }) {
                 const urlObj = new URL(finalSrc);
                 finalSrc = `${BACKEND_URL}/api/comfyui/view${urlObj.search}`;
               } catch (e) {
-                finalSrc = src;
+                finalSrc = src || '';
               }
             }
           } else if (!finalSrc.startsWith('http') && !finalSrc.startsWith('data:')) {
@@ -1588,9 +1704,10 @@ function FormattedMessageContent({ content, role }) {
           return <td style={{ padding: '8px 12px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', color: '#e2e8f0' }}>{children}</td>;
         },
         blockquote({ node, children }) {
-          const isThoughtTrace = node?.children?.[0]?.children?.[0]?.value?.includes('THOUGHT:') || 
-                                 node?.children?.[0]?.children?.[0]?.value?.includes('💭') ||
-                                 node?.children?.[0]?.children?.[0]?.value?.includes('SWARM PASS');
+          const paragraph = node?.children?.[0];
+          const first = paragraph && 'children' in paragraph ? paragraph.children[0] : undefined;
+          const text = first && 'value' in first ? String(first.value) : '';
+          const isThoughtTrace = text.includes('THOUGHT:') || text.includes('💭') || text.includes('SWARM PASS');
           return (
             <blockquote style={{
               borderLeft: isThoughtTrace ? '4px solid #c084fc' : '4px solid #60a5fa',
@@ -1625,7 +1742,7 @@ function FormattedMessageContent({ content, role }) {
             const target = (href && href.startsWith('file:')) ? href.replace(/^file:\/\/\/?/i, '') : (isLikelyHostFilePath(childStr) ? childStr : href);
             return (
               <InteractiveFileLinkPill
-                targetPath={target}
+                targetPath={target || ''}
                 displayLabel={childStr || target}
                 backendUrl={BACKEND_URL}
               />
@@ -1658,7 +1775,7 @@ function FormattedMessageContent({ content, role }) {
           <TapToRunCanvas
             key={`canvas-${idx}`}
             label={label}
-            stagedPayloads={stagedPayloads}
+            stagedPayloads={stagedPayloads || undefined}
             backendUrl={BACKEND_URL}
           />
         );
@@ -1685,12 +1802,15 @@ function FormattedMessageContent({ content, role }) {
   );
 }
 
+/** @param {{msg: import('/types/domain').ChatMessage}} props */
 function ReasoningInspector({ msg }) {
   const [isOpen, setIsOpen] = useState(false);
-  const clientDuration = Number.isFinite(msg.client_elapsed_ms) && msg.client_elapsed_ms >= 0;
-  const reportedDuration = Number.isFinite(msg.execution_time_ms) && msg.execution_time_ms > 0;
-  const duration = clientDuration ? `${Math.round(msg.client_elapsed_ms)} ms (client measured)`
-    : reportedDuration ? `${Math.round(msg.execution_time_ms)} ms (reported)` : 'Not recorded';
+  const clientElapsed = msg.client_elapsed_ms;
+  const clientDuration = typeof clientElapsed === 'number' && Number.isFinite(clientElapsed) && clientElapsed >= 0;
+  const reportedElapsed = msg.execution_time_ms;
+  const reportedDuration = typeof reportedElapsed === 'number' && Number.isFinite(reportedElapsed) && reportedElapsed > 0;
+  const duration = clientDuration ? `${Math.round(clientElapsed)} ms (client measured)`
+    : reportedDuration ? `${Math.round(reportedElapsed)} ms (reported)` : 'Not recorded';
   const dispatch = msg.decision_context;
 
   return (
@@ -1734,9 +1854,9 @@ function ReasoningInspector({ msg }) {
 
           {dispatch && (
             <div style={{ color: '#94a3b8', marginBottom: '8px' }}>
-              <div>Client request: {dispatch.operation || 'Not recorded'}</div>
-              <div>Endpoint: {dispatch.route || 'Not recorded'}</div>
-              <div>Client state: {dispatch.status || 'Not recorded'}</div>
+              <div>Client request: {typeof dispatch.operation === 'string' ? dispatch.operation : 'Not recorded'}</div>
+              <div>Endpoint: {typeof dispatch.route === 'string' ? dispatch.route : 'Not recorded'}</div>
+              <div>Client state: {typeof dispatch.status === 'string' ? dispatch.status : 'Not recorded'}</div>
               <div>Request routing does not confirm the action completed.</div>
             </div>
           )}
@@ -1765,7 +1885,7 @@ function ReasoningInspector({ msg }) {
               🧠 Memory retrieval:
             </div>
             <div style={{ color: '#94a3b8' }}>
-              No per-message memory retrieval evidence was attached to this reply.
+              {sourceRetrievalSummary(msg.source_retrieval || (msg.meta && 'source_retrieval' in msg.meta ? msg.meta.source_retrieval : null)) || 'No per-message memory retrieval evidence was attached to this reply.'}
             </div>
           </div>
         </div>
@@ -1774,6 +1894,7 @@ function ReasoningInspector({ msg }) {
   );
 }
 
+/** @param {string} text @returns {ToolCall | null} */
 function extractToolCall(text) {
   if (!text || typeof text !== 'string') return null;
   const tcMatch = text.match(/\{\s*"tool_call"\s*:\s*\{[\s\S]*?\}\s*\}/);
@@ -1800,10 +1921,11 @@ function extractToolCall(text) {
   return null;
 }
 
+/** @param {{toolCall: ToolCall|null, onExecuted?: (result: ExecutionResult) => void}} props */
 function ExecutiveActionCard({ toolCall, onExecuted }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
   const [isRunning, setIsRunning] = useState(false);
-  const [execResult, setExecResult] = useState(null);
+  const [execResult, setExecResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [showArgs, setShowArgs] = useState(false);
 
   if (!toolCall || !toolCall.name) return null;
@@ -1811,7 +1933,8 @@ function ExecutiveActionCard({ toolCall, onExecuted }) {
   const toolName = toolCall.name;
   const toolArgs = toolCall.arguments || {};
 
-  const getActionBadge = (name) => {
+  /** @param {string} name */
+const getActionBadge = (name) => {
     switch (name) {
       case 'execute_powershell_command':
         return { label: '⚡ EXECUTE POWERSHELL', bg: '#1e3a8a', border: '#3b82f6', color: '#93c5fd' };
@@ -1853,7 +1976,8 @@ function ExecutiveActionCard({ toolCall, onExecuted }) {
     setIsRunning(true);
     setExecResult({ status: 'running', message: '⚡ Dispatching command to Executive Engine with root host privileges...' });
     try {
-      let payload = {
+      /** @type {{command_type: string, target: string, payload?: ToolCall["arguments"]}} */
+let payload = {
         command_type: 'tool',
         target: toolName,
         payload: toolArgs
@@ -1933,7 +2057,7 @@ function ExecutiveActionCard({ toolCall, onExecuted }) {
       setExecResult(data);
       if (onExecuted) onExecuted(data);
     } catch (err) {
-      setExecResult({ status: 'error', message: err.message });
+      setExecResult({ status: 'error', message: errorMessage(err) });
     } finally {
       setIsRunning(false);
     }
@@ -2107,7 +2231,7 @@ function ExecutiveActionCard({ toolCall, onExecuted }) {
               </pre>
             )}
 
-            {execResult.result && (
+            {Boolean(execResult.result) && (
               <pre style={{
                 margin: '4px 0 0 0',
                 background: '#040812',
@@ -2135,11 +2259,12 @@ function ExecutiveActionCard({ toolCall, onExecuted }) {
   );
 }
 
+/** @param {{editorData: {path: string, content: string, lines?: number}, onClose?: () => void}} props */
 function FileEditorDrawer({ editorData, onClose }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
   const [content, setContent] = useState(editorData.content || '');
   const [isSaving, setIsSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState(null);
+  const [saveStatus, setSaveStatus] = useState(/** @type {string | null} */ (null));
   const [copied, setCopied] = useState(false);
   const fullCPath = resolveHostCPath(editorData.path);
 
@@ -2168,7 +2293,7 @@ function FileEditorDrawer({ editorData, onClose }) {
         setSaveStatus(`⚠️ ${data.message || 'Save error'}`);
       }
     } catch (err) {
-      setSaveStatus(`❌ Error saving: ${err.message}`);
+      setSaveStatus(`❌ Error saving: ${errorMessage(err)}`);
     } finally {
       setIsSaving(false);
       setTimeout(() => setSaveStatus(null), 5000);
@@ -2192,7 +2317,7 @@ function FileEditorDrawer({ editorData, onClose }) {
       });
       setSaveStatus(`✅ Opened in Windows File Explorer: ${fullCPath}`);
     } catch (err) {
-      setSaveStatus(`⚠️ Explorer error: ${err.message}`);
+      setSaveStatus(`⚠️ Explorer error: ${errorMessage(err)}`);
     }
     setTimeout(() => setSaveStatus(null), 3500);
   };
@@ -2397,14 +2522,19 @@ const SLASH_COMMANDS = [
   },
   {
     cmd: '/build',
-    aliases: ['/conclude-grill', '/approve-spec'],
-    title: 'Conclude Grill & Launch Execution',
-    desc: 'Locks specification into mission_spec.md and immediately triggers Stage 2 planning and 5-phase execution.',
+    title: 'Build and update local AI-BS',
+    desc: 'Build/check/update AI-BS, frontend or backend and verify the loopback API restart. A grill session ID retains the legacy conclude workflow.',
     category: '🎯 Missions',
-    zeroArg: true,
-    badge: 'Lock & Build',
-    example: '/build'
+    zeroArg: false,
+    badge: 'Local build',
+    template: '/build AI-BS',
+    example: '/build AI-BS'
   },
+  { cmd:'/conclude-grill', aliases:['/approve-spec'], title:'Conclude an existing grill session', desc:'Retain the existing specification-lock and mission execution workflow; /build <grill_session_id> remains supported.', category:'🎯 Missions', zeroArg:true, example:'/conclude-grill' },
+  { cmd:'/opencode', title:'Additional OpenCode coding/review workers', desc:'Use a hosted worker for an explicit task while keeping your selected primary. View model privacy with /opencode models.', category:'🛠️ Workbench', zeroArg:false, template:'/opencode models', example:'/opencode beam-free Review this loop' },
+  { cmd:'/rag', title:'Index or search preserved sources', desc:'Index a saved context file or retrieve bounded passages for your signed-in account.', category:'🛠️ Workbench', zeroArg:false, template:'/rag search ', example:'/rag search screenplay dialogue' },
+  { cmd:'/backend', title:'Local backend status or restart', desc:'Read API health or queue a checked, durable restart of only the local API.', category:'🛠️ Workbench', zeroArg:false, template:'/backend status', example:'/backend restart' },
+  { cmd:'/screenplay', title:'Open a PDF in Screenwriting', desc:'Use an attached parsed/indexed PDF to create a preserved screenplay project, open the writing tool and export FDX/PDF.', category:'🛠️ Workbench', zeroArg:false, template:'/screenplay open', example:'/screenplay convert FDX and export PDF' },
   // 🛠️ Autonomous Developer Workbench
   {
     cmd: '/audit',
@@ -3077,21 +3207,41 @@ const SLASH_COMMANDS = [
   }
 ];
 
-export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 }) {
+/** @param {{isNested?: boolean, wirelessCastOpenRequest?: number, showRightPane?: boolean, onToggleSplitPane?: (() => void) | null}} props */
+export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0, showRightPane = false, onToggleSplitPane = null }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
   const storedChatMessages = useAppStore(state => state.chatMessages);
   const storedFooterInput = useAppStore(state => state.footerInput);
-  const messageFeedRef = useAppStore(state => state.messageFeedRef);
+  const messageFeedRef = useRef(/** @type {HTMLDivElement | null} */ (null));
   const selectedModel = useAppStore(state => state.selectedModel);
+  const selectedProvider = useAppStore(state => state.aiProvider);
+  const providerModels = useAppStore(state => state.aiProviderModels);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isBackendDisabled, setIsBackendDisabled] = useState(false);
-  const abortControllerRef = useRef(null);
+  const abortControllerRef = useRef(/** @type {AbortController | null} */ (null));
   const conversationMemory = useConversationMemory(useAppStore, BACKEND_URL, () => abortControllerRef.current?.abort());
-  const chatMessages = conversationMemory.viewReady ? storedChatMessages : [];
-  const footerInput = conversationMemory.viewReady ? storedFooterInput : '';
-  const setChatMessages = conversationMemory.setMessages;
-  const setFooterInput = conversationMemory.setDraft;
+  const chatMessages = conversationMemory.viewReady ? storedChatMessages : (storedChatMessages || []);
+  const footerInput = conversationMemory.viewReady ? storedFooterInput : (storedFooterInput || '');
+  const setChatMessages = conversationMemory.viewReady ? conversationMemory.setMessages : (updater => useAppStore.getState().setChatMessages(updater));
+  const setFooterInput = conversationMemory.viewReady ? conversationMemory.setDraft : (updater => useAppStore.getState().setFooterInput(updater));
+
+  useEffect(() => {
+    if (!conversationMemory.viewReady) return;
+    const pending = pendingProjectMaintenance();
+    if (!pending) return;
+    let attached = true;
+    void waitForProjectMaintenance({ baseUrl: BACKEND_URL, pending,
+      headers: () => chatAuthHeaders({ 'Content-Type': 'application/json' }), active: () => attached
+    }).then(data => {
+      if (attached) setChatMessages(prev => [...prev, { role: 'assistant',
+        content: projectMaintenanceReply(data.result || data), model: 'Local Project Maintenance' }]);
+    }).catch(error => {
+      if (attached) setChatMessages(prev => [...prev, { role: 'assistant',
+        content: `Local build status remains saved: ${errorMessage(error)}`, model: 'Local Project Maintenance' }]);
+    });
+    return () => { attached = false; };
+  }, [BACKEND_URL, conversationMemory.viewReady, setChatMessages]);
 
   const handleStopOrToggleBackend = () => {
     if (isLoading) {
@@ -3119,31 +3269,41 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
   const [isListening, setIsListening] = useState(false);
   const [autoSpeak, setAutoSpeak] = useState(false);
-  const [errorPopup, setErrorPopup] = useState(null);
+  const [errorPopup, setErrorPopup] = useState(/** @type {string | null} */ (null));
   const [showTips, setShowTips] = useState(false);
   const [starterCategory, setStarterCategory] = useState('All');
   const [copiedChatUrl, setCopiedChatUrl] = useState(false);
   const [showCommandsDropdown, setShowCommandsDropdown] = useState(false);
   const [commandSearchQuery, setCommandSearchQuery] = useState('');
   const [selectedCommandCategory, setSelectedCommandCategory] = useState('All');
-  const commandsDropdownRef = useRef(null);
-  const chatInputRef = useRef(null);
+  const commandsDropdownRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const quickActionsMenuRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const chatInputRef = useRef(/** @type {HTMLTextAreaElement | null} */ (null));
+
+  // BS-Chat Decluttering Drawer & Toolbar State
+  const [showControlDrawer, setShowControlDrawer] = useState(false);
+  const [chatFocus, setChatFocus] = useState(false);
+  const [showToolBar, setShowToolBar] = useState(false);
+  const [showTagsBar, setShowTagsBar] = useState(false);
+  const [showQuickActionsMenu, setShowQuickActionsMenu] = useState(false);
+  const [showSynergyDock, setShowSynergyDock] = useState(false);
 
   // File Upload State (GPT Style)
-  const [attachments, setAttachments] = useState([]);
+  const [attachments, setAttachments] = useState(/** @type {import('/types/domain').ChatAttachment[]} */ ([]));
   const [isUploadingFile, setIsUploadingFile] = useState(false);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
 
-  const [activeTools, setActiveTools] = useState({});
+  const [activeTools, setActiveTools] = useState(/** @type {Record<string, boolean>} */ ({}));
   const [isGovernanceOpen, setIsGovernanceOpen] = useState(false);
   const [isStressTestOpen, setIsStressTestOpen] = useState(false);
   const [isArtifactsModalOpen, setIsArtifactsModalOpen] = useState(false);
   const [isPortMeshModalOpen, setIsPortMeshModalOpen] = useState(false);
-  const [stressResult, setStressResult] = useState(null);
+  const [stressResult, setStressResult] = useState(/** @type {{status?: string, accuracy_score?: number, character_count?: number, latency_ms?: number, message?: string, model_response?: string, num_ctx_allocated?: number, tokens_per_sec?: number} | null} */ (null));
   const [isRunningStress, setIsRunningStress] = useState(false);
   const [stressTier, setStressTier] = useState('4k');
 
-  const handleRunStressTest = async (tier) => {
+  /** @param {string} tier */
+const handleRunStressTest = async (tier) => {
     setIsRunningStress(true);
     setStressResult(null);
     try {
@@ -3155,7 +3315,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       const data = await res.json();
       setStressResult(data);
     } catch (err) {
-      setStressResult({ status: 'error', message: err.message || 'Stress test request failed' });
+      setStressResult({ status: 'error', message: errorMessage(err) || 'Stress test request failed' });
     } finally {
       setIsRunningStress(false);
     }
@@ -3189,14 +3349,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       });
       setMemoryToast(saved.cleared ? 'Archived to SQLite & cleared.' : 'Archived snapshot; current chat kept.');
     } catch (err) {
-      setMemoryToast('Archive not confirmed; chat kept. ' + err.message);
+      setMemoryToast('Archive not confirmed; chat kept. ' + errorMessage(err));
     } finally {
       setIsSavingMemory(false);
       setTimeout(() => setMemoryToast(''), 5000);
     }
   };
 
-  const [workspacePanel, setWorkspacePanel] = useState(null);
+  const [workspacePanel, setWorkspacePanel] = useState(/** @type {'terminal' | 'codebase' | null} */ (null));
   const closeWorkspacePanel = useCallback(() => setWorkspacePanel(null), []);
   const [activeContexts, setActiveContexts] = useState({
     file: false,
@@ -3211,7 +3371,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
   const [dpiScaleProfile, setDpiScaleProfile] = useState(() => {
     try { return localStorage.getItem('aibs_dpi_profile') || 'desktop_native'; } catch (e) { return 'desktop_native'; }
   });
-  const [mobileTelemetry, setMobileTelemetry] = useState(null);
+  const [mobileTelemetry, setMobileTelemetry] = useState(/** @type {{display?:{width:number,height:number,refresh_rate_hz:number},remote_and_input?:{parsec_running?:boolean,rustdesk_running?:boolean}}|null} */ (null));
 
   const uiDpiZoom = dpiScaleProfile === 'mobile_1080p_150' ? 1.18 : dpiScaleProfile === 'mobile_1440p_125' ? 1.10 : 1.0;
 
@@ -3235,7 +3395,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     }
   }, [mobileSynergyMode, dpiScaleProfile, BACKEND_URL]);
 
-  const handleSwitchDpiProfile = async (profileId, applyOsResolution = false) => {
+  /** @param {string} profileId @param {boolean} [applyOsResolution] */
+const handleSwitchDpiProfile = async (profileId, applyOsResolution = false) => {
     setDpiScaleProfile(profileId);
     try {
       localStorage.setItem('aibs_dpi_profile', profileId);
@@ -3273,18 +3434,18 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
   // --- 3-Way Wireless Screen Mirror & Display Cast State & Handlers ---
   const [showWirelessCastHub, setShowWirelessCastHub] = useState(false);
-  const [wirelessCastStatus, setWirelessCastStatus] = useState(null);
+  const [wirelessCastStatus, setWirelessCastStatus] = useState(/** @type {{primary_lan_ip?:string,phone_to_pc?:{scrcpy_installed?:boolean},urls?:{pc_to_phone_workspace_lan?:string,pc_to_phone_live_screen_viewer?:string}}|null} */ (null));
   const [wirelessCastFeedback, setWirelessCastFeedback] = useState('');
   const [phoneIpInput, setPhoneIpInput] = useState(() => {
     try { return localStorage.getItem('aibs_phone_ip') || ''; } catch (e) { return ''; }
   });
   const [pairPortInput, setPairPortInput] = useState('');
   const [pairCodeInput, setPairCodeInput] = useState('');
-  const [nearbyScanResult, setNearbyScanResult] = useState(null);
+  const [nearbyScanResult, setNearbyScanResult] = useState(/** @type {{pnp_displays_and_endpoints?:{name:string}[],wifi_lan_peers?:{ip:string}[]}|null} */ (null));
   const [isScanningNearby, setIsScanningNearby] = useState(false);
   const [isLiveScreenCasting, setIsLiveScreenCasting] = useState(false);
-  const screenCastIntervalRef = useRef(null);
-  const screenCastStreamRef = useRef(null);
+  const screenCastIntervalRef = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
+  const screenCastStreamRef = useRef(/** @type {MediaStream | null} */ (null));
 
   const refreshWirelessCastStatus = async () => {
     try {
@@ -3323,7 +3484,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     return () => window.removeEventListener('aibs-toggle-wireless-cast', onToggleCast);
   }, []);
 
-  const handleWirelessCastAction = async (action, extra = {}) => {
+  /** @param {string} action @param {Record<string, string | number | boolean>} [extra] */
+const handleWirelessCastAction = async (action, extra = {}) => {
     if (action === 'scan_nearby') setIsScanningNearby(true);
     setWirelessCastFeedback(`⏳ Executing ${action}...`);
     try {
@@ -3362,8 +3524,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       await refreshWirelessCastStatus();
       return data;
     } catch (err) {
-      setWirelessCastFeedback(`❌ Error: ${err.message}`);
-      return { status: 'error', message: err.message };
+      setWirelessCastFeedback(`❌ Error: ${errorMessage(err)}`);
+      return { status: 'error', message: errorMessage(err) };
     } finally {
       if (action === 'scan_nearby') setIsScanningNearby(false);
     }
@@ -3403,6 +3565,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
+      if (!ctx) { stream.getTracks().forEach(track => track.stop()); throw new Error('Screen capture canvas unavailable.'); }
 
       stream.getVideoTracks()[0].onended = () => {
         if (screenCastIntervalRef.current) clearInterval(screenCastIntervalRef.current);
@@ -3436,13 +3599,15 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       const lanIp = wirelessCastStatus?.primary_lan_ip || '192.168.4.26';
       setWirelessCastFeedback(`🟢 LIVE STREAMING PC Screen! Open http://${lanIp}:8000/api/executive/wireless-cast/viewer on your Phone or Smart TV!`);
     } catch (err) {
-      setWirelessCastFeedback(`⚠️ Screen capture cancelled or blocked: ${err.message}`);
+      setWirelessCastFeedback(`⚠️ Screen capture cancelled or blocked: ${errorMessage(err)}`);
     }
   };
 
-  const toggleContext = (ctx) => setActiveContexts(p => ({ ...p, [ctx]: !p[ctx] }));
+  /** @param {keyof typeof activeContexts} ctx */
+const toggleContext = (ctx) => setActiveContexts(p => ({ ...p, [ctx]: !p[ctx] }));
 
-  const handleExecutePlan = async (plan_id, steps) => {
+  /** @param {string} plan_id @param {number[]} steps */
+const handleExecutePlan = async (plan_id, steps) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${BACKEND_URL}/v1/ide/execute-plan`, {
@@ -3456,13 +3621,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         { role: 'assistant', content: `🚀 Plan Execution Result:\n\`\`\`json\n${JSON.stringify(data, null, 2)}\n\`\`\`` }
       ]);
     } catch (err) {
-      setErrorPopup(err.message || 'Failed to execute plan.');
+      setErrorPopup(errorMessage(err) || 'Failed to execute plan.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGrillRespond = async (grillId, response) => {
+  /** @param {string} grillId @param {string} response */
+const handleGrillRespond = async (grillId, response) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${BACKEND_URL}/api/mission/grill-respond`, {
@@ -3498,13 +3664,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         ]);
       }
     } catch (err) {
-      setErrorPopup(err.message || 'Failed to submit grill response');
+      setErrorPopup(errorMessage(err) || 'Failed to submit grill response');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGrillConclude = async (grillId) => {
+  /** @param {string} grillId */
+const handleGrillConclude = async (grillId) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${BACKEND_URL}/api/mission/grill-conclude`, {
@@ -3531,13 +3698,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         setErrorPopup(data.message || 'Failed to conclude grill session');
       }
     } catch (err) {
-      setErrorPopup(err.message || 'Failed to conclude grill session');
+      setErrorPopup(errorMessage(err) || 'Failed to conclude grill session');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const triggerGrillProposal = async (proposalText) => {
+  /** @param {string} proposalText */
+const triggerGrillProposal = async (proposalText) => {
     if (!proposalText || isLoading) return;
     const userMsg = {
       role: 'user',
@@ -3577,16 +3745,17 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     } catch (err) {
       setChatMessages(prev => [
         ...prev,
-        { role: 'assistant', content: `❌ **Grill Session Error:** ${err.message}` }
+        { role: 'assistant', content: `❌ **Grill Session Error:** ${errorMessage(err)}` }
       ]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const recognitionRef = useRef(null);
+  const recognitionRef = useRef(/** @type {import("/types/aibs").SpeechRecognitionController | null} */ (null));
 
-  const speakText = (text) => {
+  /** @param {string} text */
+const speakText = (text) => {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const cleanText = text.replace(/[*_#`\[\]()]/g, ' ');
@@ -3597,63 +3766,72 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
   // Close commands & options dropdown on click outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (commandsDropdownRef.current && !commandsDropdownRef.current.contains(event.target)) {
+    /** @param {MouseEvent} event */
+const handleClickOutside = (event) => {
+      if (commandsDropdownRef.current && !commandsDropdownRef.current.contains(event.target instanceof Node ? event.target : null)) {
         setShowCommandsDropdown(false);
+      }
+      if (quickActionsMenuRef.current && !quickActionsMenuRef.current.contains(event.target instanceof Node ? event.target : null)) {
+        setShowQuickActionsMenu(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleInputChange = (e) => {
+  /** @param {import("react").ChangeEvent<HTMLTextAreaElement>} e */
+const handleInputChange = (e) => {
     const val = e.target.value;
     setFooterInput(val);
     if (val.startsWith('/') && !val.includes('\n')) {
       setShowCommandsDropdown(true);
-      setCommandSearchQuery(val.slice(1).trim());
+      setCommandSearchQuery(val.slice(1).trim().split(/\s+/)[0]);
     } else if (!val.startsWith('/') && showCommandsDropdown) {
       setShowCommandsDropdown(false);
     }
   };
 
   // Auto-scroll on new messages
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
   useEffect(() => {
     if (messagesEndRef.current && chatMessages.length > 0) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [chatMessages, isLoading]);
 
-  const handleFileUpload = async (e) => {
+  /** @param {import("react").ChangeEvent<HTMLInputElement>} e */
+const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
     setIsUploadingFile(true);
-    const newAttachments = [];
+    /** @type {import("/types/domain").ChatAttachment[]} */
+const newAttachments = [];
 
     // Helper: read text/code file client-side via FileReader
-    const readLocalFileAsText = (targetFile) => {
+    /** @param {File} targetFile @returns {Promise<string>} */
+const readLocalFileAsText = (targetFile) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result || '');
+        reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
         reader.onerror = () => reject(reader.error || new Error('Failed to read file client-side'));
         reader.readAsText(targetFile);
       });
     };
 
     // Helper: read image file client-side as data URL
-    const readLocalFileAsDataUrl = (targetFile) => {
+    /** @param {File} targetFile @returns {Promise<string>} */
+const readLocalFileAsDataUrl = (targetFile) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result || '');
+        reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
         reader.onerror = () => reject(reader.error || new Error('Failed to read image client-side'));
         reader.readAsDataURL(targetFile);
       });
     };
 
     for (const file of files) {
-      const ext = (file.name.includes('.') ? `.${file.name.split('.').pop().toLowerCase()}` : '').trim();
+      const ext = (file.name.includes('.') ? `.${(file.name.split('.').pop() || '').toLowerCase()}` : '').trim();
       const isImage = file.type?.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'].includes(ext);
       const isTextOrCode = file.type?.startsWith('text/') ||
         ['.txt', '.md', '.py', '.js', '.jsx', '.ts', '.tsx', '.json', '.html', '.css', '.scss',
@@ -3699,7 +3877,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       } catch (err) {
         // Network / connection error; fallback will attempt client-side extraction if text/image
         if (!isTextOrCode && !isImage) {
-          setErrorPopup(`Upload error for ${file.name}: ${err.message || 'Network error'}`);
+          setErrorPopup(`Upload error for ${file.name}: ${errorMessage(err) || 'Network error'}`);
         }
       }
 
@@ -3712,6 +3890,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             newAttachments.push({
               name: file.name,
               size: file.size,
+              type: file.type,
               ext: ext,
               is_image: false,
               path: '',
@@ -3719,7 +3898,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             });
             uploadSucceeded = true;
           } catch (readErr) {
-            setErrorPopup(`Failed to read ${file.name} locally: ${readErr.message}`);
+            setErrorPopup(`Failed to read ${file.name} locally: ${errorMessage(readErr)}`);
           }
         } else if (isImage) {
           try {
@@ -3727,6 +3906,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             newAttachments.push({
               name: file.name,
               size: file.size,
+              type: file.type,
               ext: ext,
               is_image: true,
               path: '',
@@ -3734,7 +3914,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             });
             uploadSucceeded = true;
           } catch (readErr) {
-            setErrorPopup(`Failed to read image ${file.name} locally: ${readErr.message}`);
+            setErrorPopup(`Failed to read image ${file.name} locally: ${errorMessage(readErr)}`);
           }
         }
       }
@@ -3745,12 +3925,13 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const removeAttachment = (index) => {
+  /** @param {number} index */
+const removeAttachment = (index) => {
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSendMessage = async (customText = null) => {
-    if (!conversationMemory.viewReady) return;
+  /** @param {string | null} [customText] */
+const handleSendMessage = async (customText = null) => {
     const rawText = customText !== null ? customText : footerInput.trim();
     if ((!rawText && attachments.length === 0) || isLoading) return;
 
@@ -3774,31 +3955,79 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       return;
     }
 
+    // Explicit user intent controls this tool handoff. PDF instructions are data.
+    const openCodeWorkerCommand = isOpenCodeWorkerCommand(rawText);
+    const screenplayIntent = openCodeWorkerCommand ? null : screenplayWorkflowIntent(rawText);
+    if (screenplayIntent && (attachments.some(isPdfAttachment) || /^\/screenplay(?:\s|$)/i.test(rawText))) {
+      setIsLoading(true);
+      try {
+        if (activeTools?.plan_and_review) throw new Error('Plan mode: PDF import/export was not started. Input and attachments were retained.');
+        const source = selectPdfSource(attachments);
+        const headers = () => chatAuthHeaders({ 'Content-Type':'application/json' });
+        const imported = await importPdfScreenplay({backendUrl:BACKEND_URL,file:source,headers,
+          requestId:source.source_id});
+        if (!conversationMemory.isCurrent()) return;
+        /** @type {string[]} */
+        const exports = [];
+        for (const format of /** @type {('fdx'|'pdf')[]} */ (['fdx','pdf'])) {
+          if (!screenplayIntent[format]) continue;
+          try {
+            const blob = await fetchScreenplayExport({backendUrl:BACKEND_URL,project:imported.project,revision:imported.revision,format,headers});
+            if (!conversationMemory.isCurrent()) return;
+            downloadScreenplayBlob(blob,`${imported.project}.${format}`);
+            exports.push(`${format.toUpperCase()} download prepared`);
+          } catch (error) { exports.push(`${format.toUpperCase()} export failed: ${errorMessage(error)}. Project remains saved.`); }
+        }
+        setChatMessages(prev => [...prev,{role:'user',content:rawText,displayContent:rawText,attachments:[{name:source.name,type:source.type}],
+          source_references:[{source_id:source.source_id,source_sha256:source.source_sha256}],
+          source_reference_scope:{owner:conversationMemory.owner || '',conversation_id:conversationMemory.conversationId || '',backend_url:BACKEND_URL}},
+          {role:'assistant',model:'PDF → Screenwriting',content:`Preserved PDF parsed and indexed for your account; matching source passages were read back.\n\n` +
+            `Project: **${imported.project}**\nOriginal PDF SHA-256: \`${source.source_sha256}\`\n` +
+            `Source: ${source.page_count} pages (title/body details appear in Screenwriting). Source layout is preserved for unchanged exports; editor/reflow pagination is separate.\n\n` +
+            exports.join('\n') + '\n\nOpening the saved project in Screenwriting. No model call or document instruction was executed.'}]);
+        setFooterInput(current => current.trim() === rawText.trim() ? '' : current);
+        setAttachments(current => current.filter(file => file !== source));
+        navigateToScreenplay(imported.handoff);
+      } catch (error) {
+        if (conversationMemory.isCurrent()) setChatMessages(prev => [...prev,{role:'assistant',model:'PDF → Screenwriting',content:errorMessage(error)}]);
+      } finally { setIsLoading(false); }
+      return;
+    }
+
+    // Source identity travels separately from prose and never authorizes tools.
+    const sourceReferenceScope = {owner:conversationMemory.owner,conversation_id:conversationMemory.conversationId,backend_url:BACKEND_URL};
+    let sourceReferences;
+    try { sourceReferences = openCodeWorkerCommand ? [] : attachmentSourceReferences(attachments, chatMessages, sourceReferenceScope); }
+    catch (error) { setErrorPopup(errorMessage(error)); return; }
+
     // Format attachments into prompt context
     let formattedPrompt = rawText;
-    let attachmentBadges = [];
+    /** @type {import("/types/domain").ChatAttachment[]} */
+let attachmentBadges = [];
 
-    if (attachments.length > 0) {
+    if (!openCodeWorkerCommand && attachments.length > 0) {
       let attachmentText = attachments.map(att => (
-        `\n[ATTACHED FILE: ${att.name} (${(att.size/1024).toFixed(1)} KB)]\n\`\`\`${(att.ext || '').replace('.', '')}\n${att.content}\n\`\`\`\n`
+        `\n[ATTACHED FILE: ${att.name} (${((att.size ?? 0)/1024).toFixed(1)} KB)]\n\`\`\`${(att.ext || '').replace('.', '')}\n${attachmentPromptContent(att)}\n\`\`\`\n`
       )).join('\n');
 
       formattedPrompt = `${attachmentText}\n[USER PROMPT]:\n${rawText || 'Please review and analyze the attached files in detail.'}`;
-      attachmentBadges = attachments.map(att => ({ name: att.name, size: att.size, is_image: att.is_image }));
+      attachmentBadges = attachments.map(att => ({ name: att.name, type: att.type, size: att.size, is_image: att.is_image }));
     }
 
     const userMsg = {
       role: 'user',
       content: formattedPrompt,
       displayContent: rawText || 'Attached Files Analysis',
-      attachments: attachmentBadges
+      attachments: attachmentBadges,
+      source_references:sourceReferences,
+      source_reference_scope:sourceReferenceScope
     };
 
     const updatedHistory = [...useAppStore.getState().chatMessages || chatMessages, userMsg];
     setChatMessages(updatedHistory);
 
     setFooterInput('');
-    setAttachments([]);
+    if (!openCodeWorkerCommand) setAttachments([]);
     setIsLoading(true);
 
     // Setup AbortController with 90-minute ceiling (5,400,000 ms)
@@ -3812,19 +4041,138 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
     await new Promise(r => setTimeout(r, 100));
 
-    const reqHeaders = {
+    const reqHeaders = await chatAuthHeaders({
       'Content-Type': 'application/json',
       
       'X-Client-ID': 'stehouwer_publishing'
-    };
+    });
+
+    // 1. Direct Large Pasted Context Buffer: preserve source before analysis.
+    if (!openCodeWorkerCommand && rawText.trim().length > 16000) {
+      if (activeTools?.plan_and_review) {
+        setFooterInput(current => current || rawText);
+        setChatMessages(prev => [...prev, { role:'assistant', content:'Plan mode: source was not saved or indexed. Input was retained.' }]);
+        clearTimeout(timeoutId);
+        setIsLoading(false);
+        return;
+      }
+      try {
+        const staged = await stageRagSource({ backendUrl:BACKEND_URL, text:rawText });
+        if (typeof window !== 'undefined') window.__aibsLastHostFile = staged.path;
+        const stageUrl = `file:///${staged.path.replace(/\\/g, '/')}`;
+        const indexed = staged.indexing_status === 'lexical_chunks_indexed';
+        setChatMessages(prev => [...prev, {
+          role:'assistant', model:'Large Context Source Staging',
+          content:`Source write confirmed: [${staged.path}](${stageUrl})\n\n` +
+            `${staged.bytes_written.toLocaleString()} UTF-8 bytes preserved; SHA-256: \`${staged.sha256}\`.\n\n` +
+            (indexed ? `Parsed into ${staged.chunk_count} chunks for your signed-in account; ${staged.retrieval_hits} matching passage readbacks verified.\n\n` +
+              'Bounded local lexical retrieval is available. Ask a specific question about this source. No model call or document instruction was executed.' :
+              'Source bytes are preserved, but parsing/indexing/retrieval were not confirmed. ' + staged.indexing_error),
+        }]);
+        if (!indexed) setFooterInput(current => current || rawText);
+        clearTimeout(timeoutId);
+        setIsLoading(false);
+        return;
+      } catch (err) {
+        setFooterInput(current => current || rawText);
+        setChatMessages(prev => [...prev, { role:'assistant', model:'Large Context Source Staging',
+          content:'Source staging was not confirmed; analysis stopped and input was retained. ' + errorMessage(err) }]);
+        setErrorPopup(errorMessage(err));
+        clearTimeout(timeoutId);
+        setIsLoading(false);
+        return;
+      }
+    }
 
     // --- BS-CHAT SLASH COMMAND INTERCEPTORS (Zero-Mock Host Management) ---
-    if (rawText.startsWith('/')) {
+    if (openCodeWorkerCommand || rawText.startsWith('/')) {
       const parts = rawText.trim().split(/\s+/);
       const command = parts[0].toLowerCase();
       const rest = rawText.trim().substring(command.length).trim();
 
+
+      if (command === '/opencode') {
+        try {
+          const reply = await requestOpenCodeWorker({ command:rawText, backendUrl:BACKEND_URL,
+            headers:reqHeaders, signal:controller.signal, planOnly:!!activeTools?.plan_and_review });
+          if (!controller.signal.aborted && conversationMemory.isCurrent()) {
+            setChatMessages(prev => [...prev, {role:'assistant', content:reply.content, model:reply.displayName,
+              ...(reply.receipt ? {opencode_worker_receipt:reply.receipt} : {})}]);
+          }
+        } catch (error) {
+          if (!controller.signal.aborted && conversationMemory.isCurrent()) {
+            setChatMessages(prev => [...prev, {role:'assistant', model:'OpenCode worker',
+              content:`OpenCode worker did not complete: ${errorMessage(error)}`}]);
+          }
+        } finally {
+          clearTimeout(timeoutId);
+          if (abortControllerRef.current === controller) {
+            abortControllerRef.current = null;
+            if (conversationMemory.isCurrent()) setIsLoading(false);
+          }
+        }
+        return;
+      }
+
+      if (command === '/rag') {
+        try {
+          const [action, filename, expectedSha256 = ''] = rest.split(/\s+/);
+          if (action === 'index') {
+            if (activeTools?.plan_and_review) throw new Error('Plan mode: source was not indexed.');
+            const receipt = await indexSavedRagSource({ backendUrl:BACKEND_URL, filename, expectedSha256 });
+            setChatMessages(prev => [...prev, { role:'assistant', model:'Owned Source Index',
+              content:`Saved source parsed and indexed for your signed-in account.\n\n` +
+                `Source: \`${receipt.path}\`\nUTF-8 bytes: ${receipt.bytes_written}\n` +
+                `SHA-256: \`${receipt.sha256}\`\nChunks: ${receipt.chunk_count}\n` +
+                `Matching passage readbacks: ${receipt.retrieval_hits}\n\n` +
+                'Retrieval uses bounded local lexical search. No model call, embedding, command execution, or expanded model context was used.',
+            }]);
+          } else if (action === 'search') {
+            const result = await searchRagSources({ backendUrl:BACKEND_URL, query:rest.substring(action.length).trim() });
+            const evidence = result.results.map(hit =>
+              `- \`${hit.source}\` chunk ${hit.chunk_index}: bytes ${hit.byte_start}–${hit.byte_end}; source SHA-256 \`${hit.source_sha256}\``).join('\n');
+            setChatMessages(prev => [...prev, { role:'assistant', model:'Owned Source Retrieval',
+              content:`Retrieved ${result.count} bounded source passages for your signed-in account.\n\n${evidence || 'No matching indexed source passages were found.'}\n\nNo model call was made. Source excerpts were not printed in this receipt.`,
+            }]);
+          } else {
+            throw new Error('Use /rag index context_<32hex>.txt [SHA-256] or /rag search <question>.');
+          }
+        } catch (err) {
+          setChatMessages(prev => [...prev, { role:'assistant', model:'Owned Source Retrieval',
+            content:'Source indexing/retrieval was not confirmed. Original files were retained. ' + errorMessage(err) }]);
+        } finally {
+          clearTimeout(timeoutId);
+          setIsLoading(false);
+        }
+        return;
+      }
+
       // 🧹 Session Clear & Memory Persist
+      if (command === '/backend') {
+        try {
+          const action = rest.trim().toLowerCase() || 'status';
+          if (action === 'restart') {
+            const data = await requestProjectBuild({baseUrl:BACKEND_URL,target:'backend',action:'restart',
+              headers:() => chatAuthHeaders({'Content-Type':'application/json'})});
+            setChatMessages(prev => [...prev,{role:'assistant',model:'Local Backend',content:projectMaintenanceReply(data.result || data)}]);
+          } else if (action === 'status') {
+            const pending = pendingProjectMaintenance();
+            if (pending) {
+              const data = await waitForProjectMaintenance({baseUrl:BACKEND_URL,pending,
+                headers:() => chatAuthHeaders({'Content-Type':'application/json'}),active:conversationMemory.isCurrent});
+              setChatMessages(prev => [...prev,{role:'assistant',model:'Local Backend',content:projectMaintenanceReply(data.result || data)}]);
+            } else {
+              const response = await fetch(`${BACKEND_URL}/api/health`,{headers:reqHeaders});
+              const health = await response.json();
+              if (!response.ok) throw new Error(`API health returned HTTP ${response.status}`);
+              setChatMessages(prev => [...prev,{role:'assistant',model:'Local Backend',content:`Local API responded. Durable maintenance protocol: ${health.local_maintenance_protocol === 1 ? 'available' : 'unavailable'}. No build or restart was requested.`}]);
+            }
+          } else throw new Error('Use /backend status or /backend restart.');
+        } catch(error) { setChatMessages(prev => [...prev,{role:'assistant',content:`Backend request failed: ${errorMessage(error)}`}]); }
+        finally { setIsLoading(false); }
+        return;
+      }
+
       if (command === '/clear') {
         handleSaveToMemoryAndClear();
         setIsLoading(false);
@@ -3862,7 +4210,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           if (daemonsList) {
             reply += '| Port | Daemon Name | Status |\n';
             reply += '|---|---|---|\n';
-            daemonsList.forEach(d => {
+            daemonsList.forEach(/** @param {{"status": string, "port": number, "name": string}} d */ d => {
               const icon = (d.status === 'running' || d.status === 'ONLINE') ? '🟢 Online' : '⚪ Standby';
               reply += `| \`${d.port || '—'}\` | **${d.name}** | ${icon} |\n`;
             });
@@ -3875,7 +4223,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Status check error: ${err.message}` }
+            { role: 'assistant', content: `❌ Status check error: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -3919,7 +4267,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Oversight telemetry error: ${err.message}` }
+            { role: 'assistant', content: `❌ Oversight telemetry error: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -3939,7 +4287,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           let reply = '### 📦 All 43 Supervised Master Hub Modules & Tabs\n\n';
           reply += '| # | ID / Tab Key | Module Title | Operational Domain |\n';
           reply += '|---|---|---|---|\n';
-          modules.forEach((m, i) => {
+          modules.forEach(/** @param {{"key": string, "id": string, "tab_key": string, "name": string, "domain": string}} m @param {number} i */ (m, i) => {
             const keyDisplay = m.key || m.id || m.tab_key || '—';
             reply += `| ${i + 1} | \`${keyDisplay}\` | **${m.name}** | ${m.domain} |\n`;
           });
@@ -3951,7 +4299,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Failed to list modules: ${err.message}` }
+            { role: 'assistant', content: `❌ Failed to list modules: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -3983,7 +4331,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Failed to switch tab: ${err.message}` }
+            { role: 'assistant', content: `❌ Failed to switch tab: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4015,7 +4363,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Spaces overview error: ${err.message}` }
+            { role: 'assistant', content: `❌ Spaces overview error: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4060,7 +4408,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Space retrieval error: ${err.message}` }
+            { role: 'assistant', content: `❌ Space retrieval error: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4101,7 +4449,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Space ingestion error: ${err.message}` }
+            { role: 'assistant', content: `❌ Space ingestion error: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4145,7 +4493,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             setChatMessages(prev => [...prev, { role: 'assistant', content: reply, model: 'Sovereign Business Email Engine' }]);
           }
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Email command failed: ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Email command failed: ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4187,7 +4535,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           const reply = statusIcon + ' **Pre-Flight Syntax Validation (' + lang.toUpperCase() + '):**\n```json\n' + JSON.stringify(toolRes, null, 2) + '\n```';
           setChatMessages(prev => [...prev, { role: 'assistant', content: reply, model: 'Autonomous Coding Agent' }]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Syntax validation failed: ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Syntax validation failed: ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4218,7 +4566,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           const reply = '🔍 **Symbol Index Lookup Results for "' + rest.trim() + '" (' + (toolRes.match_count || 0) + ' matches, ' + (toolRes.execution_time_ms || 0) + ' ms):**\n```json\n' + JSON.stringify(toolRes.matches || [], null, 2) + '\n```';
           setChatMessages(prev => [...prev, { role: 'assistant', content: reply, model: 'Fast Codebase Symbol Indexer' }]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Symbol lookup failed: ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Symbol lookup failed: ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4237,7 +4585,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         }
 
         const ext = (scriptName.split('.').pop() || '').toLowerCase();
-        const extLangMap = {
+        /** @type {Record<string, string>} */
+const extLangMap = {
           py: 'python', js: 'node', mjs: 'node', ts: 'ts',
           ps1: 'powershell', bat: 'cmd', cmd: 'cmd',
           sh: 'bash', go: 'go', rs: 'rust', cpp: 'cpp', c: 'c'
@@ -4270,7 +4619,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Failed to execute script:** ${err.message}`,
+              content: `❌ **Failed to execute script:** ${errorMessage(err)}`,
               model: 'BS-Chat Ecosystem Engine'
             }
           ]);
@@ -4320,7 +4669,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Mission Execution Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Mission Execution Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4374,7 +4723,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Grill Session Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Grill Session Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4382,7 +4731,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         return;
       }
 
-      if (['/build', '/conclude-grill', '/approve-spec'].includes(command)) {
+      if (['/build', '/conclude-grill', '/approve-spec'].includes(command) &&
+          !(command === '/build' && rest.trim() && isLocalMaintenanceBuild(rest.trim(), null))) {
         try {
           const res = await fetch(`${BACKEND_URL}/api/mission/grill-conclude`, {
             method: 'POST',
@@ -4409,7 +4759,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Grill Conclude Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Grill Conclude Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4436,7 +4786,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Audit Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Audit Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4464,7 +4814,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **TDD Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **TDD Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4490,7 +4840,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Diff Review Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Diff Review Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4517,7 +4867,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Snapshot Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Snapshot Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4560,7 +4910,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Rollback Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Rollback Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4590,7 +4940,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Typst Compilation Error:** ${data.detail || data.message || 'Error'}` }]);
           }
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Typst Request Failed:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Typst Request Failed:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4629,7 +4979,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Demucs Separation Error:** ${data.detail || data.message || 'Error'}` }]);
           }
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Demucs Request Failed:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Demucs Request Failed:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4670,7 +5020,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ]);
           }
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **PowerShell Manager Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **PowerShell Manager Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4710,7 +5060,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ]);
           }
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **TShark Telemetry Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **TShark Telemetry Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4743,7 +5093,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Matting Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Matting Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4776,7 +5126,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Upscaling Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Upscaling Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4792,7 +5142,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             body: JSON.stringify({ raw_lyrics: lyricText, bpm: 140 })
           });
           const data = await res.json();
-          const barRows = (data.mapped_bars || []).map(b => `  - **Bar ${b.bar_number}:** \`${b.text}\` (${b.syllable_count} syl, [${b.rhyme_scheme_tag}], ${b.cadence_status})`).join('\n');
+          const barRows = (data.mapped_bars || []).map(/** @param {{"bar_number": number, "text": string, "syllable_count": number, "rhyme_scheme_tag": string, "cadence_status": string}} b */ b => `  - **Bar ${b.bar_number}:** \`${b.text}\` (${b.syllable_count} syl, [${b.rhyme_scheme_tag}], ${b.cadence_status})`).join('\n');
           setChatMessages(prev => [
             ...prev,
             {
@@ -4802,7 +5152,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Prosody Mapping Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Prosody Mapping Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4827,7 +5177,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **DuckDB Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **DuckDB Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4852,7 +5202,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **TA Indicators Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **TA Indicators Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4876,7 +5226,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **NOCO Spatial Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **NOCO Spatial Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4899,7 +5249,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **OBS Controller Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **OBS Controller Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4924,7 +5274,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Bench Diagnostics Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Bench Diagnostics Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4939,8 +5289,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           });
           const data = await res.json();
           const s = data.summary || {};
-          const onlineCore = (data.core_matrix || []).filter(m => m.status === 'ONLINE');
-          const tableRows = onlineCore.map(m => `| \`${m.port}\` | **${m.service}** | \`${m.process_name || 'Daemon'}\` | ${m.cpu_pct}% | ${m.mem_mb} MB | \`${m.type}\` |`).join('\n');
+          const onlineCore = (data.core_matrix || []).filter(/** @param {{"status": string}} m */ m => m.status === 'ONLINE');
+          const tableRows = onlineCore.map(/** @param {{"port": number, "service": string, "process_name": string, "cpu_pct": number, "mem_mb": number, "type": string}} m */ m => `| \`${m.port}\` | **${m.service}** | \`${m.process_name || 'Daemon'}\` | ${m.cpu_pct}% | ${m.mem_mb} MB | \`${m.type}\` |`).join('\n');
           setChatMessages(prev => [
             ...prev,
             {
@@ -4950,7 +5300,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Port Telemetry Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Port Telemetry Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4968,7 +5318,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           const data = await res.json();
           const services = Object.values(data.discovered_services || {});
           const totalTools = services.reduce((acc, s) => acc + (s.tools_count || 0), 0);
-          const srvDetails = services.map(s => `* **Port ${s.port} (${s.service_title}):** \`${s.tools_count}\` tools [${s.protocol}]\n  ${(s.tools || []).slice(0, 3).map(t => `  - \`${t.method} ${t.endpoint}\`: ${t.summary}`).join('\n')}`).join('\n\n');
+          const srvDetails = services.map(s => `* **Port ${s.port} (${s.service_title}):** \`${s.tools_count}\` tools [${s.protocol}]\n  ${(s.tools || []).slice(0, 3).map(/** @param {{"method": string, "endpoint": string, "summary": string}} t */ t => `  - \`${t.method} ${t.endpoint}\`: ${t.summary}`).join('\n')}`).join('\n\n');
           setChatMessages(prev => [
             ...prev,
             {
@@ -4978,7 +5328,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Tool Discovery Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Tool Discovery Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -5013,7 +5363,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Port Dispatch Failed:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Port Dispatch Failed:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -5038,7 +5388,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Specialist Crew Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Specialist Crew Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -5056,7 +5406,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           const tempStr = data.temperature_celsius !== null && data.temperature_celsius !== undefined ? `${data.temperature_celsius}°C` : 'N/A';
           const pwrStr = data.power_draw_watts !== null && data.power_draw_watts !== undefined ? `${data.power_draw_watts}W` : 'N/A';
           const vramStr = `${data.vram_used_mb || 'N/A'} MB / ${data.vram_total_mb || 'N/A'} MB (${data.vram_pct || 'N/A'}%)`;
-          const warnText = data.warnings && data.warnings.length > 0 ? `\n\n⚠️ **Warnings:**\n${data.warnings.map(w => `- ${w}`).join('\n')}` : '';
+          const warnText = data.warnings && data.warnings.length > 0 ? `\n\n⚠️ **Warnings:**\n${data.warnings.map(/** @param {unknown} w */ w => `- ${w}`).join('\n')}` : '';
           const md = `### ${statusIcon} Host Hardware Clamping & Watchdog Status\n- **Device:** \`${data.gpu_name || 'NVIDIA GPU'}\`\n- **State:** **${(data.status || 'unknown').toUpperCase()}** (Safe: \`${data.safe_to_execute}\`)\n- **Temperature:** \`${tempStr}\` *(Threshold: <83°C)*\n- **Power Draw:** \`${pwrStr}\`\n- **VRAM Utilized:** \`${vramStr}\` *(Threshold: <95%)*${warnText}`;
           setChatMessages(prev => [
             ...prev,
@@ -5069,7 +5419,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Hardware Probe Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Hardware Probe Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5098,7 +5448,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Port Probe Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Port Probe Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5128,7 +5478,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             const rawContent = data.result.content || '';
             const lines = data.result.lines || 0;
             const sizeKb = (data.result.size_bytes ? (data.result.size_bytes / 1024).toFixed(1) : '0.0');
-            const ext = targetPath.split('.').pop().toLowerCase();
+            const ext = (targetPath.split('.').pop() || '').toLowerCase();
             const preview = rawContent.length > 30000 ? rawContent.substring(0, 30000) + `\n\n... [Truncated: showing 30,000 of ${rawContent.length} characters]` : rawContent;
             
             setChatMessages(prev => [
@@ -5148,7 +5498,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Error reading file:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Error reading file:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5205,7 +5555,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           } catch (err) {
             setChatMessages(prev => [
               ...prev,
-              { role: 'assistant', content: `❌ **Error opening editor drawer:** ${err.message}` }
+              { role: 'assistant', content: `❌ **Error opening editor drawer:** ${errorMessage(err)}` }
             ]);
           } finally {
             setIsLoading(false);
@@ -5258,7 +5608,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Error writing file:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Error writing file:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5282,7 +5632,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           if (r.status === 'success') {
             const treeItems = r.tree || [];
             let md = `### 📁 Host Directory: \`${r.root || targetDir}\`\n\n| Type | Name | Size |\n|---|---|---|\n`;
-            treeItems.slice(0, 40).forEach(item => {
+            treeItems.slice(0, 40).forEach(/** @param {{"type": string, "size_bytes": number, "name": string}} item */ item => {
               const itype = item.type === 'directory' ? '📁 DIR' : '📄 FILE';
               const isize = item.type !== 'directory' && item.size_bytes >= 0 ? `${(item.size_bytes / 1024).toFixed(1)} KB` : '-';
               md += `| ${itype} | \`${item.name}\` | ${isize} |\n`;
@@ -5304,7 +5654,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Error scanning directory:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Error scanning directory:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5362,7 +5712,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Error reading file:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Error reading file:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5408,7 +5758,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Command error:** ${err.message}`,
+              content: `❌ **Command error:** ${errorMessage(err)}`,
               model: `Executive ${shellLabel} Engine`
             }
           ]);
@@ -5466,7 +5816,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **WSL command error:** ${err.message}`,
+              content: `❌ **WSL command error:** ${errorMessage(err)}`,
               model: 'WSL2 Executive Engine'
             }
           ]);
@@ -5515,7 +5865,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Bash command error:** ${err.message}`,
+              content: `❌ **Bash command error:** ${errorMessage(err)}`,
               model: 'Executive Bash Engine'
             }
           ]);
@@ -5556,7 +5906,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Pip command error:** ${err.message}`,
+              content: `❌ **Pip command error:** ${errorMessage(err)}`,
               model: 'Executive Pip Engine'
             }
           ]);
@@ -5573,25 +5923,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         const customCmd = parts.length > 1 ? parts.slice(1).join(' ') : null;
 
         try {
-          const res = await fetch(`${BACKEND_URL}/api/executive/run`, {
-            method: 'POST',
-            headers: reqHeaders,
-            body: JSON.stringify({
-              command_type: 'build_project',
-              target: projDir,
-              payload: {
-                build_command: customCmd,
-                timeout_seconds: 300
-              }
-            })
-          });
-          const data = await res.json();
+          const data = await requestProjectBuild({ baseUrl: BACKEND_URL, target: projDir, command: customCmd,
+            headers: () => chatAuthHeaders({ 'Content-Type': 'application/json' }) });
           const bRes = data.result || data;
           const statusIcon = bRes.status === 'success' ? '✅' : '❌';
           const out = bRes.stdout ? `\n\n**Build Output:**\n\`\`\`\n${bRes.stdout}\n\`\`\`` : '';
           const errText = bRes.stderr ? `\n\n**Stderr / Diagnostic Trace:**\n\`\`\`\n${bRes.stderr}\n\`\`\`` : '';
           const emptyNotice = (!bRes.stdout && !bRes.stderr) ? '\n\n*(Build completed with no console output)*' : '';
-          const reply = `${statusIcon} **Project Build Output: \`${bRes.project_dir || projDir}\`**\n- **Command:** \`${bRes.command || customCmd || 'Auto-detected'}\`\n- **Exit Code:** \`${bRes.exit_code ?? 0}\`\n- **Status:** \`${(bRes.status || 'unknown').toUpperCase()}\`${out}${errText}${emptyNotice}`;
+          const reply = bRes.job_id ? projectMaintenanceReply(bRes) : `${statusIcon} **Project Build Output: \`${bRes.project_dir || projDir}\`**\n- **Command:** \`${bRes.command || customCmd || 'Auto-detected'}\`\n- **Exit Code:** \`${bRes.exit_code ?? 0}\`\n- **Status:** \`${(bRes.status || 'unknown').toUpperCase()}\`${out}${errText}${emptyNotice}`;
 
           setChatMessages(prev => [
             ...prev,
@@ -5607,7 +5946,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Project build error:** ${err.message}`,
+              content: `❌ **Project build error:** ${errorMessage(err)}`,
               model: 'Executive Build Engine'
             }
           ]);
@@ -5639,7 +5978,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             if (progs.length === 0) {
               reply += '*No programs found in `saved_data/built_programs`. Build one with `/program build <name>`.*';
             } else {
-              progs.forEach(p => {
+              progs.forEach(/** @param {{"build": {"status": string}, "display_name": string, "project_name": string, "language": string, "description": string, "project_dir": string}} p */ p => {
                 const bStr = p.build ? ` [Build: ${p.build.status}]` : '';
                 reply += `- **${p.display_name || p.project_name}** (\`${p.language}\`${bStr}) — *${p.description || 'No description'}*\n  *Path:* \`${p.project_dir}\`\n`;
               });
@@ -5651,7 +5990,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           } catch (err) {
             setChatMessages(prev => [
               ...prev,
-              { role: 'assistant', content: `❌ **Failed to list programs:** ${err.message}`, model: 'Autonomous Program Builder' }
+              { role: 'assistant', content: `❌ **Failed to list programs:** ${errorMessage(err)}`, model: 'Autonomous Program Builder' }
             ]);
           } finally {
             setIsLoading(false);
@@ -5667,25 +6006,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             return;
           }
           try {
-            const res = await fetch(`${BACKEND_URL}/api/executive/run`, {
-              method: 'POST',
-              headers: reqHeaders,
-              body: JSON.stringify({
-                command_type: 'build_project',
-                target: progName,
-                payload: {
-                  build_command: extraArg,
-                  timeout_seconds: 300
-                }
-              })
-            });
-            const data = await res.json();
+            const data = await requestProjectBuild({ baseUrl: BACKEND_URL, target: progName, command: extraArg,
+              headers: () => chatAuthHeaders({ 'Content-Type': 'application/json' }) });
             const bRes = data.result || data;
             const statusIcon = bRes.status === 'success' ? '✅' : '❌';
             const out = bRes.stdout ? `\n\n**Build Output:**\n\`\`\`\n${bRes.stdout}\n\`\`\`` : '';
             const errText = bRes.stderr ? `\n\n**Stderr / Diagnostic Trace:**\n\`\`\`\n${bRes.stderr}\n\`\`\`` : '';
             const emptyNotice = (!bRes.stdout && !bRes.stderr) ? '\n\n*(Build completed with no console output)*' : '';
-            const reply = `${statusIcon} **Program Build: \`${bRes.project_dir || progName}\`**\n- **Command:** \`${bRes.command || extraArg || 'Auto-detected'}\`\n- **Exit Code:** \`${bRes.exit_code ?? 0}\`\n- **Status:** \`${(bRes.status || 'unknown').toUpperCase()}\`${out}${errText}${emptyNotice}`;
+            const reply = bRes.job_id ? projectMaintenanceReply(bRes) : `${statusIcon} **Program Build: \`${bRes.project_dir || progName}\`**\n- **Command:** \`${bRes.command || extraArg || 'Auto-detected'}\`\n- **Exit Code:** \`${bRes.exit_code ?? 0}\`\n- **Status:** \`${(bRes.status || 'unknown').toUpperCase()}\`${out}${errText}${emptyNotice}`;
 
             setChatMessages(prev => [
               ...prev,
@@ -5699,7 +6027,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           } catch (err) {
             setChatMessages(prev => [
               ...prev,
-              { role: 'assistant', content: `❌ **Program build error:** ${err.message}`, model: 'Autonomous Program Builder' }
+              { role: 'assistant', content: `❌ **Program build error:** ${errorMessage(err)}`, model: 'Autonomous Program Builder' }
             ]);
           } finally {
             setIsLoading(false);
@@ -5739,7 +6067,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           } catch (err) {
             setChatMessages(prev => [
               ...prev,
-              { role: 'assistant', content: `❌ **Execution error:** ${err.message}`, model: 'Autonomous Program Builder' }
+              { role: 'assistant', content: `❌ **Execution error:** ${errorMessage(err)}`, model: 'Autonomous Program Builder' }
             ]);
           } finally {
             setIsLoading(false);
@@ -5790,7 +6118,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             
             if (data.impacted_components?.length > 0) {
               formatted += `#### 🖥️ Impacted Frontend UI Tabs/Components (${data.impacted_components.length}):\n`;
-              data.impacted_components.slice(0, 10).forEach(c => {
+              data.impacted_components.slice(0, 10).forEach(/** @param {{"name": string, "file_path": string, "relation": string, "depth": string}} c */ c => {
                 formatted += `- **${c.name}** (\`${c.file_path}\`) — *${c.relation}* (Depth: ${c.depth})\n`;
               });
               if (data.impacted_components.length > 10) {
@@ -5801,7 +6129,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
             if (data.impacted_routes?.length > 0) {
               formatted += `#### ⚡ Impacted Backend Routes (${data.impacted_routes.length}):\n`;
-              data.impacted_routes.slice(0, 10).forEach(r => {
+              data.impacted_routes.slice(0, 10).forEach(/** @param {{"name": string, "file_path": string, "relation": string}} r */ r => {
                 formatted += `- \`${r.name}\` (\`${r.file_path}\`) — *${r.relation}*\n`;
               });
               formatted += `\n`;
@@ -5809,7 +6137,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
             if (data.impacted_modules?.length > 0) {
               formatted += `#### 📦 Impacted Router Modules (${data.impacted_modules.length}):\n`;
-              data.impacted_modules.slice(0, 8).forEach(m => {
+              data.impacted_modules.slice(0, 8).forEach(/** @param {{"name": string, "file_path": string}} m */ m => {
                 formatted += `- \`${m.name}\` (\`${m.file_path}\`)\n`;
               });
             }
@@ -5830,7 +6158,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Blast-Radius Error:** ${err.message}`,
+              content: `❌ **Blast-Radius Error:** ${errorMessage(err)}`,
               model: 'AST Blast-Radius Engine'
             }
           ]);
@@ -5863,7 +6191,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Graph Build Error:** ${err.message}`,
+              content: `❌ **Graph Build Error:** ${errorMessage(err)}`,
               model: 'AST Blast-Radius Engine'
             }
           ]);
@@ -5913,7 +6241,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Distillation pipeline error:** ${err.message}`,
+              content: `❌ **Distillation pipeline error:** ${errorMessage(err)}`,
               model: 'Sovereign QLoRA Engine'
             }
           ]);
@@ -5987,7 +6315,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Mobile DPI Engine Error:** ${err.message}`, model: 'Mobile Workstation Engine' }
+            { role: 'assistant', content: `❌ **Mobile DPI Engine Error:** ${errorMessage(err)}`, model: 'Mobile Workstation Engine' }
           ]);
         } finally {
           setIsLoading(false);
@@ -6043,8 +6371,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ]);
           } else if (['scan', 'nearby', 'devices'].includes(sub)) {
             const data = await handleWirelessCastAction('scan_nearby');
-            const pnp = (data.scan?.pnp_displays_and_endpoints || []).map(d => `- **[${d.class}]** \`${d.name}\``).join('\n') || '- *(None)*';
-            const peers = (data.scan?.wifi_lan_peers || []).map(p => `- \`${p.ip}\` (MAC: \`${p.mac}\`)`).join('\n') || '- *(None)*';
+            const pnp = (data.scan?.pnp_displays_and_endpoints || []).map(/** @param {{"class": string, "name": string}} d */ d => `- **[${d.class}]** \`${d.name}\``).join('\n') || '- *(None)*';
+            const peers = (data.scan?.wifi_lan_peers || []).map(/** @param {{"ip": string, "mac": string}} p */ p => `- \`${p.ip}\` (MAC: \`${p.mac}\`)`).join('\n') || '- *(None)*';
             setChatMessages(prev => [
               ...prev,
               {
@@ -6058,7 +6386,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             const lanIp = st?.primary_lan_ip || '192.168.4.26';
             const ideUrl = st?.urls?.pc_to_phone_workspace_lan || `http://${lanIp}:5173/?tab=ide`;
             const viewerUrl = st?.urls?.pc_to_phone_live_screen_viewer || `http://${lanIp}:8000/api/executive/wireless-cast/viewer`;
-            const adbDevs = (st?.phone_to_pc?.adb_devices || []).map(d => `\`${d.serial}\` (${d.model} - ${d.state})`).join(', ') || 'None connected yet';
+            const adbDevs = (st?.phone_to_pc?.adb_devices || []).map(/** @param {{"serial": string, "model": string, "state": string}} d */ d => `\`${d.serial}\` (${d.model} - ${d.state})`).join(', ') || 'None connected yet';
 
             const reply =
               `### 📡 3-Way Wireless Screen Mirror & Display Cast Hub\n\n` +
@@ -6081,7 +6409,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Wireless Cast Error:** ${err.message}`, model: '3-Way Wireless Cast Engine' }
+            { role: 'assistant', content: `❌ **Wireless Cast Error:** ${errorMessage(err)}`, model: '3-Way Wireless Cast Engine' }
           ]);
         } finally {
           setIsLoading(false);
@@ -6120,7 +6448,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             const ls = data.live_state || {};
             const ts = data.two_strike_governance || {};
             const arch = data.archival_payload || {};
-            const tiers = (arch.privilege_tiers_mapped || []).map(t => `- **${t}**`).join('\n');
+            const tiers = (arch.privilege_tiers_mapped || []).map(/** @param {unknown} t */ t => `- **${t}**`).join('\n');
             const reply =
               `### 🛡️ AI-BS Sovereign Execution & Privilege Directive (\`AIBS-DIR-000-ROOT-AUTHORITY\`)\n\n` +
               `- **Spec File:** [\`${data.directive_file}\`](file:///C:/AI-BS/directives/AIBS_SOVEREIGN_PRIVILEGE_DIRECTIVE.md)\n` +
@@ -6140,7 +6468,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Directive Engine Error:** ${err.message}`, model: 'Sovereign Privilege Engine' }
+            { role: 'assistant', content: `❌ **Directive Engine Error:** ${errorMessage(err)}`, model: 'Sovereign Privilege Engine' }
           ]);
         } finally {
           setIsLoading(false);
@@ -6167,7 +6495,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           const res = await fetch(`${BACKEND_URL}/api/memory/recall?query=${encodeURIComponent(queryText)}&limit=4`);
           const data = await res.json();
           if (data.status === 'success' && data.results && data.results.length > 0) {
-            const list = data.results.map((r, i) => {
+            const list = data.results.map(/** @param {{"document": string, "thinking": string, "content": string, "prompt": string, "category": string, "type": string, "source": string, "distance": number, "title": string, "id": string}} r @param {number} i */ (r, i) => {
               const snippet = (r.document || r.thinking || r.content || r.prompt || '').substring(0, 240).replace(/\n/g, ' ');
               const cat = r.category || r.type || r.source || 'memory';
               const dist = r.distance !== undefined && r.distance > 0 ? `*(Sim: ${(1 - r.distance).toFixed(3)})*` : '';
@@ -6197,7 +6525,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Memory Recall Error:** ${err.message}`,
+              content: `❌ **Memory Recall Error:** ${errorMessage(err)}`,
               model: 'Sovereign Memory Recall'
             }
           ]);
@@ -6247,7 +6575,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Deployment failed:** ${err.message}`,
+              content: `❌ **Deployment failed:** ${errorMessage(err)}`,
               model: 'Executive Deployment Daemon'
             }
           ]);
@@ -6296,7 +6624,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Process termination error:** ${err.message}`,
+              content: `❌ **Process termination error:** ${errorMessage(err)}`,
               model: 'Executive Process Engine'
             }
           ]);
@@ -6328,7 +6656,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Diagnostic scan error:** ${err.message}`,
+              content: `❌ **Diagnostic scan error:** ${errorMessage(err)}`,
               model: 'Matrix Doctor'
             }
           ]);
@@ -6363,7 +6691,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Service manager error:** ${err.message}`,
+              content: `❌ **Service manager error:** ${errorMessage(err)}`,
               model: 'BS-Chat Ecosystem Engine'
             }
           ]);
@@ -6384,7 +6712,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             const data = await res.json();
             if (data.status === 'success') {
               const b = data.balance || {};
-              const nonZero = Object.entries(b.total || {}).filter(([k, v]) => Number(v) > 0);
+              const nonZero = Object.entries(b.total || {}).filter(([, v]) => Number(v) > 0);
               let table = '| Asset | Free | Used | Total |\n| :--- | :--- | :--- | :--- |\n';
               if (nonZero.length === 0) {
                 table += '| *(All Assets)* | 0.00 | 0.00 | 0.00 |\n';
@@ -6450,7 +6778,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                 reply = `### 📋 Kraken Open Orders\nNo active open orders currently resting on Kraken.`;
               } else {
                 let table = '| Order ID | Symbol | Side | Amount | Price | Status |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n';
-                orders.forEach(o => {
+                orders.forEach(/** @param {{"id": string, "symbol": string, "side": string, "amount": number, "price": number, "status": string}} o */ o => {
                   table += `| \`${o.id}\` | \`${o.symbol}\` | **${(o.side || '').toUpperCase()}** | \`${o.amount}\` | \`${o.price}\` | \`${o.status}\` |\n`;
                 });
                 reply = `### 📋 Kraken Open Orders (${orders.length})\n\n${table}`;
@@ -6467,7 +6795,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                 reply = `### 📜 Kraken Trade History\nNo executed trades found in account trade history.`;
               } else {
                 let table = '| ID | Timestamp | Symbol | Side | Amount | Price | Cost |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n';
-                trades.slice(0, 10).forEach(t => {
+                trades.slice(0, 10).forEach(/** @param {{"id": string, "datetime": string, "symbol": string, "side": string, "amount": number, "price": number, "cost": string}} t */ t => {
                   table += `| \`${t.id}\` | ${t.datetime || ''} | \`${t.symbol}\` | **${(t.side || '').toUpperCase()}** | \`${t.amount}\` | \`$${t.price}\` | \`$${t.cost}\` |\n`;
                 });
                 reply = `### 📜 Kraken Trade History (Last ${trades.length})\n\n${table}`;
@@ -6496,7 +6824,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Kraken Gateway Error:** ${err.message}`,
+              content: `❌ **Kraken Gateway Error:** ${errorMessage(err)}`,
               model: 'Kraken Sovereign Gateway'
             }
           ]);
@@ -6507,7 +6835,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       }
     }
 
-    // --- NATURAL LANGUAGE HOST FILE & 1M+ RAG OFFLOAD AUTONOMOUS ENGINE (No Slash Commands Required) ---
+    // --- NATURAL LANGUAGE HOST FILE AND BOUNDED SOURCE INGESTION ---
     {
       const nlText = rawText.trim();
       const nlLower = nlText.toLowerCase();
@@ -6547,7 +6875,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Pip command error:** ${err.message}`,
+              content: `❌ **Pip command error:** ${errorMessage(err)}`,
               model: 'Executive Pip Engine'
             }
           ]);
@@ -6588,7 +6916,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Bash command error:** ${err.message}`,
+              content: `❌ **Bash command error:** ${errorMessage(err)}`,
               model: 'Executive Bash Engine'
             }
           ]);
@@ -6596,29 +6924,6 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           setIsLoading(false);
         }
         return;
-      }
-
-      // 1. Direct Large Pasted Context Buffer: preserve source before analysis.
-      if (nlText.length > 16000) {
-        try {
-          const staged = await stageRagSource({ backendUrl:BACKEND_URL, text:rawText });
-          if (typeof window !== 'undefined') window.__aibsLastHostFile = staged.path;
-          const stageUrl = `file:///${staged.path.replace(/\\/g, '/')}`;
-          setChatMessages(prev => [...prev, {
-            role:'assistant', model:'Large Context Source Staging',
-            content:`Source write confirmed: [${staged.path}](${stageUrl})\n\n` +
-              `${staged.bytes_written.toLocaleString()} UTF-8 bytes preserved; SHA-256: \`${staged.sha256}\`.\n\n` +
-              'Parsing/indexing/retrieval are not yet confirmed. This receipt does not establish a million-token model context.',
-          }]);
-        } catch (err) {
-          setFooterInput(current => current || rawText);
-          setChatMessages(prev => [...prev, { role:'assistant', model:'Large Context Source Staging',
-            content:'Source staging was not confirmed; analysis stopped and input was retained. ' + err.message }]);
-          setErrorPopup(err.message);
-          clearTimeout(timeoutId);
-          setIsLoading(false);
-          return;
-        }
       }
 
       // 2. Natural Language File Rename (e.g. "rename it testfilbrett", "re name it testfilbrett", "C:\AI-BS\exampleFile.txt rename it to bretttest")
@@ -6763,15 +7068,32 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     try {
       const isPlanMode = activeTools?.plan_and_review;
       const targetModel = selectedModel || 'stehouwer_llm';
-      const useHybridStream = !isPlanMode;
+      const useHybridStream = !isPlanMode || isComfyStatusQuery(rawText);
 
-      const reqHeaders = {
+      const reqHeaders = await chatAuthHeaders({
         'Content-Type': 'application/json',
         
         'X-Client-ID': 'stehouwer_publishing'
-      };
+      });
+
+      if (selectedProvider === 'openai' && !isPlanMode) {
+        const startedAt = Date.now();
+        setChatMessages(prev => [...prev, { role: 'assistant', content: '', model: `OpenAI · ${targetModel}` }]);
+        const reply = await streamBSChatProvider({ backendUrl: BACKEND_URL,
+          provider: selectedProvider, model: targetModel, prompt: formattedPrompt,
+          userPrompt: rawText || 'Please review and analyze the attached files.',
+          useWebSearch: !!activeContexts.web,
+          messages: updatedHistory, headers: reqHeaders, signal: controller.signal,
+          onText: (content, displayName) => setChatMessages(prev => prev.map((message, index) =>
+            index === prev.length - 1 && message.role === 'assistant'
+              ? { ...message, content, model: displayName, client_elapsed_ms: Date.now() - startedAt } : message)),
+        });
+        if (autoSpeak) speakText(reply.content);
+        return;
+      }
 
       let streamingSucceeded = false;
+      let legacyStreamUnavailable = false;
 
       if (useHybridStream) {
         const streamStartedAt = performance.now();
@@ -6790,15 +7112,15 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
         let assistantMessage = '';
         try {
-          const recentHistory = (updatedHistory || []).slice(-8).map(m => ({
+          const recentHistory = (updatedHistory || []).filter(m => m !== userMsg).slice(-32).map(m => ({
             role: m.role,
-            content: m.content || m.displayContent || ''
+            content: stripMetadataFrames(m.content || m.displayContent || '')
           }));
 
           const streamRes = await fetch(`${BACKEND_URL}/api/v1/hybrid-chat/stream`, {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify({ prompt: formattedPrompt, messages: recentHistory, model: targetModel, stream: true, use_web_search: !!activeContexts.web, web_search_query: activeContexts.web ? rawText : undefined }),
+            body: JSON.stringify({ prompt: formattedPrompt, user_prompt: rawText || 'Please review and analyze the attached files.', source_references:sourceReferences, messages: recentHistory, provider: selectedProvider, model: targetModel, stream: true, use_web_search: !!activeContexts.web, web_search_query: activeContexts.web ? rawText : undefined }),
             signal: controller.signal,
           });
 
@@ -6810,29 +7132,43 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             throw authorizationError;
           }
 
+          if (!streamRes.ok) {
+            legacyStreamUnavailable = canFallbackToLegacyStream(streamRes.status, controller.signal.aborted, false);
+            if (!legacyStreamUnavailable) throw new Error(`Local chat stream returned HTTP ${streamRes.status}. No replay was attempted.`);
+          } else if (!streamRes.body) {
+            throw new Error('Local chat returned no readable stream. No replay was attempted.');
+          }
+
           if (streamRes.ok && streamRes.body) {
             const reader = streamRes.body.getReader();
-            const decoder = new TextDecoder();
+            const decoder = createChatStreamDecoder();
+            const streamParser = new ChatStreamParser();
+            let frameText = '';
 
             while (true) {
               const { done, value } = await reader.read();
-              if (done) break;
+              if (done) {
+                decoder.finish();
+                const tail = streamParser.finish();
+                if (tail.text) {
+                  assistantMessage += tail.text;
+                  setChatMessages(prev => prev.map((m, i) => i === prev.length - 1 && m.role === 'assistant' ? { ...m, content: assistantMessage } : m));
+                }
+                break;
+              }
               const chunk = decoder.decode(value);
-              assistantMessage += chunk;
+              const parsedChunk = streamParser.feed(chunk);
+              assistantMessage += parsedChunk.text;
+              if (parsedChunk.frames.length) frameText += (frameText ? '\n' : '') + frameTextFor(parsedChunk.frames);
               
               setChatMessages(prev => {
                 const newArr = [...prev];
                 if (newArr.length > 0 && newArr[newArr.length - 1].role === 'assistant') {
                   newArr[newArr.length - 1].content = assistantMessage;
-                  const metaMatch = /<!--AI-BS-METADATA:([\s\S]*?)-->/.exec(assistantMessage);
-                  if (metaMatch) {
-                    try {
-                      const parsedMeta = JSON.parse(metaMatch[1]);
-                      if (parsedMeta.display_name) {
-                        newArr[newArr.length - 1].model = parsedMeta.display_name;
-                      }
-                      newArr[newArr.length - 1].meta = parsedMeta;
-                    } catch (e) {}
+                  const parsedMeta = readCognitiveMetadata(frameText);
+                  if (parsedMeta) {
+                    if (parsedMeta.display_name) newArr[newArr.length - 1].model = parsedMeta.display_name;
+                    newArr[newArr.length - 1].meta = parsedMeta;
                   }
                 }
                 return newArr;
@@ -6849,33 +7185,40 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
               }
             }
           }
+          if (streamRes.ok && !assistantMessage.trim()) throw new Error('The accepted local stream was empty. No replay was attempted.');
         } catch (streamErr) {
+          if (controller.signal.aborted || (streamErr && typeof streamErr === 'object' && 'name' in streamErr && streamErr.name === 'AbortError')) {
+            setChatMessages(prev => prev.map((message, index) => index === prev.length - 1 && message.role === 'assistant'
+              ? { ...message, client_elapsed_ms: performance.now() - streamStartedAt,
+                  decision_context: { ...message.decision_context, status: 'cancelled' } } : message));
+            return;
+          }
           if (streamErr && typeof streamErr === 'object' && 'status' in streamErr &&
               (streamErr.status === 401 || streamErr.status === 403)) throw streamErr;
-          console.warn('Streaming failed, engaging fallback endpoint...', streamErr);
+          console.warn('Stream interrupted; preserving received evidence without replay.', streamErr);
           if (assistantMessage.trim().length > 0) {
             setChatMessages(prev => prev.map((msg, index) => index === prev.length - 1 && msg.role === 'assistant'
               ? { ...msg, client_elapsed_ms: performance.now() - streamStartedAt,
                   decision_context: { ...msg.decision_context, status: 'stream_interrupted' } } : msg));
             streamingSucceeded = true;
           } else {
-            // Pop the empty placeholder if no tokens received
-            setChatMessages(prev => {
-              if (prev.length > 0 && prev[prev.length - 1].content === '') {
-                return prev.slice(0, -1);
-              }
-              return prev;
-            });
+            // A network/provider failure is not proof that the first request never ran.
+            throw streamErr;
           }
         }
       }
 
       if (!streamingSucceeded) {
+        if (controller.signal.aborted) return;
+        if (useHybridStream && !legacyStreamUnavailable) throw new Error('Local stream did not confirm a reply. No replay was attempted.');
         // --- NON-STREAMING ENGINE OR FAILOVER RECOVERY ---
         const endpoint = isPlanMode ? '/v1/ide/plan' : '/api/chat';
         
         const payloadBody = JSON.stringify({
+          user_prompt: rawText || 'Please review and analyze the attached files.',
+          source_references:isPlanMode ? undefined : sourceReferences,
           messages: updatedHistory.map(m => ({ role: m.role, content: m.content })),
+          provider: selectedProvider,
           model: targetModel,
           prompt: isPlanMode ? rawText : undefined,
           active_file: isPlanMode ? 'C:\\AI-BS\\backend\\AI_BS_Backend.py' : undefined,
@@ -6932,8 +7275,9 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             model: data.model || targetModel,
             execution_time_ms: typeof data.execution_time_ms === 'number' ? data.execution_time_ms : null,
             client_elapsed_ms: Date.now() - responseStartedAt,
-            decision_context: { operation: isPlanMode ? 'Plan requested' : activeContexts.web ? 'Web research requested' : 'Chat requested', route: res.url ? new URL(res.url).pathname : endpoint, status: 'response_received' },
+            decision_context: { operation: isPlanMode ? 'Plan requested' : activeContexts.web ? 'Web research requested' : 'Chat requested', route: res?.url ? new URL(res.url).pathname : endpoint, status: 'response_received' },
             tool_trace: data.tool_trace || null,
+            source_retrieval:data.source_retrieval || null,
             planData: planData,
             codingTaskId: data.coding_task?.task_id || null
           }
@@ -6945,10 +7289,16 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       }
     } catch (err) {
       console.error('Chat error:', err);
-      setErrorPopup(err.message || 'Failed to reach AI-BS backend.');
+      if (selectedProvider === 'openai' || sourceReferences.length) {
+        if (!(useAppStore.getState().footerInput || '').trim()) setFooterInput(rawText);
+        setAttachments(prev => prev.length ? prev : attachments);
+        setChatMessages(prev => prev.length && prev[prev.length - 1].role === 'assistant' && !prev[prev.length - 1].content
+          ? prev.slice(0, -1) : prev);
+      }
+      setErrorPopup(errorMessage(err) || 'Failed to reach AI-BS backend.');
       setChatMessages(prev => [
         ...prev,
-        { role: 'assistant', content: `❌ **Error:** ${err.message}` }
+        { role: 'assistant', content: `❌ **Error:** ${errorMessage(err)}` }
       ]);
     } finally {
       clearTimeout(timeoutId);
@@ -6969,6 +7319,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     }
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
@@ -7252,8 +7603,10 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       display: 'flex',
       flexDirection: 'column',
       flex: isNested ? 1 : undefined,
-      height: isNested ? '100%' : 'calc(100vh - 170px)',
-      minHeight: isNested ? 0 : '600px',
+      height: chatFocus ? '100dvh' : isNested ? '100%' : 'calc(100dvh - 170px)',
+      minHeight: 0,
+      minWidth: 0,
+      ...(chatFocus ? { position: 'fixed', inset: 0, zIndex: 1000, width: '100%', borderRadius: 0 } : {}),
       background: 'linear-gradient(180deg, #0d0f14 0%, #07090e 100%)',
       borderRadius: isNested ? '6px' : '12px',
       border: dpiScaleProfile !== 'desktop_native' ? '1px solid rgba(56, 189, 248, 0.35)' : '1px solid rgba(255, 255, 255, 0.08)',
@@ -7261,10 +7614,15 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       overflow: 'hidden',
       color: '#e2e8f0',
       fontFamily: 'Inter, system-ui, sans-serif',
-      zoom: uiDpiZoom,
+      zoom: chatFocus ? 1 : uiDpiZoom,
     }}>
+      <details style={{ flexShrink: 0, maxHeight: '25dvh', overflow: 'auto' }}>
+      <summary style={{ padding: '4px 12px', cursor: 'pointer', fontSize: '0.8rem' }}>Conversation &amp; coding</summary>
       <ConversationMemoryStatus memory={conversationMemory} />
-      <CodingPreparationPanel memory={conversationMemory} />
+      {codingModeEnabled(import.meta.env.VITE_AI_BS_CODING_MODE)
+        ? <CodingModePanel memory={conversationMemory} />
+        : <CodingPreparationPanel memory={conversationMemory} />}
+      </details>
       {/* Hidden File Input */}
       <input
         type="file"
@@ -7274,290 +7632,346 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         style={{ display: 'none' }}
       />
 
-      {/* System Status Dashboard Bar */}
+      {/* Sleek Unified Hub Bar (Decluttered 42px Single Row) */}
       <div style={{
-        padding: '12px 20px',
+        padding: '6px 14px',
         borderBottom: '1px solid rgba(255,255,255,0.08)',
         background: 'rgba(15, 19, 28, 0.95)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        gap: '8px',
+        minHeight: '42px',
         flexWrap: 'wrap',
-        gap: '10px',
+        flexShrink: 0
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+        <button type="button" aria-pressed={chatFocus} onClick={() => setChatFocus(value => !value)} style={{ padding: '5px 10px', borderRadius: '8px', cursor: 'pointer', background: '#16202e', color: '#e2e8f0', border: '1px solid #475569' }}>
+          {chatFocus ? 'Exit focused chat' : 'Focus chat'}
+        </button>
+        {/* Left: Indicator, Title & Model Picker */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, overflow: 'hidden' }}>
           <div style={{
-            width: '10px', height: '10px', borderRadius: '50%',
+            width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0,
             background: isLoading ? '#f59e0b' : '#10b981',
-            boxShadow: isLoading ? '0 0 10px #f59e0b' : '0 0 10px #10b981',
+            boxShadow: isLoading ? '0 0 8px #f59e0b' : '0 0 8px #10b981',
           }} />
-          <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#f8fafc', letterSpacing: '0.5px' }}>
-            STEHOUWER LLM CENTRAL HUB
+          <span style={{ fontWeight: 700, fontSize: '0.82rem', color: '#f8fafc', letterSpacing: '0.3px', whiteSpace: 'nowrap' }}>
+            STEHOUWER LLM
           </span>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600 }}>Active Model:</span>
-            <select
-              value={selectedModel || 'stehouwer_llm'}
-              onChange={(e) => useAppStore.getState().setSelectedModel(e.target.value)}
-              style={{
-                fontSize: '0.75rem',
-                background: 'rgba(59, 130, 246, 0.15)',
-                border: '1px solid rgba(59, 130, 246, 0.4)',
-                color: '#60a5fa',
-                padding: '4px 12px',
-                borderRadius: '8px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                outline: 'none'
-              }}
-            >
-              <option value="stehouwer_llm" style={{ background: '#0d1117', color: '#60a5fa' }}>⚡ Stehouwer LLM (Unified Swarm System)</option>
-              <option value="gemini-1.5-pro" style={{ background: '#0d1117', color: '#60a5fa' }}>✨ Google Gemini 1.5 Pro (Cloud Backup)</option>
-              <option value="gemini-1.5-flash" style={{ background: '#0d1117', color: '#38bdf8' }}>⚡ Google Gemini 1.5 Flash (Fast Backup)</option>
-              <option value="gemini-2.0-flash" style={{ background: '#0d1117', color: '#a855f7' }}>🚀 Google Gemini 2.0 Flash (Next-Gen)</option>
-              <option value="stehouwer_qwen:latest" style={{ background: '#0d1117', color: '#a855f7' }}>🚀 Stehouwer Qwen 23B (High Capacity)</option>
-              <option value="stehouwer_dolphin:latest" style={{ background: '#0d1117', color: '#f43f5e' }}>🐬 Stehouwer Dolphin 8.5B (Uncensored)</option>
-              <option value="stehouwer_hermes:latest" style={{ background: '#0d1117', color: '#38bdf8' }}>🔮 Stehouwer Hermes 8.5B (Reasoning)</option>
-              <option value="qwen2.5-coder:latest" style={{ background: '#0d1117', color: '#34d399' }}>💻 Qwen 2.5 Coder (Polyglot Engineer)</option>
-              <option value="gemma4:12b" style={{ background: '#0d1117', color: '#fbbf24' }}>💎 Google Gemma 4 12B</option>
-              <option value="qwen3.6:latest" style={{ background: '#0d1117', color: '#c084fc' }}>🧠 Qwen 3.6 23B (Heavy Reasoning)</option>
-              <option value="command-r:latest" style={{ background: '#0d1117', color: '#818cf8' }}>📚 Cohere Command-R (RAG Specialist)</option>
-              <option value="mixtral:latest" style={{ background: '#0d1117', color: '#f472b6' }}>🧩 Mixtral 8x7B (MoE Architecture)</option>
-              <option value="llama3.1:latest" style={{ background: '#0d1117', color: '#cbd5e1' }}>🦙 Llama 3.1 8B (Base Model)</option>
-            </select>
-          </div>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '4px' }}>
-            <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600 }}>Target:</span>
-            <select
-              value={targetDevice}
-              onChange={(e) => setTargetDevice(e.target.value)}
-              style={{
-                fontSize: '0.75rem',
-                background: 'rgba(16, 185, 129, 0.15)',
-                border: '1px solid rgba(16, 185, 129, 0.4)',
-                color: '#34d399',
-                padding: '4px 12px',
-                borderRadius: '8px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                outline: 'none'
-              }}
-            >
-              <option value="Host PC (Local)" style={{ background: '#0d1117', color: '#34d399' }}>🖥️ Host PC (Local)</option>
-              <option value="Mobile Phone (ADB)" style={{ background: '#0d1117', color: '#f59e0b' }}>📱 Mobile Phone (ADB)</option>
-            </select>
-          </div>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '4px' }}>
-            <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600 }}>DPI Profile:</span>
-            <select
-              value={dpiScaleProfile}
-              onChange={(e) => handleSwitchDpiProfile(e.target.value, false)}
-              title="Resolution & DPI Scaling Profile for Phone Displays + Bluetooth Keyboard/Trackpad"
-              style={{
-                fontSize: '0.75rem',
-                background: dpiScaleProfile !== 'desktop_native' ? 'rgba(245, 158, 11, 0.2)' : 'rgba(56, 189, 248, 0.12)',
-                border: `1px solid ${dpiScaleProfile !== 'desktop_native' ? 'rgba(245, 158, 11, 0.5)' : 'rgba(56, 189, 248, 0.35)'}`,
-                color: dpiScaleProfile !== 'desktop_native' ? '#fbbf24' : '#38bdf8',
-                padding: '4px 10px',
-                borderRadius: '8px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                outline: 'none'
-              }}
-            >
-              <option value="desktop_native" style={{ background: '#0d1117', color: '#38bdf8' }}>🖥️ 100% Native Desktop</option>
-              <option value="mobile_1440p_125" style={{ background: '#0d1117', color: '#34d399' }}>📱 1440p @ 125% DPI (Bluetooth Trackpad Pro)</option>
-              <option value="mobile_1080p_150" style={{ background: '#0d1117', color: '#fbbf24' }}>📲 1080p @ 150% DPI (High-Contrast Touch)</option>
-            </select>
-            <button
-              onClick={() => {
-                const next = !mobileSynergyMode;
-                setMobileSynergyMode(next);
-                try { localStorage.setItem('aibs_mobile_synergy', String(next)); } catch (e) {}
-              }}
-              title="Toggle BS-Chat Mobile Synergy & Bluetooth Trackpad Command Dock"
-              style={{
-                background: mobileSynergyMode ? 'linear-gradient(135deg, #d97706, #b45309)' : 'rgba(255, 255, 255, 0.06)',
-                color: mobileSynergyMode ? '#ffffff' : '#cbd5e1',
-                border: `1px solid ${mobileSynergyMode ? '#f59e0b' : 'rgba(255, 255, 255, 0.15)'}`,
-                padding: '4px 10px',
-                borderRadius: '8px',
-                fontSize: '0.73rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}
-            >
-              <span>📱 {mobileSynergyMode ? 'Mobile Synergy: ON' : 'Mobile Dock'}</span>
-            </button>
-            <button
-              onClick={() => setShowWirelessCastHub(!showWirelessCastHub)}
-              title="Open 3-Way Wireless Screen Mirror & Display Cast Hub (PC➔Wireless Display, PC➔Phone, Phone➔PC)"
-              style={{
-                background: showWirelessCastHub ? 'linear-gradient(135deg, #0284c7, #2563eb)' : 'rgba(56, 189, 248, 0.14)',
-                color: showWirelessCastHub ? '#ffffff' : '#38bdf8',
-                border: `1px solid ${showWirelessCastHub ? '#60a5fa' : 'rgba(56, 189, 248, 0.45)'}`,
-                padding: '4px 10px',
-                borderRadius: '8px',
-                fontSize: '0.73rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
-                boxShadow: showWirelessCastHub ? '0 0 12px rgba(56, 189, 248, 0.4)' : 'none'
-              }}
-            >
-              <span>📡 {showWirelessCastHub ? 'Wireless Cast: OPEN' : 'Wireless Cast & Mirror'}</span>
-            </button>
-          </div>
+          <select
+            value={selectedModel || 'stehouwer_llm'}
+            onChange={(e) => useAppStore.getState().setSelectedModel(e.target.value)}
+            style={{
+              fontSize: '0.72rem',
+              background: 'rgba(59, 130, 246, 0.15)',
+              border: '1px solid rgba(59, 130, 246, 0.4)',
+              color: '#60a5fa',
+              padding: '3px 8px',
+              borderRadius: '6px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              outline: 'none',
+              maxWidth: '180px',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            <option value="stehouwer_llm" style={{ background: '#0d1117', color: '#60a5fa' }}>⚡ Stehouwer LLM (Unified Swarm)</option>
+            {(providerModels?.openai || []).map(model => (
+              <option key={`openai-${model}`} value={model} style={{ background: '#0d1117', color: '#60a5fa' }}>OpenAI · {model} (API credits)</option>
+            ))}
+            <option value="gemini-1.5-pro" style={{ background: '#0d1117', color: '#60a5fa' }}>✨ Gemini 1.5 Pro</option>
+            <option value="gemini-1.5-flash" style={{ background: '#0d1117', color: '#38bdf8' }}>⚡ Gemini 1.5 Flash</option>
+            <option value="gemini-2.0-flash" style={{ background: '#0d1117', color: '#a855f7' }}>🚀 Gemini 2.0 Flash</option>
+            <option value="stehouwer_qwen:latest" style={{ background: '#0d1117', color: '#a855f7' }}>🚀 Qwen 23B</option>
+            <option value="stehouwer_dolphin:latest" style={{ background: '#0d1117', color: '#f43f5e' }}>🐬 Dolphin 8.5B</option>
+            <option value="stehouwer_hermes:latest" style={{ background: '#0d1117', color: '#38bdf8' }}>🔮 Hermes 8.5B</option>
+            <option value="qwen2.5-coder:latest" style={{ background: '#0d1117', color: '#34d399' }}>💻 Qwen 2.5 Coder</option>
+            <option value="gemma4:12b" style={{ background: '#0d1117', color: '#fbbf24' }}>💎 Gemma 4 12B</option>
+            <option value="qwen3.6:latest" style={{ background: '#0d1117', color: '#c084fc' }}>🧠 Qwen 3.6 23B</option>
+            <option value="command-r:latest" style={{ background: '#0d1117', color: '#818cf8' }}>📚 Command-R</option>
+            <option value="mixtral:latest" style={{ background: '#0d1117', color: '#f472b6' }}>🧩 Mixtral 8x7B</option>
+            <option value="llama3.1:latest" style={{ background: '#0d1117', color: '#cbd5e1' }}>🦙 Llama 3.1 8B</option>
+          </select>
         </div>
 
-        {/* Feature Badges & Quick Action Controls */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.72rem', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#34d399', padding: '3px 8px', borderRadius: '6px' }}>
-            ⚡ 70+ DBs Ready (2ms)
-          </span>
-          <span style={{ fontSize: '0.72rem', background: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.3)', color: '#c084fc', padding: '3px 8px', borderRadius: '6px' }}>
-            🛠️ 8 Master Tools
-          </span>
-          <span style={{ fontSize: '0.72rem', background: 'rgba(236,72,153,0.12)', border: '1px solid rgba(236,72,153,0.3)', color: '#f472b6', padding: '3px 8px', borderRadius: '6px' }}>
-            🎨 ComfyUI Port 8189
-          </span>
-
+        {/* Center / Action Controls: Split View Toggle (if nested) */}
+        {onToggleSplitPane && (
           <button
-            onClick={() => {
-              const url = `${window.location.origin}${window.location.pathname}?tab=chat`;
-              navigator.clipboard.writeText(url).then(() => {
-                setCopiedChatUrl(true);
-                setTimeout(() => setCopiedChatUrl(false), 2500);
-              });
-            }}
+            onClick={onToggleSplitPane}
             style={{
-              background: copiedChatUrl ? '#10b981' : 'rgba(56, 189, 248, 0.12)',
-              color: copiedChatUrl ? '#ffffff' : '#38bdf8',
-              border: '1px solid #38bdf8',
-              padding: '4px 10px',
+              background: showRightPane ? 'rgba(37, 99, 235, 0.25)' : 'rgba(255,255,255,0.06)',
+              border: `1px solid ${showRightPane ? '#3b82f6' : 'rgba(255,255,255,0.15)'}`,
+              color: showRightPane ? '#93c5fd' : '#cbd5e1',
+              padding: '3px 8px',
               borderRadius: '6px',
               cursor: 'pointer',
               fontSize: '0.72rem',
-              fontWeight: '700'
-            }}
-          >
-            🔗 {copiedChatUrl ? 'Copied!' : 'Share IDE'}
-          </button>
-
-          <button
-            onClick={handleSaveToMemoryAndClear}
-            disabled={isSavingMemory || isLoading}
-            title="Archive the complete conversation to SQLite; clear only after confirmation"
-            style={{
-              background: 'linear-gradient(135deg, rgba(147, 51, 234, 0.25), rgba(99, 102, 241, 0.25))',
-              color: '#c084fc',
-              border: '1px solid rgba(168, 85, 247, 0.5)',
-              padding: '4px 12px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '0.72rem',
-              fontWeight: '700',
-              display: 'flex',
+              fontWeight: 600,
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '5px',
-              boxShadow: '0 2px 8px rgba(147, 51, 234, 0.3)'
+              gap: '4px',
+              whiteSpace: 'nowrap'
             }}
+            title={showRightPane ? "Hide IDE Editor Pane" : "Open Split IDE Editor Pane"}
           >
-            <span>💾</span>
-            <span>{isSavingMemory ? 'Archiving...' : 'Archive Chat & Clear'}</span>
+            <span>↔</span> <span>{showRightPane ? 'Hide IDE' : 'Split IDE'}</span>
           </button>
+        )}
 
+        {/* Right: Quick toggles + Drawer toggle */}
+        <details style={{ position: 'relative', flexShrink: 0 }}>
+        <summary style={{ cursor: 'pointer', fontSize: '0.8rem' }}>Chat options</summary>
+        <div style={{ position: 'absolute', right: 0, top: '100%', zIndex: 100, background: '#111827', padding: '10px', border: '1px solid #475569', borderRadius: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
           <button
-            onClick={handleSaveToMemoryAndClear}
-            title="Reset Chat & View 18 Quick Starter Showcase Cards"
+            onClick={() => setShowWirelessCastHub(!showWirelessCastHub)}
+            title="Toggle Wireless Screen Mirror & Cast Hub"
             style={{
-              background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
-              color: '#ffffff',
-              border: '1px solid #60a5fa',
-              padding: '4px 12px',
+              background: showWirelessCastHub ? 'linear-gradient(135deg, #0284c7, #2563eb)' : 'rgba(56, 189, 248, 0.12)',
+              color: showWirelessCastHub ? '#ffffff' : '#38bdf8',
+              border: `1px solid ${showWirelessCastHub ? '#60a5fa' : 'rgba(56, 189, 248, 0.35)'}`,
+              padding: '3px 8px',
               borderRadius: '6px',
-              cursor: 'pointer',
               fontSize: '0.72rem',
-              fontWeight: '700',
-              boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
             }}
           >
-            ⚡ 18 Quick Starters
+            <span>📡 Cast</span>
           </button>
 
           <button
             onClick={() => {
-              setFooterInput('/mission ');
-              document.querySelector('textarea')?.focus();
+              const next = !mobileSynergyMode;
+              setMobileSynergyMode(next);
+              try { localStorage.setItem('aibs_mobile_synergy', String(next)); } catch (e) {}
             }}
-            title="Launch an Autonomous 5-Phase Mission (AI-BS Sovereign Execution Unison)"
+            title="Toggle Mobile Synergy & Trackpad Mode"
             style={{
-              background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(168, 85, 247, 0.25))',
-              color: '#f472b6',
-              border: '1px solid rgba(236, 72, 153, 0.5)',
-              padding: '4px 12px',
+              background: mobileSynergyMode ? 'linear-gradient(135deg, #d97706, #b45309)' : 'rgba(255, 255, 255, 0.06)',
+              color: mobileSynergyMode ? '#ffffff' : '#cbd5e1',
+              border: `1px solid ${mobileSynergyMode ? '#f59e0b' : 'rgba(255, 255, 255, 0.15)'}`,
+              padding: '3px 8px',
               borderRadius: '6px',
-              cursor: 'pointer',
               fontSize: '0.72rem',
-              fontWeight: '700',
-              display: 'flex',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '5px',
-              boxShadow: '0 2px 8px rgba(236, 72, 153, 0.25)'
+              gap: '4px'
             }}
           >
-            <span>🎯</span>
-            <span>Mission Control</span>
+            <span>📱 Mobile</span>
           </button>
 
           <button
-            onClick={() => {
-              setFooterInput('/grill ');
-              document.querySelector('textarea')?.focus();
-            }}
-            title="Pre-Flight Architectural Grill: stress-test proposals across 4 branches with 1-click recommendations"
+            onClick={() => setShowControlDrawer(!showControlDrawer)}
+            title="Toggle Controls, Hardware Targets, DPI, and Showcase Starters"
             style={{
-              background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(245, 158, 11, 0.25))',
-              color: '#fb923c',
-              border: '1px solid rgba(245, 158, 11, 0.5)',
-              padding: '4px 12px',
+              background: showControlDrawer ? 'rgba(99, 102, 241, 0.25)' : 'rgba(255, 255, 255, 0.06)',
+              color: showControlDrawer ? '#a5b4fc' : '#e2e8f0',
+              border: `1px solid ${showControlDrawer ? '#818cf8' : 'rgba(255, 255, 255, 0.18)'}`,
+              padding: '3px 9px',
               borderRadius: '6px',
-              cursor: 'pointer',
               fontSize: '0.72rem',
-              fontWeight: '700',
-              display: 'flex',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '5px',
-              boxShadow: '0 2px 8px rgba(245, 158, 11, 0.25)'
+              gap: '4px'
             }}
           >
-            <span>🔥</span>
-            <span>Grill Architecture</span>
-          </button>
-
-          <button
-            onClick={() => setShowTips(!showTips)}
-            style={{
-              background: '#21262d',
-              color: '#c9d1d9',
-              border: '1px solid #30363d',
-              padding: '4px 10px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '0.72rem',
-              fontWeight: '600'
-            }}
-          >
-            💡 {showTips ? 'Hide Tips' : 'IDE Guide'}
+            <span>⚙️ Hub Controls {showControlDrawer ? '▴' : '▾'}</span>
           </button>
         </div>
+        </div>
+        </details>
       </div>
 
+      {/* Collapsible Secondary Control Drawer */}
+      {showControlDrawer && (
+        <div style={{
+          padding: '8px 14px',
+          background: 'rgba(13, 17, 23, 0.98)',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px'
+        }}>
+          {/* Target + DPI Row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Target:</span>
+                <select
+                  value={targetDevice}
+                  onChange={(e) => setTargetDevice(e.target.value)}
+                  style={{
+                    fontSize: '0.72rem',
+                    background: 'rgba(16, 185, 129, 0.15)',
+                    border: '1px solid rgba(16, 185, 129, 0.4)',
+                    color: '#34d399',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    fontWeight: 600
+                  }}
+                >
+                  <option value="Host PC (Local)" style={{ background: '#0d1117', color: '#34d399' }}>🖥️ Host PC (Local)</option>
+                  <option value="Mobile Phone (ADB)" style={{ background: '#0d1117', color: '#f59e0b' }}>📱 Mobile Phone (ADB)</option>
+                </select>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>DPI:</span>
+                <select
+                  value={dpiScaleProfile}
+                  onChange={(e) => handleSwitchDpiProfile(e.target.value, false)}
+                  style={{
+                    fontSize: '0.72rem',
+                    background: dpiScaleProfile !== 'desktop_native' ? 'rgba(245, 158, 11, 0.2)' : 'rgba(56, 189, 248, 0.12)',
+                    border: `1px solid ${dpiScaleProfile !== 'desktop_native' ? 'rgba(245, 158, 11, 0.5)' : 'rgba(56, 189, 248, 0.35)'}`,
+                    color: dpiScaleProfile !== 'desktop_native' ? '#fbbf24' : '#38bdf8',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    fontWeight: 600
+                  }}
+                >
+                  <option value="desktop_native" style={{ background: '#0d1117', color: '#38bdf8' }}>🖥️ Native Desktop</option>
+                  <option value="mobile_1440p_125" style={{ background: '#0d1117', color: '#34d399' }}>📱 1440p @ 125% DPI</option>
+                  <option value="mobile_1080p_150" style={{ background: '#0d1117', color: '#fbbf24' }}>📲 1080p @ 150% Touch</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.68rem', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#34d399', padding: '2px 6px', borderRadius: '4px' }}>
+                ⚡ 70+ DBs (2ms)
+              </span>
+              <span style={{ fontSize: '0.68rem', background: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.3)', color: '#c084fc', padding: '2px 6px', borderRadius: '4px' }}>
+                🛠️ 8 Master Tools
+              </span>
+              <span style={{ fontSize: '0.68rem', background: 'rgba(236,72,153,0.12)', border: '1px solid rgba(236,72,153,0.3)', color: '#f472b6', padding: '2px 6px', borderRadius: '4px' }}>
+                🎨 ComfyUI 8189
+              </span>
+            </div>
+          </div>
+
+          {/* Action Buttons Row in Drawer */}
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}${window.location.pathname}?tab=chat`;
+                navigator.clipboard.writeText(url).then(() => {
+                  setCopiedChatUrl(true);
+                  setTimeout(() => setCopiedChatUrl(false), 2500);
+                });
+              }}
+              style={{
+                background: copiedChatUrl ? '#10b981' : 'rgba(56, 189, 248, 0.12)',
+                color: copiedChatUrl ? '#ffffff' : '#38bdf8',
+                border: '1px solid #38bdf8',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              🔗 {copiedChatUrl ? 'Copied!' : 'Share IDE'}
+            </button>
+
+            <button
+              onClick={handleSaveToMemoryAndClear}
+              disabled={isSavingMemory || isLoading}
+              style={{
+                background: 'rgba(147, 51, 234, 0.2)',
+                color: '#c084fc',
+                border: '1px solid rgba(168, 85, 247, 0.4)',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              💾 {isSavingMemory ? 'Archiving...' : 'Archive & Clear'}
+            </button>
+
+            <button
+              onClick={handleSaveToMemoryAndClear}
+              style={{
+                background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+                color: '#ffffff',
+                border: '1px solid #60a5fa',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              ⚡ 18 Quick Starters
+            </button>
+
+            <button
+              onClick={() => {
+                setFooterInput('/mission ');
+                document.querySelector('textarea')?.focus();
+              }}
+              style={{
+                background: 'rgba(236, 72, 153, 0.2)',
+                color: '#f472b6',
+                border: '1px solid rgba(236, 72, 153, 0.4)',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              🎯 Mission Control
+            </button>
+
+            <button
+              onClick={() => {
+                setFooterInput('/grill ');
+                document.querySelector('textarea')?.focus();
+              }}
+              style={{
+                background: 'rgba(239, 68, 68, 0.2)',
+                color: '#fb923c',
+                border: '1px solid rgba(245, 158, 11, 0.4)',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              🔥 Grill Architecture
+            </button>
+
+            <button
+              onClick={() => setShowTips(!showTips)}
+              style={{
+                background: '#21262d',
+                color: '#c9d1d9',
+                border: '1px solid #30363d',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              💡 {showTips ? 'Hide Tips' : 'IDE Guide'}
+            </button>
+          </div>
+        </div>
+      )}
       {/* Memory Ingest Toast Notification */}
       {memoryToast && (
         <div style={{
@@ -7758,7 +8172,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                         fontSize: '0.75rem', background: 'rgba(255,255,255,0.15)',
                         padding: '4px 10px', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '6px',
                       }}>
-                        {att.is_image ? '🖼️' : '📎'} {att.name} ({(att.size/1024).toFixed(1)} KB)
+                        {att.is_image ? '🖼️' : '📎'} {att.name} ({((att.size ?? 0)/1024).toFixed(1)} KB)
                       </div>
                     ))}
                   </div>
@@ -7770,6 +8184,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                     <FormattedMessageContent
                       content={msg.displayContent || msg.content || ''}
                       role={msg.role}
+                      meta={msg.meta}
                     />
                     <FileEditorDrawer editorData={msg.editorData} />
                   </>
@@ -7787,13 +8202,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                   <AgentPlanReviewCard 
                     planData={msg.planData} 
                     onExecutePlan={(plan_id, steps) => handleExecutePlan(plan_id, steps)}
-                    onRequestRevisions={() => { setFooterInput(`@Developer revise plan ${msg.planData.plan_id}: `); document.querySelector('textarea')?.focus(); }}
+                    onRequestRevisions={() => { setFooterInput(`@Developer revise plan ${msg.planData?.plan_id}: `); document.querySelector('textarea')?.focus(); }}
                   />
                 ) : (
                   <>
                     <FormattedMessageContent
                       content={msg.displayContent || msg.content || ''}
                       role={msg.role}
+                      meta={msg.meta}
                     />
                     {msg.grillHelpExamples && (
                       <div className="mt-3 p-3.5 rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-950/40 via-amber-900/20 to-black/60 shadow-lg flex flex-col gap-2.5">
@@ -7802,7 +8218,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                           <span>Launch Architectural Grill with Preset Proposal:</span>
                         </div>
                         <div className="flex flex-col gap-2">
-                          {msg.grillHelpExamples.map((ex, exIdx) => (
+                          {msg.grillHelpExamples.map(/** @param {string} ex @param {number} exIdx */ (ex, exIdx) => (
                             <button
                               key={exIdx}
                               onClick={() => triggerGrillProposal(ex)}
@@ -7827,7 +8243,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                 )}
 
                 {(msg.codingTaskId || msg.meta?.coding_task_id) && (
-                  <CodingTaskReviewCard taskId={msg.codingTaskId || msg.meta?.coding_task_id} />
+                  <CodingTaskReviewCard taskId={msg.codingTaskId || msg.meta?.coding_task_id || ''} />
                 )}
 
                 {/* Reasoning Inspector for Assistant Messages */}
@@ -7851,10 +8267,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
       {/* Footer Input Controls */}
       <div style={{
-        padding: '16px 20px',
+        padding: '8px 12px',
         borderTop: '1px solid rgba(255,255,255,0.08)',
         background: 'rgba(12, 15, 22, 0.98)',
+        flexShrink: 0,
       }}>
+        <details style={{ marginBottom: '6px' }}>
+        <summary style={{ cursor: 'pointer', fontSize: '0.8rem' }}>Tools &amp; status</summary>
+        <div style={{ maxHeight: '25dvh', overflowY: 'auto' }}>
         <CodingTaskHistory />
         {/* Attached Files Preview Bar (GPT Style) */}
         {attachments.length > 0 && (
@@ -7868,7 +8288,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
               }}>
                 <span>{att.is_image ? '🖼️' : '📄'}</span>
                 <span style={{ fontWeight: 600 }}>{att.name}</span>
-                <span style={{ color: '#64748b', fontSize: '0.72rem' }}>({(att.size / 1024).toFixed(1)} KB)</span>
+                <span style={{ color: '#64748b', fontSize: '0.72rem' }}>({((att.size || 0) / 1024).toFixed(1)} KB)</span>
                 <button
                   onClick={() => removeAttachment(index)}
                   style={{ background: 'none', border: 'none', color: '#fca5a5', cursor: 'pointer', marginLeft: '4px', fontSize: '0.9rem' }}
@@ -7880,58 +8300,108 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           </div>
         )}
 
-        {/* @Tag Quick Actions */}
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '10px', flexWrap: 'wrap' }}>
-          {['@Developer', '@Ecosystem', '@Calendar', '@Documents', '@Email'].map(tag => (
-            <button
-              key={tag}
-              onClick={() => setFooterInput(prev => (prev ? prev + ' ' + tag + ' ' : tag + ' '))}
-              style={{
-                background: 'rgba(59, 130, 246, 0.15)',
-                border: '1px solid rgba(59, 130, 246, 0.4)',
-                color: '#93c5fd',
-                borderRadius: '12px',
-                padding: '4px 10px',
-                fontSize: '0.75rem',
-                cursor: 'pointer',
-                fontWeight: 600,
-                transition: 'all 0.2s',
-              }}
-              onMouseOver={(e) => e.currentTarget.style.background = 'rgba(59, 130, 246, 0.3)'}
-              onMouseOut={(e) => e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)'}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-
-        {/* Live Context Token Budget Gauge (1,000,000 Token Offload RAG Window) */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', fontSize: '0.72rem', color: '#94a3b8', padding: '0 2px', flexWrap: 'wrap', gap: '6px' }}>
+        {/* Live Context Token Budget Gauge & Utility Toggles (Decluttered Compact Row) */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '6px',
+          fontSize: '0.7rem',
+          color: '#94a3b8',
+          padding: '0 2px',
+          flexWrap: 'wrap',
+          gap: '6px'
+        }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-            <span style={{ fontWeight: '600', color: Math.floor(footerInput.length / 4) > 1000000 ? '#f87171' : '#38bdf8' }}>
-              📊 Context Budget: {footerInput.length.toLocaleString()} chars • ~{Math.floor(footerInput.length / 4).toLocaleString()} tokens
+            <span style={{ fontWeight: '600', color: footerInput.length > 16000 ? '#f87171' : '#38bdf8' }}>
+              📊 Draft: {footerInput.length.toLocaleString()} chars (~{Math.floor(footerInput.length / 4).toLocaleString()} estimated tokens)
             </span>
-            <span style={{ color: '#34d399', fontWeight: 600 }}>
-              ({Math.min(100, ((Math.floor(footerInput.length / 4) / 1000000) * 100)).toFixed(2)}% of 1,000,000 max window • 1M+ Offload RAG Active | 4,096 GPU VRAM + CPU Port 11435)
+            <div style={{ width: '80px', height: '4px', background: 'rgba(255,255,255,0.08)', borderRadius: '2px', overflow: 'hidden' }}>
+              <div style={{
+                width: `${Math.min(100, Math.max(footerInput.length > 0 ? 2 : 0, Math.round((footerInput.length / 16000) * 100)))}%`,
+                height: '100%',
+                background: footerInput.length > 16000 ? '#ef4444' : 'linear-gradient(90deg, #34d399, #38bdf8, #818cf8)'
+              }} />
+            </div>
+            <span style={{ color: '#34d399', fontSize: '0.66rem', fontWeight: 600 }}>
+              Source tools: /rag index · /rag search
             </span>
           </div>
-          <div style={{ width: '140px', height: '6px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
-            <div style={{
-              width: `${Math.min(100, Math.max(footerInput.length > 0 ? 2 : 0, Math.round((Math.floor(footerInput.length / 4) / 1000000) * 100)))}%`,
-              height: '100%',
-              background: Math.floor(footerInput.length / 4) > 1000000 ? '#ef4444' : 'linear-gradient(90deg, #34d399, #38bdf8, #818cf8)'
-            }} />
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <button
+              onClick={() => setShowTagsBar(!showTagsBar)}
+              style={{
+                background: showTagsBar ? 'rgba(59, 130, 246, 0.25)' : 'rgba(255,255,255,0.05)',
+                border: `1px solid ${showTagsBar ? '#3b82f6' : 'rgba(255,255,255,0.12)'}`,
+                color: showTagsBar ? '#93c5fd' : '#94a3b8',
+                borderRadius: '4px',
+                padding: '2px 7px',
+                fontSize: '0.68rem',
+                cursor: 'pointer',
+                fontWeight: 600
+              }}
+            >
+              @Tags {showTagsBar ? '▴' : '▾'}
+            </button>
+            <button
+              onClick={() => setShowToolBar(!showToolBar)}
+              style={{
+                background: showToolBar ? 'rgba(168, 85, 247, 0.25)' : 'rgba(255,255,255,0.05)',
+                border: `1px solid ${showToolBar ? '#a855f7' : 'rgba(255,255,255,0.12)'}`,
+                color: showToolBar ? '#c084fc' : '#94a3b8',
+                borderRadius: '4px',
+                padding: '2px 7px',
+                fontSize: '0.68rem',
+                cursor: 'pointer',
+                fontWeight: 600
+              }}
+            >
+              🛠️ Tools {showToolBar ? '▴' : '▾'}
+            </button>
           </div>
         </div>
 
-        {/* Phase 7.1 Control Bar Injected Above Input */}
-        <ChatToolControlBar onToolToggle={setActiveTools} />
+        {/* Collapsible @Tag Quick Actions */}
+        {showTagsBar && (
+          <div style={{ display: 'flex', gap: '6px', marginBottom: '6px', flexWrap: 'wrap' }}>
+            {['@Developer', '@Ecosystem', '@Calendar', '@Documents', '@Email'].map(tag => (
+              <button
+                key={tag}
+                onClick={() => setFooterInput(prev => (prev ? prev + ' ' + tag + ' ' : tag + ' '))}
+                style={{
+                  background: 'rgba(59, 130, 246, 0.15)',
+                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  color: '#93c5fd',
+                  borderRadius: '8px',
+                  padding: '2px 8px',
+                  fontSize: '0.72rem',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                }}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Collapsible Tool Control Bar */}
+        {showToolBar && (
+          <div style={{ marginBottom: '6px' }}>
+            <ChatToolControlBar onToolToggle={setActiveTools} />
+          </div>
+        )}
+
+        <details style={{ maxHeight: '30dvh', overflow: 'auto' }}>
+        <summary style={{ cursor: 'pointer', padding: '4px 0', fontSize: '0.8rem' }}>Workspace tools</summary>
         <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext}
           onOpenArtifacts={() => setIsArtifactsModalOpen(true)}
           onOpenTerminal={() => setWorkspacePanel('terminal')}
           onOpenCodebase={() => setWorkspacePanel('codebase')} />
         <ChatWorkspaceTools panel={workspacePanel} onClose={closeWorkspacePanel} backendUrl={BACKEND_URL} hasDraft={!!footerInput.trim()}
           onInsertText={text => {setFooterInput(previous => previous ? `${previous}\n${text}` : text);requestAnimationFrame(() => chatInputRef.current?.focus());}} />
+        </details>
 
         {/* 3-Way Wireless Screen Mirror & Display Cast Hub */}
         {showWirelessCastHub && (
@@ -8267,11 +8737,11 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
               }}>
                 <div>
                   <strong style={{ color: '#38bdf8' }}>📺 Detected Display/Audio Endpoints:</strong>{' '}
-                  {(nearbyScanResult.pnp_displays_and_endpoints || []).slice(0, 6).map(d => d.name).join(' • ') || 'None'}
+                  {(nearbyScanResult.pnp_displays_and_endpoints || []).slice(0, 6).map(/** @param {{"name": string}} d */ d => d.name).join(' • ') || 'None'}
                 </div>
                 <div>
                   <strong style={{ color: '#34d399' }}>📶 Nearby Wi-Fi Subnet Peers (Click to target Phone IP):</strong>{' '}
-                  {(nearbyScanResult.wifi_lan_peers || []).map(p => (
+                  {(nearbyScanResult.wifi_lan_peers || []).map(/** @param {{"ip": string}} p */ p => (
                     <button
                       key={p.ip}
                       onClick={() => setPhoneIpInput(`${p.ip}:5555`)}
@@ -8295,164 +8765,171 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           </div>
         )}
 
-        {/* BS-Chat Mobile Synergy, DPI Scaling & Bluetooth Trackpad Dock */}
+        {/* BS-Chat Mobile Synergy, DPI Scaling & Bluetooth Trackpad Dock (Collapsible) */}
         {mobileSynergyMode && (
-          <div style={{
-            marginBottom: '10px',
-            padding: '10px 14px',
-            background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 27, 75, 0.92))',
-            border: '1px solid rgba(245, 158, 11, 0.45)',
-            borderRadius: '10px',
-            boxShadow: '0 6px 20px rgba(0, 0, 0, 0.45)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.76rem', fontWeight: 800, color: '#fbbf24', letterSpacing: '0.3px' }}>
-                  📱 MOBILE WORKSTATION & BLUETOOTH TRACKPAD SYNERGY
+          <div style={{ marginBottom: '8px' }}>
+            {!showSynergyDock ? (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '4px 10px',
+                background: 'rgba(245, 158, 11, 0.08)',
+                border: '1px solid rgba(245, 158, 11, 0.25)',
+                borderRadius: '6px',
+                fontSize: '0.7rem'
+              }}>
+                <span style={{ color: '#fbbf24', fontWeight: 600 }}>
+                  📱 Mobile Synergy Active ({dpiScaleProfile.replace('mobile_', '').replace('_', ' ')})
                 </span>
-                <span style={{ fontSize: '0.7rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.35)', color: '#34d399', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
-                  🖥️ {mobileTelemetry?.display ? `${mobileTelemetry.display.width}x${mobileTelemetry.display.height} @ ${mobileTelemetry.display.refresh_rate_hz}Hz` : 'RTX 4090 Display Ready'}
-                </span>
-                <span style={{ fontSize: '0.7rem', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
-                  ⌨️🖱️ BT Keyboard & Trackpad: Active
-                </span>
-                <span style={{ fontSize: '0.7rem', background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.35)', color: '#c084fc', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
-                  🌐 {mobileTelemetry?.remote_and_input?.parsec_running ? 'Parsec 60FPS' : mobileTelemetry?.remote_and_input?.rustdesk_running ? 'RustDesk Lossless' : 'Tailscale Mesh Ready'}
-                </span>
+                <button
+                  onClick={() => setShowSynergyDock(true)}
+                  style={{
+                    background: 'none', border: 'none', color: '#fcd34d', cursor: 'pointer', fontWeight: 700, fontSize: '0.7rem'
+                  }}
+                >
+                  Expand Trackpad Dock ▾
+                </button>
               </div>
+            ) : (
+              <div style={{
+                padding: '10px 14px',
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 27, 75, 0.92))',
+                border: '1px solid rgba(245, 158, 11, 0.45)',
+                borderRadius: '10px',
+                boxShadow: '0 6px 20px rgba(0, 0, 0, 0.45)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.76rem', fontWeight: 800, color: '#fbbf24', letterSpacing: '0.3px' }}>
+                      📱 MOBILE WORKSTATION & BLUETOOTH TRACKPAD SYNERGY
+                    </span>
+                    <span style={{ fontSize: '0.7rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.35)', color: '#34d399', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
+                      🖥️ {mobileTelemetry?.display ? `${mobileTelemetry.display.width}x${mobileTelemetry.display.height} @ ${mobileTelemetry.display.refresh_rate_hz}Hz` : 'RTX 4090 Display Ready'}
+                    </span>
+                    <span style={{ fontSize: '0.7rem', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
+                      ⌨️🖱️ BT Keyboard & Trackpad: Active
+                    </span>
+                    <span style={{ fontSize: '0.7rem', background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.35)', color: '#c084fc', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
+                      🌐 {mobileTelemetry?.remote_and_input?.parsec_running ? 'Parsec 60FPS' : mobileTelemetry?.remote_and_input?.rustdesk_running ? 'RustDesk Lossless' : 'Tailscale Mesh Ready'}
+                    </span>
+                  </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-                {[
-                  { id: 'desktop_native', label: '100% Native' },
-                  { id: 'mobile_1440p_125', label: '1440p (125% DPI)' },
-                  { id: 'mobile_1080p_150', label: '1080p (150% Touch)' }
-                ].map(p => (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                    {[
+                      { id: 'desktop_native', label: '100% Native' },
+                      { id: 'mobile_1440p_125', label: '1440p (125% DPI)' },
+                      { id: 'mobile_1080p_150', label: '1080p (150% Touch)' }
+                    ].map(p => (
+                      <button
+                        key={p.id}
+                        onClick={() => handleSwitchDpiProfile(p.id, false)}
+                        style={{
+                          background: dpiScaleProfile === p.id ? '#d97706' : 'rgba(255,255,255,0.06)',
+                          color: dpiScaleProfile === p.id ? '#fff' : '#cbd5e1',
+                          border: `1px solid ${dpiScaleProfile === p.id ? '#fbbf24' : 'rgba(255,255,255,0.15)'}`,
+                          borderRadius: '6px',
+                          padding: '3px 8px',
+                          fontSize: '0.7rem',
+                          fontWeight: 700,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => setShowSynergyDock(false)}
+                      style={{
+                        background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '0.72rem', fontWeight: 600
+                      }}
+                    >
+                      ▴ Collapse
+                    </button>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
                   <button
-                    key={p.id}
-                    onClick={() => handleSwitchDpiProfile(p.id, false)}
+                    onClick={() => {
+                      const target = window.prompt('Enter component, file, or route for AST Blast-Radius analysis:', 'ChatTab');
+                      if (target && target.trim()) handleSendMessage(`/blast ${target.trim()}`);
+                    }}
                     style={{
-                      background: dpiScaleProfile === p.id ? '#d97706' : 'rgba(255,255,255,0.06)',
-                      color: dpiScaleProfile === p.id ? '#fff' : '#cbd5e1',
-                      border: `1px solid ${dpiScaleProfile === p.id ? '#fbbf24' : 'rgba(255,255,255,0.15)'}`,
-                      borderRadius: '6px',
-                      padding: '3px 8px',
-                      fontSize: '0.7rem',
-                      fontWeight: 700,
-                      cursor: 'pointer'
+                      background: 'rgba(239, 68, 68, 0.18)', color: '#fca5a5', border: '1px solid rgba(239, 68, 68, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
                     }}
                   >
-                    {p.label}
+                    🕸️ /blast
                   </button>
-                ))}
+                  <button
+                    onClick={() => handleSendMessage('/graph')}
+                    style={{
+                      background: 'rgba(56, 189, 248, 0.18)', color: '#7dd3fc', border: '1px solid rgba(56, 189, 248, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    🗺️ /graph
+                  </button>
+                  <button
+                    onClick={() => handleSendMessage('/distill')}
+                    style={{
+                      background: 'rgba(168, 85, 247, 0.18)', color: '#d8b4fe', border: '1px solid rgba(168, 85, 247, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    🧬 /distill
+                  </button>
+                  <button
+                    onClick={() => handleSendMessage('/ps')}
+                    style={{
+                      background: 'rgba(16, 185, 129, 0.18)', color: '#86efac', border: '1px solid rgba(16, 185, 129, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    ⚡ /ps
+                  </button>
+                  <button
+                    onClick={() => handleSendMessage('/wsl')}
+                    style={{
+                      background: 'rgba(245, 158, 11, 0.18)', color: '#fde047', border: '1px solid rgba(245, 158, 11, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    🐧 /wsl
+                  </button>
+                  <button
+                    onClick={() => handleSendMessage('/health')}
+                    style={{
+                      background: 'rgba(16, 185, 129, 0.18)', color: '#6ee7b7', border: '1px solid rgba(16, 185, 129, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    🩺 /health
+                  </button>
+                  <button
+                    onClick={() => setShowWirelessCastHub(!showWirelessCastHub)}
+                    style={{
+                      background: 'rgba(56, 189, 248, 0.22)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.5)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    📡 Cast Hub
+                  </button>
+                </div>
               </div>
-            </div>
-
-            {/* 1-Tap High-Contrast Slash Command & Mission Bar for Mobile & Trackpad */}
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
-              <button
-                onClick={() => {
-                  const target = window.prompt('Enter component, file, or route for AST Blast-Radius analysis:', 'ChatTab');
-                  if (target && target.trim()) handleSendMessage(`/blast ${target.trim()}`);
-                }}
-                style={{
-                  background: 'rgba(239, 68, 68, 0.18)', color: '#fca5a5', border: '1px solid rgba(239, 68, 68, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Run AST Blast-Radius Dependency Analysis"
-              >
-                🕸️ /blast
-              </button>
-
-              <button
-                onClick={() => handleSendMessage('/graph')}
-                style={{
-                  background: 'rgba(56, 189, 248, 0.18)', color: '#7dd3fc', border: '1px solid rgba(56, 189, 248, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Rebuild SQLite AST Codebase Dependency Graph"
-              >
-                🗺️ /graph
-              </button>
-
-              <button
-                onClick={() => handleSendMessage('/distill')}
-                style={{
-                  background: 'rgba(168, 85, 247, 0.18)', color: '#d8b4fe', border: '1px solid rgba(168, 85, 247, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Trigger Sovereign Nightly QLoRA Dataset Curation on RTX 4090"
-              >
-                🧠 /distill
-              </button>
-
-              <button
-                onClick={() => {
-                  setFooterInput('/ps ');
-                  chatInputRef.current?.focus();
-                }}
-                style={{
-                  background: 'rgba(37, 99, 235, 0.22)', color: '#93c5fd', border: '1px solid rgba(59, 130, 246, 0.5)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Insert /ps for instant Windows PowerShell execution"
-              >
-                ⚡ /ps
-              </button>
-
-              <button
-                onClick={() => {
-                  setFooterInput('/wsl ');
-                  chatInputRef.current?.focus();
-                }}
-                style={{
-                  background: 'rgba(234, 88, 12, 0.2)', color: '#fdba74', border: '1px solid rgba(234, 88, 12, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Insert /wsl for instant Linux WSL2 Bash execution"
-              >
-                🐧 /wsl
-              </button>
-
-              <button
-                onClick={() => handleSendMessage('/health')}
-                style={{
-                  background: 'rgba(16, 185, 129, 0.18)', color: '#6ee7b7', border: '1px solid rgba(16, 185, 129, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Run Matrix Doctor Ecosystem Health Scan"
-              >
-                🩺 /health
-              </button>
-
-              <button
-                onClick={() => handleSendMessage('/dpi status')}
-                style={{
-                  background: 'rgba(245, 158, 11, 0.18)', color: '#fde68a', border: '1px solid rgba(245, 158, 11, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Inspect Display Resolution, DPI Scaling, Parsec/Tailscale & Bluetooth HID Status"
-              >
-                📱 /dpi status
-              </button>
-
-              <button
-                onClick={() => setShowWirelessCastHub(!showWirelessCastHub)}
-                style={{
-                  background: 'rgba(56, 189, 248, 0.22)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.5)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Open 3-Way Wireless Screen Mirror & Display Cast Hub (PC➔Display, PC➔Phone, Phone➔PC)"
-              >
-                📡 /cast Wireless Mirror
-              </button>
-            </div>
+            )}
           </div>
         )}
-
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+        </div>
+        </details>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end', minWidth: 0 }}>
+          <details style={{ position: 'relative', flexShrink: 0 }}>
+            <summary style={{ padding: '10px', cursor: 'pointer', border: '1px solid #475569', borderRadius: '10px', fontSize: '0.8rem' }}>Actions</summary>
+            <div style={{ position: 'absolute', bottom: '100%', left: 0, zIndex: 100, padding: '10px', background: '#111827', border: '1px solid #475569', borderRadius: '10px', width: 'min(320px, 80vw)', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
           {/* Artifacts & Tools Hub Button */}
           <button
             onClick={() => setIsArtifactsModalOpen(true)}
@@ -8536,11 +9013,12 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             {/* Dropdown Menu Popup (Anchored Above the Button) */}
             {showCommandsDropdown && (
               <div style={{
-                position: 'absolute',
-                bottom: '50px',
-                left: '0',
-                width: 'min(580px, 92vw)',
-                maxHeight: '480px',
+                position: 'fixed',
+                top: '8dvh',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 'min(580px, calc(100vw - 24px))',
+                maxHeight: '75dvh',
                 background: 'linear-gradient(180deg, #0d131f 0%, #060911 100%)',
                 border: '1px solid rgba(56, 189, 248, 0.45)',
                 borderRadius: '14px',
@@ -8612,7 +9090,6 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                         fontSize: '0.8rem',
                         outline: 'none'
                       }}
-                      autoFocus
                     />
                     {commandSearchQuery && (
                       <button
@@ -8841,6 +9318,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             )}
           </div>
 
+            </div>
+          </details>
           {/* Attachment Button 📎 */}
           <button
             onClick={() => fileInputRef.current?.click()}
@@ -8860,7 +9339,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
           <textarea
             ref={chatInputRef}
-            disabled={!conversationMemory.viewReady}
+            disabled={false}
             value={footerInput}
             onChange={handleInputChange}
             onKeyDown={(e) => {
@@ -8941,8 +9420,11 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           </div>
         </div>
 
-        {/* Clear screen & Action Toolbar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+        {/* Clear screen & Action Toolbar (Decluttered Single Row) */}
+        {isLoading && <button type="button" onClick={handleStopOrToggleBackend} style={{ padding: '6px 12px', color: '#fecaca', background: '#7f1d1d', borderRadius: '8px' }}>Stop response</button>}
+        <details>
+        <summary style={{ cursor: 'pointer', fontSize: '0.75rem', marginTop: '4px' }}>More actions · {conversationMemory.statusLabel}</summary>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             {/* Disable / Enable Backend & Stop Process Button */}
             <button
@@ -8985,174 +9467,109 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
               )}
             </button>
 
-            {chatMessages.length > 0 && (
+            {/* Quick Actions Drop-up Menu */}
+            <div style={{ position: 'relative' }} ref={quickActionsMenuRef}>
               <button
-                onClick={handleSaveToMemoryAndClear}
+                onClick={() => setShowQuickActionsMenu(!showQuickActionsMenu)}
                 style={{
-                  background: 'none', border: 'none', color: '#64748b', fontSize: '0.75rem', cursor: 'pointer',
+                  background: showQuickActionsMenu ? 'rgba(56, 189, 248, 0.25)' : 'rgba(56, 189, 248, 0.12)',
+                  color: '#38bdf8',
+                  border: '1px solid rgba(56, 189, 248, 0.4)',
+                  borderRadius: '6px',
+                  padding: '3px 9px',
+                  fontSize: '0.72rem',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
                 }}
+                title="Open Quick Diagnostic & System Actions"
               >
-                Clear Screen (Archives First)
+                <span>⚡ Quick Actions</span>
+                <span style={{ fontSize: '0.65rem' }}>{showQuickActionsMenu ? '▴' : '▾'}</span>
               </button>
-            )}
 
-            <button
-              onClick={() => handleSendMessage('/monitor')}
-              style={{
-                background: 'rgba(245, 158, 11, 0.12)',
-                color: '#fbbf24',
-                border: '1px solid rgba(245, 158, 11, 0.35)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-              title="Monitor all 43 Master Hub modules, 20 daemons, and storage matrix"
-            >
-              👑 43-Module Oversight
-            </button>
-
-            <button
-              onClick={() => handleSendMessage('/spaces')}
-              style={{
-                background: 'rgba(99, 102, 241, 0.12)',
-                color: '#a5b4fc',
-                border: '1px solid rgba(99, 102, 241, 0.35)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-              title="Inspect all 11 memory-mapped SQLite database spaces"
-            >
-              🔍 11 Spaces
-            </button>
-
-            <button
-              onClick={() => {
-                const text = window.prompt("Enter data or note to persist into SQLite database space:");
-                if (text && text.trim()) handleSendMessage('/ingest ' + text.trim());
-              }}
-              style={{
-                background: 'rgba(16, 185, 129, 0.12)',
-                color: '#34d399',
-                border: '1px solid rgba(16, 185, 129, 0.35)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-              title="On-demand structured data ingestion to database"
-            >
-              💾 Ingest to DB
-            </button>
-
-            <button
-              onClick={() => setIsGovernanceOpen(true)}
-              style={{
-                background: 'rgba(56, 189, 248, 0.1)',
-                color: '#38bdf8',
-                border: '1px solid rgba(56, 189, 248, 0.3)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-            >
-              🛡️ Risk & Governance Review
-            </button>
-
-            <button
-              onClick={() => setIsStressTestOpen(true)}
-              style={{
-                background: 'rgba(129, 140, 248, 0.1)',
-                color: '#818cf8',
-                border: '1px solid rgba(129, 140, 248, 0.3)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-            >
-              📊 Context Stress Test
-            </button>
-
-            <button
-              onClick={() => handleSendMessage('/blast ChatTab.jsx')}
-              style={{
-                background: 'rgba(239, 68, 68, 0.14)',
-                color: '#fca5a5',
-                border: '1px solid rgba(239, 68, 68, 0.4)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '700'
-              }}
-              title="Stage 2: Compute AST Blast-Radius Dependency Impact"
-            >
-              💥 /blast AST Impact
-            </button>
-
-            <button
-              onClick={() => handleSendMessage('/graph')}
-              style={{
-                background: 'rgba(56, 189, 248, 0.14)',
-                color: '#7dd3fc',
-                border: '1px solid rgba(56, 189, 248, 0.4)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '700'
-              }}
-              title="Stage 2: Rebuild 491-Node SQLite AST Dependency Graph"
-            >
-              🕸️ /graph (491 Nodes)
-            </button>
-
-            <button
-              onClick={() => handleSendMessage('/distill')}
-              style={{
-                background: 'rgba(168, 85, 247, 0.14)',
-                color: '#d8b4fe',
-                border: '1px solid rgba(168, 85, 247, 0.4)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '700'
-              }}
-              title="Stage 3: Build Sovereign Nightly QLoRA Dataset on RTX 4090"
-            >
-              🧬 /distill QLoRA
-            </button>
-
-            <button
-              onClick={() => {
-                const next = !mobileSynergyMode;
-                setMobileSynergyMode(next);
-                try { localStorage.setItem('aibs_mobile_synergy', String(next)); } catch (e) {}
-              }}
-              style={{
-                background: mobileSynergyMode ? 'linear-gradient(135deg, #d97706, #b45309)' : 'rgba(245, 158, 11, 0.14)',
-                color: mobileSynergyMode ? '#ffffff' : '#fcd34d',
-                border: '1px solid rgba(245, 158, 11, 0.45)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '700'
-              }}
-              title="Toggle Mobile Workstation DPI & Bluetooth Trackpad Synergy Dock"
-            >
-              📱 {mobileSynergyMode ? 'Mobile Synergy: ON' : 'Mobile DPI Dock'}
-            </button>
+              {showQuickActionsMenu && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: '100%',
+                  left: 0,
+                  marginBottom: '8px',
+                  background: 'rgba(15, 23, 42, 0.98)',
+                  border: '1px solid #30363d',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.6)',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, minmax(140px, 1fr))',
+                  gap: '6px',
+                  zIndex: 200,
+                  minWidth: '320px'
+                }}>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); handleSendMessage('/monitor'); }}
+                    style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#fbbf24', border: '1px solid rgba(245, 158, 11, 0.35)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 600, textAlign: 'left' }}
+                  >
+                    👑 43-Module Oversight
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); handleSendMessage('/spaces'); }}
+                    style={{ background: 'rgba(99, 102, 241, 0.12)', color: '#a5b4fc', border: '1px solid rgba(99, 102, 241, 0.35)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 600, textAlign: 'left' }}
+                  >
+                    🔍 11 Spaces
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowQuickActionsMenu(false);
+                      const text = window.prompt("Enter data or note to persist into SQLite database space:");
+                      if (text && text.trim()) handleSendMessage('/ingest ' + text.trim());
+                    }}
+                    style={{ background: 'rgba(16, 185, 129, 0.12)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.35)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 600, textAlign: 'left' }}
+                  >
+                    💾 Ingest to DB
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); setIsGovernanceOpen(true); }}
+                    style={{ background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 600, textAlign: 'left' }}
+                  >
+                    🛡️ Risk & Governance
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); setIsStressTestOpen(true); }}
+                    style={{ background: 'rgba(129, 140, 248, 0.1)', color: '#818cf8', border: '1px solid rgba(129, 140, 248, 0.3)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 600, textAlign: 'left' }}
+                  >
+                    📊 Context Stress Test
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); handleSendMessage('/blast ChatTab.jsx'); }}
+                    style={{ background: 'rgba(239, 68, 68, 0.14)', color: '#fca5a5', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 700, textAlign: 'left' }}
+                  >
+                    💥 /blast AST Impact
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); handleSendMessage('/graph'); }}
+                    style={{ background: 'rgba(56, 189, 248, 0.14)', color: '#7dd3fc', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 700, textAlign: 'left' }}
+                  >
+                    🕸️ /graph (491 Nodes)
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); handleSendMessage('/distill'); }}
+                    style={{ background: 'rgba(168, 85, 247, 0.14)', color: '#d8b4fe', border: '1px solid rgba(168, 85, 247, 0.4)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 700, textAlign: 'left' }}
+                  >
+                    🧬 /distill QLoRA
+                  </button>
+                  {chatMessages.length > 0 && (
+                    <button
+                      onClick={() => { setShowQuickActionsMenu(false); handleSaveToMemoryAndClear(); }}
+                      style={{ gridColumn: 'span 2', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', textAlign: 'center' }}
+                    >
+                      Clear Screen (Archives First)
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -9171,10 +9588,11 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
               <span style={{ fontSize: '0.65rem' }}>{isBackendDisabled ? '🔴' : '🟢'}</span> {isBackendDisabled ? 'Backend Offline' : conversationMemory.statusLabel}
             </span>
             <span style={{ color: '#60a5fa', fontSize: '0.72rem', fontWeight: 700 }}>
-              {`Stehouwer LLM ${SYSTEM_VERSION} • Stage 1–3 Auto-Heal, AST Graph & RTX 4090 QLoRA Active`}
+              {`Stehouwer LLM ${SYSTEM_VERSION} • Selected provider and per-message evidence shown above`}
             </span>
           </div>
         </div>
+        </details>
       </div>
 
       {/* Live Workspace Artifacts & Autonomous Program Builder Hub Modal */}
@@ -9240,7 +9658,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             </div>
 
             <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: 0, marginBottom: '18px' }}>
-              Test BS-Chat context limits and needle-in-a-haystack accuracy up to 1,000,000 tokens (4,096 GPU VRAM window + CPU Port 11435 Offload RAG).
+              Synthetic context benchmark. Model input limits and bounded source retrieval require separate verification; this control does not establish a million-token model window.
             </p>
 
             <div style={{ marginBottom: '20px' }}>
@@ -9322,3 +9740,9 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
 
 
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version":2,
+  "asset_id":"539b6312-a9f6-4a92-a096-77f1b6c5045b",
+  "name":"Adam v20 scalar surface study - unapproved",
+  "source":{"sha256":"3fec67639f357c6800f05d031a3dad21faaaf7fa171c5aaa4e91d9395dc87f10","bytes":13748304},
+  "resources":[],
+  "source_manifest":{"format":"AIBS_GLTF_SOURCE 1","sha256":"6be8c39ff23776fa7d5c45922c71dfca361abd6d09b0b7945171b94b7dc47576"},
+  "license":{"sha256":"88b1629b6d8656ac72089d2441698b6cc92d329090fff899192dba8af8dac666","bytes":1751},
+  "license_review":"Supplied UTF-8 declaration copied verbatim; ownership/permission not inferred",
+  "importer":{"name":"aibs-gltf-character","format_version":2,"cgltf_version":"1.15","commit":"360db1a95480fe102ae9c69b27c5d101167ff5ba","header_sha256":"e378a21c084bf1f288bb799de827bb26906efb024255f1ecf1705ea13f11c6ec","license":"MIT","license_notice":"Full cgltf MIT notice is distributed with the engine dependency and installed SDK licenses"},
+  "options":{"units":"meters","up_axis":"+Y","forward_axis":"+Z","axis_conversion":"right-handed glTF to left-handed engine by X reflection","bind_shape":"coherent joint-bind times inverse-bind; skinned mesh-node transform is ignored","bake_rate":30,"clips":[{"source_animation":0,"name":"idle","looping":true},{"source_animation":1,"name":"walk","looping":true},{"source_animation":2,"name":"catchup","looping":true},{"source_animation":3,"name":"guidance","looping":false}],"source_skin_to_cooked":[0,1,2,5,8,13,9,14,18,20,10,15,19,21,3,6,11,16,4,7,12,17],"baked_intervals_seconds":[0.033333331346511841,0.033333333333333333,0.033333331346511841,0.033333331346511841],"interpolation":"LINEAR TRS baked uniformly including endpoints; per-channel clamping","opaque_alpha":"source alpha ignored and set to255 before linear-light sRGB mip generation; hologram opacity belongs to runtime instance","external_resources":"exact explicit URI map only; no filesystem or network fallback","weight_policy":"at most four influences; bounded float/UNORM quantization normalization only"},
+  "import_memory":{"parser_peak_bytes":596988,"engine_owned_live_upper_bound_bytes":76190744,"scope":"private parser and conservative engine-owned accounting; not WIC, driver or whole-process memory"},
+  "cooked":{"file":"dcc8fe2f1c3c99938baff7a17dbe11838bfcb59d383984bf40d7d947af5d03de.aibchar","sha256":"dcc8fe2f1c3c99938baff7a17dbe11838bfcb59d383984bf40d7d947af5d03de","bytes":19901697,"decoded_bytes":19902412}
+}

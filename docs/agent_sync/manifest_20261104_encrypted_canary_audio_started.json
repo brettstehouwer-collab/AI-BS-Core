@@ -1,0 +1,37 @@
+{
+  "id": "20261104_encrypted_canary_audio_started",
+  "utc": "2026-11-04T21:23:47.367875+00:00",
+  "status": "ENCRYPTED_RECOVERY_CANARY_VERIFIED_AUDIO_SNAPSHOT_INVENTORY_RUNNING",
+  "fresh_key_copies_verified": true,
+  "external_offline_key_custody_verified": false,
+  "encrypted_repository_initialized": true,
+  "canary_snapshot_id": "a9750768b14e1b0039790d1c16574a76cc66fa96512a903efdeb2739400cf4d9",
+  "canary_verified_with_E_key": true,
+  "source_audio_files_expected": 198,
+  "source_audio_bytes_expected": 85686866220,
+  "audio_stage_at_checkpoint": "POINT_IN_TIME_INVENTORY_COMPLETE",
+  "owned_audio_shadow_created_and_reconciled": true,
+  "source_moves_or_deletes": false,
+  "E_music_backup_complete": false,
+  "full_C_backup_complete": false,
+  "C_free_bytes": 217450954752,
+  "E_free_bytes": 42846830592,
+  "backup_folder": "https://drive.google.com/drive/folders/1waaZECrzSuTz3aYGRhxrY0MB6CryfD_W",
+  "key_values_tokens_private_logs_uploaded": false,
+  "known_failure_preserved": "Initial Init local executable-path parsing; corrected CSV/shell fixture passed before same-intent recovery. Initial audio snapshot validation used incorrect State9; existing durable successful creation journal and native snapshot listing reconciled exact same shadow after primary-source State12 correction. No replacement snapshot created.",
+  "current_source_sha256": {
+    "private_encrypted_backup.py": "0aeb740662e8712d163d64efc9adc6afbdf24b4cc1a527dbc9b03924220d560d",
+    "Backup-ExactVolumeShadow.ps1": "9e8f6099ab50d2a1ab71a5c50b7f757fd7c28a6e842f103d679b0173cb8bceb1",
+    "encrypted_backup_manifest.json": "df78743efc510a5bc63ec7b5068025844d391e261bbc6ba6685145816a72618e"
+  },
+  "derived_art_scope_reconciled": {
+    "source": "docs/game_engine/checkpoints/derived_art_backup_authorization_20261104.json",
+    "source_thread": "01a19491-7a5c-71e0-a6ba-0dc4a3f58f44",
+    "source_turn": "01a1a819-e05c-72a3-a68b-8de3fe91ea35",
+    "source_user_item": "01a1a824-8c6f-7022-b80a-c50c7fa18b1c",
+    "question_id": "call_27e18808a1cc49429b50fbc1e150f549",
+    "exact_answer": "Approve these and future checkpoints",
+    "note": "Later approval supersedes older derived-game-art hold wording within the specified game-checkpoint scope; full private encrypted C backup has separate user authorization."
+  },
+  "next_step": "Finish exact 198-file E snapshot inventory and encrypted copy; release only owned E shadow, check all encrypted data and sample restores. Qualify C resident-cloud coverage and explicit metadata/exclusion gaps, then run C file backup. No original deletion justified by a partial backup."
+}

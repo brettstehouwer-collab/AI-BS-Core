@@ -1,0 +1,75 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "58c350db683e469085aa55242cfd535c",
+  "plan_id": "61b4752198814f7595ce8619ac54b499",
+  "snapshot_sha256": "86da7ba90dc319e4b79405e412057ffb209b29e1bf14c67e6e9d062321967063",
+  "review_digest": "e3c9a02dd4c808b9dd8230f7f88693ec60adfb10cfba24898cf8fe3ed0e423e0",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "c38a6513eb89423ab976cb56b4ffb5ce",
+  "reviewed_plan_sha256": "d536674e75c2ccc8cac3be6011bc6975e120195112e1370638f39fb125dfbcae",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.js",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.js",
+        "role": "editable",
+        "sha256": "8de5c07db8deb3b75dedd9b5bc999669936cea181ae0033c27c4e2071a6e434d",
+        "content": "const value = 1;\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/app.test.cjs",
+        "role": "verification",
+        "sha256": "65de91e27330ad94491c6723465667e99ac3a02e59787368acfc76225ddf3f14",
+        "content": "require('node:test')('candidate',()=>require('node:assert/strict').match(require('node:fs').readFileSync('src/app.js','utf8'),/value = 42/));\n",
+        "source_complete": true
+      },
+      {
+        "path": "package.json",
+        "role": "dependency",
+        "sha256": "dcecf8cc830ac548798645cc1d7ed17b6c1c9063c7d2b7b19af8fc0220c77230",
+        "content": "{\"scripts\": {\"check\": \"node --test tests/app.test.cjs\", \"precheck\": \"node -e \\\"process.exit(23)\\\"\", \"postcheck\": \"node -e \\\"process.exit(24)\\\"\"}}",
+        "source_complete": true
+      },
+      {
+        "path": "package-lock.json",
+        "role": "dependency",
+        "sha256": "2086223f909ecaf4b063cfc7e8187ab73e8e8a24ec7029d54e0403dee55a3265",
+        "content": "{\"lockfileVersion\":3}",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "npm",
+        "argv": [
+          "npm",
+          "run",
+          "check"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.js"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "34d777d361ecb24f9b5c5c0f65df3d8f92ff6d8f5b6f101f90ac0b1b5e2ee7a4",
+  "worker": {
+    "pid": 12784,
+    "created": 1794782635.3494687
+  },
+  "created_at_utc": "2026-11-15T22:43:57.357267+00:00",
+  "entry_sha256": "2210d85139741d1c78b7c37de3ceabd680c3ed9c6ec6804a1c1e8f1e1a236d47"
+}

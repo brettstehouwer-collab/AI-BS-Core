@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Play, Square, Pause, Volume2, Cpu, Download, Layout, Grid, Sliders, Music, Radio, Film, Video } from 'lucide-react';
+import { useState, useRef } from "react";
+import { Play, Square, Pause, Volume2, Download, Music, Film } from "lucide-react";
 import { theme } from '../../styles/theme';
 import { useDawStore } from './dawStore';
 import * as Tone from 'tone';
@@ -15,8 +15,9 @@ import StehouwerWaveStudio from './StehouwerWaveStudio';
 import AiVocalStemSuite from './AiVocalStemSuite';
 import { LatencyMonitorHUD } from './LatencyMonitorHUD';
 import MusicAssistantChat from './MusicAssistantChat';
-import { Bot, MessageSquare } from 'lucide-react';
+import { Bot } from "lucide-react";
 
+/** @param {AudioBuffer} buffer */
 function audioBufferToWavBlob(buffer) {
   const numOfChan = buffer.numberOfChannels;
   const length = buffer.length * numOfChan * 2 + 44;
@@ -26,17 +27,20 @@ function audioBufferToWavBlob(buffer) {
   let offset = 0;
   let pos = 0;
 
+  /** @param {string} str */
   function writeString(str) {
     for (let i = 0; i < str.length; i++) {
       out.setUint8(pos++, str.charCodeAt(i));
     }
   }
 
+  /** @param {number} data */
   function setUint16(data) {
     out.setUint16(pos, data, true);
     pos += 2;
   }
 
+  /** @param {number} data */
   function setUint32(data) {
     out.setUint32(pos, data, true);
     pos += 4;
@@ -63,7 +67,7 @@ function audioBufferToWavBlob(buffer) {
   while (offset < buffer.length) {
     for (let i = 0; i < numOfChan; i++) {
       let sample = Math.max(-1, Math.min(1, channels[i][offset]));
-      sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0;
+      sample = (sample < 0 ? sample * 32768 : sample * 32767) | 0;
       out.setInt16(pos, sample, true);
       pos += 2;
     }
@@ -93,7 +97,7 @@ const MusicDAWStudioTab = () => {
   const toggleAssistantDrawer = useDawStore(state => state.toggleAssistantDrawer);
 
   const [isExporting, setIsExporting] = useState(false);
-  const [exportType, setExportType] = useState('wav'); // 'wav' or 'mp4'
+  const [] = useState('wav'); // 'wav' or 'mp4'
   const [browserWidth, setBrowserWidth] = useState(320);
   const [isBrowserExpanded, setIsBrowserExpanded] = useState(false);
   const [isTheater, setIsTheater] = useState(false);
@@ -132,7 +136,9 @@ const MusicDAWStudioTab = () => {
         kick.triggerAttackRelease('C1', '8n', 1.5);
       }, 4);
 
-      const blob = audioBufferToWavBlob(buffer.get());
+      const rendered = buffer.get();
+      if (!rendered) throw new Error('Audio export did not return a complete buffer.');
+      const blob = audioBufferToWavBlob(rendered);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -164,12 +170,13 @@ const MusicDAWStudioTab = () => {
     }
   };
 
-  const centerCanvasRef = useRef(null);
+  const centerCanvasRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
+  /** @param {import("react").WheelEvent} e */
   const handleGlobalWheel = (e) => {
     const target = e.target;
     // Let elements with their own internal scrollbars scroll naturally
-    if (target && target.closest && (target.closest('.browser-sound-list') || target.closest('.channel-rack-steps-container'))) {
+    if (target instanceof Element && (target.closest('.browser-sound-list') || target.closest('.channel-rack-steps-container'))) {
       return;
     }
     if (centerCanvasRef.current) {
@@ -196,7 +203,7 @@ const MusicDAWStudioTab = () => {
       <div style={{
         height: '52px',
         background: 'rgba(13, 16, 22, 0.98)',
-        borderBottom: `1px solid ${theme.colors.border}`,
+        borderBottom: `1px solid ${'#30363d'}`,
         display: 'flex',
         alignItems: 'center',
         padding: '0 16px',

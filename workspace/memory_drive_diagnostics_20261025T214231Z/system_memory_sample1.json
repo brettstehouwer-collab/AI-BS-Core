@@ -1,0 +1,53 @@
+{
+  "utc": "2026-10-25T21:42:33.1886839Z",
+  "eastern": "2026-10-25T17:42:33.1890967-04:00",
+  "output": "C:\\AI-BS\\workspace\\memory_drive_diagnostics_20261025T214231Z",
+  "memory": {
+    "CommittedBytes": 202099417088,
+    "CommitLimit": 205738504192,
+    "PercentCommittedBytesInUse": 98,
+    "AvailableBytes": 11468337152,
+    "PagesInputPersec": 4130,
+    "PageReadsPersec": 79
+  },
+  "os": {
+    "TotalVisibleMemorySize": 64641804,
+    "FreePhysicalMemory": 11236528,
+    "LastBootUpTime": "2026-10-25T01:46:01.5-04:00"
+  },
+  "pagefiles": [
+    {
+      "Name": "C:\\pagefile.sys",
+      "AllocatedBaseSize": 133080,
+      "CurrentUsage": 51411,
+      "PeakUsage": 54210,
+      "TempPageFile": false
+    }
+  ],
+  "settings": {
+    "AutomaticManagedPagefile": false,
+    "TotalPhysicalMemory": 66193207296
+  },
+  "drives": [
+    {
+      "DeviceID": "C:",
+      "Size": 1796861837312,
+      "FreeSpace": 43280089088
+    },
+    {
+      "DeviceID": "D:",
+      "Size": 510770802688,
+      "FreeSpace": 60686950400
+    },
+    {
+      "DeviceID": "E:",
+      "Size": 899427594240,
+      "FreeSpace": 115395764224
+    },
+    {
+      "DeviceID": "F:",
+      "Size": 79990812672,
+      "FreeSpace": 65971441664
+    }
+  ]
+}

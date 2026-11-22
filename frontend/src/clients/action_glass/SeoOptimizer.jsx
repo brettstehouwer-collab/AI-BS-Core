@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from 'react';
+/** Encode untrusted model/input text before adding fixed result markup. @param {unknown} value */
+function seoText(value) {
+  return typeof value === 'string' ? value.replace(/[&<>"']/g, character => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[character] || '')) : '';
+}
 
+import { useState } from "react";
+
+/** @param {{"backendUrl": string}} props */
 export default function SeoOptimizer({ backendUrl }) {
   const [activeView, setActiveView] = useState('dashboard');
   const [isAuditing, setIsAuditing] = useState(false);
@@ -7,7 +13,7 @@ export default function SeoOptimizer({ backendUrl }) {
 
   // Action Glass Brand Colors
   const ACTION_GOLD = '#ffd832';
-  const ACTION_BLUE = '#1f6feb'; // Using standard theme blue for now
+  ('#1f6feb'); // Using standard theme blue for now
   
   const runSecurityAudit = () => {
     setIsAuditing(true);
@@ -171,8 +177,11 @@ export default function SeoOptimizer({ backendUrl }) {
             />
             <button 
               onClick={async () => {
-                const svc = document.getElementById('serviceInput').value;
-                document.getElementById('aiResults').innerHTML = 'Generating...';
+                const input = document.getElementById('serviceInput');
+                const results = document.getElementById('aiResults');
+                if (!(input instanceof HTMLInputElement) || !results) return;
+                const svc = input.value;
+                results.textContent = 'Generating...';
                 try {
                   const res = await fetch(`${backendUrl}/api/clients/action_glass/seo-optimizer`, {
                     method: 'POST',
@@ -180,6 +189,7 @@ export default function SeoOptimizer({ backendUrl }) {
                     body: JSON.stringify({ service: svc, location: 'Jenison, MI' })
                   });
                   
+                  /** @type {Record<string, unknown>} */
                   let ai = {};
                   if (!res.ok) {
                     console.error("Genkit API failed, using fallback for demo purposes.");
@@ -194,15 +204,15 @@ export default function SeoOptimizer({ backendUrl }) {
                     const data = await res.json();
                     ai = data.ai_optimization || {};
                   }
-                  document.getElementById('aiResults').innerHTML = `
-                    <div style="margin-bottom: 15px;"><strong>Headline:</strong> ${ai.adHeadline || ''}</div>
-                    <div style="margin-bottom: 15px;"><strong>Body:</strong> ${ai.adBody || ''}</div>
-                    <div style="margin-bottom: 15px;"><strong>SEO Title:</strong> ${ai.seoTitle || ''}</div>
-                    <div style="margin-bottom: 15px;"><strong>Meta Description:</strong> ${ai.metaDescription || ''}</div>
-                    <div><strong>Keywords:</strong> ${(ai.keywords || []).join(', ')}</div>
+                  results.innerHTML = `
+                    <div style="margin-bottom: 15px;"><strong>Headline:</strong> ${seoText(ai.adHeadline)}</div>
+                    <div style="margin-bottom: 15px;"><strong>Body:</strong> ${seoText(ai.adBody)}</div>
+                    <div style="margin-bottom: 15px;"><strong>SEO Title:</strong> ${seoText(ai.seoTitle)}</div>
+                    <div style="margin-bottom: 15px;"><strong>Meta Description:</strong> ${seoText(ai.metaDescription)}</div>
+                    <div><strong>Keywords:</strong> ${Array.isArray(ai.keywords) ? ai.keywords.map(seoText).join(', ') : ''}</div>
                   `;
                 } catch(e) {
-                  document.getElementById('aiResults').innerHTML = 'Error calling Genkit server. Is it running?';
+                  results.textContent = 'Error calling Genkit server. Is it running?';
                 }
               }}
               style={{ padding: '10px 20px', background: ACTION_GOLD, color: '#000', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}

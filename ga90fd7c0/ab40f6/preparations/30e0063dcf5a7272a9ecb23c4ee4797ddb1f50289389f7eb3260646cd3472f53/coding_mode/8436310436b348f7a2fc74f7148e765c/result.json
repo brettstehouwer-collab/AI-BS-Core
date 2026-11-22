@@ -1,0 +1,37 @@
+{
+  "kind": "trusted_local_result",
+  "input_sha256": "fb3ab049a2ea6a0e073885264f1f0463bf6093f80f87fcc7748ed187c72d3d17",
+  "state": "VERIFIED",
+  "checks": [
+    {
+      "check_id": "npm",
+      "returncode": 0,
+      "error": null,
+      "execution_time_ms": 282,
+      "stdout": "\n> check\n> node --test tests/app.test.cjs\n\n\u2714 candidate (0.7621ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 1\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 59.9231\n",
+      "stderr": "",
+      "preview_truncated": false,
+      "log_file": "check_logs\\npm.json",
+      "log_sha256": "1ac891ae66b8bcc07afb4bc54fba5888f3fcc744a567e87aebccf6d5f115e49c"
+    }
+  ],
+  "static_checks": [
+    {
+      "path": "src/app.js",
+      "kind": "syntax",
+      "status": "passed",
+      "parser_sha256": "914c11c83f502189db0479fa0452db4baf86cdb1b75555e5ed7ff77cd118ce8e"
+    }
+  ],
+  "started_at": 1794718695.2192345,
+  "worker": null,
+  "resource_limits": {
+    "cpu_percent": 20,
+    "job_memory_bytes": 536870912,
+    "below_normal_priority": true
+  },
+  "npm_policy": "Selected script may use a shell; pre/post lifecycle hooks disabled; no installation requested.",
+  "finished_at": 1794718695.5624337,
+  "runtime_seal": "34099b697b2575bce6dfe6d6d081c43adb9b95d09fb4d3da1fe888ad266222a9",
+  "entry_sha256": "54058d7d6f2761cf29050a621d0b0b599fe92ed2d3900ee990e6a9e2e5f06495"
+}

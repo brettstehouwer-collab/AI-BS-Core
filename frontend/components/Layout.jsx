@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { theme } from '../styles/theme';
 
 export const PillarlessCenter = ({ areaSqFt = 4500, guestCapacity = 350 }) => {

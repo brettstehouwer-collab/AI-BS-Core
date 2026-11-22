@@ -1,0 +1,17 @@
+{
+  "handoff_id": "takeover139_checkpoint_incomplete",
+  "utc": "2026-11-10T15:03:52.904334+00:00",
+  "qualification": "INCOMPLETE",
+  "goal_status": "PAUSE_REQUESTED_FOR_MEMORY_DIAGNOSTIC",
+  "all_ten_goals_complete": false,
+  "source_manifest": "C:\\AI-BS\\backups\\antigravity_takeover_20261109T190150Z\\final-source\\g004\\manifest.json",
+  "source_manifest_sha256": "5bdbf8b355bad57b468edf91a15b7d5f3549039abd531b604ad917b55e730739",
+  "snapshot_files_verified": 231,
+  "current_document_drift_preserved": [
+    "docs/CODEX_HANDOFF.md"
+  ],
+  "restart_checkpoint": "C:\\AI-BS\\backups\\antigravity_takeover_20261109T190150Z\\final139-checkpoint\\SAFE_RESTART_CHECKPOINT.json",
+  "restart_checkpoint_sha256": "dc88cd3f8769f13c3d27b9845276762d5a701669a8682dd38bddc098090268aa",
+  "runtime_limit": "Old API pointer24892 stale after boot. Actual core_boot_20261110T144347139440Z.json names API15872/Ollama35972 and HTTP200 observed. psutil listener-state filtering was unreliable; duplicate starts failed occupied ports and were retained. No listener replaced or stopped. Revalidate current identities before any adoption/restart.",
+  "next_step": "Read this checkpoint, document-corruption/recovery.json and g004 manifest. After hardware diagnosis revalidate source/runtime; retain browser/gameplay/performance/human/history gates and all ten goals."
+}

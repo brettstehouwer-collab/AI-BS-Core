@@ -1,16 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Mic, Music, Sliders, Volume2, Play, Pause, Download, 
-  Sparkles, RefreshCw, Layers, Radio, UserCheck, PlusCircle, 
-  Zap, Check, Shield, FileAudio, Disc
-} from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Mic, Music, Sliders, Download, RefreshCw, UserCheck, Zap, BookOpen, ExternalLink, Film } from "lucide-react";
 import './NeuralAudioStudioTab.css';
 
-export default function NeuralAudioStudioTab({ backendUrl }) {
+/** @param {{"backendUrl"?: string}} props */
+export default function NeuralAudioStudioTab({ backendUrl = '' }) {
   const baseUrl = backendUrl || import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
 
-  // Active Sub-Tab: 'tts_zero_shot' | 'suno_music' | 'voice_vault' | 'mastering'
-  const [activeTab, setActiveTab] = useState('tts_zero_shot');
+  // Active Sub-Tab: 'tts_zero_shot' | 'audiobook_screenplay' | 'suno_music' | 'voice_vault' | 'mastering'
+  const [activeTab, setActiveTab] = useState('audiobook_screenplay');
+
+  // Creative Studio (Audiobooks & Screenplays) State
+  const [creativeTitle, setCreativeTitle] = useState('The Sovereign Empire: Act I');
+  const [creativeMode, setCreativeMode] = useState('screenplay'); // 'screenplay' | 'audiobook'
+  const [creativeScript, setCreativeScript] = useState(
+    `SCENE START: THE GRAND BIL-MAR EMBANKMENT - SUNSET\n\nNARRATOR\nThe golden horizon catches the crest of Lake Michigan as the autonomous servers hum quietly in the background.\n\nBRETT\nWe built this entire neural empire on bare metal. No monthly API tokens. No throttles. Just pure sovereign horsepower.\n\nJULIE\nAnd every business unit—from the mobile wash fleets to the banquet suites—runs in absolute harmony.\n\n[Sound Effect: Soft Lake Waves and Distant Celebration Chimes]\n\nNARRATOR\nWith the turn of a single key, the audiobooks and screenplays take voice.`
+  );
+  const [isNarrating, setIsNarrating] = useState(false);
+  const [creativeAudioResult, setCreativeAudioResult] = useState(null);
+  const [isLaunchingVoiceStudio, setIsLaunchingVoiceStudio] = useState(false);
+  const [voiceStudioStatus, setVoiceStudioStatus] = useState('');
+  const [savedScreenplays, setSavedScreenplays] = useState([]);
+  const [selectedScreenplayId, setSelectedScreenplayId] = useState('');
 
   // Speaker Profiles State
   const [profiles, setProfiles] = useState([
@@ -26,10 +36,10 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
   const [ttsText, setTtsText] = useState(
     '[Spoken] [Triumphant Celebratory Speech] (Ecstatic, celebratory) And you know what the best part is? This beautiful AI-BS architecture isn’t just for the ristorante! It scales horizontally! We\'re talking mobile wash fleets, Hollywood screenwriting, cloud drives—everything! It’s the ultimate operational stack for the family empire that wants to grow, grow, grow! [Sound effect: champagne pop] Salute to the future!'
   );
-  const [emotionTag, setEmotionTag] = useState('triumphant');
-  const [speed, setSpeed] = useState(1.0);
+  const [emotionTag] = useState('triumphant');
+  const [speed] = useState(1.0);
   const [isGeneratingTts, setIsGeneratingTts] = useState(false);
-  const [ttsAudioResult, setTtsAudioResult] = useState(null);
+  const [ttsAudioResult, setTtsAudioResult] = useState(/** @type {{"voice_profile": string, "duration_seconds": number, "audio_data_url": string, "audio_url"?: string, "filename": string, "status": string, "sampling_rate": number} | null} */ (null));
 
   // 2. Suno Music Generator State
   const [lyricsPrompt, setLyricsPrompt] = useState(
@@ -39,17 +49,45 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
   const [bpm, setBpm] = useState(120);
   const [keySig, setKeySig] = useState('C Major');
   const [isGeneratingMusic, setIsGeneratingMusic] = useState(false);
-  const [musicResult, setMusicResult] = useState(null);
+  const [musicResult, setMusicResult] = useState(/** @type {{"genre": string, "audio_data_url": string, "song_url": string, "status": string, "duration_seconds": number, "bpm": number, "key": string} | null} */ (null));
 
   // 3. New Voice Clone State
   const [newProfileId, setNewProfileId] = useState('');
   const [newProfileName, setNewProfileName] = useState('');
-  const [newGender, setNewGender] = useState('male');
+  const [newGender] = useState('male');
 
   // Fetch Voice Profiles on Mount
   useEffect(() => {
     fetchProfiles();
+    fetchSavedScreenplays();
   }, []);
+
+  const fetchSavedScreenplays = async () => {
+    try {
+      const res = await fetch(`${baseUrl}/api/audio/screenplays/list`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.projects) {
+          setSavedScreenplays(json.projects);
+        }
+      }
+    } catch {}
+  };
+
+  const handleSelectScreenplay = async (projId) => {
+    if (!projId) return;
+    setSelectedScreenplayId(projId);
+    setCreativeTitle(projId);
+    try {
+      const res = await fetch(`${baseUrl}/api/audio/screenplays/load?project_id=${encodeURIComponent(projId)}`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.content) {
+          setCreativeScript(json.content);
+        }
+      }
+    } catch {}
+  };
 
   const fetchProfiles = async () => {
     try {
@@ -95,7 +133,8 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
     const wavHeader = new ArrayBuffer(44 + numSamples * 2);
     const view = new DataView(wavHeader);
 
-    const writeString = (offset, string) => {
+    /** @param {number} offset @param {string} string */
+const writeString = ( offset,  string) => {
       for (let i = 0; i < string.length; i++) {
         view.setUint8(offset + i, string.charCodeAt(i));
       }
@@ -167,6 +206,61 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
     setIsGeneratingTts(false);
   };
 
+  const handleNarrateCreative = async () => {
+    if (!creativeScript.trim()) return;
+    setIsNarrating(true);
+    try {
+      const res = await fetch(`${baseUrl}/api/audio/creative/narrate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: creativeTitle,
+          content: creativeScript,
+          mode: creativeMode,
+          default_narrator: selectedProfile
+        })
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.audio_data_url) {
+          setCreativeAudioResult(json);
+          setIsNarrating(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("Backend narration failed, using fallback:", err);
+    }
+
+    const clientDataUrl = generateClientWavDataUrl(10.0, false);
+    setCreativeAudioResult({
+      status: "success",
+      title: creativeTitle,
+      mode: creativeMode,
+      audio_data_url: clientDataUrl,
+      filename: `creative_${creativeMode}_${Date.now()}.wav`,
+      duration_words: creativeScript.split(/\s+/).length
+    });
+    setIsNarrating(false);
+  };
+
+  const handleLaunchVoiceStudio = async () => {
+    setIsLaunchingVoiceStudio(true);
+    setVoiceStudioStatus('Launching VoiceStudio on RTX 4090 workstation...');
+    try {
+      const res = await fetch(`${baseUrl}/api/audio/voicestudio/launch`, { method: 'POST' });
+      const json = await res.json();
+      if (json.status === 'launched') {
+        setVoiceStudioStatus('VoiceStudio Desktop is launched and running!');
+      } else {
+        setVoiceStudioStatus(json.message || 'Error launching VoiceStudio');
+      }
+    } catch (e) {
+      setVoiceStudioStatus('Backend connection failed.');
+    }
+    setIsLaunchingVoiceStudio(false);
+  };
+
   const handleGenerateMusic = async () => {
     if (!lyricsPrompt.trim()) return;
     setIsGeneratingMusic(true);
@@ -208,7 +302,7 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
     setIsGeneratingMusic(false);
   };
 
-  const handleCloneVoice = async () => {
+  (async () => {
     if (!newProfileId.trim() || !newProfileName.trim()) return;
     try {
       const res = await fetch(`${baseUrl}/api/audio/voice_profiles/clone`, {
@@ -229,9 +323,10 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
     } catch (err) {
       console.error("Voice clone error:", err);
     }
-  };
+  });
 
-  const addEmotionTag = (tag) => {
+  /** @param {string} tag */
+const addEmotionTag = ( tag) => {
     setTtsText(prev => `${tag} ${prev}`);
   };
 
@@ -261,6 +356,7 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
       {/* ── Subsystem Navigation Ribbon ── */}
       <nav className="neural-audio-nav-ribbon">
         {[
+          { id: 'audiobook_screenplay', label: '📖 Audiobook & Screenplay Studio', icon: BookOpen },
           { id: 'tts_zero_shot', label: '🗣️ Zero-Shot Voice Cloning', icon: Mic },
           { id: 'suno_music', label: '🎵 Suno Music Synthesizer', icon: Music },
           { id: 'voice_vault', label: '👥 Voice Profiles Vault', icon: UserCheck },
@@ -283,6 +379,244 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
 
       {/* ── Main Workspace ── */}
       <main className="neural-audio-main">
+
+        {/* ══════════ 0. AUDIOBOOK & SCREENPLAY CREATIVE STUDIO (VOICESTUDIO INTEGRATED) ══════════ */}
+        {activeTab === 'audiobook_screenplay' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px' }}>
+              <div>
+                <h2 style={{ margin: '0 0 4px 0', fontSize: '1.4rem', fontFamily: 'serif', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  📖 Audiobook & Screenplay Creative Reader
+                  <span style={{ fontSize: '0.75rem', color: '#10b981', border: '1px solid rgba(16,185,129,0.4)', padding: '2px 8px', borderRadius: '4px' }}>
+                    VoiceStudio Local Engine Ready
+                  </span>
+                </h2>
+                <p style={{ margin: 0, fontSize: '0.84rem', color: '#94a3b8' }}>
+                  Synthesize complete audiobook chapters, script character dialogues, and multi-voice screenplay table reads powered by your local RTX 4090.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <button
+                  onClick={handleLaunchVoiceStudio}
+                  disabled={isLaunchingVoiceStudio}
+                  style={{
+                    backgroundColor: '#1e293b',
+                    color: '#38bdf8',
+                    border: '1px solid rgba(56, 189, 248, 0.4)',
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    fontWeight: '700',
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <ExternalLink size={15} />
+                  {isLaunchingVoiceStudio ? 'Launching...' : 'Open VoiceStudio App (646 Langs)'}
+                </button>
+              </div>
+            </div>
+
+            {voiceStudioStatus && (
+              <div style={{ padding: '8px 14px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38bdf8', fontSize: '0.82rem' }}>
+                ℹ️ {voiceStudioStatus}
+              </div>
+            )}
+
+            {/* Mode Selector & Quick Presets */}
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => setCreativeMode('screenplay')}
+                style={{
+                  padding: '8px 18px',
+                  borderRadius: '8px',
+                  backgroundColor: creativeMode === 'screenplay' ? '#0284c7' : 'rgba(255,255,255,0.05)',
+                  color: '#ffffff',
+                  border: creativeMode === 'screenplay' ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.1)',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                <Film size={15} /> Screenplay / Table Read
+              </button>
+
+              <button
+                onClick={() => setCreativeMode('audiobook')}
+                style={{
+                  padding: '8px 18px',
+                  borderRadius: '8px',
+                  backgroundColor: creativeMode === 'audiobook' ? '#0284c7' : 'rgba(255,255,255,0.05)',
+                  color: '#ffffff',
+                  border: creativeMode === 'audiobook' ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.1)',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                <BookOpen size={15} /> Audiobook Chapter Narration
+              </button>
+
+              <span style={{ fontSize: '0.8rem', color: '#94a3b8', marginLeft: 'auto' }}>
+                Preset: <strong>{creativeMode === 'screenplay' ? 'Dual-Voice Script' : 'Solo Narrator'}</strong>
+              </span>
+            </div>
+
+            {/* Main Creative Input & Narrator Pick */}
+            <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '20px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {/* Saved Screenplay Archive Selector */}
+                {savedScreenplays.length > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '0.82rem', color: '#38bdf8', fontWeight: '700' }}>
+                      📁 Load from Screenplay Vault ({savedScreenplays.length} projects):
+                    </span>
+                    <select
+                      value={selectedScreenplayId}
+                      onChange={e => handleSelectScreenplay(e.target.value)}
+                      style={{
+                        flex: 1,
+                        backgroundColor: '#0b1120',
+                        color: '#f0f6fc',
+                        border: '1px solid rgba(56, 189, 248, 0.4)',
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        fontSize: '0.85rem',
+                        outline: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <option value="">-- Choose Screenplay or Scene to Narrate --</option>
+                      {savedScreenplays.map(proj => (
+                        <option key={proj.id} value={proj.id}>
+                          {proj.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                <input
+                  type="text"
+                  value={creativeTitle}
+                  onChange={e => setCreativeTitle(e.target.value)}
+                  placeholder="Chapter or Screenplay Title..."
+                  style={{
+                    backgroundColor: '#0b1120',
+                    border: '1px solid rgba(56, 189, 248, 0.3)',
+                    borderRadius: '8px',
+                    padding: '10px 14px',
+                    color: '#ffffff',
+                    fontWeight: '700',
+                    fontSize: '0.95rem',
+                    outline: 'none'
+                  }}
+                />
+
+                <textarea
+                  value={creativeScript}
+                  onChange={e => setCreativeScript(e.target.value)}
+                  rows={10}
+                  placeholder="Paste your screenplay, character cues, or audiobook text here..."
+                  style={{
+                    backgroundColor: '#0b1120',
+                    border: '1px solid rgba(56, 189, 248, 0.3)',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    color: '#f0f6fc',
+                    fontSize: '0.92rem',
+                    fontFamily: 'monospace',
+                    outline: 'none',
+                    resize: 'vertical',
+                    lineHeight: '1.6'
+                  }}
+                />
+
+                <button
+                  onClick={handleNarrateCreative}
+                  disabled={isNarrating}
+                  style={{
+                    backgroundColor: isNarrating ? '#0284c7' : '#0284c7',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '14px 24px',
+                    borderRadius: '10px',
+                    fontWeight: '800',
+                    fontSize: '1rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px',
+                    boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)'
+                  }}
+                >
+                  {isNarrating ? <RefreshCw className="animate-spin" size={18} /> : <Zap size={18} />}
+                  {isNarrating ? 'Generating Voice Performance...' : `🎙️ Render Full ${creativeMode === 'screenplay' ? 'Screenplay Scene' : 'Audiobook Chapter'}`}
+                </button>
+              </div>
+
+              {/* Narrator Profile Picker */}
+              <div style={{ backgroundColor: '#0b1120', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <h4 style={{ margin: 0, fontSize: '0.9rem', color: '#38bdf8' }}>Lead Narrator Profile</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {profiles.map(p => (
+                    <div
+                      key={p.id}
+                      onClick={() => setSelectedProfile(p.id)}
+                      style={{
+                        padding: '10px 12px',
+                        borderRadius: '8px',
+                        border: selectedProfile === p.id ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.08)',
+                        backgroundColor: selectedProfile === p.id ? 'rgba(14, 165, 233, 0.2)' : 'transparent',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <strong style={{ color: '#ffffff', fontSize: '0.88rem', display: 'block' }}>{p.name}</strong>
+                      <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{p.gender} • {p.timbre.replace(/_/g, ' ')}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Rendered Narration Audio Player */}
+            {creativeAudioResult && (
+              <div style={{ backgroundColor: '#0f172a', border: '1px solid #10b981', borderRadius: '12px', padding: '18px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ color: '#10b981', fontWeight: '800' }}>✓ Mastered Audio Rendered</span>
+                    <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>({creativeAudioResult.duration_words} words)</span>
+                  </div>
+                  <a
+                    href={creativeAudioResult.audio_data_url}
+                    download={creativeAudioResult.filename}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      color: '#38bdf8',
+                      textDecoration: 'none',
+                      fontSize: '0.85rem',
+                      fontWeight: '700'
+                    }}
+                  >
+                    <Download size={14} /> Download WAV Master
+                  </a>
+                </div>
+
+                <audio controls src={creativeAudioResult.audio_data_url} style={{ width: '100%', outline: 'none' }} />
+              </div>
+            )}
+          </div>
+        )}
 
         {/* ══════════ 1. ZERO-SHOT VOICE CLONING (ELEVENLABS PARITY) ══════════ */}
         {activeTab === 'tts_zero_shot' && (

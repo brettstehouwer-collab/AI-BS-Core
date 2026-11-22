@@ -1,0 +1,1 @@
+{"argv":["C:\\AI-BS\\runtime\\recovery-20261110\\Scripts\\python.exe","-s","-B","-m","unittest","tests.test_app"],"execution_time_ms":219,"returncode":0,"stderr":".\r\n----------------------------------------------------------------------\r\nRan 1 test in 0.004s\r\n\r\nOK\r\n","stdout":""}

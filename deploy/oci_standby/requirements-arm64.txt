@@ -1,0 +1,6 @@
+# AI-BS Passive Standby Python Requirements (ARM64 / aarch64 Linux)
+# Core runtime (`ha_execution_gateway.py`, `structural_dip_engine.py`, `agent4_risk_watchdog.py`,
+# `oci_stack_claimer.py`, `pure_rsa_sha256.py`, `backup_and_restore.py`) uses Python >= 3.11 stdlib ONLY.
+# Zero binary wheels or compiler toolchains are required on Ubuntu 24.04 ARM64 / Oracle Linux 9 ARM64.
+# Optional verification dependency (if installed locally for offline test parity):
+# cryptography==49.0.0

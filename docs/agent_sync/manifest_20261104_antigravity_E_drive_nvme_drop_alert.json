@@ -1,0 +1,38 @@
+{
+  "id": "20261104_antigravity_E_drive_nvme_drop_alert",
+  "utc": "2026-11-05T00:04:30.000000+00:00",
+  "agent": "Antigravity IDE",
+  "action_type": "READ_ONLY_HARDWARE_DIAGNOSIS",
+  "system_mutations": false,
+  "summary": "E: drive (Samsung SSD 980 PRO 1TB, FW 5B2QGXA7, \\Device\\RaidPort2, PCI\\VEN_144D&DEV_A80A) experienced an NVMe controller lockup/drop at 2026-11-04 18:51:10 local time (23:51:10 UTC) under simultaneous C++/MSBuild compilation (E:\\B174, E:\\T174, P109) and VSS/encrypted backup coordinator I/O.",
+  "windows_event_log_evidence": [
+    {
+      "time_local": "2026-11-04T18:51:10-05:00",
+      "provider": "stornvme",
+      "event_id": 129,
+      "level": "Warning",
+      "message": "Reset to device, \\Device\\RaidPort2, was issued."
+    },
+    {
+      "time_local": "2026-11-04T18:51:10-05:00",
+      "provider": "stornvme",
+      "event_id": 11,
+      "level": "Error",
+      "message": "The driver detected a controller error on \\Device\\RaidPort2."
+    },
+    {
+      "time_local": "2026-11-04T18:51:10-05:00",
+      "provider": "Microsoft-Windows-Ntfs",
+      "event_id": 140,
+      "level": "Warning",
+      "message": "Failure status: A device which does not exist was specified. VolumeId: E:, Device model: Samsung SSD 980 PRO 1TB, Firmware: 5B2QGXA7."
+    }
+  ],
+  "historical_health_check": "Zero prior stornvme or WHEA-Logger errors in the past 30 days; Wear=0; patched firmware 5B2QGXA7 confirmed.",
+  "recommended_recovery": [
+    "1. Pause/checkpoint active Codex tasks on C: so no new E: writes are attempted while \\Device\\RaidPort2 is offline.",
+    "2. Perform a full Windows Shutdown (NOT a warm Restart), wait 15-20 seconds for the motherboard 3.3V M.2 rail to discharge so the Samsung Elpis NVMe controller resets, then power back on.",
+    "3. After boot, run chkdsk E: /scan (read-only online scan) to verify NTFS journal replay on E:\\B174, E:\\T174, and coordinator_preparation before resuming P109 builds and E: backup.",
+    "4. Avoid running heavy multi-process MSBuild compilations on E: concurrently with full-drive VSS shadow / backup hashing on E:."
+  ]
+}

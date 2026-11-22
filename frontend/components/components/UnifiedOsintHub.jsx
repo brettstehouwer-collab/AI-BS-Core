@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import RapidApiReconTab from './RapidApiReconTab';
 import BrettDataTab from './BrettDataTab';
 import LostPropertyTab from './LostPropertyTab';
 import OsintDataVaultTab from './OsintDataVaultTab';
 
-export default function UnifiedOsintHub(props) {
+/** @param {import('react').ComponentProps<typeof RapidApiReconTab> & import('react').ComponentProps<typeof LostPropertyTab> & import('react').ComponentProps<typeof BrettDataTab> & import('react').ComponentProps<typeof OsintDataVaultTab>} props */
+export default function UnifiedOsintHub( props) {
   const [activeSubTab, setActiveSubTab] = useState('recon');
 
   const tabs = [
@@ -48,7 +49,7 @@ export default function UnifiedOsintHub(props) {
         {activeSubTab === 'api_hub' && <BrettDataTab {...props} />}
         {activeSubTab === 'saved_vault' && (
           <div style={{ padding: '20px', height: '100%', overflowY: 'auto' }}>
-            <OsintDataVaultTab {...props} />
+            <OsintDataVaultTab />
           </div>
         )}
       </div>

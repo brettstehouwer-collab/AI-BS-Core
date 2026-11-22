@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      # Route Ollama and ChromaDB to the host machine
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434/api
+      - CHROMA_HOST=host.docker.internal
+      - CHROMA_PORT=8001
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "4173:4173"
+    volumes:
+      - ./frontend:/app
+      # Prevent host node_modules from overriding container node_modules
+      - /app/node_modules
+    environment:
+      # Tell Vite/React to route to the backend container via localhost
+      - VITE_BACKEND_URL=http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped

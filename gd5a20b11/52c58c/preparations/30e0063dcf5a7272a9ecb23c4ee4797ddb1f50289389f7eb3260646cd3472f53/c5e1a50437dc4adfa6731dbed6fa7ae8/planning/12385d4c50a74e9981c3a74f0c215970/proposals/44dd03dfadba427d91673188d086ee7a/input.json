@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "c5e1a50437dc4adfa6731dbed6fa7ae8",
+  "plan_id": "12385d4c50a74e9981c3a74f0c215970",
+  "snapshot_sha256": "777c86daf5fb467378f14c0a0d191d1f54bbae93255d423750501810046355a0",
+  "review_digest": "414bbcb66bb6e3d2a77a432e1ab563baba71628ef9dc097553838fcb00d6789c",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "44dd03dfadba427d91673188d086ee7a",
+  "reviewed_plan_sha256": "06dec11a96bc46a6978441b7c3b6d027105e052802f3c6063f5fd2f782e39c65",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 29128,
+    "created": 1794666065.6990325
+  },
+  "created_at_utc": "2026-11-14T14:21:07.003804+00:00",
+  "entry_sha256": "d207cf1afa9c5aa4c3ccb9fd0a71fd521d9c8826b836cc121260db0d8b96d30e"
+}

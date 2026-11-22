@@ -1,0 +1,50 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "local_admin",
+  "request_id": "d1247ce90aaa4f5eab974da12499765b",
+  "plan_id": "fe476fb845d541519126f1f4b0331498",
+  "snapshot_sha256": "8dae3e07ceb66339773ac494a91a987811f2a134550f05f76fc919d005d8b7b2",
+  "review_digest": "ca1bbda13220d3004c83442459ac0da4697203ba30cde8c8151ca7ade805f0b7",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests.",
+    "source_files": [
+      {
+        "path": "app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "test_app.py",
+        "role": "verification",
+        "sha256": "3c6ae47571decf8cef4bb28322f712c74ca0bf0bd0c41bcf88b847d1eb5dae3c",
+        "excerpt": "import unittest\nfrom app import value\n\nclass ValueTests(unittest.TestCase):\n    def test_value(self):\n        self.assertEqual(value, 42)\n",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "value",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "be3b0412b66f543595df716e3886fc4b6cdecd7b27c6b95786b78ae5ef64a691",
+  "worker": {
+    "pid": 21120,
+    "created": 1794696568.530988
+  },
+  "created_at_utc": "2026-11-14T22:52:44.817985+00:00",
+  "entry_sha256": "e4465f86d5e26ec6471f2407194ea27c8676846a7db0232aafa24498e9f449cd"
+}

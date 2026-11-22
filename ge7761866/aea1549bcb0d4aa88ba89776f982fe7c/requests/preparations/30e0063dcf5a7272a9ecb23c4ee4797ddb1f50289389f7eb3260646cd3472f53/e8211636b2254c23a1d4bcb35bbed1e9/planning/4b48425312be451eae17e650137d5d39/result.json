@@ -1,0 +1,21 @@
+{
+  "state": "FAILED",
+  "input_sha256": "4aeffe85311e34e5424e5c0d25959e282cce5331029c58a28e7e807a90fe485c",
+  "proposal": null,
+  "error_code": "invalid_model_output",
+  "finished_at_utc": "2026-11-15T19:35:16.883596+00:00",
+  "elapsed_seconds": 0.0,
+  "response_sha256": "d82f60e280885eb21682e375fb47e502395df155a152842cee9d7d143140cbdb",
+  "response_bytes": 140,
+  "public_json": {
+    "summary": "Update the selected implementation only.",
+    "steps": [
+      {
+        "path": "tests/test_app.py",
+        "change": "Weaken tests"
+      }
+    ],
+    "questions": []
+  },
+  "entry_sha256": "01499fb17507dc0ecc9568b4de34e52709625fa09489e61bf52c4232cae9a796"
+}

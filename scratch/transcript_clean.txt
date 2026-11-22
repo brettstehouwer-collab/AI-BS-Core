@@ -1,0 +1,277 @@
+[10.0s]: What's going on everyone? Welcome Rabid here and 
+with much pleasure and the sponsor of today's  
+[15.8s]: video, Hero Miners, they are pleasant to say that 
+they have announced their pearl mining pool and  
+[22.1s]: Hero Miners is probably the largest altcoin pool 
+for mining right now. And they say here, "We are  
+[28.7s]: pleased to announce that the Pearl mining pool is 
+now officially open. And to celebrate the launch,  
+[34.3s]: we are offering 0% pool fees until August 1st, 
+2026." Now, that's actually a pretty big deal,  
+[41.3s]: as every other pool has anywhere between 3 to 8% 
+pool fees or something. I don't know where the  
+[46.7s]: adjustments were, but they were pretty high. 
+They may have came down, but they have fees.  
+[50.8s]: And SRB miner does work with Hero Miners, which 
+is the current fastest miner. And it's a 3% fee,  
+[57.6s]: which means instead of using SRB plus pool fees, 
+you're only getting 3% fees while mining to hero  
+[65.4s]: miners on the fastest miners. So in theory, that 
+should grant you the most amount of pearl. And  
+[71.0s]: I do have a profitability test going on 
+between our previous winner, Alphamine,  
+[77.8s]: and SRB on Hero Miners. So, it'll be interesting 
+to see the results of that because I know you  
+[83.1s]: guys love watching those types of videos as well. 
+So, first I'm going to show you how to mine this  
+[87.5s]: and then I'll show the results of which pool 
+is earning you the most amount of Pearl. So,  
+[93.4s]: first thing you're going to need here is obviously 
+a wallet to mine Pearl. All right, so here is  
+[98.6s]: their wallet. I will have a link to this down in 
+the description, but keep in mind we'll see if  
+[104.9s]: GitHub links will work or not, but here it is. So 
+simply download the proper one for you. Here's the  
+[110.5s]: Windows download. EXE installer. For Mac OS, do 
+the DMG. And for Linux, get thedev. And down here,  
+[117.4s]: you can see these are the binaries to download 
+for you. So for Windows here, obviously here is  
+[122.6s]: the .exe. Most of you guys are probably running 
+that. And then this basic wallet setup. you know,  
+[128.1s]: get your seed phrase, confirm it's there, make 
+sure you save it somewhere safe, hit the receive  
+[133.2s]: button, get your wallet address, and continue 
+on to the next step. All right, so now that you  
+[138.8s]: have your wallet set up and you got your receiving 
+address, just come into the Hero Miners pool here  
+[143.8s]: and click on the start button. So, we're going to 
+start this in Windows, but before we do, you got  
+[149.0s]: to see where your stratums and everything is. So, 
+right here is a list of all Hero Miner stratums.  
+[154.3s]: They got quite a bit of them. And then you 
+obviously you just choose the one with your lowest  
+[158.7s]: latency and that'll be the one in green for me. 
+You can see it is this one right here. And then  
+[163.9s]: from that point moving down we can just see all 
+our miners that we need. Now keep in mind you can  
+[169.6s]: also solo mine. Now everything I say here if you 
+want to solo mine just put solo and then colon in  
+[176.0s]: front of your wallet address and that'll allow you 
+to solo mine Pearl. And I know that is a feature  
+[181.3s]: that most pools don't have. There's very few of 
+them and Hero Miners is one of them that allows  
+[186.6s]: you to solo mine yourself some pearl. So that's 
+awesome. So we're going to start this one out in  
+[191.7s]: Windows. So click on SRB minor Windows here. And 
+then if you need SRB minor still, simply click  
+[197.6s]: this link right here. And it'll open up the latest 
+SRB, which we can see is version 3.3.4. And then  
+[204.8s]: just simply download the Windows zip. Yes, srb now 
+has native Windows support. So it makes life easy.  
+[213.0s]: No more WSL. So just download that one and extract 
+it. Once you get that done, just come down here  
+[219.4s]: and you can see it is by defaulted. There will 
+be one in SRB minor, but you can also just copy  
+[225.0s]: this like so. Right click, copy that. And the only 
+thing you will need to change here is your wallet  
+[231.4s]: address. Everything else is set up. Obviously, 
+choose the closest stratum for you in here unless  
+[237.0s]: you want to mine to.de. So you will have to adjust 
+that pool here for the closest one to you. But  
+[242.0s]: even if you forget to do that and just add your 
+address in, you are good to go. But remember,  
+[247.3s]: keep in mind, pick the closest stratum for you and 
+it will be in green here defaulted depending where  
+[253.8s]: you're browsing from. So it'll be easy to find 
+out where it is. So once you get this copied here,  
+[258.2s]: then we got to bring up our BAT file from where 
+we extracted SRB minor. All right. So once you got  
+[264.2s]: that downloaded and have it extracted, you'll see 
+a whole list of multiple bat files. If you scroll  
+[269.4s]: down, you'll see a start mining Pearl. Now you 
+can just choose anyone. Like I said, Hero Miners  
+[274.2s]: has that copy and paste here, but I'm just going 
+to go straight up to the Pearl one here. We're  
+[278.2s]: going to edit that in a notepad. Now, you can see 
+I already have mine set up, but I'm going to do it  
+[282.7s]: just like you were. So, I'm just going to get rid 
+of everything. Delete. Got rid of that. And I'm  
+[286.8s]: just going to paste in exactly what we copied from 
+Hero Miner. So now we're going to come into here  
+[292.7s]: and show you how to set everything up. So again, 
+we need to adjust our pool to our closest stratum.  
+[298.3s]: For me, it is right here. 33 milliseconds. So 
+I'm just going to copy this one. Right click,  
+[303.4s]: copy that. Now, we do have to find our port. So 
+our default port is 1,200 for everything you can  
+[309.2s]: see here. So I'm just going to go with that. So 
+our port is 1,200, just so you know. We're going  
+[314.1s]: to paste this in right here. Or we can just even 
+leave the port there as is. and then just paste  
+[320.1s]: that in right there. So, uspearl.heroomminers.com 
+port 1,200. We're good to go here. Now, I got to  
+[327.4s]: put in my wallet address right here. So, I got 
+to find that right quick. All right. So, I do  
+[332.2s]: have my wallet address. I'm just going to delete 
+this here. Now, make sure you have one space after  
+[336.9s]: wallet. So, I just went backspace one more space. 
+And now, paste in my wallet address. We're going  
+[342.2s]: to put in a period. And I'm going to go Rabid 
+WS for Rabid Workstation. That's it. That's all  
+[348.0s]: you got to do. Adjust the pool to the one where 
+you want it based on your latency. And then put  
+[353.4s]: in your wallet address and your worker name. And 
+that's all you got to do. You're going to hit file  
+[357.7s]: here. We're going to save that like this. I like 
+to always save it twice. It doesn't ma matter.  
+[362.0s]: That won't do anything, but I do it anyway. So now 
+we're just going to bring this up and doubleclick  
+[366.6s]: right here. Run that. And now we should begin 
+connecting to her miners and mining away on our  
+[373.4s]: GPUs in Windows. There we go. We are connected to 
+us heromminers.com port 1200. We found a share.  
+[380.8s]: Awesome sauce. Everything's looking good. Now, if 
+we come in and take a look at our actual mining  
+[386.6s]: address. So, let's just see right here. There we 
+go. And obviously, I have been mining here. So,  
+[392.7s]: I am detected, but we seen it's working. This 
+is the pool I'm currently mining on. So, there  
+[398.3s]: we can see all my rigs rocking away. But here is 
+Rabbid Workstation. And you can see less than a  
+[403.6s]: minute ago, we already have that share found and 
+detected at the pool. So things are looking really  
+[409.4s]: good. Now that you got Windows figured out, let's 
+jump into HiveOSs. Actually, before we do that,  
+[414.9s]: in case you have a question, let's go over solo 
+mining. So it's pretty simple. As I mentioned, you  
+[419.2s]: just put solo colon right in front of your address 
+here. So this is all you'd have to do. So right  
+[423.7s]: in front of your address, just put solo and then 
+colon. There you go. Now you're all set. If I save  
+[430.2s]: this and run this miner now, it will solo mine 
+Pearl for me. And that's all you got to do. So,  
+[435.4s]: it's pretty simple to get up and running for solo 
+mining if that's something you want to do. Now,  
+[440.4s]: let's actually jump into HiveOSs. And it 
+is pretty simple. If we come into here,  
+[444.7s]: we scroll on down more. This is where SRB minor 
+Windows was. We're just going to click beside  
+[449.2s]: it on SRB minor HiveOSs. And then we're just going 
+to copy all this stuff right here. So, rightclick,  
+[455.8s]: copy this. We're going to come into our uh HiveOSs 
+here. So, click on that. And now we're going to  
+[462.4s]: come into our flight sheet. And we're simply 
+just going to paste this from clipboard. So,  
+[466.9s]: click on that. Boom. Everything is in there. Now, 
+if you don't yet have a wallet, just simply click  
+[472.7s]: add wallet into here. Pick Pearl. It already has 
+it. Paste your wallet address in here and name  
+[478.1s]: it whatever you want like GY or test video or you 
+know test pool test hero miners whatever you want  
+[486.6s]: paste your wallet address in here and put that 
+in there and whatever you did name it will show  
+[491.4s]: up here and that's all you got to do in this case 
+I'm going to use GUI2 because that is my default  
+[497.7s]: wallet that I use for everything and if you go to 
+setup minor config you can see everything is set  
+[502.6s]: up here but we are going to have to adjust that 
+pool to the pools where lowest latency. All right,  
+[507.8s]: so we're going to jump back into herom miners 
+here. And you can see my lowest latency was  
+[512.9s]: us.pearl.hero miner. So I'm going to rightclick, 
+copy that. Remember our port we're using is 1,200  
+[519.4s]: here. Come into HiveOSs and we're going to adjust 
+that. So the port is there. So we don't have to  
+[524.4s]: do anything. Just paste that in right there. And 
+then we're going to paste it in down here as well.  
+[530.8s]: And then we're also going to have to adjust 
+our wallet and worker name. As you can see,  
+[534.7s]: it has our wallet is here, but worker has worker 
+name your worker name. We're going to get rid of  
+[539.8s]: that. We don't need that here with this version. 
+So, you can actually delete that completely.  
+[545.4s]: But in later versions, you will need that. So, 
+we're just going to have wallet.worker name. So,  
+[550.3s]: I'm just going to come into here. I'm going to get 
+rid of this, too. And I'm just going to paste that  
+[554.4s]: like so. Right click and copy that. And I'm going 
+to put that one in right here as well. Bam. There  
+[560.3s]: you go. So, it's going to pull our wallet. And 
+then we have our period here. And then our worker  
+[564.7s]: name will be there as well. And if you do want to 
+solo mine, pretty simple. Just hit solo like this.  
+[570.6s]: Put in your colon. Bam. Now we are solo mining. 
+All set that way. But we're not going to be solo  
+[576.2s]: mining here. So this is how we set up our flight 
+sheet. Everything should be good to go. Here's our  
+[580.8s]: custom miner name. Install URL. All set. We're 
+going to apply those changes. And I'm going to  
+[586.7s]: name this Herom Miners Pearl test video. So, I'm 
+going to run this so you can actually see it's  
+[592.8s]: working. So, I'm going to create that flight sheet 
+here. Mine is Pearl test video. I'm going to open  
+[598.7s]: it up and we're going to come into I guess this 
+rig right here. And now I am going to find test  
+[605.0s]: video and we're going to send that to the moon 
+and I'm going to SSH into my rig. So, you can  
+[610.0s]: see it's actually working. So, we're going to log 
+in and then simply hit minor. Let this thing kind  
+[617.1s]: of restart because it's going to shut down the 
+other one. There we go. It's shutting it down.
+[623.8s]: All right. So, now it should start 
+engaging the new flight sheet. Here  
+[627.2s]: we go. Rocking away. Detected all the GPUs.
+[634.1s]: Here we are. US.Pearl heromminers.com. Port 
+1200. Everything is all set. We're going to  
+[640.5s]: wait for some shares to make sure we are mining. 
+But so far, everything's looking good. We're  
+[645.1s]: not shooting out any errors. So if we had any 
+issues, it would have happened by now. So to me,  
+[650.4s]: everything's looking good. But we will confirm 
+that a share is found. And there it is. Share is  
+[656.6s]: found. All good. We are mining away on HiveOSs. 
+Now, another great point I do want to point out  
+[663.3s]: to you guys that I'm really enjoying here is 
+the A2000s work with SRB miner. So they work  
+[669.6s]: on Hero Miner. So that's awesome on that because 
+when I was using Alpha Pool, I had to split it  
+[675.0s]: up because the miners would not work on Alpha 
+Pool. The new versions might I haven't tried it  
+[680.7s]: since because I am noticing I am earning more out 
+here now that I got you set up in both Windows and  
+[687.1s]: HiveOSs. Let's take a quick peek at my pool test 
+just to see what things are looking like on the  
+[692.7s]: probability standpoint with Herom Miners versus 
+our latest winner, Alpha Mine. All right, guys.  
+[698.7s]: So you can see our previous test and I did release 
+a video on that with Alphamine versus Pearlash and  
+[704.3s]: we can see that after 7 days alphamine did get 
+30.78 coins and Pearl Hash was at 24.2. Obviously  
+[713.4s]: that means Alpha Mine was the winner here. And 
+the green here is how much they're getting per  
+[719.1s]: day. Now we're fast forwarding for SRB Hero Miners 
+versus Alpha Mine. It's only been two days so far,  
+[725.9s]: but we can see day one, we did get 2.62 
+coins on Alpha Mine and 2.82 on Hero Miners,  
+[733.8s]: slightly more. And then when it came 
+to the day two here, the next 24 hours,  
+[738.4s]: our total here with this one right here is 5.1 
+coins. And then Hero Miners is 6.14 for day two's  
+[745.9s]: 24-hour earnings of 2.48 from Alpha Mine. And 
+Hero Miners was getting 3.3277. So that 0% pool  
+[755.0s]: fee on top of the lower 3% only from SRB miner 
+with the higher hash rate is panning out to add  
+[762.5s]: to extra earnings coming in from Hero Miners. 
+All right guys, so that pretty much does wrap  
+[768.2s]: up this video. Hero Miners is now live on Pearl 
+and they have 0% pool fees. So utilizing SRB minor  
+[776.2s]: does help you earn more Pearl while using Hero 
+Miner. So hopefully this video did help you out.  
+[782.1s]: I know a lot of people were waiting for 
+Hero Miners to finally drop and release. So,  
+[786.8s]: here it is. And I showed you how to set it up 
+in Windows and HiveOSs, as well as gave you a  
+[791.9s]: little pool test to show you how well Hero Miners 
+is doing so far. So, thank you for checking out  
+[797.1s]: this video. Please share it around. Hit that hype 
+button. I'll see you on the next one. Rabid Out

@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "716dc0b5e2ec4299a5c35ac70d04306a",
+  "plan_id": "ea922be8b9e04d69a5b573777103c336",
+  "snapshot_sha256": "fb38d972a920e1be1284a07c57b3fbd534224b99e4b4b53636c692e4821c3407",
+  "review_digest": "3a631ede29c2e4ef061870da7c3fc2538e35fad6f61f1aa418ee2e732a907c07",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "640d99ef6cd54f8696927371756b120a",
+  "reviewed_plan_sha256": "e9627f2c4eb5ad497b43ea2423fef69e802710368cbf169af92518bb36344921",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 59156,
+    "created": 1794718679.0745277
+  },
+  "created_at_utc": "2026-11-15T04:58:06.134524+00:00",
+  "entry_sha256": "abd60474ac0d661b8fab13a696168f72ca9b78df23039213998210be3c2819b0"
+}

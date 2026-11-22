@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "verified_authenticated_roundtrip",
+  "verified_at": "2026-11-02T16:46:01.393476+00:00",
+  "archive_sha256": "c46706235676176b404dfdb4de4fc2ac5a47db8cec614b40123d3a93980d08b7",
+  "archive_bytes": 11212188,
+  "embedded_manifest_sha256": "db2b30d5b72d3a508571718e35c0f5fad4f4bac1ede4de7815fce527d43f4b80",
+  "selected_files": 353,
+  "all_members_including_manifest": 354,
+  "whole_download_hash_verified": true,
+  "every_member_crc_length_sha_verified": true,
+  "cache_archive": "D:\\AI-BS-Game-Resources\\cache\\c46706235676176b404dfdb4de4fc2ac5a47db8cec614b40123d3a93980d08b7.zip",
+  "goal_complete": false,
+  "sharing_modified": false,
+  "drive_files": [
+    {
+      "key": "20A",
+      "id": "1fhu43sT5xyvVv2xN77UZECSuMRnclgzF",
+      "url": "https://drive.google.com/file/d/1fhu43sT5xyvVv2xN77UZECSuMRnclgzF/view?usp=drivesdk"
+    }
+  ],
+  "parts": []
+}

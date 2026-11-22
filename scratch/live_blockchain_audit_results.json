@@ -1,0 +1,121 @@
+{
+  "0xd269c1CE398397b441F1D4573Bd630bDd6c1e56b": {
+    "label": "AI-BS Treasury Hot Wallet (Active)",
+    "network": "EVM (Ethereum / Polygon)",
+    "eth_balance": 0.0,
+    "pol_balance": 0.0,
+    "polygon_usdc": 0.0,
+    "ethereum_clore": 1158.82
+  },
+  "0x4761aD28A8A6b0F5F66E0825a03AA419376152aa": {
+    "label": "Crypto.com App Deposit Wallet",
+    "network": "EVM (Ethereum / Polygon)",
+    "eth_balance": 0.0,
+    "pol_balance": 0.0,
+    "polygon_usdc": 0.0,
+    "ethereum_clore": 0.0
+  },
+  "0xD6277C501465CFc329D8dd429908769718aa49FA": {
+    "label": "Legacy Treasury Hot Wallet (Retired)",
+    "network": "EVM (Ethereum / Polygon)",
+    "eth_balance": 0.0,
+    "pol_balance": 0.0,
+    "polygon_usdc": 0.0,
+    "ethereum_clore": 0.0
+  },
+  "0xaDEE155F468E9cD18Fa62a18da259640B8DcbDc9": {
+    "label": "Phase 9 Gaming Treasury Wallet",
+    "network": "EVM (Ethereum / Polygon)",
+    "eth_balance": 0.0,
+    "pol_balance": 0.0,
+    "polygon_usdc": 0.0,
+    "ethereum_clore": 0.0
+  },
+  "0xe67824E6383d5644269C94B1b381f8922343B15A": {
+    "label": "Historical Prototype Deployer A",
+    "network": "EVM (Ethereum / Polygon)",
+    "eth_balance": 0.0,
+    "pol_balance": 0.0,
+    "polygon_usdc": 0.0,
+    "ethereum_clore": 0.0
+  },
+  "0x8D53c6247244339C280Ed4f524016bc1eBC006A0": {
+    "label": "Historical Prototype Deployer B",
+    "network": "EVM (Ethereum / Polygon)",
+    "eth_balance": 0.0,
+    "pol_balance": 0.0,
+    "polygon_usdc": 4.355107,
+    "ethereum_clore": 0.0
+  },
+  "0xc4D44D5Cba9a3a028DB72593674B3CD356ABB0AE": {
+    "label": "Historical Prototype Deployer C",
+    "network": "EVM (Ethereum / Polygon)",
+    "eth_balance": 0.0,
+    "pol_balance": 0.0,
+    "polygon_usdc": 0.0,
+    "ethereum_clore": 0.0
+  },
+  "bc1qnmkdqygvx4llnwmfv7y08q2fcr4f0hndxwyz87": {
+    "label": "Clore.ai Custodial Bitcoin Deposit",
+    "network": "Bitcoin (BTC)",
+    "btc_balance": 0.0,
+    "tx_count": 0
+  },
+  "DHg4nBMj5tUenAVUG1XYgcic46SoJ2AN2G": {
+    "label": "Primary Dogecoin Mining Payout Wallet",
+    "network": "Dogecoin (DOGE)",
+    "doge_balance": 0.0
+  },
+  "DLhqTFrXoeDrQ6AzEbkMkCXEv6FqK1kLBSox": {
+    "label": "Secondary Dogecoin Target",
+    "network": "Dogecoin (DOGE)",
+    "doge_balance": 0.0,
+    "status": "HTTP Error 400: Bad Request"
+  },
+  "DRihRLZBKgooyDzxQeHbztNkabRbBEt6rs": {
+    "label": "Historical Dogecoin Conversation Target",
+    "network": "Dogecoin (DOGE)",
+    "doge_balance": 0.0,
+    "status": "HTTP Error 400: Bad Request"
+  },
+  "prl1p5r4kvz636h2pa9fuww723s4r02flt25rec9qs6yjckk7lyejkvjs67a4n5": {
+    "label": "Pearl Stratum Mining Rig Target",
+    "network": "Pearl (PRL)",
+    "pool_pending_prl": 0.048553543,
+    "pool_paid_prl": 0.823238597,
+    "last_share": "1789350591"
+  },
+  "prl1pkn5kx5qr08wlx6jaasjrf4kdkjx5g8gnevmmz9dptkz5q0lr3p4qfsa7ya": {
+    "label": "Pearl Desktop GUI Receive Address",
+    "network": "Pearl (PRL)",
+    "pool_pending_prl": 0.0,
+    "pool_paid_prl": 0.0,
+    "status": "On-chain HD Wallet (Local GUI)"
+  },
+  "prl1p8e3ar3mje25fez4vl76wng3yzxzh7d8czyuvxtxlydhk6hkmf4kqulwrgn": {
+    "label": "SafeTrade Exchange PRL Bridge",
+    "network": "Pearl (PRL)",
+    "pool_pending_prl": 0.0,
+    "pool_paid_prl": 0.0,
+    "status": "On-chain HD Wallet (Local GUI)"
+  },
+  "prl1phhaqjgq4vvapjdl480yflm3qqv48em5kn095cvafq8rzpdahfk7q6rcjer": {
+    "label": "Historical Pearl Test Target",
+    "network": "Pearl (PRL)",
+    "pool_pending_prl": 0.0,
+    "pool_paid_prl": 0.0,
+    "status": "On-chain HD Wallet (Local GUI)"
+  },
+  "xch1y7l2q9l2jzzmlch8lnzymnt3t5uknrczd85y5hu6ehtakp4drxtq4kpgge": {
+    "label": "Chia Primary Farmer & NFT Royalty Address",
+    "network": "Chia Network (XCH)",
+    "xch_balance": 0.0,
+    "status": "Active Plotter Configuration"
+  },
+  "xch17fhz6mn3f0z693y5fdrqqcjg7lk7vlqqsklk78ql7negqay5lz7svgndzu": {
+    "label": "Chia Secondary Plotter Target",
+    "network": "Chia Network (XCH)",
+    "xch_balance": 0.0,
+    "status": "Active Plotter Configuration"
+  }
+}

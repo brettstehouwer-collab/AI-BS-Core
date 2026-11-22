@@ -1,0 +1,36 @@
+{
+  "kind": "trusted_local_result",
+  "input_sha256": "c95064e2e975834d7e4d2d4884ab8ac637c7e0e6c329e9f6c23f4495480e8966",
+  "state": "VERIFIED",
+  "checks": [
+    {
+      "check_id": "python",
+      "returncode": 0,
+      "error": null,
+      "execution_time_ms": 78,
+      "stdout": "",
+      "stderr": ".\r\n----------------------------------------------------------------------\r\nRan 1 test in 0.003s\r\n\r\nOK\r\n",
+      "preview_truncated": false,
+      "log_file": "check_logs\\python.json",
+      "log_sha256": "2e200dc43ac43feda582e3a89689d2671a8c3a03c30590c39612823a3ec38acd"
+    }
+  ],
+  "static_checks": [
+    {
+      "path": "src/app.py",
+      "kind": "syntax",
+      "status": "passed"
+    }
+  ],
+  "started_at": 1794665603.4826026,
+  "worker": null,
+  "resource_limits": {
+    "cpu_percent": 20,
+    "job_memory_bytes": 536870912,
+    "below_normal_priority": true
+  },
+  "npm_policy": "Selected script may use a shell; pre/post lifecycle hooks disabled; no installation requested.",
+  "finished_at": 1794665603.5998037,
+  "runtime_seal": "f686398a162d1bb596f70d706af0a2278d41de361b474e9882448bd341fb4ab9",
+  "entry_sha256": "4acd812dc55deebed09a6a58c9a8a3f56ffb74200418046bb72edea4bf07c58f"
+}

@@ -1,0 +1,30 @@
+[Unit]
+Description=AI-BS Exclusive Execution Gateway (Stage 1 Single Authority, Private Interface Only)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=aibs-gateway
+Group=aibs-gateway
+WorkingDirectory=/opt/ai-bs/scratch
+Environment=PYTHONUNBUFFERED=1
+Environment=AIBS_GATEWAY_BIND=127.0.0.1
+Environment=AIBS_GATEWAY_DB=/var/lib/aibs-gateway/authority_journal.db
+EnvironmentFile=/etc/aibs/gateway-trade.env
+# Note: Only enable after Stage 1 controlled cutover authorization and private WireGuard/SSH tunnel setup
+ExecStart=/usr/bin/python3 -c "import sys; sys.path.insert(0, '/opt/ai-bs/scratch'); from ha_execution_gateway import AuthorityStore; s = AuthorityStore('/var/lib/aibs-gateway/authority_journal.db'); print('AuthorityStore ready:', s.check_integrity(), flush=True); import signal; signal.pause()"
+Restart=on-failure
+RestartSec=10
+
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ReadWritePaths=/var/lib/aibs-gateway /var/log/aibs-gateway
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

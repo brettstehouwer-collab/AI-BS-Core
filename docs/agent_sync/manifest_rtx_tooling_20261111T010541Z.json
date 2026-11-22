@@ -1,0 +1,103 @@
+{
+  "at": "2026-11-11T01:14:29.533749+00:00",
+  "status": "TOOLING_SETUP_VERIFIED_ASSET_AND_ENGINE_CAPTURE_PENDING",
+  "goal_status": "PAUSED",
+  "all_ten_goals_complete": false,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "previous_checkpoint": "C:\\AI-BS\\backups\\creative_drive_paused_20261111T004128Z\\checkpoint.json",
+  "changed_paths": [
+    "runtime/devtools/Blender-AI-BS-RTX.cmd",
+    "runtime/devtools/Nsight-AI-BS.cmd",
+    "runtime/devtools/blender-rtx/configure_optix.py",
+    "docs/game_engine/RTX_ASSET_WORKFLOW.md",
+    "PLAN.md",
+    "docs/CODEX_HANDOFF.md",
+    "docs/AI_BS_TAKEOVER_GOAL_2026-11-09.md",
+    "engine/out/warm_beginning/monitor_summary.json",
+    "docs/agent_sync/current_long_term_goal.json"
+  ],
+  "source_sha256": {
+    "runtime/devtools/Blender-AI-BS-RTX.cmd": "3a552f53f0dc216e1771eab483050e4da4f12913bbfd7af3bcb4d049fd01b7b6",
+    "runtime/devtools/Nsight-AI-BS.cmd": "8df9e86ac2beac54f0d88d6465a9172695eb8e0aef98b53e408ffc72b8bbe9ef",
+    "runtime/devtools/blender-rtx/configure_optix.py": "beb6af51ea46affe987d99fc89c04865ea702d3d1edfe546311e67cf7af0db43",
+    "docs/game_engine/RTX_ASSET_WORKFLOW.md": "cb16f55eea38d474efe39cabe5c7af9f6c9320f20feeb8121d0c225bef01b3ba",
+    "PLAN.md": "28b4605acacca6191de8495e7c35298ae7839d7bde5b0d311bcfe45d70b711da",
+    "docs/CODEX_HANDOFF.md": "41304dc7ec54bb42203afb2410edb4142ee55ddc3820bab05bcb3f89d911eeaa",
+    "docs/AI_BS_TAKEOVER_GOAL_2026-11-09.md": "c0853c076f32edf55919b61b1177fcf366bc197e60c6c5569146c6eba88008b2",
+    "engine/out/warm_beginning/monitor_summary.json": "8cbaedc5bcdd79f903302231f5a12e85b67af7126c6ede702ce8e2082f702878",
+    "docs/agent_sync/current_long_term_goal.json": "3a7fc63d533c661a1ad2e72ca219899b6b665277760d4c302aecd1206a91ee8b"
+  },
+  "patch": "C:\\AI-BS\\backups\\rtx_tooling_20261111T010541Z\\scoped.patch",
+  "blender": {
+    "blender": "5.3.0",
+    "backend": "OPTIX",
+    "scene_device": "GPU",
+    "denoiser": "OPTIX",
+    "devices": [
+      {
+        "name": "NVIDIA GeForce RTX 4090",
+        "type": "CUDA",
+        "enabled": false
+      },
+      {
+        "name": "AMD Ryzen 9 9950X 16-Core Processor",
+        "type": "CPU",
+        "enabled": false
+      },
+      {
+        "name": "NVIDIA GeForce RTX 4090",
+        "type": "OPTIX",
+        "enabled": true
+      },
+      {
+        "name": "AMD Radeon(TM) Graphics",
+        "type": "HIP",
+        "enabled": false
+      }
+    ],
+    "render_seconds": 1.025567000000592,
+    "fixture": "factory cube only; no user .blend loaded",
+    "image_sha256": "a2937986d9eed1187d5112990b9ea45391657305e8bbafd72c5495f423d347bf",
+    "profile": "C:\\AI-BS\\runtime\\devtools\\blender-rtx\\profile"
+  },
+  "fresh_profile_reopen": {
+    "fresh_process_reopen": true,
+    "optix_only": true,
+    "startup_gpu": true,
+    "startup_resolution": [
+      1920,
+      1080
+    ]
+  },
+  "nsight_installer_exit": 0,
+  "nsight_commands": {
+    "ngfx-version": {
+      "exit_code": 1,
+      "evidence": "C:\\AI-BS\\backups\\rtx_tooling_20261111T010541Z\\ngfx-version.txt"
+    },
+    "capture-version": {
+      "exit_code": 0,
+      "evidence": "C:\\AI-BS\\backups\\rtx_tooling_20261111T010541Z\\capture-version.txt"
+    },
+    "capture-help": {
+      "exit_code": 0,
+      "evidence": "C:\\AI-BS\\backups\\rtx_tooling_20261111T010541Z\\capture-help.txt"
+    }
+  },
+  "installer_sha256": "8d71c99baeec88c854ebe1e9b01d9f7b2991851315df980edd09e707f959452c",
+  "driver": "621.14",
+  "original_blender_preferences_unchanged": true,
+  "creative_10_source_pins_unchanged": true,
+  "frozen_game_executable_unchanged": true,
+  "original_data_writes": false,
+  "game_launched": false,
+  "drive_uploaded": false,
+  "next_on_explicit_resume": [
+    "Trusted reviewed-candidate invocation controller and process-bound server redemption/lease resolver; then explicit UI/native boot integration.",
+    "Investigate the unexplained ordinary native exit only with attributable evidence; preserve all retained saves and failures. Do not request declined manual tests.",
+    "Continue retained broader UI/game/release/architecture acceptance gates independently. Worker source/local protected API is qualified only to its receipts; last429/no answer, actual_model:null and unknownv01 remain, with no additional diagnostic model calls/replay/rotation. Mounted-browser worker execution, Studio107 parity and automatic scheduling remain unqualified.",
+    "Retain both verified scoped Drive milestones and seven privacy holds; qualify future source/progress increments separately. All ten goals remain ACTIVE/incomplete."
+  ],
+  "asset_workflow": "docs/game_engine/RTX_ASSET_WORKFLOW.md"
+}

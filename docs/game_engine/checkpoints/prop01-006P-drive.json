@@ -1,0 +1,21 @@
+{
+  "checkpoint": "006P",
+  "description": "1080p DX12 Frame Capture (1,926,329 px, 0 errors, RTX 4090), 903 observations & FastAPI SSE Telemetry Stream",
+  "timestamp": "2026-11-06T00:52:08Z",
+  "drive_folder_id": "1YysHc-GvXADj1-HWwGd4ivt_ZARVqW4i",
+  "drive_parent_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "drive_file_id": "1CqVsQ4z1lmC9-4QT_Ueq-UYondldfLZM",
+  "archive_name": "Prop01_006P_DX12_1080p_Capture_Checkpoint.zip",
+  "byte_count": 132982,
+  "sha256": "0a96a853efbf9980aefba179b49620ae6d2ac69d894c1a897aba4a38d39c538e",
+  "member_count": 7,
+  "restore_verified": true,
+  "crc_errors": 0,
+  "resolution": "1920x1080",
+  "nonbackground_pixels": 1926329,
+  "debug_errors": 0,
+  "debug_warnings": 0,
+  "observations": 903,
+  "adapter": "NVIDIA GeForce RTX 4090",
+  "goal_complete": false
+}

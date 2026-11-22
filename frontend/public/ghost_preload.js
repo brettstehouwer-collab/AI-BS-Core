@@ -124,6 +124,7 @@ function extractTelemetry() {
     transmitToLocalPipeline(payload);
 }
 
+/** @param {{timestamp: string; source: string; geofence: string; organic_reach: number; engagement_rate: string}} payload */
 function transmitToLocalPipeline(payload) {
     console.log("[Ghost Browser] Transmitting to local AI-BS pipeline (127.0.0.1/api/advertising/telemetry/shadow)...");
     
@@ -157,7 +158,7 @@ function activeDOMNavigator() {
     setTimeout(() => {
         try {
             if (window.location.hostname.includes("facebook.com")) {
-                const contentTabs = Array.from(document.querySelectorAll('div[role="tab"], a, span')).filter(el => el.innerText && el.innerText.match(/Content|See all|Views/i));
+                const contentTabs = Array.from(document.querySelectorAll('div[role="tab"], a, span')).filter(/** @returns {el is HTMLElement} */ el => el instanceof HTMLElement && !!el.innerText && /Content|See all|Views/i.test(el.innerText));
                 if (contentTabs.length > 0) {
                     contentTabs[0].click();
                     console.log("[Ghost Browser AutoNavigator] Clicked Facebook Insight element:", contentTabs[0].innerText);
@@ -165,7 +166,7 @@ function activeDOMNavigator() {
             } else if (window.location.hostname.includes("google.com") && window.location.pathname.includes("/maps/contrib/")) {
                 const tabs = Array.from(document.querySelectorAll('button[role="tab"], a[role="tab"]'));
                 if (tabs.length > 1) {
-                    tabs[1].click(); 
+                    if (tabs[1] instanceof HTMLElement) tabs[1].click(); 
                     console.log("[Ghost Browser AutoNavigator] Clicked Google Maps Sub-tab.");
                 }
             } else if (window.location.hostname.includes("tiktok.com")) {

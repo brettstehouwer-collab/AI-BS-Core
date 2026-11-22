@@ -1,0 +1,50 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "local_admin",
+  "request_id": "23945f4f1f424540a5fc703d624d436e",
+  "plan_id": "f9499bb997b94553a9d7428aa91318d2",
+  "snapshot_sha256": "27a54a766f25db3b804141de74401e9fa643f266170b38b42d976d5afc0df85d",
+  "review_digest": "801480612eedc3abb99463622281b07352ab5dade973e222496565071a986499",
+  "model_payload": {
+    "objective": "Synthetic native UI acceptance: change value from 1 to 42",
+    "source_files": [
+      {
+        "path": "native_app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "test_native_app.py",
+        "role": "verification",
+        "sha256": "619e0d3458c24a2059863dc0d980243b13fb37c03091ece0f3e4b67dada1d0cf",
+        "excerpt": "import unittest\nfrom native_app import value\n\nclass NativeValueTests(unittest.TestCase):\n    def test_value(self):\n        self.assertEqual(value, 42)\n",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python_unittest",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "test_native_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "native_app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "75f5844a423548edd73ebd4c5a753d5b14da6a1baeebd14a41f2f146d58b0538",
+  "worker": {
+    "pid": 51928,
+    "created": 1794697448.1195896
+  },
+  "created_at_utc": "2026-11-14T23:07:42.391829+00:00",
+  "entry_sha256": "ad20f1e286a54d16efa159227ea00ebfff1582b9cce28f452c6c67219eadea46"
+}

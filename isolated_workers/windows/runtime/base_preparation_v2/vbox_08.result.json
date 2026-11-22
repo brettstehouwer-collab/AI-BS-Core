@@ -1,0 +1,14 @@
+﻿{
+    "Arguments":  [
+                      "createmedium",
+                      "disk",
+                      "--filename=C:\\AI-BS\\isolated_workers\\windows\\runtime\\base_preparation_v2\\vms\\AI-BS-Eval-Base-20261023\\system.vdi",
+                      "--size=65536",
+                      "--format=VDI",
+                      "--variant=Standard"
+                  ],
+    "PID":  331632,
+    "ExitCode":  0,
+    "TimedOut":  false,
+    "TimestampUTC":  "2026-10-23T21:07:30.0787789Z"
+}

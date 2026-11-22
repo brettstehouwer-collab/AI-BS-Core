@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "89465a04bef44dd486623a4d0251f9c6",
+  "plan_id": "9c75e892e06a4cd593a8d7dee8ef4fc1",
+  "snapshot_sha256": "f94bf583870693a273a7600a2691b9bbb002d36b2fd42c165397ce567d366177",
+  "review_digest": "183e2b8b0fee3c4caf961ddd316fec9a7a3d755f74b2c64d121831e7973ab1c8",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "84689d8fdbba42f3be633cf4b90fc3e8",
+  "reviewed_plan_sha256": "4a2a393b94b740d1d22f7a98cae6a218735b1f7f82387f07af1869746c66f019",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 59156,
+    "created": 1794718679.0745277
+  },
+  "created_at_utc": "2026-11-15T04:58:07.972048+00:00",
+  "entry_sha256": "f85398c30ebbd58c4044ba87ee180804c55c19d50a3499e3d433be61ad20bcf8"
+}

@@ -1,0 +1,62 @@
+{
+  "owner": "local_admin",
+  "request_id": "16ad932d62c6406fb14cacc6291fd064",
+  "plan_id": "e2c384128d4741719d1dcb358a959f72",
+  "snapshot_sha256": "63327daee581f6db41296005efb37a528a48b51d9bc0dd2aca5386ed69de25cc",
+  "review_digest": "9d4f284d4d79a07f663958f2b6c1aab6eaca6352149055ed26e4367685f37bdd",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "7ce39ac07c5f45fca52c2d5af8dd9f16",
+  "reviewed_plan_sha256": "576fdacc5a33004fbfc4e0ad7186ff96e1a0e9e524c85564d82c339565448cef",
+  "model_payload": {
+    "objective": "Implement clamp(value, lower, upper) in native_app.py: return lower below the lower bound, upper above the upper bound, otherwise value. Assume lower <= upper. Preserve the signature and existing tests.",
+    "reviewed_plan": {
+      "summary": "Implement the clamp function in native_app.py to return the value clamped between the lower and upper bounds.",
+      "steps": [
+        {
+          "path": "native_app.py",
+          "change": "def clamp(value, lower, upper):\n    return max(lower, min(value, upper))"
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "native_app.py",
+        "role": "editable",
+        "sha256": "431f7ff295b4b180e99157c8bd2d5191459f8b8511799b90808ce71bc5ccc556",
+        "content": "def clamp(value, lower, upper):\n    return value\n",
+        "source_complete": true
+      },
+      {
+        "path": "test_native_app.py",
+        "role": "verification",
+        "sha256": "b63dc6e81da6501833b06f60ad78c2f053e6ac169c4b454d41c42d1769ee9251",
+        "content": "import unittest\nfrom native_app import clamp\n\nclass ClampTests(unittest.TestCase):\n    def test_cases(self):\n        for args, expected in [((-2,0,10),0),((12,0,10),10),((5,0,10),5),((0,0,10),0),((10,0,10),10),((-5,-4,-1),-4)]:\n            with self.subTest(args=args): self.assertEqual(clamp(*args),expected)\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python_unittest",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "test_native_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "native_app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "0e25b61f9325c4db5c078a01c68147fe8cc548e82b0fc82d3f5c9588fd4cbe03",
+  "worker": {
+    "pid": 55908,
+    "created": 1794697973.2263496
+  },
+  "created_at_utc": "2026-11-14T23:28:51.509321+00:00",
+  "entry_sha256": "97a536b4b765102d31e24548260ac9fd3dc5f5855f3d704b9f754be60ecb1664"
+}

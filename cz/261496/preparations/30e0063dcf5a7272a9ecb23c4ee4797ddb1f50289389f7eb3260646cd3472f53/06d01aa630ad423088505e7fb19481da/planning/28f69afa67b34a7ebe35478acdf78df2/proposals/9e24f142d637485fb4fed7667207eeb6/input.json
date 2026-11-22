@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "06d01aa630ad423088505e7fb19481da",
+  "plan_id": "28f69afa67b34a7ebe35478acdf78df2",
+  "snapshot_sha256": "f03643a3096b9475896a1a815eb1d96680c1a539507f6c196415aaba6d1d0fb8",
+  "review_digest": "d14eb3f0887a52fa3c4085973455be0f8e9c37d029a50714551e9d9299e8f67d",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "9e24f142d637485fb4fed7667207eeb6",
+  "reviewed_plan_sha256": "f550d4b4bedc1cdc40a9c2473059753cada9c843c472022b05c436f623b51623",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 39148,
+    "created": 1794665372.484454
+  },
+  "created_at_utc": "2026-11-14T14:09:34.190847+00:00",
+  "entry_sha256": "4d5d54fbf425cbfb317fc884c459de8cf5201525237bd96b23ccb75e00672c82"
+}

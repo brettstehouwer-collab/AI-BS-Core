@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Search, ShieldAlert, FileText, Database, Code, ExternalLink, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Search, ShieldAlert, FileText, Database, Code, ExternalLink, AlertTriangle } from 'lucide-react';
 import { useAppStore } from './useAppStore.js';
 
+/** @param {{backendUrl?: string}} props */
 export default function LostPropertyTab({ backendUrl: propBackendUrl }) {
-  const backendUrl = propBackendUrl || import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8000' : 'https://ai-bs-dashboard.web.app');
+  (propBackendUrl || import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8000' : 'https://ai-bs-dashboard.web.app'));
   
   const [targetEmail, setTargetEmail] = useState('');
   const [scanType, setScanType] = useState('all');
@@ -30,8 +31,8 @@ export default function LostPropertyTab({ backendUrl: propBackendUrl }) {
     await runLostPropertyWebScan(targetEmail, selectedType);
   };
 
-  const getCategoryColor = (cat) => {
-    switch (cat?.toLowerCase()) {
+  const getCategoryColor = (/** @type {unknown} */ cat) => {
+    switch (typeof cat === 'string' ? cat.toLowerCase() : '') {
       case 'crypto': return '#f59e0b';
       case 'finance': return '#10b981';
       case 'social': return '#3b82f6';
@@ -40,7 +41,7 @@ export default function LostPropertyTab({ backendUrl: propBackendUrl }) {
     }
   };
 
-  const getSeverityBadge = (severity) => {
+  const getSeverityBadge = (/** @type {unknown} */ severity) => {
     switch (severity) {
       case 'CRITICAL_LEAK':
         return <span className="px-2 py-0.5 text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30 rounded flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> CRITICAL LEAK</span>;
@@ -100,7 +101,7 @@ export default function LostPropertyTab({ backendUrl: propBackendUrl }) {
         {accounts.map((acc, i) => (
           <div key={i} className="glass-panel" style={{ padding: '1.5rem', borderRadius: '8px', borderTop: `3px solid ${getCategoryColor(acc.category)}`, background: '#111' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-              <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{acc.company}</h3>
+              <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{displayValue(acc.company)}</h3>
               <span style={{ 
                 fontSize: '0.8rem', 
                 padding: '0.2rem 0.6rem', 
@@ -114,8 +115,8 @@ export default function LostPropertyTab({ backendUrl: propBackendUrl }) {
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', opacity: 0.8 }}>
-              <div><strong>From:</strong> <span style={{ fontFamily: 'monospace' }}>{acc.sender}</span></div>
-              <div><strong>Subject:</strong> {acc.subject}</div>
+              <div><strong>From:</strong> <span style={{ fontFamily: 'monospace' }}>{displayValue(acc.sender)}</span></div>
+              <div><strong>Subject:</strong> {displayValue(acc.subject)}</div>
             </div>
             
             <div style={{ marginTop: '1.5rem' }}>
@@ -224,18 +225,18 @@ export default function LostPropertyTab({ backendUrl: propBackendUrl }) {
             {webResults.map((hit, i) => (
               <div key={i} style={{ padding: '1.2rem', borderRadius: '8px', borderTop: `3px solid #f87171`, background: '#121212', border: '1px solid #222' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem', gap: '0.5rem' }}>
-                  <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 'bold', color: '#fff', lineClamp: 1 }}>{hit.title}</h3>
+                  <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 'bold', color: '#fff', lineClamp: 1 }}>{displayValue(hit.title)}</h3>
                   {getSeverityBadge(hit.severity)}
                 </div>
 
                 <div style={{ marginBottom: '0.8rem' }}>
-                  <a href={hit.url} target="_blank" rel="noreferrer" style={{ color: '#60a5fa', fontSize: '0.8rem', wordBreak: 'break-all', display: 'flex', itemsCenter: 'center', gap: '0.3rem' }}>
-                    <ExternalLink className="w-3 h-3 inline shrink-0" /> {hit.url}
+                  <a href={typeof hit.url === 'string' ? hit.url : undefined} target="_blank" rel="noreferrer" style={{ color: '#60a5fa', fontSize: '0.8rem', wordBreak: 'break-all', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <ExternalLink className="w-3 h-3 inline shrink-0" /> {displayValue(hit.url)}
                   </a>
                 </div>
 
                 <div style={{ fontSize: '0.8rem', opacity: 0.85, background: '#1a1a1a', padding: '0.8rem', borderRadius: '4px', border: '1px solid #2a2a2a', color: '#d1d5db', fontFamily: 'sans-serif', whiteSpace: 'pre-wrap' }}>
-                  {hit.snippet}
+                  {displayValue(hit.snippet)}
                 </div>
               </div>
             ))}
@@ -263,9 +264,9 @@ export default function LostPropertyTab({ backendUrl: propBackendUrl }) {
                 )) : (
                   <div style={{ color: '#64748b', fontSize: '0.8rem' }}>No structured data found.</div>
                 )}
-                {item.data && item.data.url && (
+                {recordUrl(item.data) && (
                   <div style={{ marginTop: '8px' }}>
-                    <a href={item.data.url} target="_blank" rel="noreferrer" style={{ color: '#60a5fa', fontSize: '0.8rem', wordBreak: 'break-all' }}>View Source</a>
+                    <a href={recordUrl(item.data)} target="_blank" rel="noreferrer" style={{ color: '#60a5fa', fontSize: '0.8rem', wordBreak: 'break-all' }}>View Source</a>
                   </div>
                 )}
               </div>
@@ -278,3 +279,8 @@ export default function LostPropertyTab({ backendUrl: propBackendUrl }) {
     </div>
   );
 }
+
+/** @param {unknown} value @returns {string} */
+function displayValue(value) { return value == null ? '' : typeof value === 'object' ? JSON.stringify(value) : String(value); }
+/** @param {unknown} value @returns {string|undefined} */
+function recordUrl(value) { return typeof value === 'object' && value !== null && 'url' in value && typeof value.url === 'string' ? value.url : undefined; }

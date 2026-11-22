@@ -1,0 +1,245 @@
+{
+  "checkpoint": "BS_CHAT_CODING_MODE_20261114_V01",
+  "utc": "2026-11-14T13:56:19.917297+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "next verified executor",
+  "commit": "64fad2871e0a716d9964f506bdef1050612b173d",
+  "branch": "codex/audit-v532976-20261031",
+  "status": "SOURCE_QUALIFIED_EXECUTION_AND_LIVE_ACCEPTANCE_INCOMPLETE",
+  "files": [
+    {
+      "path": "backend/core/coding_mode_execution.py",
+      "bytes": 9545,
+      "sha256": "d28ff799d2ff958becc8bb9b3c930aebb098fbda8e10202e137594ca0c5a5e53"
+    },
+    {
+      "path": "backend/core/coding_vm_inputs.py",
+      "bytes": 11304,
+      "sha256": "3c460042f983ef9f95e9bc6c47d1c6e90eed95524441e1ab128c6ae4f4e3b764"
+    },
+    {
+      "path": "backend/routers/coding_mode_router.py",
+      "bytes": 2064,
+      "sha256": "b5ff968bae72a7dcf437ee62809a1d5a2b4874c7ff5431a8f7345ebd68d15921"
+    },
+    {
+      "path": "backend/routers/coding_review_router.py",
+      "bytes": 3079,
+      "sha256": "ce45147e6b5afff9a6334fb336af2a986c59b0465053cb098e2b50715808edaf"
+    },
+    {
+      "path": "backend/tests/test_coding_mode_execution.py",
+      "bytes": 8513,
+      "sha256": "87d4c74cf7087ab5edb53d8d5f232595030c72dba1d5d69ad1158423493be6ab"
+    },
+    {
+      "path": "backend/tests/test_coding_npm_admission.py",
+      "bytes": 1228,
+      "sha256": "96f77c05eac2410df8155baa01e6c026895a440a56324288af5bd0000f412563"
+    },
+    {
+      "path": "native_studio/bs_chat_ide_full.py",
+      "bytes": 121059,
+      "sha256": "90f8ee111365ff3e63a9137845754a1a244f59bc53e8138e121866af6b0512a1"
+    },
+    {
+      "path": "native_studio/coding_mode_service.py",
+      "bytes": 2980,
+      "sha256": "ca17f6b118ad590655e95376fe849fc42c50deb37bdd7ab2e69abca9d91e0f72"
+    },
+    {
+      "path": "native_studio/coding_mode_view.py",
+      "bytes": 13485,
+      "sha256": "f0f25f8c3ef7cc57037384162d9657cd3c54d84d09af90f44b0cd51523937969"
+    },
+    {
+      "path": "native_studio/test_coding_mode_service.py",
+      "bytes": 2512,
+      "sha256": "7f3b7b07407649dc1e44f1740060d16329c3e00bdcfe491f0d2cb373d8f18a73"
+    },
+    {
+      "path": "native_studio/test_coding_mode_view.py",
+      "bytes": 4483,
+      "sha256": "df75e46e8305e6d4edccf581985aedf21c3312866cac021ee55fe03212abbc42"
+    },
+    {
+      "path": "frontend/src/utils/codingMode.js",
+      "bytes": 1146,
+      "sha256": "f68a1fc9bb2a2f39c2af551744deeb4967b2aa9e4a99c42ecc6a5a3848efaf0e"
+    },
+    {
+      "path": "frontend/tests/coding-mode.test.mjs",
+      "bytes": 1284,
+      "sha256": "9a4200d115a520aed374c709c3a16022f79e6b47c9cfe5f4f9d031273b1b3eba"
+    },
+    {
+      "path": "frontend/tests/coding-mode-render.test.cjs",
+      "bytes": 1754,
+      "sha256": "1811720ac964fb69ee049954148b63bc17a8d77d3c8d2d22708c86f2e10cc5c2"
+    },
+    {
+      "path": "docs/architecture/BS_CHAT_CODING_MODE_2026-11-14.md",
+      "bytes": 5039,
+      "sha256": "bcc3440e02ebb4ae9046060be42fcae2252f1b8fd69e229e4267fb62d44728ce"
+    },
+    {
+      "path": "frontend/src/components/ChatTab.jsx",
+      "bytes": 445537,
+      "sha256": "871f216a48255b8fd8fc75d98cd0667ad99a10f0386fe41fbd7fd58c47e910ab"
+    },
+    {
+      "path": "frontend/src/components/CodingModePanel.jsx",
+      "bytes": 10637,
+      "sha256": "438fe3907862eab8370e07a6a3020c7e81dd6e19e2720e328bcf57fa2652fae8"
+    },
+    {
+      "path": "frontend/src/components/CodingPreparationPanel.jsx",
+      "bytes": 25186,
+      "sha256": "911e52bb8b920936a8387e8c774a34ffbcb66a17e7a68b1a38a20fc1c762ee02"
+    },
+    {
+      "path": "frontend/components/ChatTab.jsx",
+      "bytes": 445537,
+      "sha256": "871f216a48255b8fd8fc75d98cd0667ad99a10f0386fe41fbd7fd58c47e910ab"
+    },
+    {
+      "path": "frontend/components/CodingModePanel.jsx",
+      "bytes": 10637,
+      "sha256": "438fe3907862eab8370e07a6a3020c7e81dd6e19e2720e328bcf57fa2652fae8"
+    },
+    {
+      "path": "frontend/components/CodingPreparationPanel.jsx",
+      "bytes": 25186,
+      "sha256": "911e52bb8b920936a8387e8c774a34ffbcb66a17e7a68b1a38a20fc1c762ee02"
+    },
+    {
+      "path": "frontend/src/components/components/ChatTab.jsx",
+      "bytes": 445537,
+      "sha256": "871f216a48255b8fd8fc75d98cd0667ad99a10f0386fe41fbd7fd58c47e910ab"
+    },
+    {
+      "path": "frontend/src/components/components/CodingModePanel.jsx",
+      "bytes": 10637,
+      "sha256": "438fe3907862eab8370e07a6a3020c7e81dd6e19e2720e328bcf57fa2652fae8"
+    },
+    {
+      "path": "frontend/src/components/components/CodingPreparationPanel.jsx",
+      "bytes": 25186,
+      "sha256": "911e52bb8b920936a8387e8c774a34ffbcb66a17e7a68b1a38a20fc1c762ee02"
+    },
+    {
+      "path": "frontend/components/components/ChatTab.jsx",
+      "bytes": 445537,
+      "sha256": "871f216a48255b8fd8fc75d98cd0667ad99a10f0386fe41fbd7fd58c47e910ab"
+    },
+    {
+      "path": "frontend/components/components/CodingModePanel.jsx",
+      "bytes": 10637,
+      "sha256": "438fe3907862eab8370e07a6a3020c7e81dd6e19e2720e328bcf57fa2652fae8"
+    },
+    {
+      "path": "frontend/components/components/CodingPreparationPanel.jsx",
+      "bytes": 25186,
+      "sha256": "911e52bb8b920936a8387e8c774a34ffbcb66a17e7a68b1a38a20fc1c762ee02"
+    }
+  ],
+  "source_manifest_sha256": "a08166bb16418fd30bf2403b121f8067b18c84380388729de21ff01ff239c285",
+  "patch": "backups/bs_chat_coding_mode_20261114_v01/tracked-source.diff",
+  "patch_scope": "Git tracked changes include prior dirty changes; untracked source preserved in full, not represented as historical diffs.",
+  "checks": {
+    "backend_focused": 13,
+    "native_synthetic": 12,
+    "browser": 4,
+    "existing_preparation": 29,
+    "browser_candidate_build": "PASS 5696 modules 21.83s",
+    "creative_pins": [
+      {
+        "path": "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\runtime\\devtools\\native_creative_writer.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\native_creative_entry.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\creative_session.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\creative_pipe_bootstrap.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\creative_pipe_transport.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\creative_pipe_io.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\creative_wire.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\screenplay_client.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\rich_screenplay_draft.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\local_connection.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\windows_profile.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\screenwriting_view.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\engine.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\theme.py",
+        "matches": true
+      },
+      {
+        "path": "C:\\AI-BS\\native_studio\\__init__.py",
+        "matches": true
+      }
+    ]
+  },
+  "test_commands": [
+    "PYTHONPATH=backend;backend/tests AIBS_SNAPSHOT_TEST_ROOT=C:/AI-BS/cmf1 recovery-python -m unittest test_coding_mode_execution.CodingModeTests test_coding_npm_admission.NpmAdmissionTests -q -> 13 PASS",
+    "PYTHONPATH=project-root;recovery-site-packages QT_QPA_PLATFORM=offscreen qt-python -m unittest native_studio.test_coding_mode_service native_studio.test_coding_mode_view -q -> 12 PASS",
+    "node --test frontend/tests/coding-mode.test.mjs frontend/tests/coding-mode-render.test.cjs -> 4 PASS",
+    "VITE_AI_BS_CODING_MODE=1 vite.cmd build --outDir C:/AI-BS/backups/coding_mode_browser_build_20261114_v01 --emptyOutDir false -> PASS",
+    "recovery-python -m unittest test_coding_preparation.PreparationTests -q with isolated snapshot fixture -> 29 PASS",
+    "FastAPI OpenAPI includes /api/chat/coding-tasks/mode/executions -> PASS; touched three component files four-mirror SHA256 parity -> PASS"
+  ],
+  "failures": [
+    "Initial regression setup lacked AIBS_SNAPSHOT_TEST_ROOT.",
+    "Long fixture paths exceeded Windows MAX_PATH; missing-parent and reused-root attempts retained.",
+    "Broad proposal regression stalled >5min; exact owned Python children stopped. No full-suite pass.",
+    "Standalone Qt runtime lacks httpx; final synthetic run uses existing recovery site packages. Disabled import corrected.",
+    "TypeScript transpile API unavailable; Babel/esbuild and actual Vite build passed."
+  ],
+  "gates": [
+    "No accepted isolated worker: project checks not_run and apply blocked.",
+    "Authenticated native/browser and real-model acceptance pending; no services restarted or production artifacts promoted.",
+    "Other project registry support remains later extension; current registry ai-bs only.",
+    "No new Drive upload/restore qualification."
+  ],
+  "next": "Resolve broad regression stall; schedule candidate native/browser acceptance; review and qualify isolated worker before connecting sealed verification/application.",
+  "preservation": "Scoped local source only. No private DBs, credentials, manuscripts, original media or model weights included."
+}

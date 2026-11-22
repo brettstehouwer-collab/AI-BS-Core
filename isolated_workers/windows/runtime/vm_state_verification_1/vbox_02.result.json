@@ -1,0 +1,11 @@
+﻿{
+    "Arguments":  [
+                      "showmediuminfo",
+                      "disk",
+                      "C:\\AI-BS\\isolated_workers\\windows\\runtime\\base_preparation_v2\\vms\\AI-BS-Eval-Base-20261023\\system.vdi"
+                  ],
+    "PID":  174940,
+    "ExitCode":  0,
+    "TimedOut":  false,
+    "TimestampUTC":  "2026-10-23T21:52:47.1584686Z"
+}

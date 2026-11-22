@@ -1,0 +1,18 @@
+{
+  "checkpoint": "006P",
+  "archive_path": "D:\\AI-BS-Game-Resources\\Prop01_006P_DX12_1080p_Capture_Checkpoint.zip",
+  "timestamp": "2026-11-06T00:52:08Z",
+  "byte_count": 132982,
+  "sha256": "0a96a853efbf9980aefba179b49620ae6d2ac69d894c1a897aba4a38d39c538e",
+  "member_count": 7,
+  "cloud_backup_verified": true,
+  "drive_folder_id": "1YysHc-GvXADj1-HWwGd4ivt_ZARVqW4i",
+  "drive_file_id": "1CqVsQ4z1lmC9-4QT_Ueq-UYondldfLZM",
+  "resolution": "1920x1080",
+  "nonbackground_pixels": 1926329,
+  "debug_errors": 0,
+  "debug_warnings": 0,
+  "observations": 903,
+  "adapter": "NVIDIA GeForce RTX 4090",
+  "goal_complete": false
+}

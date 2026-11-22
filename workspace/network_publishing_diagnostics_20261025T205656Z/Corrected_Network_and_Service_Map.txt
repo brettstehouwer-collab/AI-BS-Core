@@ -1,0 +1,28 @@
+CORRECTED MAP — diagnostic baseline25October2026; UTC/EDT(-04:00)
+USER-REPORTED: FiberONT -> eeroMax7 -> PC byCat8.
+OBSERVED: Ethernet2/Realtek#2/2.5Gbps/192.168.4.35/22/DHCP,DNS,defaultGW192.168.4.1.
+INFERRED router-before-PC role consistent; gatewayvendor/ONTphysicalpath not independently verified.
+OBSERVED: separateEthernet/Realtek#1/1Gbps/static192.168.10.50/24/noGW. DestinationUNKNOWN.
+USER-REPORTED: oneNETGEARpoweredon duringtask;21:06UTCpassiverefresh retains samePCIPs/rates/default. R6700v3 vsRAX40identity/roleUNKNOWN.
+OBSERVED: XboxNAT internal192.168.10.0/24 exists; do not equate with householdICS/eeroNAT. SharedAccessRunning alone is insufficient;IPEnableRouter0/noUDP67;COMbindingsUNKNOWN.
+HISTORICAL ONLY: ONT->WindowsICS137.1->eero6->switch/AP. Superseded forplanning; no ICS/IPforwarding change justified.
+
+PUBLISHING:
+Hyphenatedroot/www -> CloudflareDNS104.21.51.119/172.67.180.43 -> TLS404 at20:58UTC.
+SpecificconnectorforresponseUNKNOWN.
+UserPID16512/config.yml: publishingnames->127.0.0.1:80; broaderAPIselectors8099; unmatched404.
+UserPID34912/scopedAPI.yml: APIhostonly; /sse,/messages404; APIremainder8000; unmatched404.
+These two local tunnel identities are equal; policies differ.
+SYSTEMPID6252/tokenconnector: remoteidentity/ingressUNKNOWN inbaseline.
+No80listener/noNGINXprocess -> independentoriginblocker.
+CandidateNginxroot website-rebuild/dist is NOT privacy-approvedwholesale.
+Pythonalternative same root/proxy8000 binds0.0.0.0:80 and needssecurityreview.
+Nonhyphenatedroot/www -> NXDOMAIN; intendedDNS/ownershipdecisionseparate.
+
+SEPARATE AI-BS:
+127.0.0.1:8000 GoPID30912 ->8080;127.0.0.1:8080 PythonPID50200.
+127.0.0.1:8089 svchost/IPHelperPID6232; forwardingtarget/HLSbehaviorUNKNOWN.
+Candidatepublishingproxies are declarations, not acceptance. No API/HLSrequests performed.
+core_boot.py hash-admits scoped tunnelconfig; futureingressedit must preservepairedadmission/APIpolicy.
+Record98v70dashboarddeployment is historicalcontext, separate frompublishingsiteavailability.
+

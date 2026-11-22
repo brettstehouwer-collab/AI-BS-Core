@@ -1,0 +1,11 @@
+{
+  "enabled": true,
+  "chat_enabled": false,
+  "broadcast_started_by_apply": false,
+  "compositor_mean_ms": 3.659,
+  "compositor_max_ms": 4.039,
+  "frames_benchmarked": 30,
+  "preview_is_offline_example": true,
+  "shortcut": "C:\\AI-BS\\Live AI Overlay.lnk",
+  "config_sha256": "889b4468162e93b12fb011637bb8e91ef0b1a9351c98516e90dae160ce7caf2f"
+}

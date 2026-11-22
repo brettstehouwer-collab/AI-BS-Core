@@ -1,0 +1,59 @@
+﻿[ARCHITECTURE_RULES]
+1. Core API (FastAPI) MUST bind to Port 8080.
+2. Go Gateway / Reverse Proxy MUST bind to Port 8000.
+3. ChromaDB Vector Store MUST bind to Port 8002.
+4. Broadcast Daemon (aibs_broadcast_daemon.py) MUST bind to Port 8005.
+5. Social Hub / Sidekick Daemon MUST bind to Port 8006.
+6. Crypto Swarm & Scalp Bot Daemon MUST bind to Port 8007.
+7. SHM WebSocket Gateway MUST bind to Port 8010.
+8. VST3 Audio Bridge Daemon MUST bind to Port 8013.
+9. Broadcast Kernel & Media Processor MUST bind to Port 8088.
+10. Gemini MCP Server MUST bind to Port 8099.
+11. ComfyUI Primary Instance MUST bind to Port 8188.
+12. ComfyUI Secondary / Screenplay Instance MUST bind to Port 8189.
+13. Unreal Engine 5 Signaling Server MUST bind to Port 8888.
+14. OBS WebSocket Engine MUST bind to Port 4455.
+15. Node Backend / WebSocket Broker MUST bind to Port 3001.
+16. Vite React Frontend Development Server MUST bind to Port 5173.
+17. Ollama Local LLM Primary MUST bind to Port 11434 (C: Drive).
+18. Ollama Local LLM Secondary MUST bind to Port 11435 (E: Drive).
+19. StehouwerPublishing Nginx Gateway MUST bind to Port 80.
+
+[SAFETY_AND_INTEGRITY_RULES]
+1. Stehouwer LLM Safety Filter Directive: Categories S1 (Violent Crimes), S3 (Sex-Related Crimes), and S4 (Child Sexual Exploitation & Abuse) MUST remain permanently locked and immutable. Categories S2, S5-S13 are disabled.
+2. Zero-Mock Real Money Rule: NEVER push unflagged dummy transactions to production or live chains. Ephemeral local test fixtures and dev stubs are permitted during active feature implementation.
+3. Cost Constraints: Use ONLY 100% free, open-source, or local tools and models. Never use paid cloud APIs.
+4. Interactive Side-Box & Consent Standard: User implementation requests carry pre-approval. Execute code directly end-to-end without generating implementation_plan.md or requesting feedback.
+5. Multi-Tenant Header & Schema Isolation: All FastAPI endpoints extract X-Client-ID with fallback to 'stehouwer_publishing'. All SQLite tables enforce client_id TEXT DEFAULT 'stehouwer_publishing'.
+6. Circuit Breaker: Halt only if an identical command fails twice consecutively with the same error. No upper limit on tool calls per turn.
+
+[ELECTRON_RULES]
+1. Enforce Direct3D11 stability.
+2. DO NOT use experimental zero-copy swapchain flags (e.g., --enable-zero-copy) that cause blackout artifacts on multi-monitor NVIDIA setups.
+
+[AUDIO_RULES]
+1. Use low-latency 48kHz audio buffers globally.
+2. The 6-track isolated stem recording layout is immutable:
+   Track 1: Master Stream Output
+   Track 2: Clean Microphone Stems
+   Track 3: Desktop & Game WASAPI Audio
+   Track 4: In-App FL Studio DAW Synthesizer & Drum Stems
+   Track 5: Discord & Remote WebRTC Guests
+   Track 6: AI Sidekick Co-Host Voice Output
+3. Audio Engineering Society Standards: Adhere to AES3 / AES/EBU IEC 60958 Type I 24-bit linear PCM framing and 192-frame channel status blocks with CRC-8 integrity.
+
+[BROADCAST_RULES]
+1. Video processing via FFmpeg MUST adhere to hardware encoders: NVENC AV1 (av1_nvenc), NVENC HEVC (hevc_nvenc), NVENC H.264 (h264_nvenc).
+2. Rate control MUST use presets (P1-P7) with 2-second keyframe intervals.
+3. Local archive recording MUST use Hybrid MP4 formatting with flags: -movflags +faststart+frag_keyframe+empty_moov+default_base_moof for crash resilience.
+
+[SIDEKICK_PRIVACY_RULES]
+1. Live IRC WebSocket connections MUST route via wss://irc-ws.chat.twitch.tv:443.
+2. The Sidekick Co-Host MUST rely entirely on local AI processing via Ollama (llama3.2). NO cloud routing for stream chat analysis.
+
+[DEPLOYMENT_AND_PARITY_RULES]
+1. Frontend Deployment: Run deployment commands ONLY on explicit user command. Never auto-deploy during intermediate frontend edits.
+2. UI Version Parity: Whenever system version is incremented, update all frontend version badges (App.jsx, TopNavbar.jsx, Sidebar.jsx, ChatTab.jsx across all mirror trees) to match the new version.
+3. Milestone Ledger Sync: Update AI_BS_MASTER_ARCHITECTURAL_LEDGER.md, docs/AI_BS_MASTER_ECOSYSTEM_MANUAL.md, saved_data/artifacts/, and chronologies ONLY upon completing verified feature milestones (strictly exempt during Q&A and code exploration). Enforce idempotent execution (never repeat tool calls).
+
+

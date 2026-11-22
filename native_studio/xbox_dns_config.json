@@ -1,0 +1,25 @@
+{
+  "spoof_target_ip": "192.168.10.1",
+  "upstream_dns": [
+    "1.1.1.1",
+    "8.8.8.8"
+  ],
+  "intercept_domains": [
+    "play.inpvp.net",
+    "mco.mineplex.com",
+    "geo.hivebedrock.network",
+    "play.hivemc.com",
+    "play.galaxite.net",
+    "play.cubecraft.net",
+    "play.pixelparadise.gg",
+    "play.lifeboat.net"
+  ],
+  "custom_redirects": {},
+  "server_proxy": {
+    "enabled": true,
+    "listen_port": 19132,
+    "target_server_host": "play.cubecraft.net",
+    "target_server_port": 19132,
+    "custom_motd": "§6AI-BS §bCustom Server Bridge §r[1 Gbps Direct Link]"
+  }
+}

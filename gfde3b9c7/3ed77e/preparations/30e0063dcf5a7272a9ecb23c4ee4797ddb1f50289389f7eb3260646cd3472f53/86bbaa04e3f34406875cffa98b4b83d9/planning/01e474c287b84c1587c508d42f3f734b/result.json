@@ -1,0 +1,38 @@
+{
+  "state": "PLAN_PROPOSED",
+  "input_sha256": "19d377421e4f4252b21d7a1bb1a991a155a8a177384f9a57e584836559368f2e",
+  "proposal": {
+    "summary": "Change only selected implementation values.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Change the selected value to42."
+      },
+      {
+        "path": "src/other.py",
+        "change": "Change the selected value to42."
+      }
+    ],
+    "questions": []
+  },
+  "error_code": null,
+  "finished_at_utc": "2026-11-15T22:44:02.617578+00:00",
+  "elapsed_seconds": 0.016,
+  "response_sha256": "b1be0ab1eb0b7486126a0b8be9e6c6912578c8b8da82d388656d193b9902df77",
+  "response_bytes": 226,
+  "public_json": {
+    "summary": "Change only selected implementation values.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Change the selected value to42."
+      },
+      {
+        "path": "src/other.py",
+        "change": "Change the selected value to42."
+      }
+    ],
+    "questions": []
+  },
+  "entry_sha256": "ab5b34d027273fbf3ea4530eb2feba9c5fa180eb936d3ae11c6d5518e07fce35"
+}

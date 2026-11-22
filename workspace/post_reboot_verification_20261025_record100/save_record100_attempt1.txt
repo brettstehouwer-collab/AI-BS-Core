@@ -1,0 +1,1 @@
+The first checkpoint writer completed document writes and checkpoint JSON, then its final text assertion used Windows cp1252 and raised UnicodeDecodeError. No application failure or rollback occurred. Corrected explicit UTF-8 and verified existing results without rerunning the writer or duplicating appends.

@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "classification": "TRUSTED_INFRASTRUCTURE_ONLY",
+  "infrastructure_checks_passed": 29,
+  "failed": 0,
+  "setup_entry_executed": false,
+  "vm_operations": 0,
+  "guest_input": 0,
+  "candidate_execution": false,
+  "native_cmd_inputs": "SYNTHETIC_HOST_TEXT_FIXTURES_ONLY",
+  "source_sha256": "ed523cd3a17ced6ba901470a60838506aefafb616586831260fb39b71dc62ae7",
+  "test_sha256": "3d87fd0bf0be87e4e09e4dd9db6ee51f04a365b6ad60c0960e7fc0cec03b8a64",
+  "checks": [
+    {
+      "check": "setup_progress_source_parses",
+      "passed": true
+    },
+    {
+      "check": "tested_primitive_exact_parity_Require",
+      "passed": true
+    },
+    {
+      "check": "tested_primitive_exact_parity_Parse-ObservedMachine",
+      "passed": true
+    },
+    {
+      "check": "tested_primitive_exact_parity_Verify-ObservedMachine",
+      "passed": true
+    },
+    {
+      "check": "tested_primitive_exact_parity_Verify-RecoveryStorage",
+      "passed": true
+    },
+    {
+      "check": "tested_primitive_exact_parity_New-ObservationCommandRecord",
+      "passed": true
+    },
+    {
+      "check": "tested_primitive_exact_parity_VBox-Observe",
+      "passed": true
+    },
+    {
+      "check": "two_fixed_switches_no_input_parameter",
+      "passed": true
+    },
+    {
+      "check": "exactly_one_phase_required",
+      "passed": true
+    },
+    {
+      "check": "exactly_two_fixed_literal_commands",
+      "passed": true
+    },
+    {
+      "check": "inventory_exact_three_boot_paths_and_four_log_paths",
+      "passed": true
+    },
+    {
+      "check": "tail_exact_six_lines_one_known_log",
+      "passed": true
+    },
+    {
+      "check": "one_fixed_command_then_enter_per_phase",
+      "passed": true
+    },
+    {
+      "check": "only_fixed_enter_scancodes",
+      "passed": true
+    },
+    {
+      "check": "no_disk_or_firmware_writes_repair_or_answerfile_reads",
+      "passed": true
+    },
+    {
+      "check": "separate_permanent_one_use_phase_markers",
+      "passed": true
+    },
+    {
+      "check": "durable_intent_before_keyboard",
+      "passed": true
+    },
+    {
+      "check": "prior_reviewed_setup_observation_and_inventory_required",
+      "passed": true
+    },
+    {
+      "check": "screens_before_and_after_input",
+      "passed": true
+    },
+    {
+      "check": "bounded_private_console_images",
+      "passed": true
+    },
+    {
+      "check": "raw_command_records_private",
+      "passed": true
+    },
+    {
+      "check": "sealed_worker_refused",
+      "passed": true
+    },
+    {
+      "check": "protected_exact_standard_host_entry",
+      "passed": true
+    },
+    {
+      "check": "native_cmd_tail_fixture_line_count_14",
+      "passed": true
+    },
+    {
+      "check": "native_cmd_tail_fixture_line_count_7",
+      "passed": true
+    },
+    {
+      "check": "native_cmd_tail_fixture_line_count_6",
+      "passed": true
+    },
+    {
+      "check": "native_cmd_tail_fixture_line_count_3",
+      "passed": true
+    },
+    {
+      "check": "native_cmd_tail_fixture_line_count_0",
+      "passed": true
+    },
+    {
+      "check": "native_cmd_inventory_reports_present_size_and_missing_separately",
+      "passed": true
+    }
+  ],
+  "utc": "2026-10-26T19:15:44.8286891Z"
+}

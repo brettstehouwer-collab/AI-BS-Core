@@ -1,35 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { theme } from '../styles/theme';
-import {
-  Cpu,
-  Play,
-  FastForward,
-  CheckCircle2,
-  RefreshCw,
-  Plus,
-  Trash2,
-  Zap,
-  ArrowRight,
-  Database,
-  Sparkles,
-  Settings2,
-  Sliders,
-  Music,
-  Video,
-  Mic,
-  Film,
-  Search,
-  Bot,
-  Mail,
-  FileSpreadsheet,
-  X,
-  PlusCircle,
-  Copy,
-  ChevronRight,
-  Server
-} from 'lucide-react';
+import '../styles/theme';
+import { Cpu, Play, FastForward, CheckCircle2, RefreshCw, Trash2, Zap, ArrowRight, Database, Sparkles, Settings2, Sliders, Music, Video, Mic, Film, Search, Bot, Mail, X, PlusCircle, Server } from "lucide-react";
 
+/** @typedef {Record<string, string | number | boolean>} WorkflowParams */
+/** @typedef {{id: string, title: string, type: string, desc: string, status: string, params: WorkflowParams}} WorkflowNode */
 // Tool catalog available to drop into the DAG
+/** @type {Array<{type: string, title: string, category: string, icon: import('lucide-react').LucideIcon, color: string, desc: string, defaultParams: WorkflowParams}>} */
 const AVAILABLE_AGENT_TOOLS = [
   {
     type: 'llm',
@@ -114,6 +90,7 @@ const AVAILABLE_AGENT_TOOLS = [
   }
 ];
 
+/** @type {Array<{id: string, name: string, nodes: WorkflowNode[]}>} */
 const PALETTE_TEMPLATES = [
   {
     id: 'lead_gen_to_crm',
@@ -151,12 +128,12 @@ const PALETTE_TEMPLATES = [
 export default function VisualWorkflowDAGTab() {
   const [selectedTemplateId, setSelectedTemplateId] = useState('multimedia_video_pipeline');
   const [nodes, setNodes] = useState(PALETTE_TEMPLATES[1].nodes);
-  const [activeStep, setActiveStep] = useState(null);
+  const [activeStep, setActiveStep] = useState(/** @type {string | null} */ (null));
   const [isExecuting, setIsExecuting] = useState(false);
-  const [executionLogs, setExecutionLogs] = useState([]);
-  const [vramStatus, setVramStatus] = useState(null);
-  const [nodeOutputs, setNodeOutputs] = useState({});
-  const [selectedNode, setSelectedNode] = useState(null); // Node selected for inspector drawer
+  const [executionLogs, setExecutionLogs] = useState(/** @type {Array<{"type": string, "time": string, "msg": string}>} */ ([]));
+  const [vramStatus, setVramStatus] = useState(/** @type {{"free_vram_gb": number, "free_gb": number} | null} */ (null));
+  const [nodeOutputs, setNodeOutputs] = useState(/** @type {{[key: string]: {"status": string, "summary"?: string}}} */ ({}));
+  const [selectedNode, setSelectedNode] = useState(/** @type {WorkflowNode | null} */ (null)); // Node selected for inspector drawer
   const [toolSearch, setToolSearch] = useState('');
 
   const fetchVramStatus = async () => {
@@ -175,7 +152,8 @@ export default function VisualWorkflowDAGTab() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSelectTemplate = (tplId) => {
+  /** @param {typeof selectedTemplateId} tplId */
+const handleSelectTemplate = ( tplId) => {
     setSelectedTemplateId(tplId);
     const tpl = PALETTE_TEMPLATES.find(t => t.id === tplId);
     if (tpl) {
@@ -187,12 +165,14 @@ export default function VisualWorkflowDAGTab() {
     }
   };
 
-  const addLog = (msg, type = 'info') => {
+  /** @param {string} msg */
+const addLog = ( msg, type = 'info') => {
     setExecutionLogs(prev => [...prev, { time: new Date().toLocaleTimeString(), msg, type }]);
   };
 
   // Add node from tools palette to active pipeline
-  const handleAddToolToPipeline = (tool) => {
+  /** @param {{title: string, type: string, desc: string, defaultParams: WorkflowParams}} tool */
+const handleAddToolToPipeline = ( tool) => {
     const newId = String(Date.now());
     const newNode = {
       id: newId,
@@ -208,7 +188,8 @@ export default function VisualWorkflowDAGTab() {
   };
 
   // Delete node from pipeline
-  const handleDeleteNode = (id, e) => {
+  /** @param {string} id @param {import('react').SyntheticEvent<HTMLElement>} [e] */
+const handleDeleteNode = ( id,  e) => {
     if (e) e.stopPropagation();
     setNodes(prev => prev.filter(n => n.id !== id));
     if (selectedNode?.id === id) {
@@ -218,7 +199,8 @@ export default function VisualWorkflowDAGTab() {
   };
 
   // Update parameters of the selected node
-  const handleUpdateNodeParam = (key, value) => {
+  /** @param {string} key @param {string | number | boolean} value */
+const handleUpdateNodeParam = ( key,  value) => {
     if (!selectedNode) return;
     const updatedParams = { ...selectedNode.params, [key]: value };
     const updatedNode = { ...selectedNode, params: updatedParams };
@@ -226,7 +208,8 @@ export default function VisualWorkflowDAGTab() {
     setNodes(prev => prev.map(n => n.id === updatedNode.id ? updatedNode : n));
   };
 
-  const handleUpdateNodeTitle = (title) => {
+  /** @param {string} title */
+const handleUpdateNodeTitle = ( title) => {
     if (!selectedNode) return;
     const updatedNode = { ...selectedNode, title };
     setSelectedNode(updatedNode);
@@ -272,20 +255,22 @@ export default function VisualWorkflowDAGTab() {
 
       addLog(`✨ Pipeline Completed! All outputs synthesized and verified.`, 'success');
     } catch (err) {
-      addLog(`❌ Error executing pipeline: ${err.message}`, 'error');
+      addLog(`❌ Error executing pipeline: ${(err instanceof Error ? err.message : String(err))}`, 'error');
     } finally {
       setActiveStep(null);
       setIsExecuting(false);
     }
   };
 
-  const getNodeIcon = (type) => {
+  /** @param {string} type */
+const getNodeIcon = ( type) => {
     const t = AVAILABLE_AGENT_TOOLS.find(item => item.type === type);
     if (!t) return Sparkles;
     return t.icon;
   };
 
-  const getNodeColor = (type) => {
+  /** @param {string} type */
+const getNodeColor = ( type) => {
     const t = AVAILABLE_AGENT_TOOLS.find(item => item.type === type);
     return t ? t.color : '#58a6ff';
   };
@@ -311,7 +296,7 @@ export default function VisualWorkflowDAGTab() {
       <div style={{
         height: '52px',
         background: 'rgba(13, 16, 24, 0.98)',
-        borderBottom: `1px solid ${theme.colors.border}`,
+        borderBottom: `1px solid ${'#30363d'}`,
         display: 'flex',
         alignItems: 'center',
         padding: '0 16px',
@@ -435,7 +420,8 @@ export default function VisualWorkflowDAGTab() {
               <input
                 type="text"
                 value={toolSearch}
-                onChange={(e) => setToolSearch(e.target.value)}
+                onChange={
+( e) => setToolSearch(e.target.value)}
                 placeholder="Filter tools..."
                 style={{
                   width: '100%',
@@ -453,7 +439,8 @@ export default function VisualWorkflowDAGTab() {
 
           {/* Tools List */}
           <div style={{ flex: 1, overflowY: 'auto', padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {filteredTools.map((tool) => {
+            {filteredTools.map(
+( tool) => {
               const IconComponent = tool.icon;
               return (
                 <div
@@ -470,8 +457,10 @@ export default function VisualWorkflowDAGTab() {
                     flexDirection: 'column',
                     gap: '4px'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.borderColor = tool.color}
-                  onMouseLeave={(e) => e.currentTarget.style.borderColor = '#30363d'}
+                  onMouseEnter={
+( e) => e.currentTarget.style.borderColor = tool.color}
+                  onMouseLeave={
+( e) => e.currentTarget.style.borderColor = '#30363d'}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
@@ -498,7 +487,7 @@ export default function VisualWorkflowDAGTab() {
           <div style={{
             height: '56%',
             background: 'radial-gradient(circle at 50% 50%, #111726 0%, #080b10 100%)',
-            borderBottom: `1px solid ${theme.colors.border}`,
+            borderBottom: `1px solid ${'#30363d'}`,
             padding: '24px',
             overflowX: 'auto',
             display: 'flex',
@@ -550,7 +539,8 @@ export default function VisualWorkflowDAGTab() {
                           {isCompleted && <CheckCircle2 size={13} color="#5eff7b" />}
                           {isActive && <RefreshCw size={12} color="#00f0ff" className="spin" />}
                           <button
-                            onClick={(e) => handleDeleteNode(node.id, e)}
+                            onClick={
+( e) => handleDeleteNode(node.id, e)}
                             title="Delete Node"
                             style={{
                               background: 'transparent',
@@ -561,8 +551,10 @@ export default function VisualWorkflowDAGTab() {
                               display: 'flex',
                               alignItems: 'center'
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.color = '#f85149'}
-                            onMouseLeave={(e) => e.currentTarget.style.color = '#8b949e'}
+                            onMouseEnter={
+( e) => e.currentTarget.style.color = '#f85149'}
+                            onMouseLeave={
+( e) => e.currentTarget.style.color = '#8b949e'}
                           >
                             <Trash2 size={12} />
                           </button>
@@ -623,7 +615,7 @@ export default function VisualWorkflowDAGTab() {
           {/* Live Execution Logs & Output Inspector */}
           <div style={{ flex: 1, background: '#090c12', display: 'flex', overflow: 'hidden' }}>
             {/* Console Stream */}
-            <div style={{ flex: 1, padding: '12px', overflowY: 'auto', fontFamily: 'monospace', fontSize: '11px', borderRight: `1px solid ${theme.colors.border}` }}>
+            <div style={{ flex: 1, padding: '12px', overflowY: 'auto', fontFamily: 'monospace', fontSize: '11px', borderRight: `1px solid ${'#30363d'}` }}>
               <div style={{ fontSize: '10px', color: '#888', fontWeight: 'bold', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 REAL-TIME EVENT LOGS & REASONING STREAM:
               </div>
@@ -702,7 +694,8 @@ export default function VisualWorkflowDAGTab() {
                 <input
                   type="text"
                   value={selectedNode.title}
-                  onChange={(e) => handleUpdateNodeTitle(e.target.value)}
+                  onChange={
+( e) => handleUpdateNodeTitle(e.target.value)}
                   style={{
                     width: '100%',
                     background: '#161b22',
@@ -746,7 +739,8 @@ export default function VisualWorkflowDAGTab() {
                     <input
                       type="text"
                       value={String(paramVal)}
-                      onChange={(e) => handleUpdateNodeParam(paramKey, e.target.value)}
+                      onChange={
+( e) => handleUpdateNodeParam(paramKey, e.target.value)}
                       style={{
                         width: '100%',
                         background: '#161b22',

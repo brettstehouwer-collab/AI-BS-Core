@@ -1,14 +1,17 @@
-import React, { useState, useSyncExternalStore } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { useAppStore } from './useAppStore';
 import { preparationClientFor } from '/src/utils/projectPreparation.js';
 
+/** @type {Record<string, string>} */
 const planLabels = { RUNNING: 'Planning', INCOMPLETE: 'Incomplete', PLAN_PROPOSED: 'Plan proposed', NEEDS_CLARIFICATION: 'Needs clarification',
   FAILED: 'Failed', TIMED_OUT: 'Timed out', CANCELLED: 'Cancelled', INTERRUPTED: 'Interrupted' };
 const terminalPlans = new Set(['PLAN_PROPOSED', 'NEEDS_CLARIFICATION', 'FAILED', 'TIMED_OUT', 'CANCELLED', 'INTERRUPTED']);
+/** @type {Record<string, string>} */
 const proposalLabels = { PROPOSAL_READY: 'Saved proposal', RUNNING: 'Generating proposal', INCOMPLETE: 'Incomplete',
   FAILED: 'Failed', TIMED_OUT: 'Timed out', CANCELLED: 'Cancelled', INTERRUPTED: 'Interrupted' };
 const terminalProposals = new Set(['PROPOSAL_READY', 'FAILED', 'TIMED_OUT', 'CANCELLED', 'INTERRUPTED']);
 
+/** @param {{record: Pick<import("/types/preparation").PreparationReceipt, "files" | "checks">}} props */
 function InputEvidence({ record }) {
   return <div className="mt-3 text-xs">
     <table className="w-full text-left"><caption className="text-left font-semibold">Reviewed inputs</caption>
@@ -24,10 +27,11 @@ function InputEvidence({ record }) {
 }
 
 /** Preparation evidence only. This view has no run/apply action. */
+/** @param {{allowCodeProposal?: boolean, state: import("/types/preparation").PreparationState, onField: (name: keyof import("/types/preparation").PreparationForm, value: string) => void, canCopyDraft: boolean, onPreview: () => void, onSave: () => void, onRefresh: () => void, onMore: () => void, onKeepPending: () => void, onCopyDraft: () => void, onReconnect: () => void, onGeneratePlan: () => void, onPlansRefresh: () => void, onPlansMore: () => void, onProposalReview: () => void, onProposalGenerate: () => void, onProposalsRefresh: () => void, onProposalsMore: () => void, onInspect: (id: string) => void, onRecover: (id: string) => void, onPlanInspect: (id: string) => void, onPlanRecover: (id: string) => void, onPlanCancel: (id: string) => void, onPlanId: (id: string) => void, onProposalInspect: (id: string) => void, onProposalRecover: (id: string) => void, onProposalCancel: (id: string) => void, onProposalId: (id: string) => void}} props */
 export function PreparationView({ state, onField, onPreview, onSave, onRefresh, onMore, onInspect, onRecover,
   onKeepPending, onCopyDraft, onReconnect, canCopyDraft, onGeneratePlan, onPlanInspect, onPlanRecover, onPlanCancel,
   onPlansRefresh, onPlansMore, onPlanId, onProposalReview, onProposalGenerate, onProposalInspect, onProposalRecover,
-  onProposalCancel, onProposalId, onProposalsRefresh, onProposalsMore }) {
+  onProposalCancel, onProposalId, onProposalsRefresh, onProposalsMore, allowCodeProposal = true }) {
   const control = 'rounded border border-slate-600 px-2 py-1 text-xs disabled:opacity-40';
   if (!state.connected) return <section aria-label="Coding preparation" className="rounded border border-slate-700 bg-slate-900 p-3 text-sm text-slate-200">
     <p>{state.busy ? 'Checking preparation access…' : 'Connect to view preparations for the selected backend and account.'}</p>
@@ -37,12 +41,12 @@ export function PreparationView({ state, onField, onPreview, onSave, onRefresh, 
   const planning = Boolean(state.planBusy || state.planCancelBusy || state.proposalBusy || state.proposalCancelBusy);
   const locked = state.busy || planning || Boolean(state.pendingId);
   const activePlanId = state.planPendingId || state.planRecord?.plan_id;
-  const canCancel = Boolean(activePlanId && (state.planPendingId || !terminalPlans.has(state.planRecord?.state)));
+  const canCancel = Boolean(activePlanId && (state.planPendingId || !terminalPlans.has(state.planRecord?.state || '')));
   const activeProposalId = state.proposalPendingId || state.proposalRecord?.proposal_id;
-  const canCancelProposal = Boolean(activeProposalId && (state.proposalPendingId || !terminalProposals.has(state.proposalRecord?.state)));
-  const fields = [['editable', 'Files to change', 'src/example.py'], ['verification', 'Tests to keep', 'tests/test_example.py'],
+  const canCancelProposal = Boolean(activeProposalId && (state.proposalPendingId || !terminalProposals.has(state.proposalRecord?.state || '')));
+  const fields = /** @type {const} */ ([['editable', 'Files to change', 'src/example.py'], ['verification', 'Tests to keep', 'tests/test_example.py'],
     ['dependencies', 'Dependencies or configuration', 'package.json\npackage-lock.json'], ['python', 'Python test modules', 'tests.test_example'],
-    ['node', 'Node test files', 'tests/example.test.js'], ['npm', 'Existing npm script', 'test']];
+    ['node', 'Node test files', 'tests/example.test.js'], ['npm', 'Existing npm script', 'test']]);
   return <section aria-label="Coding preparation" className="rounded border border-slate-700 bg-slate-900 p-3 text-sm text-slate-200">
     <h3 className="font-semibold">Prepare a code change</h3>
     <p className="mt-1 text-xs text-slate-400">Repository: AI-BS. Select files and checks, preview them, then save the reviewed inputs.</p>
@@ -70,7 +74,7 @@ export function PreparationView({ state, onField, onPreview, onSave, onRefresh, 
     </div>
     {state.pendingId && <div className="mt-2 text-xs text-amber-300">
       <p>Save not yet confirmed: {state.pendingId}. Retain this ID and inspect its saved state.</p>
-      <button type="button" className={`${control} mr-2 mt-1`} disabled={state.busy} onClick={() => onInspect(state.pendingId)}>Inspect pending preparation</button>
+      <button type="button" className={`${control} mr-2 mt-1`} disabled={state.busy} onClick={() => { if (state.pendingId) onInspect(state.pendingId); }}>Inspect pending preparation</button>
       <button type="button" className={`${control} mt-1`} disabled={state.busy} onClick={onKeepPending}>Keep pending ID and edit a new request</button>
     </div>}
     {state.preview && <InputEvidence record={state.preview} />}
@@ -88,14 +92,14 @@ export function PreparationView({ state, onField, onPreview, onSave, onRefresh, 
           </button>
           <button type="button" className={control} disabled={state.busy || planning} onClick={onPlansRefresh}>Load saved plans</button>
           <button type="button" className={control} disabled={Boolean(!canCancel || state.busy || state.planCancelBusy)}
-            onClick={() => onPlanCancel(activePlanId)}>Cancel planning</button>
+            onClick={() => activePlanId && onPlanCancel(activePlanId)}>Cancel planning</button>
         </div>
         {state.planBusy && <p role="status" className="mt-2 text-xs">Waiting for planning evidence…</p>}
         {state.planCancelRequested && <p className="mt-2 text-xs text-amber-300">Cancellation requested. Inspect saved state to confirm the outcome.</p>}
         {state.planPendingId && <div className="mt-2 break-all text-xs text-amber-300">
           Plan request not yet confirmed: {state.planPendingId}. Keep this ID for inspection or the same-ID retry.
           <button type="button" className={`${control} ml-2`} disabled={state.busy || planning}
-            onClick={() => onPlanInspect(state.planPendingId)}>Inspect pending plan</button>
+            onClick={() => { if (state.planPendingId) onPlanInspect(state.planPendingId); }}>Inspect pending plan</button>
         </div>}
         {state.planRecord && <div className="mt-3 rounded border border-slate-600 p-2 text-xs">
           <div role="status">{planLabels[state.planRecord.state] || 'Unconfirmed'} · Tests not run</div>
@@ -114,8 +118,8 @@ export function PreparationView({ state, onField, onPreview, onSave, onRefresh, 
             </div>}
           </>}
           <button type="button" className={`${control} mt-2`} disabled={state.busy || planning}
-            onClick={() => onPlanRecover(state.planRecord.plan_id)}>Recover current plan</button>
-          {state.planRecord.state === 'PLAN_PROPOSED' && !state.planRecord.proposal?.questions.length && <div className="mt-3 border-t border-slate-600 pt-3">
+            onClick={() => { if (state.planRecord) onPlanRecover(state.planRecord.plan_id); }}>Recover current plan</button>
+          {allowCodeProposal && state.planRecord.state === 'PLAN_PROPOSED' && !state.planRecord.proposal?.questions.length && <div className="mt-3 border-t border-slate-600 pt-3">
             <h5 className="font-semibold">Code proposal · Review only</h5>
             <p className="mt-1 text-slate-400">Review this saved plan before asking Stehouwer for code. Nothing is applied, and tests have not run.</p>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -124,7 +128,7 @@ export function PreparationView({ state, onField, onPreview, onSave, onRefresh, 
                 {state.proposalPendingId ? 'Retry same proposal request' : 'Generate code proposal'}
               </button>
               <button type="button" className={control} disabled={Boolean(!canCancelProposal || state.busy || state.planBusy || state.planCancelBusy || state.proposalCancelBusy)}
-                onClick={() => onProposalCancel(activeProposalId)}>Cancel proposal</button>
+                onClick={() => activeProposalId && onProposalCancel(activeProposalId)}>Cancel proposal</button>
             </div>
             {state.proposalReview && <p className="mt-2 break-all text-slate-400">Complete saved inputs reviewed · {state.proposalReview.reviewed_plan_sha256}</p>}
             {state.proposalBusy && <p role="status" className="mt-2">Waiting for proposal evidence…</p>}
@@ -132,7 +136,7 @@ export function PreparationView({ state, onField, onPreview, onSave, onRefresh, 
             {state.proposalPendingId && <div className="mt-2 break-all text-amber-300">
               Proposal request not yet confirmed: {state.proposalPendingId}. Keep this ID to inspect after a reload or retry the same request.
               <button type="button" className={`${control} ml-2`} disabled={Boolean(state.busy || planning)}
-                onClick={() => onProposalInspect(state.proposalPendingId)}>Inspect pending proposal</button>
+                onClick={() => { if (state.proposalPendingId) onProposalInspect(state.proposalPendingId); }}>Inspect pending proposal</button>
             </div>}
             {state.proposalRecord && <div className="mt-3 rounded border border-slate-600 p-2">
               <div role="status">{proposalLabels[state.proposalRecord.state] || 'Unconfirmed'} · Tests not run · Not applied</div>
@@ -153,7 +157,7 @@ export function PreparationView({ state, onField, onPreview, onSave, onRefresh, 
                 </div>)}
               </>}
               <button type="button" className={`${control} mt-2`} disabled={Boolean(state.busy || planning)}
-                onClick={() => onProposalRecover(state.proposalRecord.proposal_id)}>Recover current proposal</button>
+                onClick={() => { if (state.proposalRecord) onProposalRecover(state.proposalRecord.proposal_id); }}>Recover current proposal</button>
             </div>}
             <details className="mt-3"><summary className="cursor-pointer">Inspect a saved proposal</summary>
               <button type="button" className={`${control} mt-2`} disabled={Boolean(state.busy || planning)} onClick={onProposalsRefresh}>Load saved proposals</button>
@@ -228,11 +232,13 @@ export function PreparationView({ state, onField, onPreview, onSave, onRefresh, 
   </section>;
 }
 
+/** @param {{memory: ReturnType<typeof import("/src/hooks/useConversationMemory.jsx").useConversationMemory>}} props */
 export default function CodingPreparationPanel({ memory }) {
   const client = preparationClientFor(useAppStore);
   const state = useSyncExternalStore(client.subscribe, client.getState, client.getState);
   const [open, setOpen] = useState(false);
-  const run = action => { Promise.resolve().then(action).catch(() => {}); };
+  /** @param {() => unknown} action */
+const run = action => { Promise.resolve().then(action).catch(() => {}); };
   const canCopyDraft = Boolean(memory?.viewReady && memory.isCurrent() && memory.owner === state.owner && state.connected);
   const copyDraft = () => {
     if (memory?.viewReady && memory.isCurrent() && memory.owner === client.getState().owner) {

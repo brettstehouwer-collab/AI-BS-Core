@@ -1,0 +1,54 @@
+{
+  "status": "CONTROLLED_FRESH_GUI_RESTORE_PASS",
+  "schema": 1,
+  "test_command": "recovery Python -B -m unittest: eleven focused modules; native-recovery-closed-window-final.log",
+  "tests": 82,
+  "result": "PASS",
+  "receipts": [
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-pipe-gui-20261111T102735234855Z\\result.json",
+      "sha256": "27ddfb351a996857cf616891d53d8c02ff19ef7d57aa55b9c63ed8c1900a982f",
+      "status": "PASS"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-pipe-gui-20261111T102737366848Z\\result.json",
+      "sha256": "161a2c0e5dec3b8fc90eacac4d2df7418a523037f104a0328ab6e270062757da",
+      "status": "PASS"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-backend-loss-20261111T102739221575Z\\result.json",
+      "sha256": "3ef157d3622b705b56374634283d835ceab1039dfbcf6b07da44d73c2b1628c2",
+      "status": "PASS"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-crash-restore-20261111T102740489297Z\\result.json",
+      "sha256": "daa8b9e5cd8b94a34407fe0d40cbc2ec16d6a555192460cff86e990d604ed77d",
+      "status": "PASS"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-crash-restore-20261111T102740489297Z\\native-backend-loss-20261111T102740489297Z\\result.json",
+      "sha256": "7ccc0ee35c2b2f478f762774fe94859b49306bc1628c5b23da0fbb36d87184df",
+      "status": "PASS"
+    }
+  ],
+  "binding": "Server-derived owner/project/source hash; not an authentication token",
+  "recovery_schema": 3,
+  "plain_gui_restore": "Two distinct owned children; Recovery button; host and source hashes unchanged; normal exit; no HTTP",
+  "rich_recovery": "Validated branch replay against exact host snapshot; styles, metadata and undo preserved; separate source/session checks, not end-to-end rich-source GUI qualification",
+  "legacy_copies": "Preserved; unbound schema1/2 not automatically restored",
+  "remaining": [
+    "Actual rich-source owned GUI workflow",
+    "Fresh real Firebase owner, original manuscript, installed/release qualification"
+  ],
+  "cloud_status": "VERIFIED_PRIVATE_SCOPED_SOURCE_PROGRESS_CHECKPOINT",
+  "seconds": 13.427,
+  "combined_crash_replacement_restore": "PASS; retained synthetic PDF project, new host and fresh owned GUI Recovery button; no host writes/HTTP/source changes",
+  "shutdown": "Deterministic READY/drained-only Qt disposal while QApplication lives; application destroyed before DLL-directory scope closes",
+  "retained_failure": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-backend-loss-20261111T102510653904Z\\result.json",
+    "exit_code": 3221225477,
+    "windows_module": "sip.cp312-win_amd64.pyd",
+    "resolution": "Explicit drained QObject/application teardown; final checks PASS; prior evidence retained"
+  },
+  "drive_receipt": "C:\\AI-BS\\backups\\native_recovery_20261111T102831Z\\drive_verified.json"
+}

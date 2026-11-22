@@ -1,0 +1,38 @@
+{
+  "state": "PLAN_PROPOSED",
+  "input_sha256": "952d0efddaa4cec82c522b35d3529247a0a654d617301b73e6677b6a03383256",
+  "proposal": {
+    "summary": "Update the selected implementation only.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Return42 instead of the previous value."
+      },
+      {
+        "path": "src/App.jsx",
+        "change": "Display42 while preserving component behavior."
+      }
+    ],
+    "questions": []
+  },
+  "error_code": null,
+  "finished_at_utc": "2026-11-15T21:55:48.150193+00:00",
+  "elapsed_seconds": 0.016,
+  "response_sha256": "77348b2865faf496c53d27fff293f3698e95d0836d72e64e21837a2f0530aeea",
+  "response_bytes": 245,
+  "public_json": {
+    "summary": "Update the selected implementation only.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Return42 instead of the previous value."
+      },
+      {
+        "path": "src/App.jsx",
+        "change": "Display42 while preserving component behavior."
+      }
+    ],
+    "questions": []
+  },
+  "entry_sha256": "4a9dbcafb9b5f5a8b66d7f0ec40c2f410464d82429812dc6b3bf76e3a509107a"
+}

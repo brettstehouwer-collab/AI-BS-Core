@@ -1,0 +1,66 @@
+00:00:00.000464 main     VirtualBox COM Server 7.2.22 r175245 win.amd64 (Oct 19 2026 20:31:00) release log
+00:00:00.000466 main     Log opened 2026-10-24T17:14:53.390393900Z
+00:00:00.000467 main     Build Type: release
+00:00:00.000470 main     OS Product: Windows 11
+00:00:00.000518 main     OS Release: 10.0.26300.9711
+00:00:00.000518 main     OS Service Pack: 
+00:00:00.030169 main     DMI Product Name: System Product Name
+00:00:00.038719 main     DMI Product Version: System Version
+00:00:00.038724 main     Firmware type: UEFI
+00:00:00.039051 main     Secure Boot: Enabled
+00:00:00.039059 main     Host RAM: 63126MB (61.6GB) total, 27479MB (26.8GB) available
+00:00:00.039063 main     Executable: C:\Program Files\Oracle\VirtualBox\VBoxSVC.exe
+00:00:00.039065 main     Process ID: 118128
+00:00:00.039065 main     Package type: WINDOWS_64BITS_GENERIC
+00:00:00.039066 main     Windows Features:
+00:00:00.039067 main       Core Isolation (Memory Integrity): DISABLED
+00:00:00.205997          VirtualBox: object creation starts
+00:00:00.206351          Home directory: 'C:\AI-BS\isolated_workers\windows\runtime\base_preparation_v2\vbox_config'
+00:00:00.206491          Installed Drivers:
+00:00:00.206665          Loading settings file "C:\AI-BS\isolated_workers\windows\runtime\base_preparation_v2\vbox_config\VirtualBox.xml" with version "1.12-windows"
+00:00:00.207252          USBLibInit: USB Service not found
+00:00:00.291835          netIfGetBoundAdapters: could not find either 'oracle_VBoxNetLwf' or 'sun_VBoxNetFlt' components (0x1)
+00:00:00.297737          HostDnsMonitor: initializing
+00:00:00.320214          HostDnsMonitor: updating information
+00:00:00.320245          HostDnsMonitor: old information
+00:00:00.320245            no server entries
+00:00:00.320246            no domain set
+00:00:00.320246            no search string entries
+00:00:00.320246          HostDnsMonitor: new information
+00:00:00.320246            server 1: 192.168.4.1
+00:00:00.320249            server 2: 192.168.1.1
+00:00:00.320250            no domain set
+00:00:00.320250            no search string entries
+00:00:00.323471          VD: VDInit finished with VINF_SUCCESS
+00:00:00.324383          Platform architecture set to 'x86'
+00:00:00.324795          Loading settings file "C:\AI-BS\isolated_workers\windows\runtime\base_preparation_v2\vms\AI-BS-Eval-Base-20261023\AI-BS-Eval-Base-20261023.vbox" with version "1.19-windows"
+00:00:00.325144          Platform architecture set to 'x86'
+00:00:00.325156          Platform architecture set to 'x86'
+00:00:00.325254          Platform architecture set to 'x86'
+00:00:00.325419          Platform architecture set to 'x86'
+00:00:00.325424          Platform architecture set to 'x86'
+00:00:00.325511          Platform architecture set to 'x86'
+00:00:00.325611          Platform architecture set to 'x86'
+00:00:00.325616          Platform architecture set to 'x86'
+00:00:00.325704          Platform architecture set to 'x86'
+00:00:00.325805          Platform architecture set to 'x86'
+00:00:00.326139          VirtualBox: object created
+00:00:00.335310          Platform architecture set to 'x86'
+00:00:00.337022          ERROR [COM]: aRC=VBOX_E_NOT_SUPPORTED (0x80bb0009) aIID={e36a5081-a82a-40bd-9e4e-42a44d6ce50f} aComponent={SessionMachine} aText={This VM is not encrypted}, preserve=false aResultDetail=0
+00:00:00.349460          WARNING [COM]: aRC=E_FAIL (0x80004005) aIID={d5dcece0-b202-4416-a138-03502784cc07} aComponent={HostWrap} aText={Could not load the Host USB Proxy Service (VERR_FILE_NOT_FOUND).  The service might not be installed on the host computer}, preserve=true aResultDetail=0
+00:00:00.349571          WARNING [COM]: aRC=E_FAIL (0x80004005) aIID={d5dcece0-b202-4416-a138-03502784cc07} aComponent={HostWrap} aText={Could not load the Host USB Proxy Service (VERR_FILE_NOT_FOUND).  The service might not be installed on the host computer}, preserve=true aResultDetail=0
+00:00:00.350683          ERROR [COM]: aRC=E_FAIL (0x80004005) aIID={83cfdc66-4f20-4569-ad39-8722f7d472b3} aComponent={RecordingSettingsWrap} aText={Recording not started}, preserve=false aResultDetail=0
+00:00:00.407353          Platform architecture set to 'x86'
+00:00:00.408775          ERROR [COM]: aRC=VBOX_E_NOT_SUPPORTED (0x80bb0009) aIID={e36a5081-a82a-40bd-9e4e-42a44d6ce50f} aComponent={SessionMachine} aText={This VM is not encrypted}, preserve=false aResultDetail=0
+00:00:00.421770          WARNING [COM]: aRC=E_FAIL (0x80004005) aIID={d5dcece0-b202-4416-a138-03502784cc07} aComponent={HostWrap} aText={Could not load the Host USB Proxy Service (VERR_FILE_NOT_FOUND).  The service might not be installed on the host computer}, preserve=true aResultDetail=0
+00:00:00.421970          WARNING [COM]: aRC=E_FAIL (0x80004005) aIID={d5dcece0-b202-4416-a138-03502784cc07} aComponent={HostWrap} aText={Could not load the Host USB Proxy Service (VERR_FILE_NOT_FOUND).  The service might not be installed on the host computer}, preserve=true aResultDetail=0
+00:00:00.422958          ERROR [COM]: aRC=E_FAIL (0x80004005) aIID={83cfdc66-4f20-4569-ad39-8722f7d472b3} aComponent={RecordingSettingsWrap} aText={Recording not started}, preserve=false aResultDetail=0
+00:00:05.438453 main     VirtualBox: object deletion starts
+00:00:05.438500 main     ERROR [COM]: aRC=VBOX_E_OBJECT_IN_USE (0x80bb000c) aIID={7d510820-a678-4730-a862-818dcd3fbed0} aComponent={MediumWrap} aText={Medium 'C:\AI-BS\isolated_workers\windows\runtime\base_preparation_v2\vms\AI-BS-Eval-Base-20261023\Snapshots/{cddcb90b-9ea3-42d2-90a5-49de79b7dc0e}.vdi' cannot be closed because it is still attached to 1 virtual machines}, preserve=false aResultDetail=0
+00:00:05.439171 main     ERROR [COM]: aRC=E_ACCESSDENIED (0x80070005) aIID={6cc49055-dad4-4496-85cf-3f76bcb3b5fa} aComponent={SnapshotWrap} aText={The object is not ready}, preserve=false aResultDetail=0
+00:00:05.439370 main     ERROR [COM]: aRC=E_ACCESSDENIED (0x80070005) aIID={6cc49055-dad4-4496-85cf-3f76bcb3b5fa} aComponent={SnapshotWrap} aText={The object is not ready}, preserve=false aResultDetail=0
+00:00:05.439408 main     ERROR [COM]: aRC=E_ACCESSDENIED (0x80070005) aIID={6cc49055-dad4-4496-85cf-3f76bcb3b5fa} aComponent={SnapshotWrap} aText={The object is not ready}, preserve=false aResultDetail=0
+00:00:05.440136 main     HostDnsMonitor: shutting down ...
+00:00:05.440162 main     HostDnsMonitor: shut down
+00:00:05.440965 Watcher  ERROR [COM]: aRC=E_ACCESSDENIED (0x80070005) aIID={2ce10519-3c09-45d8-a12d-e887786146b7} aComponent={VirtualBoxWrap} aText={The object is not ready}, preserve=false aResultDetail=0
+00:00:05.441075 main     VirtualBox: object deleted

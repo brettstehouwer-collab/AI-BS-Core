@@ -1,0 +1,41 @@
+{
+  "at": "2026-11-04T23:11:18.262465+00:00",
+  "status": "completed_selective_cache_cleanup_and_verified_lossless_compression",
+  "deleted_items": 48,
+  "logical_bytes_deleted": 5957499271,
+  "cleanup_observed_D_free_delta": 6128558080,
+  "compressed_verified_files": 20112,
+  "preserved_files": [
+    {
+      "path": "D:\\AI-BS-Game-Resources\\P28\\Adam_v12\\SourceData\\MakeHuman-a8bc2d54\\base.obj",
+      "status": "PRESERVED_OR_OPERATION_FAILED",
+      "reason": "Unexpected non-binary compiler artifact"
+    }
+  ],
+  "reported_file_storage_reduction_bytes": 73187585681,
+  "accounting_limit": "Deletion logical bytes, observed volume free delta and GetCompressedFileSizeW reductions are distinct accounting bases. Compression before values may be logical rather than rounded cluster allocation; no exact whole-volume attribution claimed.",
+  "content_coverage": "Worker verifies each compressed default stream SHA-256, file identity, size, modification and birth times under an exclusive handle. ACLs and alternate streams were not separately audited.",
+  "independent_review": {
+    "actor": "/root/cleanup_evidence_review",
+    "scope": "All48removed targets absent; all40retained original archives independently rehashed; full20107records plus6canaries reconciled;15independent postread samples totaling151325222bytes acrossall6extensions passed; original text modelOBJ remains unchanged/uncompressed.",
+    "source": "Collaboration final report in this chat; attributed helper review, not a claim of root rerunning every postread."
+  },
+  "protected": [
+    "AI-BS source, resources, masters, references, saves, SDKs and releases",
+    "All T* test evidence, including failed results",
+    "Downloaded AI model weights and embeddings",
+    "Windows_Backup_2026 and cbackup",
+    "Personal files, recordings and wallet data",
+    "Installed games/applications, WindowsApps/WpSystem/GamingRoot",
+    "Gradle modules-2 dependencies, wrapper, configuration, daemon logs and Android projects"
+  ],
+  "ProgramData_deleted": false,
+  "programdata_review": "EpicInstallerTemp/dbg/ProgramData SoftwareDistribution empty; mntemp16bytes. No service/driver/audio/application-data deletion.",
+  "free_GiB": {
+    "C": 286.47,
+    "D": 97.88,
+    "E": 89.52
+  },
+  "goal_complete": false,
+  "next_cleanup_rule": "Exclude SourceData paths explicitly in future compiler-object selection; current text model was protected by binary-header validation. No retry needed."
+}

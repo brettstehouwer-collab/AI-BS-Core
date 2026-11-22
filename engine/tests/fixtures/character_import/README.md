@@ -1,0 +1,1 @@
+Synthetic generated import fixtures. Rebuild with generate_character_import.py. No family/media references. source-oracle.txt independently evaluates original source joint globals and inverse binds at bake samples, followed by LH and nonidentity world placement.

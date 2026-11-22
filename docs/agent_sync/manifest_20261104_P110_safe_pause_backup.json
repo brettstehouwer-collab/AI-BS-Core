@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-05T00:58:23.384517+00:00",
+  "status": "safely_paused_verified_backup_complete",
+  "summary": "Safe pause backup110P verified:56,121,885bytes,1,211members including563sourcefiles, derived native captures, successful/failed/interrupted evidence and prepared helpers. Downloaded from Drive and every member checked. All owned jobs joined; no development resumes without the user request. Installed107 unchanged; SDK174 and Studio110 remain unqualified/unpublished. Original family media, saves, credentials and private Git/Master-ledger data excluded.",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\P110\\SafePause\\110P_Safe_Pause_Source_And_Progress.zip",
+    "bytes": 56121885,
+    "sha256": "5367958d75db1c8c5bba4611b3c6790cbce3fddd5b0a3c9a15d0917046050408",
+    "members": 1211,
+    "cloud_upload_authorized": true,
+    "cloud_backup_verified": true,
+    "at": "2026-11-05T00:57:53.041437+00:00",
+    "drive_folder_id": "12r4sSCXb87ykS2Y2j5B8yUicJ4ylgikI",
+    "drive_file_id": "1vssJGMInplhMQe3mJsIIaj6C4fEBqB_u",
+    "drive_restore_verified": true,
+    "all_members_verified": true,
+    "goal_complete": false,
+    "authorization_record": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\derived_art_backup_authorization_20261104.json"
+  },
+  "resume_handoff": "C:/AI-BS/docs/agent_sync/manifest_20261104_P110_safe_pause.json",
+  "all_owned_jobs_joined": true,
+  "goal_complete": false,
+  "resume_requires_user_request": true
+}

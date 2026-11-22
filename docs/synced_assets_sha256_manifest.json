@@ -1,0 +1,724 @@
+{
+  "schema_version": 1,
+  "total_files": 177,
+  "root_directory": "C:/AI-BS/synced_drive_assets",
+  "categories": [
+    "01_Engineering_Backups",
+    "02_Memoirs_Manuscripts",
+    "03_Finance_Trading",
+    "04_Real_Estate",
+    "05_Music_Audio",
+    "06_Health_Recovery",
+    "07_Legal_Credentials"
+  ],
+  "files": {
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/(venv) PS G__Stehouwer_Server_": {
+      "size_bytes": 429799,
+      "sha256": "77057bba42954407bd6e81956f784ca73d3684af3a617a2fc09978d6c1649b97"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/2026-10-23 Codex Engineering Ledger.md": {
+      "size_bytes": 17926,
+      "sha256": "8eb5673e7f194df1f16cfd1234dd5b6c2d88b1d9d68d206fc305fdb7a06f59c6"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/2026-10-24_Codex_Engineering_Ledger.md": {
+      "size_bytes": 356203,
+      "sha256": "72858eba956b3a87859dac7d295537d62a46521bf875f8454de760e6b91f799f"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/2026-10-30_AI-BS_History_Upload_Receipt.json": {
+      "size_bytes": 3414,
+      "sha256": "80d7b4fb4b1e6f097c880caa5abe42931890223ebfe3e55cb4fff8d68b72ff06"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/2026-10-30_Codex_Engineering_Ledger.md": {
+      "size_bytes": 731486,
+      "sha256": "e4d03bb6f2ee83c1076975edeb91087d8bd300e8d9ad4c423be89d8c2d6cce62"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS Architecture Components and Operational Directives.csv": {
+      "size_bytes": 5222,
+      "sha256": "b836cab0748c4e6f8e742765c424f41b49c94341f907a753250904fd1653d69b"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS-Creative-Drive-verification.json": {
+      "size_bytes": 1579,
+      "sha256": "46ed205bfdadc33015eda3bf61d3bfa8b7f3321ed65b28035db0d9792518e801"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS-Creative-Paused-Checkpoint-20261111T003942Z.json": {
+      "size_bytes": 2516,
+      "sha256": "5b8956be474ea110c3e1f32cc3f408269264209c9df422639cb95184b1fb557c"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS-Creative-Paused-Handoff-20261111T003942Z.txt": {
+      "size_bytes": 1851,
+      "sha256": "7c6ab44db90ace558d28c8e2f980b29b6ad87fff7828272e5e313e585c57a9eb"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS-Drive-Verified-Receipt-20261110T215948Z.json": {
+      "size_bytes": 6914,
+      "sha256": "4fd7c0caf7eb0433198ce90f0dd49e04e08c5e70a9cc8a169c1812fa479f375e"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS-HUD-Swarm-checkpoint-20261110T235106349961Z.json": {
+      "size_bytes": 3377,
+      "sha256": "573637e22168d420228b78c6044d352fbd52e9142ed0befc589294ac0f6488d5"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS-HUD-Swarm-checkpoint-20261111T001649359687Z.json": {
+      "size_bytes": 3699,
+      "sha256": "a547d2ac3aead681555a71bee58b399b83b60e4fd76dfee61018bacabba87df4"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS-HUD-Swarm-Handoff-20261110T235106349961Z.txt": {
+      "size_bytes": 5243,
+      "sha256": "0157fca61c68f27509d117c88de3c2b5910e537fcc1d1ceeff3ff363e15289ef"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS-HUD-Swarm-Handoff-20261111T001649359687Z.txt": {
+      "size_bytes": 6328,
+      "sha256": "a641f36fe45cf2315660c4258fca9feb04bc57883b11ab8228eb6960a02595b0"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS-HUD-Tools-Drive-receipt-20261110.json": {
+      "size_bytes": 8951,
+      "sha256": "849104c1dcc386738cb18298a1732c3793e5e85b6f41a15cfb178eee054fd674"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS-OpenCode-Drive-receipt-20261111.json": {
+      "size_bytes": 6250,
+      "sha256": "2bbd4af2d265cfe851fc108369ac3add574212b9d7c8c4316013e00afd57399d"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS-Recovery-Handoff-20261110T215704Z.txt": {
+      "size_bytes": 8241,
+      "sha256": "9304fd93ee9b3af6361a01a06aa8d70843b5ab39997393e15920739e3260d97d"
+    },
+    "01_Engineering_Backups/AI_BS_Codex_Ledger/AI-BS_Creative_Progress_20261111T003942Z.zip": {
+      "size_bytes": 51618,
+      "sha256": "77214c4a911117cf0066fc7fd49c5739d6e81b9cef1295a176ae9c732b6eaedc"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/AI BS Feature Option Pitch": {
+      "size_bytes": 6198,
+      "sha256": "596242e3975646df156fce6a9e6ff3ae5125c5f67a8885d5b84e0d74f118813c"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/AI BS OUTLINE and any details needed for potential use.txt": {
+      "size_bytes": 223806,
+      "sha256": "0487dcaa4a49b6fdda075e947849898bd0985a702c6002d287a46aef2424ec80"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/AI-BS_Matrix_Master_Session_Log.txt": {
+      "size_bytes": 10386,
+      "sha256": "0ae9e35829ae5a2cb1e8b66ba79e937e14eaa7dfbff190c7b3f49f5ea68cd582"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/also add the Mentorship Directive_ Bit-by-Bit Gui....csv": {
+      "size_bytes": 650,
+      "sha256": "ee763caf7748d516f7e7879805ba1ebdd68b250da01ad77948f7ca42f81ec98f"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/back end port 8000.txt": {
+      "size_bytes": 16725,
+      "sha256": "db27b300d53fee027243fc29cd5edcb389c8796821807a679481fb125cbb4d1f"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/Build review2.txt": {
+      "size_bytes": 110182,
+      "sha256": "626728649f17fd1c3b5dcf786e03b777d37bb7aa841a65f9d80d161cbbfca998"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/Chat log IDE.txt": {
+      "size_bytes": 3,
+      "sha256": "f1945cd6c19e56b3c1c78943ef5ec18116907a4ca1efc40a57d48ab1db7adfc5"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/Instead of the daemons running multiple at once co....txt": {
+      "size_bytes": 3675,
+      "sha256": "6ada1668bd9adf75b6f52b76b5090bf49a9cacd5a14b1fa2968c5219653d5f68"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/Memory for CodeCoach.csv": {
+      "size_bytes": 146,
+      "sha256": "4cd302681db26b8c3e3c5e8bad8b43a7a19a412992339e18de5a6d0df5e3d175"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/Multi agent unifided bifuricated mining tools_agent_modual..txt": {
+      "size_bytes": 19954,
+      "sha256": "5486ab7f6e49d187047d20aad7379288ff0bbeac2a5b3eff59ae8de54c25b760"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/path directories.txt": {
+      "size_bytes": 53569,
+      "sha256": "fea9488fee62867dd61d64e904be3a23b7c1b9caaadb5d595c25a5946bbcf000"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/we need to work on going fom mock to live and fun....txt": {
+      "size_bytes": 8724,
+      "sha256": "8ce031aa69297c549fd5858e5e90c910d313602a292dfbe4bac84af49333164a"
+    },
+    "01_Engineering_Backups/AI_BS_Engineering/what launauge of code is being used while perfomi....txt": {
+      "size_bytes": 2924,
+      "sha256": "46b1da3981759acf3dbd240ba902dbc44a05768ac7a88824f56787828cc9be13"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Ecosystem_Architecture_Checkpoint_20261111T092855Z.zip": {
+      "size_bytes": 135055,
+      "sha256": "09f537cc9d1a101995fe56eb8b3284c65c6d28f0672071b5842a4f425df5a3fa"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_HUD_Fit_20261111T132423Z.zip": {
+      "size_bytes": 2810699,
+      "sha256": "b98a8eb4036e6e7670263c9e7d52e5dfc12435eeba5827b0f644005a2f1ec0bf"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_HUD_Fit_Handoff_20261111T132423Z.md": {
+      "size_bytes": 1122,
+      "sha256": "d3931b96f2a32acececd6c576707595e16fe7a34db44973c3fb2a7b4322f840a"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_MASTER_ECOSYSTEM_ARCHITECTURE_20261111T092855Z.md": {
+      "size_bytes": 65527,
+      "sha256": "d92e94ffd5f1348653b25ee9793b4d9ed404efaa714bdc8b964cbcafab443e71"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Native_Creative_V2_GUI_20261111T100300Z.zip": {
+      "size_bytes": 203756,
+      "sha256": "b44bbfc0e00883068df046b382395e97099089bf8673311af16f0ef3f556de61"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Native_Creative_V2_GUI_Handoff_20261111T100300Z.md": {
+      "size_bytes": 2198,
+      "sha256": "4dfc8b06d3f4c63a7b5a3ce2e35f50a44d8e4387fb6e326c14ea18c260a00bd0"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Native_Recovery_20261111T102831Z.zip": {
+      "size_bytes": 151578,
+      "sha256": "51650093f749d7ae8ae0c76c257f87971e0aa480631bb96b1fea8caa22264510"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Native_Recovery_Handoff_20261111T102831Z.md": {
+      "size_bytes": 1230,
+      "sha256": "4d263b48ba9bd63c39a1929c7bf84763fcf170dda17e461c3b4fb392da8805b8"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Native_Rich_GUI_20261111T104217Z.zip": {
+      "size_bytes": 412027,
+      "sha256": "2bd099308a6023278af56e1e727af4271cec5fa17b3e4baaa4b532b440dc92d6"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Native_Rich_Handoff_20261111T104217Z.md": {
+      "size_bytes": 1318,
+      "sha256": "75761956e950e1795a195474509f7c46ba4ecc4662b8c6ca02490808617d273b"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Nsight_Diagnostic_20261111T135744Z.zip": {
+      "size_bytes": 2387895,
+      "sha256": "4dc472557394ffbd8f1e1be936b09a0f1c5ec2190798560d7d51a80e184f7f02"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Nsight_Diagnostic_Handoff_20261111T135744Z.md": {
+      "size_bytes": 1272,
+      "sha256": "62103d72d0e5766ba2eb94b3a523b0072e536c84a5aa65c063040e82c43a475d"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Real_Owner_Mobile_RAG_20261111T112913Z.zip": {
+      "size_bytes": 357962,
+      "sha256": "ad3d1e4ef93c206a688c756e03c3978bc9ada66f2eaa4f90240318f48a3e5d5e"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Real_Owner_Mobile_RAG_Handoff_20261111T112913Z.md": {
+      "size_bytes": 1717,
+      "sha256": "b6e6544051c961f9c4b0e2bfa825f906caab951e741390ac52874911a576095e"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Recovery_Drive_Reference_Links_20261111.json": {
+      "size_bytes": 9986,
+      "sha256": "1722e04f81baa35726f8ff1ced6cece02d47ce5998afc2645191e426b189d27f"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Recovery_Save_20261111T080426Z.zip": {
+      "size_bytes": 494509,
+      "sha256": "54a79fc8ef72bb8fff05e72e5cf68ee83f82e377c556e950148a7d9cd6fbd7c8"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Recovery_Save_Checkpoint_20261111T080426Z.json": {
+      "size_bytes": 19064,
+      "sha256": "4f7a8bb150f52853d9af947106872325e51c3cb460561a4b7cfbe925493beb33"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Recovery_Save_Drive_Verification_20261111T080752Z.json": {
+      "size_bytes": 1557,
+      "sha256": "efc5e0350da0100d032375334bca7a5bef50db9cb220a79c4c5483214d3b4861"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Recovery_Save_Handoff_20261111T080426Z.md": {
+      "size_bytes": 2751,
+      "sha256": "7ee9e2d2fa95f42dbe6683b5517aba4c48145c23cd79d41af9e08b3e306d9e57"
+    },
+    "01_Engineering_Backups/AI_BS_Private_Recovery/AI-BS_Release144_Progress_20261111T173157Z.zip": {
+      "size_bytes": 865594,
+      "sha256": "94971a30b97fc7c130dba359ca4cb8c2c370370681604f9d7db568d955920e22"
+    },
+    "01_Engineering_Backups/AI_Protocols_Workflows/Gemini Export March 11, 2026 at 8_33_07 PM EDT.md": {
+      "size_bytes": 1310,
+      "sha256": "93f5e51d3bcb693c32c7cb405feae3d5dc472656f421e3cae76b86270abe0ed8"
+    },
+    "01_Engineering_Backups/AI_Protocols_Workflows/Google Drive Organization 2015-Present.csv": {
+      "size_bytes": 809,
+      "sha256": "580b38523461b36a2e4da19a5d3c5e797d11f8d086c1089caf26eccb1c412fa4"
+    },
+    "01_Engineering_Backups/AI_Protocols_Workflows/Protocol 25_7 Workflow Expansion.md": {
+      "size_bytes": 4563,
+      "sha256": "30a650c3271c2854bdb3b0ba3cacae3a3bcaaf9fad4e46d84ed1f6e129d9a961"
+    },
+    "01_Engineering_Backups/AI_Protocols_Workflows/trade logic audit.txt": {
+      "size_bytes": 354355,
+      "sha256": "d92fa21f48eae27fe7007749be552f6fb6b33e342f66d14d636b24a984cc5b08"
+    },
+    "01_Engineering_Backups/AI_Protocols_Workflows/Untitled spreadsheet.csv": {
+      "size_bytes": 3351,
+      "sha256": "4f379902a50c2aac3c89eb6d11c0ac38da83d0deef3b4d0f42fa65467351f005"
+    },
+    "01_Engineering_Backups/BS_Game/AI-BS_CURRENT_HANDOFF_2026-11-11.md": {
+      "size_bytes": 4313,
+      "sha256": "af33be2a00cdb9c0d1eb1b776709b997ef3a64319d4993a393930b07de606c95"
+    },
+    "01_Engineering_Backups/BS_Game/AI-BS_Release144_Final_Progress_20261111T175413023695Z.zip": {
+      "size_bytes": 1383387,
+      "sha256": "6ef8503177fd5ccc4863a6206bbc2fa32bd0d95be2c6fc9e2dddd7f808b65ac7"
+    },
+    "01_Engineering_Backups/BS_Game/AI-BS_Release144_Final_Progress_20261111T175413023695Z_HANDOFF.md": {
+      "size_bytes": 5313,
+      "sha256": "f316dc2c9d274c9c18266b801eae4c7ca1335c5557ba6222d3fb26128b438bc0"
+    },
+    "01_Engineering_Backups/BS_Game/AI-BS_Release144_VERIFIED_BACKUP_20261111T175505613282Z_750cbfb9.json": {
+      "size_bytes": 3839,
+      "sha256": "bb9c5d6e9781d06545d9423705721cfb2d805e4359e93bfdd338e2c81f70a600"
+    },
+    "01_Engineering_Backups/BS_Game/AI-BS_Studio144_Runtime_20261111T174915Z.zip": {
+      "size_bytes": 85749319,
+      "sha256": "85db5ed5fa092c70b3d1facb665b4fc62fee8fcace1008fcbf478e6f091f3de6"
+    },
+    "01_Engineering_Backups/BS_Game/AI_BS_RECOVERY_SOURCE_HISTORY_2026-11-11.md": {
+      "size_bytes": 46712,
+      "sha256": "a0bbff0820df6b2159979e2c353abf9b505c832a43da020c748b9c5a03c5a711"
+    },
+    "01_Engineering_Backups/BS_Game/PROJECT_INDEX.md": {
+      "size_bytes": 10379,
+      "sha256": "ed63f550a6c35d9d5038dc6cf79a6292410fd759f52151c4e036841622723f23"
+    },
+    "01_Engineering_Backups/PC_Backup_C_Drive/Backup Complete.md": {
+      "size_bytes": 1283,
+      "sha256": "35f6f120805d66568bdac564cb50d62577fb49679de2ab0a30a5c207da94eac5"
+    },
+    "01_Engineering_Backups/PC_Backup_C_Drive/Windows Admin Terminal Commands Reference.md": {
+      "size_bytes": 11589,
+      "sha256": "3e724139b0db8bef5628fb06031cfcc18f6711552670f06dcc5e80036138f058"
+    },
+    "02_Memoirs_Manuscripts/Creative_Screenplays/@Google Docs come up with 100 Hashtags that descr....md": {
+      "size_bytes": 2271,
+      "sha256": "1c409cd98f98746d7024761f8e56dccdff4dd2795740502f986345b686a1ace8"
+    },
+    "02_Memoirs_Manuscripts/Creative_Screenplays/Mom- look what is new for NoteBook.eml": {
+      "size_bytes": 24076874,
+      "sha256": "54dde122bcad49170fb113569da4f2a7cefc4582f50ab1aa72e1213727ff6e94"
+    },
+    "02_Memoirs_Manuscripts/Creative_Screenplays/NearlyTenYears_ClinicalAudit.docx": {
+      "size_bytes": 20815,
+      "sha256": "4274784e50b10f34d647986cc4b78b8d125e12893330a65d8cb8ac4b31f5333f"
+    },
+    "02_Memoirs_Manuscripts/Creative_Screenplays/Red Line No More.md": {
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "02_Memoirs_Manuscripts/Creative_Screenplays/Sean My Brother Who Never Leaves.md": {
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "02_Memoirs_Manuscripts/Echos_Within_Manuscripts/garry did acctually die below is copied text from....csv": {
+      "size_bytes": 914,
+      "sha256": "acf91f13f7b9663301ce2be47fc87c195e9a873ad1b120ccca8d55230da66879"
+    },
+    "02_Memoirs_Manuscripts/Echos_Within_Manuscripts/process _The Treadmill & The Row Boat (Final)_ (S....md": {
+      "size_bytes": 348666,
+      "sha256": "5b40f97ccf4f60ab0ed25a9509622e321c08eb6baee3f2487fe227c31b72950c"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Archival/Archival Data Finalization and Verification.csv": {
+      "size_bytes": 1027,
+      "sha256": "54a6da8082eff10113b99ecd6a9477d4df66dcc205875ab4e84cabf345a0d5d2"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Archival/Deleting Chat History and Master Index.csv": {
+      "size_bytes": 601,
+      "sha256": "0ef70f5d893ce7c596afbe7891eebd68d9e7723db1b84625185bc2270f9308ff"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Archival/Echos Within.md": {
+      "size_bytes": 2058599,
+      "sha256": "7ef1a43bad5668b120b9a0f1f4c6663954dc843b11b8a010c83eb016e656831c"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Archival/Fragment Archival Display.md": {
+      "size_bytes": 4562,
+      "sha256": "028c5e8f6e590b0f6df1b42b519fdd1a721f7fbd258307a394889d4131ce8206"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Archival/throw words adam.docx": {
+      "size_bytes": 11166,
+      "sha256": "74c4227886c161bb3ad7cfe241b10f18c889fee4ef16e238f0c0e2f654685110"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Outlines/Analyzing Brett Stehouwer's _Echos Within_.md": {
+      "size_bytes": 27505,
+      "sha256": "c1b31c2fb3ccbdcd19c829b23c25d6e0c3ff38b45d813024bf18e519af4ef39e"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Outlines/create a toc based of myt structure rules.md": {
+      "size_bytes": 10036,
+      "sha256": "bd1757002930e6e6f41123e1999a3785c238c0728e65e4b48cd11ab6572689f8"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Outlines/Echos Within 12_03_25.pdf": {
+      "size_bytes": 7464270,
+      "sha256": "6b3c53da7fc3964d597d1902473aa128bf4fddb580fe97d724ee9a99641309f3"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Outlines/how much of a timeline of events can you map out_.md": {
+      "size_bytes": 4588,
+      "sha256": "983cac97d16bc9b0e249ebadc3d493d06ab6884de0c69f6d2cdb033db21081ce"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Outlines/Multi interest subjects..md": {
+      "size_bytes": 43208,
+      "sha256": "a1acc0530469e05f070ed78a2765043ea2b2f24bf4e31d600ff6ea6b834a0174"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Outlines/The Echoes Within-Full Book.md": {
+      "size_bytes": 133757,
+      "sha256": "587a9e10ea86227fac6edb6ec7d62fbe17bfa50cb1e2c430e35e795cfbba93d6"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Outlines/Untitled document.md": {
+      "size_bytes": 6254,
+      "sha256": "180c0bbbc689a94391c4336f1ede55fa64179666e10ccf5d0dfed02bbdbe1835"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Outlines/Untitled spreadsheet.csv": {
+      "size_bytes": 5596,
+      "sha256": "19312a2ab105e09aea809ecba6050f47734914a3653d503f10dfa29af8c4da61"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Outlines/use canvas for this.md": {
+      "size_bytes": 13942,
+      "sha256": "2b2724f453298cc32c5a620815aa3509566b382aff966b784e3a0c8995b9756c"
+    },
+    "02_Memoirs_Manuscripts/Memoir_Outlines/will you put this into a table or a better vidual....csv": {
+      "size_bytes": 2972,
+      "sha256": "de5c8ffb6821093977ac9a5027b6b7c03396a3137555016ae9c290dca280fdc3"
+    },
+    "02_Memoirs_Manuscripts/Personal_Writings_Memoirs/Copy of October 7th year 6.md": {
+      "size_bytes": 3301,
+      "sha256": "9f9d97df3c60fdac3e5845688902e61f07264aeb3385b977c769247ac2cd3dbd"
+    },
+    "02_Memoirs_Manuscripts/Personal_Writings_Memoirs/Engagement Rating Of Personal Narrative.csv": {
+      "size_bytes": 732,
+      "sha256": "aa09cf946cbaea42290f975578bd72f2288044f11c1eb13422ecb71e237cd416"
+    },
+    "02_Memoirs_Manuscripts/Personal_Writings_Memoirs/Journal notes for Dr. Bartholomew before the next follow up appointment..md": {
+      "size_bytes": 1794,
+      "sha256": "c7e8d4add5025d3d7751b21b8fe2e1c2884ecdb7a02c65e5ba9875d0a399e137"
+    },
+    "02_Memoirs_Manuscripts/Personal_Writings_Memoirs/March2026.md": {
+      "size_bytes": 16087,
+      "sha256": "3b53bc5272a709727ea3578261d27bf9cfb83a3327433c17e30429927be51597"
+    },
+    "02_Memoirs_Manuscripts/Personal_Writings_Memoirs/satire.md": {
+      "size_bytes": 8163,
+      "sha256": "b32708b2dfd18b8c391eb631d4b3f19a4b8199eba2bfb3881cd7dcf0f2b37049"
+    },
+    "02_Memoirs_Manuscripts/Personal_Writings_Memoirs/Stehouwer Document Matrix Analysis.csv": {
+      "size_bytes": 513,
+      "sha256": "142982dc250dbc95bf388a6166539c0fca8886fa0bc6c2f376be2520d53ba0cd"
+    },
+    "02_Memoirs_Manuscripts/Personal_Writings_Memoirs/Stehouwer Reality_ Document Consolidation.md": {
+      "size_bytes": 40998,
+      "sha256": "d28adde4a98c3ab28cd66dfef3ededa67a4b1ccfc440cffa7dca86b33dd95212"
+    },
+    "02_Memoirs_Manuscripts/Personal_Writings_Memoirs/Subjective Reader Analysis Protocol.csv": {
+      "size_bytes": 374,
+      "sha256": "933ba97c2422fca4710cf743f831ab1d9753e86ba59156f3ce8a6c6ee45d005d"
+    },
+    "02_Memoirs_Manuscripts/Personal_Writings_Memoirs/Tomorrow Is Todays Surennder. .pdf": {
+      "size_bytes": 118393,
+      "sha256": "0ca95050112f2b8c6a1c64ef685cd781054862a08b1672a63177abf9e5be2ef3"
+    },
+    "02_Memoirs_Manuscripts/Personal_Writings_Memoirs/Total satire brett sean humor.md": {
+      "size_bytes": 4351,
+      "sha256": "512afb1be4bf12f3728ecba768a077addb461ffedc9431ceffd3e658234c6520"
+    },
+    "02_Memoirs_Manuscripts/Protocol_25_7_Satire/Jeffrey and His Friends_ Technical Roast.md": {
+      "size_bytes": 6598,
+      "sha256": "71c6cc392abefc4abf8bae2fed289945241ec8d7eefa1a4a97d37f4773312892"
+    },
+    "02_Memoirs_Manuscripts/Protocol_25_7_Satire/Jeffrey and His Friends_ Technical Roast.pdf": {
+      "size_bytes": 94634,
+      "sha256": "21c6a1426a010c5363bdece028144588c602890722165d3f5e7e76fd666ddb68"
+    },
+    "02_Memoirs_Manuscripts/Protocol_25_7_Satire/Manuscript Roast_ Trauma and Resilience.md": {
+      "size_bytes": 5384,
+      "sha256": "c6d74d662515c9145cf38aeffc6a6e133f59799368a43cf903cb16f3d2904abb"
+    },
+    "02_Memoirs_Manuscripts/Protocol_25_7_Satire/Protocol 25_7 Satire Gem Instructions.md": {
+      "size_bytes": 2936,
+      "sha256": "38c3ef3db7352b98fbce476638ff98a8b3a6d41c5e893f8cb8aed78d161ec149"
+    },
+    "02_Memoirs_Manuscripts/Protocol_25_7_Satire/Quantum Gastronomy_ The Tupperware Postulate.md": {
+      "size_bytes": 5820,
+      "sha256": "45db80dbd80b4aba8361373538fac5c747f2fd27ec3bdf2f3d5b4ce7d35382c2"
+    },
+    "02_Memoirs_Manuscripts/Protocol_25_7_Satire/Quantum Gastronomy_ The Tupperware Postulate.pdf": {
+      "size_bytes": 103734,
+      "sha256": "e28d5257191a66b9fbf97bc1f02a06eccd535abab29a169625251f14c1894f50"
+    },
+    "02_Memoirs_Manuscripts/Writing_Literary_Works/Full script.txt": {
+      "size_bytes": 3,
+      "sha256": "f1945cd6c19e56b3c1c78943ef5ec18116907a4ca1efc40a57d48ab1db7adfc5"
+    },
+    "02_Memoirs_Manuscripts/Writing_Literary_Works/intro.txt": {
+      "size_bytes": 17241,
+      "sha256": "9917d15721df17bbd0a1d503aeda5d52d09881589af14b677727f0207636a874"
+    },
+    "02_Memoirs_Manuscripts/Writing_Literary_Works/Julie Stehouwer's Professional Profile.txt": {
+      "size_bytes": 42574,
+      "sha256": "3da215df2db0aed2b9f11406a6918e8051315127869a4de3ce01c2ba54bfb068"
+    },
+    "02_Memoirs_Manuscripts/Writing_Literary_Works/The Judge Made Him Go! FNLC.txt": {
+      "size_bytes": 83569,
+      "sha256": "295b4deb3c2ddd8f57d421c4e27280616e9dcd0690c8ecd68a15ba3f78346950"
+    },
+    "02_Memoirs_Manuscripts/Writing_Literary_Works/writing videos.txt": {
+      "size_bytes": 34,
+      "sha256": "a64781a461050a3e0e1362cf172b96a168da0901c65425fce90d7d05913a7cc4"
+    },
+    "03_Finance_Trading/Economic_Research/AI's Impact on Education Data.csv": {
+      "size_bytes": 929,
+      "sha256": "75fdb8e5f7f77ea9e5bff2c2feefa1e39abe18df8179beedb7d1a1f2e4094202"
+    },
+    "03_Finance_Trading/Economic_Research/Macro-Economic & Infrastructure Matrix.md": {
+      "size_bytes": 6874,
+      "sha256": "8062ffde15054d2278217e8c768f9b0bd28ccabf519a29c6d8e34a7f4bd56efc"
+    },
+    "03_Finance_Trading/Local_Revenue_Prospectus/Gemini Export March 26, 2026 at 5_15_30\u202fPM UTC-4.md": {
+      "size_bytes": 41647,
+      "sha256": "647339dddf96531e76a1cb8f038a48835d1899597baef664945b3a01bf5f520a"
+    },
+    "03_Finance_Trading/Local_Revenue_Prospectus/Localized Revenue Maximization Prospectus.csv": {
+      "size_bytes": 3112,
+      "sha256": "4f9128afa1a5b1295d800c0f8d8ed5cbd5bdbd902e837efb2c8d5472d3415f34"
+    },
+    "03_Finance_Trading/Macroeconomic_Synthesis/app.py.md": {
+      "size_bytes": 12970,
+      "sha256": "3cc4eb56804052b3bc3a7d181981edbdcfe1e0ffc38eda498bc6f360cf9fcc50"
+    },
+    "03_Finance_Trading/Macroeconomic_Synthesis/Fiscal Policy, Fed Independence, Savings.txt": {
+      "size_bytes": 36285,
+      "sha256": "43fc45d7ed3582876b1671f74ab841e17c4487451b217d513fbcef4a854401c0"
+    },
+    "03_Finance_Trading/Macroeconomic_Synthesis/Macroeconomic Synthesis Engine.txt": {
+      "size_bytes": 7770,
+      "sha256": "e2d9a22b2798a5231af87cfb3d0a6e6e23ea2c33e9768667c90a866233f5d98b"
+    },
+    "03_Finance_Trading/Trading_SOPs_Market_Strategy/Day Trading Techniques and Strategies.md": {
+      "size_bytes": 37344,
+      "sha256": "f4c099aba8f9c620b5e02be86572bceea3dfe8fab66860753f3edff213f9689e"
+    },
+    "03_Finance_Trading/Trading_SOPs_Market_Strategy/Macro Filter Module Research.md": {
+      "size_bytes": 42729,
+      "sha256": "5d02d2463a3597d7d72f87b9858e275aac35a4f9c416b43725fc8d28fc68af81"
+    },
+    "03_Finance_Trading/Trading_SOPs_Market_Strategy/TRD-LOGIC-V4_ OPERATING PROCEDURE (SOP).md": {
+      "size_bytes": 3570,
+      "sha256": "814193e45bae592354ec9dab0cfb79d28fe4ac1ee1b69dc1717e5b30d225598c"
+    },
+    "04_Real_Estate/NoCo_Real_Estate/NoCo Property Acquisition & Realtor Due Diligence Questionnaire.csv": {
+      "size_bytes": 32569,
+      "sha256": "2f66b52ddf0319143bc13732a9d16c05335b3a270eb7c49e7f5d767e7c8ec523"
+    },
+    "04_Real_Estate/Recreational_Debut/May 14 2020- While in Pivot-Cover letter job app to Hope Network.txt": {
+      "size_bytes": 2277,
+      "sha256": "82ef863c0a2e0c9ba9a3ff92ce1ae9a31c1a6a070c9e3ee98687a0b2cdb58746"
+    },
+    "04_Real_Estate/Recreational_Debut/RecDebut_Tracking_Upgrade_Patch_Script.txt": {
+      "size_bytes": 16192,
+      "sha256": "1eeac2aa2bd71be573be650879b56e6056f19a89dce7c4ef340be8562883375d"
+    },
+    "04_Real_Estate/Recreational_Debut/RecDebut_Tracking_Upgrade_Production_Script.txt": {
+      "size_bytes": 27754,
+      "sha256": "8481f952f85ff669592b4c82302b16d37d722ee7b94172004e750c1776657e5d"
+    },
+    "04_Real_Estate/Recreational_Debut/Untitled document.txt": {
+      "size_bytes": 37353,
+      "sha256": "8bd5d4659e597915698a3744fedfc432067afccde55ef96117fefe93b9d0f98a"
+    },
+    "04_Real_Estate/The_Simple_Chef/cleaned_homepage.zip": {
+      "size_bytes": 6492,
+      "sha256": "320dfafb38bfc26ec6dc8f38385bdacf337c325f9df53c9730460b83bb11de14"
+    },
+    "04_Real_Estate/The_Simple_Chef/Gemini Export July 6, 2026 at 5_44_25 PM EDT.txt": {
+      "size_bytes": 2659,
+      "sha256": "6b309b1d66a682172d3b98f2443781c82475b40779b12e3966b0054f260dc33c"
+    },
+    "04_Real_Estate/West_Michigan_Market_Leads/50-State Apex Chamber Database & Executive Roster.csv": {
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "04_Real_Estate/West_Michigan_Market_Leads/pull public as many member contacts you can show....txt": {
+      "size_bytes": 15399,
+      "sha256": "dc62201bad926fea259d16b4a936bead6bc012c6c2cc0f4ea3d1288423a3fdd9"
+    },
+    "04_Real_Estate/West_Michigan_Market_Leads/West Michigan Lead Research.txt": {
+      "size_bytes": 30482,
+      "sha256": "4264962cc064561bbd9956d8a9041542e8841719752465d58cd3b41f9288c525"
+    },
+    "04_Real_Estate/West_Michigan_Market_Leads/West Michigan Target Lead Manifest - Stehouwer Advertising.txt": {
+      "size_bytes": 3155,
+      "sha256": "436ea4f81366eadbf6e16f90db69256e2ede6eccb93638a05b80818e95b0e7fc"
+    },
+    "05_Music_Audio/Audio_Stems_Stem_Vault/Macroeconomic Stability and Fiscal Governance_ A Comprehensive Analysis of the Clinton Era and Institutional Frameworks.md": {
+      "size_bytes": 49101,
+      "sha256": "77c28e01f1d874aa257350f8f721c63b14606ad066d4a6179ea49118fcd0dfef"
+    },
+    "05_Music_Audio/Audio_Stems_Stem_Vault/The Partisan Prism_ Institutional Analysis of Federal Reserve Credibility and Monetary Signaling (2001\u20132023).csv": {
+      "size_bytes": 767,
+      "sha256": "5e0c784f225ae46629d7978cbc992630876de09f95acc23a0679e315951a159e"
+    },
+    "05_Music_Audio/Audio_Stems_Stem_Vault/The Partisan Prism_ Institutional Analysis of Federal Reserve Credibility and Monetary Signaling (2001\u20132023).md": {
+      "size_bytes": 10222,
+      "sha256": "76327e8d2371204ecf4552102f505dffa87204a7ce37f8b836abccc652fb6e28"
+    },
+    "05_Music_Audio/Audio_Stems_Stem_Vault/US Fiscal Policy and Public Institutional Trust Metrics.csv": {
+      "size_bytes": 7463,
+      "sha256": "6bceb20491e7d05b8b7a434bb60bc8c280d67ee4c93c073941dc041632e05640"
+    },
+    "05_Music_Audio/Music_Audio_Production/Can you make a song about all the ladies that want....txt": {
+      "size_bytes": 217,
+      "sha256": "460d4ff8834cbdb9f4b3391c030141ed461471e513c0b44da9529a5709f3d527"
+    },
+    "05_Music_Audio/Music_Audio_Production/Put together everything you found into one full in....pdf": {
+      "size_bytes": 103749,
+      "sha256": "1751ed77458bdaff23685736e639b916b6753e8ae76de84ccad53d4c920be889"
+    },
+    "05_Music_Audio/Music_Audio_Production/Put together everything you found into one full in....txt": {
+      "size_bytes": 5137,
+      "sha256": "4c9b5197e08f7a303f8e4bd1dfd24a107a1ab8cb797431b25428032beefee860"
+    },
+    "05_Music_Audio/Suno_AI_Guides_Prompts/Psilocybin for TBI, PTSD, and Apathy.md": {
+      "size_bytes": 40077,
+      "sha256": "098b22d69c5699951f2f63070776ed2a3118451d6861d3a697f36476b8a461d8"
+    },
+    "05_Music_Audio/Suno_AI_Guides_Prompts/Psilocybin Protocol for TBI and PTSD Recovery.csv": {
+      "size_bytes": 3878,
+      "sha256": "3e0c5b40206f61f34288c5b98a121e68e425fa4045d02a541188e2e0f79a67c0"
+    },
+    "05_Music_Audio/Suno_AI_Guides_Prompts/Trauma and Psilocybin Brain Recovery.csv": {
+      "size_bytes": 1446,
+      "sha256": "b15338fd155408d70ca22bcb6c9b12f82c2b8747af7d5090e18bdf781ea9dbf3"
+    },
+    "05_Music_Audio/Suno_AI_Guides_Prompts/tripping session.docx": {
+      "size_bytes": 1232989,
+      "sha256": "67ab0621a5f10d58bd9e786c8c07a15ee2da08204b5abf9452869de742a149bc"
+    },
+    "05_Music_Audio/Suno_AI_Guides_Prompts/tripping session.md": {
+      "size_bytes": 4473030,
+      "sha256": "accd8d427fe7934987334d1eac4ff3c17473b619b4d4e17c57a3c9c8331e6c95"
+    },
+    "06_Health_Recovery/Cognitive_Assessment_Clinical/can we put together a collective study practice c....csv": {
+      "size_bytes": 672,
+      "sha256": "9b161683dc2bd1b3225f2763ac8de3a822af9b9ab692d50174a0c0f486754675"
+    },
+    "06_Health_Recovery/Cognitive_Assessment_Clinical/PTCE Practice Quiz (Google Forms Ready).txt": {
+      "size_bytes": 1028,
+      "sha256": "0fd766ce939c65083f861949fd9695acc6bd5638bba859d27b2b37da28b1bf25"
+    },
+    "06_Health_Recovery/Cognitive_Assessment_Clinical/PTCE Study Guide And Preparation - Google Gemini.pdf": {
+      "size_bytes": 2495924,
+      "sha256": "78cdbf7f8afc7171e929dfcc631240a2098d41c29ff4cb7e88503f863f38dc13"
+    },
+    "06_Health_Recovery/Cognitive_Assessment_Clinical/Top 200 Database (Google Sheets Ready).txt": {
+      "size_bytes": 879,
+      "sha256": "87ab97ece6c5cc8b87c76ea1e423f0a1902b5b4012be4bdebedb11ff826923d0"
+    },
+    "06_Health_Recovery/Cognitive_Assessment_Clinical/Untitled spreadsheet.csv": {
+      "size_bytes": 25885,
+      "sha256": "faf230a39a92a9c5a71fbb04cb1223dbaf611d2db660917f28a26a9b37163d3b"
+    },
+    "06_Health_Recovery/Fasting_Supplements_Health/Stehouwer_B_EEOC_Michigan_Department_of_Civil RightsComplaint_DriveSafeLogLogistics_2025-09-19.pdf.md": {
+      "size_bytes": 5070,
+      "sha256": "66f63011475798c45785398100d8286427828eaf6f44421dcdb9b2b54c17a4e5"
+    },
+    "06_Health_Recovery/Fasting_Supplements_Health/Stehouwer_B_Ethics_Complaint_AmazonDSP_DriveSafeLogistics_2025-09-19.pdf.md": {
+      "size_bytes": 4641,
+      "sha256": "3e8a1f684ef35aec3483de6f9bc93f27d89e560bc1b21586df7f28fec0de94e1"
+    },
+    "06_Health_Recovery/Fasting_Supplements_Health/Untitled document.md": {
+      "size_bytes": 5211064,
+      "sha256": "87ee1f007b42c868d6d16fc8ac33bc6892d476df0c116e563084eea1336e27dc"
+    },
+    "06_Health_Recovery/TBI_Psilocybin_Recovery/Journal notes for Dr. Bartholomew before the next follow up appointment": {
+      "size_bytes": 33115,
+      "sha256": "20eaed2588759d69a669895794bb2df1d8127e1004a7c2407b67509f085cd357"
+    },
+    "06_Health_Recovery/TBI_Psilocybin_Recovery/Notes for Dr. Andrew Bartholomew.txt": {
+      "size_bytes": 12315,
+      "sha256": "f8b5f595cb1ee978d27c91acd3f13938addee511ce392216b22518d04b67943c"
+    },
+    "07_Legal_Credentials/Legal_NDAs_Disputes/AI-BS NDA.txt": {
+      "size_bytes": 15577,
+      "sha256": "75f95d1a638ef8eedeadba32473b8b93708bf18fe4ba06a10d18a127a2d5bc5e"
+    },
+    "07_Legal_Credentials/Legal_NDAs_Disputes/AI-BS Non-Disclosure and Confidentiality Agreement - Finalized.txt": {
+      "size_bytes": 7731,
+      "sha256": "fb24c72d06eaad85dc3261b28b2516f44b24ac78388bddcbf8579b7787d1fbf1"
+    },
+    "07_Legal_Credentials/Legal_NDAs_Disputes/Master Services Agreement.txt": {
+      "size_bytes": 23185,
+      "sha256": "744b39e297e2062a9d47317b79f21469b7c38980c906851e9a6bfca9bb6f5e3b"
+    },
+    "07_Legal_Credentials/Legal_NDAs_Disputes/Stehouwer Publishing NDA.txt": {
+      "size_bytes": 23185,
+      "sha256": "744b39e297e2062a9d47317b79f21469b7c38980c906851e9a6bfca9bb6f5e3b"
+    },
+    "07_Legal_Credentials/Personal_Identity_Records/21-Day Dirty Fast Supplement Matrix.csv": {
+      "size_bytes": 2735,
+      "sha256": "249a5bf73ec4a491d99e4967fd3015d87c1034f0d8961636b865081e9289ea0a"
+    },
+    "07_Legal_Credentials/Personal_Identity_Records/Ketogenic High-Protein Meal Configurations.csv": {
+      "size_bytes": 173,
+      "sha256": "da5732f63d68f84e45e8e7f8d1d7b729953ac97bef512c1d72516093c84a3b76"
+    },
+    "07_Legal_Credentials/Personal_Identity_Records/Master 22-Day Integration Plan.csv": {
+      "size_bytes": 6251,
+      "sha256": "6c07df1a0fde5a1fe5bd248934c583ecb50bcb9d71c9986706da4b8b6fba3319"
+    },
+    "07_Legal_Credentials/Personal_Identity_Records/Master Data Sheet_ Pharmacological Events.csv": {
+      "size_bytes": 3602,
+      "sha256": "f096f4dd33dec41128c6c46dacf87b401b5087d2e17d3aae30a3cf4ed250c3e4"
+    },
+    "07_Legal_Credentials/Personal_Identity_Records/Supplement Dosing for Dirty Fasting.csv": {
+      "size_bytes": 953,
+      "sha256": "d4638ac1a00cad92d5446a4e5be5e9a686748005ff3845777335bfc55485d03c"
+    },
+    "07_Legal_Credentials/Personal_Identity_Records/Supplement Logic Scale Audit.csv": {
+      "size_bytes": 3379,
+      "sha256": "24f35c3186b66e1b4e6bc18d3af7007fda390ed157690a68fd8e56a38a21f9cf"
+    },
+    "07_Legal_Credentials/Personal_Identity_Records/Supplement Stack Analysis and Optimization.csv": {
+      "size_bytes": 520,
+      "sha256": "edb298dea8f99444f0fe8b0103e3ffec6c7184d0df97d2a235ee8e365f31ee5b"
+    },
+    "07_Legal_Credentials/Personal_Identity_Records/Unified Supplement Execution Matrix.csv": {
+      "size_bytes": 8148,
+      "sha256": "de2cb2fdb84f6696bd3942ee8dd571da9451e82545d5fcb99ce15735aff00741"
+    },
+    "07_Legal_Credentials/Personal_Identity_Records/Untitled spreadsheet.csv": {
+      "size_bytes": 15266,
+      "sha256": "4a51a8ff6655e863ce77707ca236db1dfe06f8d4b7d19372e99a1277a1026b90"
+    },
+    "07_Legal_Credentials/Personal_Identity_Records/We put all this information into a new graph data....csv": {
+      "size_bytes": 2813,
+      "sha256": "b4b982160820d5e4ef245f5207d3852c073fdc385963709997f0271b849643cc"
+    },
+    "07_Legal_Credentials/Professional_Credentials/20260727_065146.jpg": {
+      "size_bytes": 2763212,
+      "sha256": "549a40144ae9f48d67fc549add6348924c4df05765769641126f6422137af0af"
+    },
+    "07_Legal_Credentials/Professional_Credentials/20260727_065156.jpg": {
+      "size_bytes": 2462828,
+      "sha256": "63968a014d9a880663dd15bd973373288e7436b34a05c66cf8779c71c8b294a8"
+    },
+    "07_Legal_Credentials/Professional_Credentials/20260727_165316.jpg": {
+      "size_bytes": 2073982,
+      "sha256": "aafa2e6400b333bf0f256c04a4801bcd5e8d39097af38c1d0b8b23822afd3448"
+    },
+    "07_Legal_Credentials/Professional_Credentials/20260727_165354.jpg": {
+      "size_bytes": 1568386,
+      "sha256": "4afe19f5d50fdd5a978f8f4622b888e9931c9a7f0fdba1478570a2288a9162e8"
+    },
+    "07_Legal_Credentials/Professional_Credentials/20260727_165401(1).jpg": {
+      "size_bytes": 749925,
+      "sha256": "14303484134e85165b8bb8fe4395e7d268a052b2d0188f732c0b056b1c4b9c3b"
+    },
+    "07_Legal_Credentials/Professional_Credentials/20260727_165401.jpg": {
+      "size_bytes": 2934711,
+      "sha256": "fbc069d49954dfcfd86603d1e72ec4865d0ce2881e041419da0aa24a9e9c6c09"
+    },
+    "07_Legal_Credentials/Professional_Credentials/20260727_170944.jpg": {
+      "size_bytes": 2692209,
+      "sha256": "ff48aebdfbdfe19fe0171306ade442deaf606a731fc42003422a18bcfe47aa87"
+    },
+    "07_Legal_Credentials/Professional_Credentials/20260727_170957.jpg": {
+      "size_bytes": 2252204,
+      "sha256": "5008548471d3abfb77854665b656f3458705a277d75552f4435c61b68cc904b8"
+    },
+    "07_Legal_Credentials/Professional_Credentials/brett patrick 5th hour My auto biography on reading.txt": {
+      "size_bytes": 2823,
+      "sha256": "42f9d1e5470e59e172d8d375a97bd74565d66c1cde3996932aa6c554adfda466"
+    },
+    "07_Legal_Credentials/Professional_Credentials/Elephant man essay doc created 02_08_2012.txt": {
+      "size_bytes": 3780,
+      "sha256": "c1bf80f1c84dfbcfc3b471869368fb7afae8eafc3f882dd256eeb171bcea047c"
+    },
+    "07_Legal_Credentials/PTCE_Pharmacy_Prep/Clinical Session Summary.md": {
+      "size_bytes": 20437,
+      "sha256": "0d858765e8baae6bb163fde8dfd747b3551cd33e57a94d03b585018c0dc88b79"
+    },
+    "07_Legal_Credentials/PTCE_Pharmacy_Prep/Clinical Session Summary.txt": {
+      "size_bytes": 20303,
+      "sha256": "d4598707248e773e1dd8042283381fdbf3c011d94cdb58fd71cab83674a1d164"
+    }
+  }
+}

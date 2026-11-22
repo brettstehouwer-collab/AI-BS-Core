@@ -1,0 +1,37 @@
+{
+  "at": "2026-11-03T23:45:13.200710+00:00",
+  "status": "verified_partial_surface_checkpoint_backed_up_live_build_wait",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\61A_Partial_Surface_Foundation_Release_Evidence_Source.zip",
+    "bytes": 245249,
+    "sha256": "1c5fc3002734022ac678d9108ec259d561bdc22d822827b86d036d5b8082216c",
+    "members": 70,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "drive_file_id": "1zFpryKi4q9053t3rNUx6TSd9HZWtCL_o",
+    "drive_folder_id": "1-wFJjczshzh4oaLcSPXRwKzcJ15YShK8",
+    "at": "2026-11-03T23:44:30.588495+00:00",
+    "verification": "Metadata readback and raw download: SHA256, CRC, exact member set, embedded manifest and every member SHA256/length verified. Partial source checkpoint; Debug/GPU/import/shading/fullSDK qualification and live build drain remain pending."
+  },
+  "coordinator_exec_session": 8358,
+  "live_members": [
+    {
+      "pid": 13772,
+      "name": "MSBuild.exe",
+      "created": 1793749035.2944133
+    },
+    {
+      "pid": 41940,
+      "name": "conhost.exe",
+      "created": 1793749035.2997117
+    }
+  ],
+  "build_not_restarted": true,
+  "next_step": "Poll same session8358. Release parent compile0 and three independentCPU tests passed; original owned MSBuild reuse worker drain still pending. Future task-local cmake/msbuild child now disables reuse. After drain, original coordinator runs ReleaseCTest and Debug. Verify actual receipts; then buildGPUguard and implement importer/shading. Do not install/deploy incomplete0170source.",
+  "storage_free_GiB": {
+    "C:/": 57.04,
+    "D:/": 51.41,
+    "E:/": 136.73
+  },
+  "goal_complete": false
+}

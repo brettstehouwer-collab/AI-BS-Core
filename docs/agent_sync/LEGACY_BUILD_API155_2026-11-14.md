@@ -1,0 +1,9 @@
+# Selected production-source tool API composition — source155
+
+The production tools-execute handler wrapped unavailable legacy results as HTTP200/status success. A focused source patch now returns HTTP503 with status unavailable and the original result. Existing queued maintenance and coding-task status handling are preserved. Authentication code is unchanged.
+
+The actual admin middleware, payload and handler were AST-extracted from AI_BS_Backend.py and composed in an isolated FastAPI app with the real registry, tool validation and legacy admission. Twelve checks initially had5failures, then passed12/12: anonymous denial, build/run/generated/custom rejection, caller confirmation not granting execution, fixed-maintenance dispatch under owner scope, invalid principal rejection, private headers, owner reset and request validation. subprocess.run and legacy source scanning were forbidden.
+
+The identity resolver is a synthetic fixture, not real administrator/Firebase verification. This is selected source composition, not full backend import, startup/lifespan/all middleware, live runtime, actual maintenance execution or installed/hosted acceptance. No service was restarted and no credential, provider, private store or default launcher changed. Source155 metadata passed the existing release-helper consistency gate. Native152, compiled web151 and hosted146 remain distinct. Earlier browser stop/failures retained.
+
+Evidence: backups/legacy_build_api155_20261114_v01/. Next coherent candidate qualification before scoped runtime promotion; original creative/game/worker/release gates remain. Goal ACTIVE/incomplete. Scoped archive contains patch, fixture and aggregate evidence, excluding whole backend preimage, private data, raw logs and runtime binaries. Closing annotations may postdate seal.

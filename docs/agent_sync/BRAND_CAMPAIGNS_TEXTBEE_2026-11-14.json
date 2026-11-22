@@ -1,0 +1,70 @@
+{
+  "status": "TEXTBEE_VERIFIED_CAMPAIGN_PREVIEW_LOCAL",
+  "checked_utc": "2026-11-15T00:27:23.434241+00:00",
+  "ui": "http://localhost:5173/?tab=campaign_automation",
+  "also_in": "Beta analytics -> Email & SMS Campaigns",
+  "brands": [
+    "productions",
+    "publishing"
+  ],
+  "connection": {
+    "brand": "productions",
+    "name": "Stehouwer Productions",
+    "app_version": "2.10.0",
+    "api_key_verified": true,
+    "device_verified": true,
+    "online_observed": true,
+    "basis": "recent heartbeat",
+    "storage": "Windows DPAPI current user; write-only API; cleared password field"
+  },
+  "intake": {
+    "source_rows": 751,
+    "saved_contacts_after_dedup": 697,
+    "emails": 17,
+    "pdf_pages": 37,
+    "additional_pdf_emails": 0,
+    "originals_preserved": true,
+    "SMS_consent": "unknown"
+  },
+  "messages_sent": 0,
+  "actual_delivery_events": 0,
+  "email_sender_verified": false,
+  "sending_enabled": false,
+  "publishing_connection_configured": false,
+  "tests": {
+    "backend": 15,
+    "frontend": 15,
+    "actual_authenticated_UI_save_verify_import": true,
+    "anonymous_state_rejected": 403,
+    "launcher_syntax": "pass"
+  },
+  "runtime": {
+    "bind": "127.0.0.1:5191",
+    "shared_services_restarted": false,
+    "startup_launcher": "Launch-Brand-Campaign-Manager.cmd",
+    "OS_autostart_changed": false
+  },
+  "legacy": {
+    "RecDebut_configuration_changed_by_agent": false,
+    "old_SMTP_hold_changed": false,
+    "historical_suppression_owner_bound": true,
+    "legacy_fake_view_replaced_in_current_UI": true,
+    "unguarded_legacy_API_routes": "Unmodified; new contacts never stored there, separate security follow-up needed"
+  },
+  "failed_evidence": [
+    "First supplied key valid but account had0devices; userprovidedreplacement andregisteredProductionsphone",
+    "Provider single-device GET404; implemented verified device-list exactmatch",
+    "Normal Google sign-in restored after sessionlock without desktop-auth bypass",
+    "Receipt defaultencodingfailure corrected toUTF8; logged locally"
+  ],
+  "privacy": "No actual API keys or contact tables in source patch or shared receipts. Encrypted connections/private intake staylocal.",
+  "pending": [
+    "Email transport verification and actual delivery reconciliation",
+    "Campaign-specific authorization before outbound dispatch",
+    "Documented SMS opt-ins",
+    "Publishing provider configuration"
+  ],
+  "patch": "work/brand-campaign-manager-20261114/changes.patch",
+  "screenshot": "work/brand-campaign-manager-20261114/productions-textbee-connected.jpg",
+  "backup": "Local preservation only; no Drive upload claimed"
+}

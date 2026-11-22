@@ -1,0 +1,190 @@
+{
+  "at": "2026-11-04T19:25:23.300836+00:00",
+  "status": "verified_separate_v30_constrained_neck_partial_improvement_defect_open",
+  "model": "E:\\AI_BS_Resources\\FirstBoot\\P95\\AdamNeckConstraintStudy\\master\\adam-character-v30-neck-constraint-study.blend",
+  "geometry": {
+    "status": "passed_separate_v30_cumulative_and_triangle_constrained_neck",
+    "selected_vertices": 2115,
+    "changed_vertices": 2113,
+    "maximum_delta_m": 0.007500014722437098,
+    "initial_energy": 0.013503022983829206,
+    "final_energy": 0.004091479495067324,
+    "energy_ratio": 0.3030047049440078,
+    "minimum_triangle_area_ratio": 0.6000000003680555,
+    "minimum_normal_dot": 0.8500012531876564,
+    "minimum_area_m2": 1.4407746941096805e-10,
+    "cumulative_clamps": 69,
+    "step_reductions": 18704,
+    "step_rejections": 402,
+    "admitted_steps": 16518,
+    "iterations": [
+      {
+        "iteration": 1,
+        "energy": 0.008641361170453759,
+        "max_delta_m": 0.003603914398151759
+      },
+      {
+        "iteration": 2,
+        "energy": 0.0058097688463475475,
+        "max_delta_m": 0.005903271447219664
+      },
+      {
+        "iteration": 3,
+        "energy": 0.004779416783092047,
+        "max_delta_m": 0.0074999967826678655
+      },
+      {
+        "iteration": 4,
+        "energy": 0.004379257519113286,
+        "max_delta_m": 0.007500005331916857
+      },
+      {
+        "iteration": 5,
+        "energy": 0.0042066609746448476,
+        "max_delta_m": 0.007500006726474279
+      },
+      {
+        "iteration": 6,
+        "energy": 0.0041320836092326625,
+        "max_delta_m": 0.00750000613530323
+      },
+      {
+        "iteration": 7,
+        "energy": 0.004102293712083142,
+        "max_delta_m": 0.00750000643088876
+      },
+      {
+        "iteration": 8,
+        "energy": 0.004091479495067324,
+        "max_delta_m": 0.007500014722437098
+      }
+    ],
+    "likeness_approved": false,
+    "installed_model_changed": false,
+    "master_sha256": "498effb8d851abb7890d0f9aa1d72932c54591ade89f74a510926db0a0a9c813",
+    "source_sha256": "4a80b6393072125ab33896c8ce386ca80a3bb05781000de4d003bb3d0b9bd6b5",
+    "topology_UV_colors_weights_binds_actions_images_exact": true,
+    "non_neck_positions_exact": true,
+    "contracts": {
+      "topology": "ec95c798816b90b4ed7b7633dc17cc126c4360f112cd60dce1db0495ee50cfe5",
+      "UV": "0943cacc847d70afa0056617cb1216a80fdac16f2af070d2e254933b4d71b02a",
+      "colors": "459019fee7ada837feacec6d6c9f93a12229edd69104499f7b899d33f0692d0d",
+      "weights": "f63e80d8f55433bf2af03f9a3b14f54b54aba2d3aa86f484d53a7529e79c3418",
+      "binds": "0554467b32516504802d3e4ddd2bbb1bfe0fc1dcb2cf64675c493c430d222872",
+      "actions": "aaaf04233ffb34a15ea55dd9cc4d9dd8b776d272d17881b5da4032f88b03da1e",
+      "images": [
+        [
+          "authored-hair-albedo-v29b.png",
+          "7863479177f79a18cddba0b0de8589a37c0ce6d4cd42e5ffd518d7f62d06acfa"
+        ],
+        [
+          "authored-head-albedo-v24c.png",
+          "01c52db42df0f8b2b41859fd70247b50ec969f5cc3d674d63d9f886df4a3f9b9"
+        ],
+        [
+          "authored-shirt-print.png",
+          "3e3ca8b112f38ac6fc51dac75da62ac50ed1fb581bf14e611fe5a1f8336625a4"
+        ]
+      ]
+    },
+    "scope": "Skin-only1.50..1.58m neck band, smooth pinned boundaries, cumulative7.5mmweighted cap and triangle guards. No final anatomical/cloth/collision or motion-quality claim."
+  },
+  "native": {
+    "status": "passed_actual_native_band_material_and_animation",
+    "vertices": 53243,
+    "indices": 236646,
+    "joints": 22,
+    "clips": 4,
+    "decoded_bytes": 17564956,
+    "content_gpu_bytes": 18284544,
+    "visible_pixel_difference": 284965,
+    "animated_pixel_difference": 69220,
+    "band_material_changed_pixels": 11852,
+    "debug_errors": 0,
+    "debug_warnings": 0,
+    "likeness_approved": false,
+    "installed_model_replaced": false
+  },
+  "four_clips": [
+    {
+      "name": "idle",
+      "duration_seconds": 3.2,
+      "frames": 97,
+      "captured_phases": 9,
+      "changed_poses": 6,
+      "maximum_changed_pixels": 34211,
+      "root_fixed": true,
+      "boundary_pose_verified": true,
+      "immutable_resources_stable": true,
+      "gpu_errors": 0,
+      "gpu_warnings": 0
+    },
+    {
+      "name": "walk",
+      "duration_seconds": 1,
+      "frames": 31,
+      "captured_phases": 9,
+      "changed_poses": 6,
+      "maximum_changed_pixels": 69308,
+      "root_fixed": true,
+      "boundary_pose_verified": true,
+      "immutable_resources_stable": true,
+      "gpu_errors": 0,
+      "gpu_warnings": 0
+    },
+    {
+      "name": "catchup",
+      "duration_seconds": 0.733333,
+      "frames": 23,
+      "captured_phases": 9,
+      "changed_poses": 6,
+      "maximum_changed_pixels": 71134,
+      "root_fixed": true,
+      "boundary_pose_verified": true,
+      "immutable_resources_stable": true,
+      "gpu_errors": 0,
+      "gpu_warnings": 0
+    },
+    {
+      "name": "guidance",
+      "duration_seconds": 2.4,
+      "frames": 73,
+      "captured_phases": 9,
+      "changed_poses": 7,
+      "maximum_changed_pixels": 23304,
+      "root_fixed": true,
+      "boundary_pose_verified": true,
+      "immutable_resources_stable": true,
+      "gpu_errors": 0,
+      "gpu_warnings": 0
+    }
+  ],
+  "private_chapter_admission": true,
+  "both_routes_on_v30": false,
+  "residual_seam": {
+    "status": "verified_seam_remains_under_uniform_lit_albedo_but_not_flat_emission",
+    "uniform_patch_bounds": [
+      300,
+      395,
+      450,
+      470
+    ],
+    "flat_emissive_unique_RGB": 2,
+    "uniform_lit_unique_RGB": 148,
+    "flat_maximum_channel_range": 1,
+    "lit_maximum_channel_range": 43,
+    "first_quantification_failure": "Exact one-color assertion failed:11248pixels RGB188,153,129 and2pixels RGB187,153,129. One-level raster rounding tolerance now explicit; lit range independently much larger. No new render or shader modification.",
+    "inference": "The residual seam includes geometry/normal response; a texture-only correction cannot fully resolve it. This does not yet isolate topology from normal interpolation.",
+    "first_diagnostic_limitation": "E:/T95D labelled a lighting-disabled view unlit, but character.hlsl uses normal-based legacy fallback lighting. It also retained material base tints. Preserved as limited evidence; T95D2 sets base tints/vertex colors and explicit emission.",
+    "neck_defect_resolved": false
+  },
+  "visual_review": "Front/quarter neck captures show reduced upper-neck faceting but jagged collar-line seam remains. Numerical roughness reduction is not final anatomy or likeness acceptance. No approved model selection.",
+  "source_scope": "Independent positive-relaxation solver with cumulative7.5mmweighted trust bound plus triangle admission guards; stopped P73unconstrained/paired recipes not rerun. Float coordinate quantization yielded7.500015mm maximum, below retained8mmlimit. Topology/UV/colors/weights/binds/actions/images and all non-neck positions exact.",
+  "preserved": "Sourcev29b, separatev28face study, earlier masters/failures, original family references, installed107 and user saves unchanged.",
+  "diagnostic_limitations": "Initial lighting-disabled probe was not flat because character.hlsl uses legacy shading. Corrected probe uses uniform material/vertex color and explicit emission. Exact-one-color assertion initially failed on2pixels with1LSBrounding; actual flat maxrange1 vs lit43 is recorded. Old probe and failed quantification retained, not final acceptance.",
+  "backup_status": "Local editable master/export/scripts/logs retained. No personal-art cloud upload attempted; held pending specific authorization after automatic-review rejection.91A remains last verified software-only cloud checkpoint.",
+  "cloud_backup_verified": false,
+  "likeness_approved": false,
+  "goal_complete": false,
+  "next_step": "Prepare a separate pinned SDK0172 playable review package with isolated saves and explicit draft-model choice, reusing existing play/measurement workflow. Keep installed107/default assets untouched. Residual collar surface needs topology/normal investigation; human8-12minute pacing, caption listening review, current1080p60performance, final packaged matrix and verified accepted backup remain required."
+}

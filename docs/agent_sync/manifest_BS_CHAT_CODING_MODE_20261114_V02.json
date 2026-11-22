@@ -1,0 +1,649 @@
+{
+  "checkpoint": "BS_CHAT_CODING_MODE_20261114_V02",
+  "utc": "2026-11-14T14:22:32.001274+00:00",
+  "status": "SOURCE_INTEGRATED_SYNTHETIC_GATE_PASSED",
+  "commit": "64fad2871e0a716d9964f506bdef1050612b173d",
+  "branch": "codex/audit-v532976-20261031",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "next verified executor",
+  "source_manifest_sha256": "17e2825d85e08b08de33100e68c62efac97c99e4ddb61cb08adbcfdd50614816",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "kind": "documentation",
+      "bytes": 23917,
+      "sha256": "b6a26fb8c5d02c20c4f09cff11dbfec97a0d64b053e8afa52c061070ddb3a048"
+    },
+    {
+      "path": "PLAN.md",
+      "kind": "documentation",
+      "bytes": 113024,
+      "sha256": "624f718145df47c95eb2c5ab12e1e4af76a43ba9aa51886e476794984ecad0b6"
+    },
+    {
+      "path": "backend/core/coding_mode_execution.py",
+      "kind": "code",
+      "bytes": 15541,
+      "sha256": "cb830e57b1cbc985f80f408af6a40851efd21bec21f4d443c824dbb54fa3f75b"
+    },
+    {
+      "path": "backend/core/coding_mode_local.py",
+      "kind": "code",
+      "bytes": 21448,
+      "sha256": "bc682e4d2fe413c3deb9c0b9ada4d80dc0411fa825829939a819fa4f0d85b5c7"
+    },
+    {
+      "path": "backend/core/coding_process.py",
+      "kind": "code",
+      "bytes": 5565,
+      "sha256": "f29dee6378f0305fbb29ffa79919b80ea53cdb8b13845aea7d5c08d7e42ba455"
+    },
+    {
+      "path": "backend/core/coding_syntax.py",
+      "kind": "code",
+      "bytes": 3452,
+      "sha256": "77542be88fee5a59d2ddf89cad76c117c81a12a09cb56682097656bbf882f2d1"
+    },
+    {
+      "path": "backend/core/coding_vm_inputs.py",
+      "kind": "code",
+      "bytes": 11304,
+      "sha256": "3c460042f983ef9f95e9bc6c47d1c6e90eed95524441e1ab128c6ae4f4e3b764"
+    },
+    {
+      "path": "backend/routers/coding_mode_router.py",
+      "kind": "code",
+      "bytes": 3017,
+      "sha256": "ae1147f13ab7ca9356711ce7ff5d2a5e67deb6f4f7749b0fafeb36a5cd0ce40f"
+    },
+    {
+      "path": "backend/routers/coding_review_router.py",
+      "kind": "code",
+      "bytes": 3079,
+      "sha256": "ce45147e6b5afff9a6334fb336af2a986c59b0465053cb098e2b50715808edaf"
+    },
+    {
+      "path": "backend/tests/test_coding_mode_execution.py",
+      "kind": "code",
+      "bytes": 10360,
+      "sha256": "eedf0cc9d06971b31b1e286405f866ae4e77f9c5d5063a70d9efdd0d6796d066"
+    },
+    {
+      "path": "backend/tests/test_coding_mode_local.py",
+      "kind": "code",
+      "bytes": 14535,
+      "sha256": "76ea04f2df2e914ef89a5293c9eaf07dba58c840bb98fcde92a9dca86397a89b"
+    },
+    {
+      "path": "backend/tests/test_coding_mode_restart.py",
+      "kind": "code",
+      "bytes": 2822,
+      "sha256": "26267ecac095f247ae0c7fcfce44bd0a91790b58093a93306e637c14ea78afdd"
+    },
+    {
+      "path": "backend/tests/test_coding_npm_admission.py",
+      "kind": "code",
+      "bytes": 1228,
+      "sha256": "96f77c05eac2410df8155baa01e6c026895a440a56324288af5bd0000f412563"
+    },
+    {
+      "path": "backend/tests/test_coding_syntax.py",
+      "kind": "code",
+      "bytes": 2498,
+      "sha256": "168191e1014d126685b3fc97e4759b76628a232363b31bb4db0bf3b5a817dfe0"
+    },
+    {
+      "path": "backend/tests/test_preparation_planning.py",
+      "kind": "code",
+      "bytes": 17393,
+      "sha256": "16308f5a279aa5413c1687677333be2942ffba4309304109313a26111ffce1b9"
+    },
+    {
+      "path": "backend/tests/test_preparation_proposals.py",
+      "kind": "code",
+      "bytes": 25234,
+      "sha256": "5907b7dba181dc0f0326799ea4f423ac50742bf3457d2ed3b9b2cc6b7546f17f"
+    },
+    {
+      "path": "docs/AI_BS_MASTER_IMPLEMENTATION_PLAN.md",
+      "kind": "documentation",
+      "bytes": 14580,
+      "sha256": "003dfe85e7bd0b5fe1019d4a44f2438db7d98611f5f7648e8fa3838a04ea7a16"
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "kind": "documentation",
+      "bytes": 1502429,
+      "sha256": "32c9b22ab2c8dfff770815da2f950fb8d9cb9d7cbc014f36e9082637d8f86ee6"
+    },
+    {
+      "path": "docs/agent_sync/BS_CHAT_CHALLENGE_REPAIR_2026-11-14.md",
+      "kind": "documentation",
+      "bytes": 6154,
+      "sha256": "3d6c6e4c3058b5d2faab21bc5e5661167a4b3ceb59998cfcd27767000ac4dc5f"
+    },
+    {
+      "path": "docs/agent_sync/PLAN_ADDITIONS_2026-11-14.json",
+      "kind": "documentation",
+      "bytes": 2945,
+      "sha256": "740260d1013961a5eeea288f677416ced3398aa193c91dc0d6b3046beac74f35"
+    },
+    {
+      "path": "docs/agent_sync/current_long_term_goal.json",
+      "kind": "documentation",
+      "bytes": 10805,
+      "sha256": "7e7fcdb94cba3ed673af93f93a195f16f75bbb1d919322e2265775476f37957f"
+    },
+    {
+      "path": "docs/architecture/BS_CHAT_CODING_MODE_2026-11-14.md",
+      "kind": "documentation",
+      "bytes": 10156,
+      "sha256": "429512ea688b469eb8e3646c57a8760b30d1a3e3e43509a071144dd11b1c85ee"
+    },
+    {
+      "path": "docs/fe_express/plan_state.json",
+      "kind": "documentation",
+      "bytes": 6098,
+      "sha256": "b24790df3385cda8785c40c6547cdb5445f16923ce9a9f9d9f49bec7eba11162"
+    },
+    {
+      "path": "frontend/components/ChatTab.jsx",
+      "kind": "code",
+      "bytes": 445537,
+      "sha256": "871f216a48255b8fd8fc75d98cd0667ad99a10f0386fe41fbd7fd58c47e910ab"
+    },
+    {
+      "path": "frontend/components/CodingModePanel.jsx",
+      "kind": "code",
+      "bytes": 14601,
+      "sha256": "2c42ab9432ca0a78faeb28f0008919dd34497bc974ed78b33da76ee0fe4edc9f"
+    },
+    {
+      "path": "frontend/components/CodingPreparationPanel.jsx",
+      "kind": "code",
+      "bytes": 25186,
+      "sha256": "911e52bb8b920936a8387e8c774a34ffbcb66a17e7a68b1a38a20fc1c762ee02"
+    },
+    {
+      "path": "frontend/components/components/ChatTab.jsx",
+      "kind": "code",
+      "bytes": 445537,
+      "sha256": "871f216a48255b8fd8fc75d98cd0667ad99a10f0386fe41fbd7fd58c47e910ab"
+    },
+    {
+      "path": "frontend/components/components/CodingModePanel.jsx",
+      "kind": "code",
+      "bytes": 14601,
+      "sha256": "2c42ab9432ca0a78faeb28f0008919dd34497bc974ed78b33da76ee0fe4edc9f"
+    },
+    {
+      "path": "frontend/components/components/CodingPreparationPanel.jsx",
+      "kind": "code",
+      "bytes": 25186,
+      "sha256": "911e52bb8b920936a8387e8c774a34ffbcb66a17e7a68b1a38a20fc1c762ee02"
+    },
+    {
+      "path": "frontend/src/components/ChatTab.jsx",
+      "kind": "code",
+      "bytes": 445537,
+      "sha256": "871f216a48255b8fd8fc75d98cd0667ad99a10f0386fe41fbd7fd58c47e910ab"
+    },
+    {
+      "path": "frontend/src/components/CodingModePanel.jsx",
+      "kind": "code",
+      "bytes": 14601,
+      "sha256": "2c42ab9432ca0a78faeb28f0008919dd34497bc974ed78b33da76ee0fe4edc9f"
+    },
+    {
+      "path": "frontend/src/components/CodingPreparationPanel.jsx",
+      "kind": "code",
+      "bytes": 25186,
+      "sha256": "911e52bb8b920936a8387e8c774a34ffbcb66a17e7a68b1a38a20fc1c762ee02"
+    },
+    {
+      "path": "frontend/src/components/components/ChatTab.jsx",
+      "kind": "code",
+      "bytes": 445537,
+      "sha256": "871f216a48255b8fd8fc75d98cd0667ad99a10f0386fe41fbd7fd58c47e910ab"
+    },
+    {
+      "path": "frontend/src/components/components/CodingModePanel.jsx",
+      "kind": "code",
+      "bytes": 14601,
+      "sha256": "2c42ab9432ca0a78faeb28f0008919dd34497bc974ed78b33da76ee0fe4edc9f"
+    },
+    {
+      "path": "frontend/src/components/components/CodingPreparationPanel.jsx",
+      "kind": "code",
+      "bytes": 25186,
+      "sha256": "911e52bb8b920936a8387e8c774a34ffbcb66a17e7a68b1a38a20fc1c762ee02"
+    },
+    {
+      "path": "frontend/src/utils/codingMode.js",
+      "kind": "code",
+      "bytes": 1437,
+      "sha256": "0b975d4223adff906b1a79817dbe2029a587c750b72b34f137b4b2b70bec5122"
+    },
+    {
+      "path": "frontend/src/utils/codingModeClient.js",
+      "kind": "code",
+      "bytes": 10563,
+      "sha256": "8c5d3a23fcf0b91f9e1998f6e638ce6fce59be058908deac734ddb4174d3ac83"
+    },
+    {
+      "path": "frontend/tests/coding-mode-client.test.mjs",
+      "kind": "code",
+      "bytes": 11052,
+      "sha256": "85b259bbd8efa40ee7910fa29e0f4525f37625b1ce4ac62c46c58ad1dc919b3c"
+    },
+    {
+      "path": "frontend/tests/coding-mode-render.test.cjs",
+      "kind": "code",
+      "bytes": 1754,
+      "sha256": "1811720ac964fb69ee049954148b63bc17a8d77d3c8d2d22708c86f2e10cc5c2"
+    },
+    {
+      "path": "frontend/tests/coding-mode.test.mjs",
+      "kind": "code",
+      "bytes": 1284,
+      "sha256": "9a4200d115a520aed374c709c3a16022f79e6b47c9cfe5f4f9d031273b1b3eba"
+    },
+    {
+      "path": "native_studio/bs_chat_ide_full.py",
+      "kind": "code",
+      "bytes": 121059,
+      "sha256": "90f8ee111365ff3e63a9137845754a1a244f59bc53e8138e121866af6b0512a1"
+    },
+    {
+      "path": "native_studio/coding_mode_service.py",
+      "kind": "code",
+      "bytes": 3124,
+      "sha256": "7ea69ff9476c49408672573302ab86379bce7fc75502e452f2a939dc54453b8a"
+    },
+    {
+      "path": "native_studio/coding_mode_view.py",
+      "kind": "code",
+      "bytes": 24242,
+      "sha256": "0d394ef20a07837d0f03babb3688fecb985eeb91cbde4fc24b0c72ccfe396fb2"
+    },
+    {
+      "path": "native_studio/test_coding_mode_service.py",
+      "kind": "code",
+      "bytes": 3187,
+      "sha256": "b0e7c7c9467bb27c66e0852d9432227c9841412fc28b043939139ca36b36f562"
+    },
+    {
+      "path": "native_studio/test_coding_mode_view.py",
+      "kind": "code",
+      "bytes": 11427,
+      "sha256": "80812de578b3dc59646e099a8da23e4c2bf82993fa5d8471b6721ceea49ddc2f"
+    }
+  ],
+  "integrated_gate": {
+    "scope": "Synthetic fixtures only; no live services or real inference",
+    "checkpoint_sha256": "fb1aefdffe40a9c51a454627577c3090861d488e5a40535e36eb76c24d660cf6",
+    "frozen_code_before": {
+      "backend/core/coding_mode_execution.py": true,
+      "backend/core/coding_mode_local.py": true,
+      "backend/core/coding_process.py": true,
+      "backend/core/coding_syntax.py": true,
+      "backend/core/coding_vm_inputs.py": true,
+      "backend/routers/coding_mode_router.py": true,
+      "backend/routers/coding_review_router.py": true,
+      "backend/tests/test_coding_mode_execution.py": true,
+      "backend/tests/test_coding_mode_local.py": true,
+      "backend/tests/test_coding_mode_restart.py": true,
+      "backend/tests/test_coding_npm_admission.py": true,
+      "backend/tests/test_coding_syntax.py": true,
+      "backend/tests/test_preparation_planning.py": true,
+      "backend/tests/test_preparation_proposals.py": true,
+      "frontend/components/ChatTab.jsx": true,
+      "frontend/components/CodingModePanel.jsx": true,
+      "frontend/components/CodingPreparationPanel.jsx": true,
+      "frontend/components/components/ChatTab.jsx": true,
+      "frontend/components/components/CodingModePanel.jsx": true,
+      "frontend/components/components/CodingPreparationPanel.jsx": true,
+      "frontend/src/components/ChatTab.jsx": true,
+      "frontend/src/components/CodingModePanel.jsx": true,
+      "frontend/src/components/CodingPreparationPanel.jsx": true,
+      "frontend/src/components/components/ChatTab.jsx": true,
+      "frontend/src/components/components/CodingModePanel.jsx": true,
+      "frontend/src/components/components/CodingPreparationPanel.jsx": true,
+      "frontend/src/utils/codingMode.js": true,
+      "frontend/src/utils/codingModeClient.js": true,
+      "frontend/tests/coding-mode-client.test.mjs": true,
+      "frontend/tests/coding-mode-render.test.cjs": true,
+      "frontend/tests/coding-mode.test.mjs": true,
+      "native_studio/bs_chat_ide_full.py": true,
+      "native_studio/coding_mode_service.py": true,
+      "native_studio/coding_mode_view.py": true,
+      "native_studio/test_coding_mode_service.py": true,
+      "native_studio/test_coding_mode_view.py": true
+    },
+    "source_sha256": {
+      "C:\\AI-BS\\backend\\tests\\test_repository_snapshot.py": "fb179cda5acbf30e1f81b0b632a7acd87b209ab83d7c55b1709909156900796e",
+      "C:\\AI-BS\\backend\\tests\\test_coding_preparation.py": "b3f418b09ad42c2ece252a05e2b0cc48ad60dcddb1cc114665e8b445f2185c69",
+      "C:\\AI-BS\\backend\\tests\\test_preparation_planning.py": "16308f5a279aa5413c1687677333be2942ffba4309304109313a26111ffce1b9",
+      "C:\\AI-BS\\backend\\tests\\test_preparation_proposals.py": "5907b7dba181dc0f0326799ea4f423ac50742bf3457d2ed3b9b2cc6b7546f17f",
+      "C:\\AI-BS\\backend\\tests\\test_coding_mode_execution.py": "eedf0cc9d06971b31b1e286405f866ae4e77f9c5d5063a70d9efdd0d6796d066",
+      "C:\\AI-BS\\backend\\tests\\test_coding_syntax.py": "168191e1014d126685b3fc97e4759b76628a232363b31bb4db0bf3b5a817dfe0",
+      "C:\\AI-BS\\backend\\tests\\test_coding_npm_admission.py": "96f77c05eac2410df8155baa01e6c026895a440a56324288af5bd0000f412563",
+      "C:\\AI-BS\\backend\\tests\\test_coding_mode_local.py": "76ea04f2df2e914ef89a5293c9eaf07dba58c840bb98fcde92a9dca86397a89b",
+      "C:\\AI-BS\\backend\\tests\\test_coding_mode_restart.py": "26267ecac095f247ae0c7fcfce44bd0a91790b58093a93306e637c14ea78afdd",
+      "C:\\AI-BS\\frontend\\tests\\coding-mode.test.mjs": "9a4200d115a520aed374c709c3a16022f79e6b47c9cfe5f4f9d031273b1b3eba",
+      "C:\\AI-BS\\frontend\\tests\\coding-mode-render.test.cjs": "1811720ac964fb69ee049954148b63bc17a8d77d3c8d2d22708c86f2e10cc5c2",
+      "C:\\AI-BS\\frontend\\tests\\coding-mode-client.test.mjs": "85b259bbd8efa40ee7910fa29e0f4525f37625b1ce4ac62c46c58ad1dc919b3c",
+      "C:\\AI-BS\\native_studio\\test_coding_mode_service.py": "b0e7c7c9467bb27c66e0852d9432227c9841412fc28b043939139ca36b36f562",
+      "C:\\AI-BS\\native_studio\\test_coding_mode_view.py": "80812de578b3dc59646e099a8da23e4c2bf82993fa5d8471b6721ceea49ddc2f",
+      "C:\\AI-BS\\backups\\bs_chat_coding_mode_20261114_v02\\run_integrated_gate.py": "282696620b0929d160319aae844331e912c0198128e1e824df7a2d9728e36c4d"
+    },
+    "runs": [
+      {
+        "name": "test_coding_preparation.PreparationTests",
+        "argv": [
+          "C:\\AI-BS\\runtime\\recovery-20261110\\Scripts\\python.exe",
+          "-m",
+          "unittest",
+          "test_coding_preparation.PreparationTests",
+          "-v"
+        ],
+        "environment_overrides": {
+          "PYTHONPATH": "C:\\AI-BS\\backend;C:\\AI-BS\\backend\\tests",
+          "AIBS_SNAPSHOT_TEST_ROOT": "C:\\AI-BS\\gc9df0ee7"
+        },
+        "fixture_root": "C:\\AI-BS\\gc9df0ee7",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 5.703,
+        "tests": 29,
+        "stdout": "integrated_gate_01_test_coding_preparation_PreparationTests.stdout.log",
+        "stderr": "integrated_gate_01_test_coding_preparation_PreparationTests.stderr.log"
+      },
+      {
+        "name": "test_preparation_planning.PlanningTests",
+        "argv": [
+          "C:\\AI-BS\\runtime\\recovery-20261110\\Scripts\\python.exe",
+          "-m",
+          "unittest",
+          "test_preparation_planning.PlanningTests",
+          "-v"
+        ],
+        "environment_overrides": {
+          "PYTHONPATH": "C:\\AI-BS\\backend;C:\\AI-BS\\backend\\tests",
+          "AIBS_SNAPSHOT_TEST_ROOT": "C:\\AI-BS\\g7a5e08f0"
+        },
+        "fixture_root": "C:\\AI-BS\\g7a5e08f0",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 7.609,
+        "tests": 26,
+        "stdout": "integrated_gate_02_test_preparation_planning_PlanningTests.stdout.log",
+        "stderr": "integrated_gate_02_test_preparation_planning_PlanningTests.stderr.log"
+      },
+      {
+        "name": "test_preparation_proposals.ProposalTests",
+        "argv": [
+          "C:\\AI-BS\\runtime\\recovery-20261110\\Scripts\\python.exe",
+          "-m",
+          "unittest",
+          "test_preparation_proposals.ProposalTests",
+          "-v"
+        ],
+        "environment_overrides": {
+          "PYTHONPATH": "C:\\AI-BS\\backend;C:\\AI-BS\\backend\\tests",
+          "AIBS_SNAPSHOT_TEST_ROOT": "C:\\AI-BS\\g84a3f07e"
+        },
+        "fixture_root": "C:\\AI-BS\\g84a3f07e",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 10.563,
+        "tests": 28,
+        "stdout": "integrated_gate_03_test_preparation_proposals_ProposalTests.stdout.log",
+        "stderr": "integrated_gate_03_test_preparation_proposals_ProposalTests.stderr.log"
+      },
+      {
+        "name": "test_coding_mode_execution.CodingModeTests",
+        "argv": [
+          "C:\\AI-BS\\runtime\\recovery-20261110\\Scripts\\python.exe",
+          "-m",
+          "unittest",
+          "test_coding_mode_execution.CodingModeTests",
+          "-v"
+        ],
+        "environment_overrides": {
+          "PYTHONPATH": "C:\\AI-BS\\backend;C:\\AI-BS\\backend\\tests",
+          "AIBS_SNAPSHOT_TEST_ROOT": "C:\\AI-BS\\gd5a20b11"
+        },
+        "fixture_root": "C:\\AI-BS\\gd5a20b11",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 5.922,
+        "tests": 13,
+        "stdout": "integrated_gate_04_test_coding_mode_execution_CodingModeTests.stdout.log",
+        "stderr": "integrated_gate_04_test_coding_mode_execution_CodingModeTests.stderr.log"
+      },
+      {
+        "name": "test_coding_syntax.SyntaxTests",
+        "argv": [
+          "C:\\AI-BS\\runtime\\recovery-20261110\\Scripts\\python.exe",
+          "-m",
+          "unittest",
+          "test_coding_syntax.SyntaxTests",
+          "-v"
+        ],
+        "environment_overrides": {
+          "PYTHONPATH": "C:\\AI-BS\\backend;C:\\AI-BS\\backend\\tests",
+          "AIBS_SNAPSHOT_TEST_ROOT": "C:\\AI-BS\\g4253033f"
+        },
+        "fixture_root": "C:\\AI-BS\\g4253033f",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 0.203,
+        "tests": 4,
+        "stdout": "integrated_gate_05_test_coding_syntax_SyntaxTests.stdout.log",
+        "stderr": "integrated_gate_05_test_coding_syntax_SyntaxTests.stderr.log"
+      },
+      {
+        "name": "test_coding_npm_admission.NpmAdmissionTests",
+        "argv": [
+          "C:\\AI-BS\\runtime\\recovery-20261110\\Scripts\\python.exe",
+          "-m",
+          "unittest",
+          "test_coding_npm_admission.NpmAdmissionTests",
+          "-v"
+        ],
+        "environment_overrides": {
+          "PYTHONPATH": "C:\\AI-BS\\backend;C:\\AI-BS\\backend\\tests",
+          "AIBS_SNAPSHOT_TEST_ROOT": "C:\\AI-BS\\gd6a79881"
+        },
+        "fixture_root": "C:\\AI-BS\\gd6a79881",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 0.093,
+        "tests": 3,
+        "stdout": "integrated_gate_06_test_coding_npm_admission_NpmAdmissionTests.stdout.log",
+        "stderr": "integrated_gate_06_test_coding_npm_admission_NpmAdmissionTests.stderr.log"
+      },
+      {
+        "name": "test_coding_mode_local.TrustedLocalTests",
+        "argv": [
+          "C:\\AI-BS\\runtime\\recovery-20261110\\Scripts\\python.exe",
+          "-m",
+          "unittest",
+          "test_coding_mode_local.TrustedLocalTests",
+          "-v"
+        ],
+        "environment_overrides": {
+          "PYTHONPATH": "C:\\AI-BS\\backend;C:\\AI-BS\\backend\\tests",
+          "AIBS_SNAPSHOT_TEST_ROOT": "C:\\AI-BS\\gebc3832b"
+        },
+        "fixture_root": "C:\\AI-BS\\gebc3832b",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 10.172,
+        "tests": 13,
+        "stdout": "integrated_gate_07_test_coding_mode_local_TrustedLocalTests.stdout.log",
+        "stderr": "integrated_gate_07_test_coding_mode_local_TrustedLocalTests.stderr.log"
+      },
+      {
+        "name": "test_coding_mode_restart.RestartTests",
+        "argv": [
+          "C:\\AI-BS\\runtime\\recovery-20261110\\Scripts\\python.exe",
+          "-m",
+          "unittest",
+          "test_coding_mode_restart.RestartTests",
+          "-v"
+        ],
+        "environment_overrides": {
+          "PYTHONPATH": "C:\\AI-BS\\backend;C:\\AI-BS\\backend\\tests",
+          "AIBS_SNAPSHOT_TEST_ROOT": "C:\\AI-BS\\ge5a66830"
+        },
+        "fixture_root": "C:\\AI-BS\\ge5a66830",
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 1.657,
+        "tests": 1,
+        "stdout": "integrated_gate_08_test_coding_mode_restart_RestartTests.stdout.log",
+        "stderr": "integrated_gate_08_test_coding_mode_restart_RestartTests.stderr.log"
+      },
+      {
+        "name": "native",
+        "argv": [
+          "C:\\AI-BS\\runtime\\qt-layout-check-20261111\\Scripts\\python.exe",
+          "-m",
+          "unittest",
+          "native_studio.test_coding_mode_service",
+          "native_studio.test_coding_mode_view",
+          "-v"
+        ],
+        "environment_overrides": {
+          "PYTHONPATH": "C:\\AI-BS;C:\\AI-BS\\runtime\\recovery-20261110\\Lib\\site-packages",
+          "QT_QPA_PLATFORM": "offscreen"
+        },
+        "fixture_root": null,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 0.453,
+        "tests": 23,
+        "stdout": "integrated_gate_09_native.stdout.log",
+        "stderr": "integrated_gate_09_native.stderr.log"
+      },
+      {
+        "name": "browser",
+        "argv": [
+          "C:\\AI-BS\\runtime\\devtools\\node-v24.22.1-win-x64\\node.exe",
+          "--test",
+          "frontend/tests/coding-mode.test.mjs",
+          "frontend/tests/coding-mode-render.test.cjs",
+          "frontend/tests/coding-mode-client.test.mjs"
+        ],
+        "environment_overrides": {},
+        "fixture_root": null,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 0.172,
+        "tests": 16,
+        "stdout": "integrated_gate_10_browser.stdout.log",
+        "stderr": "integrated_gate_10_browser.stderr.log"
+      }
+    ],
+    "status": "PASSED",
+    "frozen_code_after": {
+      "backend/core/coding_mode_execution.py": true,
+      "backend/core/coding_mode_local.py": true,
+      "backend/core/coding_process.py": true,
+      "backend/core/coding_syntax.py": true,
+      "backend/core/coding_vm_inputs.py": true,
+      "backend/routers/coding_mode_router.py": true,
+      "backend/routers/coding_review_router.py": true,
+      "backend/tests/test_coding_mode_execution.py": true,
+      "backend/tests/test_coding_mode_local.py": true,
+      "backend/tests/test_coding_mode_restart.py": true,
+      "backend/tests/test_coding_npm_admission.py": true,
+      "backend/tests/test_coding_syntax.py": true,
+      "backend/tests/test_preparation_planning.py": true,
+      "backend/tests/test_preparation_proposals.py": true,
+      "frontend/components/ChatTab.jsx": true,
+      "frontend/components/CodingModePanel.jsx": true,
+      "frontend/components/CodingPreparationPanel.jsx": true,
+      "frontend/components/components/ChatTab.jsx": true,
+      "frontend/components/components/CodingModePanel.jsx": true,
+      "frontend/components/components/CodingPreparationPanel.jsx": true,
+      "frontend/src/components/ChatTab.jsx": true,
+      "frontend/src/components/CodingModePanel.jsx": true,
+      "frontend/src/components/CodingPreparationPanel.jsx": true,
+      "frontend/src/components/components/ChatTab.jsx": true,
+      "frontend/src/components/components/CodingModePanel.jsx": true,
+      "frontend/src/components/components/CodingPreparationPanel.jsx": true,
+      "frontend/src/utils/codingMode.js": true,
+      "frontend/src/utils/codingModeClient.js": true,
+      "frontend/tests/coding-mode-client.test.mjs": true,
+      "frontend/tests/coding-mode-render.test.cjs": true,
+      "frontend/tests/coding-mode.test.mjs": true,
+      "native_studio/bs_chat_ide_full.py": true,
+      "native_studio/coding_mode_service.py": true,
+      "native_studio/coding_mode_view.py": true,
+      "native_studio/test_coding_mode_service.py": true,
+      "native_studio/test_coding_mode_view.py": true
+    },
+    "total_tests": 156,
+    "sources_unchanged": true,
+    "collector_correction": {
+      "reason": "Node default Unicode spec reporter rather than TAP; parsed retained stdout without rerun",
+      "original_total": 140,
+      "corrected_total": 156,
+      "browser_stdout_sha256": "4c75e63ec6a1754c7f05c805660ca091e85c815e02ecedb0bef1f9d9f9a7c78c"
+    },
+    "log_sha256": {
+      "integrated_gate_01_test_coding_preparation_PreparationTests.stderr.log": "37e97a1d96ff11ee3b3489d13031814c9e9d263d861a147f68628feffa13c31f",
+      "integrated_gate_01_test_coding_preparation_PreparationTests.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "integrated_gate_02_test_preparation_planning_PlanningTests.stderr.log": "2276d892d01e40ecb77df2327a196d76fcba8115fba9f417b6a57d735a6afd79",
+      "integrated_gate_02_test_preparation_planning_PlanningTests.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "integrated_gate_03_test_preparation_proposals_ProposalTests.stderr.log": "c163cb5a831c4532657123be57d1290a6f6e058ec2178d66eeb0b1aff2866116",
+      "integrated_gate_03_test_preparation_proposals_ProposalTests.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "integrated_gate_04_test_coding_mode_execution_CodingModeTests.stderr.log": "d69242894c0b1508f9b8caffc359f0d4a0bb703d17d18c3467002d395ffeb7d6",
+      "integrated_gate_04_test_coding_mode_execution_CodingModeTests.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "integrated_gate_05_test_coding_syntax_SyntaxTests.stderr.log": "9a482a60924785e9a4bd6f86c91d8842413a10043a48b80aacf619eb24d2a2e2",
+      "integrated_gate_05_test_coding_syntax_SyntaxTests.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "integrated_gate_06_test_coding_npm_admission_NpmAdmissionTests.stderr.log": "1cd13e08c28154ddd46cc6f46cbc708e9b07be6cf0df3ea18340223c970efa28",
+      "integrated_gate_06_test_coding_npm_admission_NpmAdmissionTests.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "integrated_gate_07_test_coding_mode_local_TrustedLocalTests.stderr.log": "a01af23ed7e68c3db61317a29d3dcf20ee94c97e2cce3cba32071ba92b3c5bf6",
+      "integrated_gate_07_test_coding_mode_local_TrustedLocalTests.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "integrated_gate_08_test_coding_mode_restart_RestartTests.stderr.log": "32d73c22dcf315739c956d84178ec325f82161fa31e92148fb66564e1da1175d",
+      "integrated_gate_08_test_coding_mode_restart_RestartTests.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "integrated_gate_09_native.stderr.log": "26ea395629ef79976a51d102db79adb8bd13691a854a38747e381864db8baeed",
+      "integrated_gate_09_native.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "integrated_gate_10_browser.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "integrated_gate_10_browser.stdout.log": "4c75e63ec6a1754c7f05c805660ca091e85c815e02ecedb0bef1f9d9f9a7c78c"
+    }
+  },
+  "ownership": {
+    "lead": "backend runner/review/apply and checkpoint; frozen before final gate",
+    "tests": "backend/tests scoped synthetic verification",
+    "browser": "browser files and selected master-plan records",
+    "native": "native interface files"
+  },
+  "routing": {
+    "lead_requested": "gpt-6.1-sol medium; UI setting user-reported",
+    "final_collectors": "three fresh gpt-6.1-sol low workers explicitly spawned"
+  },
+  "scope": "Trusted local per-task checks and explicit reviewed apply qualified only on synthetic repositories; isolated mode remains separate.",
+  "runtime_changed": false,
+  "model_requests": 0,
+  "live_source_applied_by_coding_mode": false,
+  "prior_evidence": {
+    "regression": "backups/coding_mode_regression_repair_20261114_v01/result.json",
+    "local": "backups/coding_mode_local_diagnostic_20261114_v01/final-tests.json",
+    "partial_apply": "backups/coding_mode_local_diagnostic_20261114_v01/partial-apply-test.json",
+    "restart": "backups/coding_restart_97048c/result.json",
+    "health": "backups/bs_chat_coding_mode_20261114_v01/read-only-health.json"
+  },
+  "open_gates": [
+    "Mounted real-owner native/browser acceptance and live opt-in activation",
+    "Installed/hosted package qualification; source146 is distinct from retained144/145 and held inconsistent146",
+    "Isolated-worker provisioning/acceptance remains separate; no silent fallback",
+    "No new Drive upload or verified restore; private FE intake/raw history/databases excluded from reviewed source payload"
+  ],
+  "next": "Schedule non-disruptive candidate acceptance; continue active master queue with per-driver/offline and separate personal-finance contracts.",
+  "preservation": "Full scoped code copied locally; documentation hashes recorded. Private FE state/raw handoff bodies not copied into reviewed source payload."
+}

@@ -1,0 +1,15 @@
+{
+  "status": "drive_full_roundtrip_verified",
+  "archive_path": "D:\\AI-BS-Game-Resources\\Backups\\16C_Final_Records_And_Scope_Clarification.zip",
+  "archive_bytes": 164447,
+  "archive_sha256": "a213c7375a9702baaf59e1da9c07d593d526c2e07822278a08b2c9b6489b252e",
+  "embedded_manifest_sha256": "c9314e451117b9bc3516258d4cd22c3362946669b8471126dc0f2fb55d01de55",
+  "selected_file_count": 12,
+  "crc_all_entries_passed": true,
+  "full_member_sha_length_readback_passed": true,
+  "goal_complete": false,
+  "verified_at": "2026-11-02T12:50:17.618759+00:00",
+  "drive_file_id": "1owi5FRN93RgadfUz1tT-FE7VlX8m8cwB",
+  "drive_url": "https://drive.google.com/file/d/1owi5FRN93RgadfUz1tT-FE7VlX8m8cwB/view?usp=drivesdk",
+  "cache_path": "D:\\AI-BS-Game-Resources\\cache\\a213c7375a9702baaf59e1da9c07d593d526c2e07822278a08b2c9b6489b252e.zip"
+}

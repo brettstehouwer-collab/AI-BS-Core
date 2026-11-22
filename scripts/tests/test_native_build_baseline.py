@@ -1,5 +1,6 @@
 """Build admission fixtures only: never imports or launches the native app."""
 import hashlib
+import ast
 import importlib.util
 import json
 from pathlib import Path
@@ -67,6 +68,14 @@ class VerifiedBaselineTests(unittest.TestCase):
         self.assertFalse(baseline['isolated_execution_available'])
         self.assertEqual(baseline['signing'], 'NOT_SIGNED')
         self.assertFalse(result['applicationExecuted'])
+
+    def test_pywin32_dynamic_timezone_dependency_is_explicitly_collected(self):
+        self.stage()
+        tree = ast.parse((self.output / 'AI_BS_WebParity.spec').read_text(encoding='utf-8'))
+        call = next(n for n in ast.walk(tree) if isinstance(n, ast.Call)
+                    and isinstance(n.func, ast.Name) and n.func.id == 'Analysis')
+        imports = ast.literal_eval(next(k.value for k in call.keywords if k.arg == 'hiddenimports'))
+        self.assertIn('win32timezone', imports)
 
     def test_manifest_bytes_must_match_admitted_pin(self):
         self.manifest.write_text(self.manifest.read_text() + '\n')

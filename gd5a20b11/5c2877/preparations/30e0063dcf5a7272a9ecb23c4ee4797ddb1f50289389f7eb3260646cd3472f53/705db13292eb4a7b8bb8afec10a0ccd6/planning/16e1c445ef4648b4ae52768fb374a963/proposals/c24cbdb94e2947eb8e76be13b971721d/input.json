@@ -1,0 +1,61 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "705db13292eb4a7b8bb8afec10a0ccd6",
+  "plan_id": "16e1c445ef4648b4ae52768fb374a963",
+  "snapshot_sha256": "014c5ec3d5dcc6e0470db66cb35b6ae3d1727f9cfd5de989f740c0dc9015ca22",
+  "review_digest": "9ce28413cc542835a74fc622935338adce8e52fe707fcd3e226c6a76e7ea7208",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "c24cbdb94e2947eb8e76be13b971721d",
+  "reviewed_plan_sha256": "a93158fc7b479a6c2173da85a25d8364bc8b49b3e55c190476f0979f1fb649ab",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.js",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.js",
+        "role": "editable",
+        "sha256": "8de5c07db8deb3b75dedd9b5bc999669936cea181ae0033c27c4e2071a6e434d",
+        "content": "const value = 1;\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/app.test.mjs",
+        "role": "verification",
+        "sha256": "a5b6378e1ebf283f4593174939bffc09435f9f5359df6fa5d1e51ba3811a3f2a",
+        "content": "// selected test, never run\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "node",
+        "argv": [
+          "node",
+          "--test",
+          "tests/app.test.mjs"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.js"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "5b3c877ba83f6a572040773bda11f9ab9cb449469031744f0fe9d8d37fc3d035",
+  "worker": {
+    "pid": 29128,
+    "created": 1794666065.6990325
+  },
+  "created_at_utc": "2026-11-14T14:21:09.851252+00:00",
+  "entry_sha256": "097373549e07e3f9cc5a035f31cc98fbfd1660fcbcdd455cc958a06a2366e4d8"
+}

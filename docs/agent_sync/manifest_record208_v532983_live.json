@@ -1,0 +1,165 @@
+{
+  "handoff_id": "record208_v532983_live",
+  "utc": "2026-10-31T19:52:01.514271+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next AI-BS session",
+  "branch": "codex/audit-v532976-20261031",
+  "records_commit": "29d55bef23db7e5a2682a9a26e56fb0eb0f1e895",
+  "base_commit": "dedea53af3a130697bd21f68047b983b3ccf8a78",
+  "application_version": "v5.329.83",
+  "human_report": "docs/audit/2026-10-30-complete/WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md",
+  "documents": [
+    {
+      "path": "docs/CODEX_JOURNAL.md",
+      "bytes": 761374,
+      "sha256": "a0d0475380de3271099f80fe60306196c46816e6e78957976ad857a3adca55ac",
+      "preimage_sha256": "5b44259b086c86a15ee94e1659249ad68b2d360f5d6ce6ae91664f8e0cbf0317"
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "bytes": 1135547,
+      "sha256": "b6a9eefe033d52af65451dd3cd8d1e5070808089339f9ce1ebc1acbc7337280b",
+      "preimage_sha256": "95f95f7ee09b798c391cd47b2d8f3296a2ed933e7486f819d4d8d3bbf65c2953"
+    },
+    {
+      "path": "docs/CODEX_DECISIONS.md",
+      "bytes": 251341,
+      "sha256": "6cec95170eb33503dad2dd844ca64837e679239e3e27ad92e5c35eb8996d6368",
+      "preimage_sha256": "e225cf95e9762ad1cc96394c47c12daf2bc04b06e4a9eb7361c923f27beb1381"
+    },
+    {
+      "path": "docs/CODEX_TASKS.md",
+      "bytes": 357541,
+      "sha256": "73a07e7739eb7044e7c8a2161013798af7674933d7202b1ff7c4be5e5fa488d8",
+      "preimage_sha256": "ada88effef62a6b7db9b8db284ea867bf9c99d741ee8055b45219007a4c41771"
+    },
+    {
+      "path": "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+      "bytes": 1152695,
+      "sha256": "f698681e6992dc505df7a23ba9f5cd99406c0dc0d7152816fae91ff7e93a5e19",
+      "preimage_sha256": "9b1502179c963122e8ce9b2669ed49318ebd8f8ea7a4571637b090d529e5b84b"
+    },
+    {
+      "path": "MASTER_TASKS_CHRONOLOGY.md",
+      "bytes": 237681,
+      "sha256": "197cb495881a91e52032df5172f4850a4c27c2ad6437632e70fae1396d2668bf",
+      "preimage_sha256": "5c70c64c73041bc04acd1d786606c7dec11d0034cbe74ac373419acbb890e99d"
+    },
+    {
+      "path": "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+      "bytes": 112736,
+      "sha256": "f608ff387937bdbf1513e6ec0619e1d57c3cc535c230e3d1c9b0dd00c9911ebc",
+      "preimage_sha256": "9988910d2bb07e9448387e4dbffc72b48c47e12f2d02e285ccbe27b39b5a20ef"
+    },
+    {
+      "path": "MASTER_HISTORICAL_INDEX.md",
+      "bytes": 127139,
+      "sha256": "5642b672a3320b2093e6ecccb2b3a4b4904478cda9c1463eb205313ca1fd3a30",
+      "preimage_sha256": "3668b0e11e7fec3f8fd22eb3d6b68256976372e5f1d387bf3a91465ae2dd1f2e"
+    },
+    {
+      "path": "NotebookLM_Records/artifact_history.md",
+      "bytes": 175774,
+      "sha256": "c646f00d08801f085a542d4be41104b4a2f26b2d233f9268c8f582af11eb499b",
+      "preimage_sha256": "a94af14bd551ac57a5be820b080e2e10218257950657c61d0dc3edc848d003f9"
+    },
+    {
+      "path": "SAVED_CHECKPOINT.md",
+      "bytes": 18798,
+      "sha256": "b47dbcddb111903597509e02e617071770e27e2093937fa96ad65f8be10395a5",
+      "preimage_sha256": "8034fee0e557fc5a17c28c596529dec492aa776426a13bfbbb38e6a0d6a7197f"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/README.md",
+      "bytes": 14184,
+      "sha256": "d4f78d95fdc2600c680286990b951109b5967aff9acb6b52de028f817ab035eb",
+      "preimage_sha256": "39f98bf905f7b01420054c2013e0cb02e3b139ba99509e873367edb55be89acc"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/findings.json",
+      "bytes": 67058,
+      "sha256": "3d10d204788043d507bfe9b43309f9da2ef37e250d4e12878b81a1d05373d8cf",
+      "preimage_sha256": "4c41bc0653913e6dbd91ff65b221ce4fb6937a535732ae7c47c246bcc05af59c"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/coverage.json",
+      "bytes": 17883,
+      "sha256": "3fc72938a31c7e3bded4719bbf6b812b502992e46e2ac9ad82339b84701950dd",
+      "preimage_sha256": "b9a4854563a2e8bd47a189e4ce6582e8634cc9715b5a0227dddc722f58cc3ab9"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/recovery_gate.json",
+      "bytes": 6403,
+      "sha256": "27cf4d8c955e45ad3a0e2fdf93802964cab50fd19c09a9d06fb9c2576455141d",
+      "preimage_sha256": "1abf8ba3933fae7cd8d929ad184b684dedd037ef56a1cb0dd0d616402a6f03c8"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md",
+      "bytes": 4582,
+      "sha256": "910ffd081e4715e26d92429b4a2fc0c2f259e43e4af30133736d722196094abd",
+      "preimage_sha256": null
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/WINDOWS_V83_LIVE_VERIFICATION_RECORD208.json",
+      "bytes": 6467,
+      "sha256": "b257269eb93cf78eefa71ea791a6eaef3d303fdaf77a1814267b8abac537376a",
+      "preimage_sha256": null
+    }
+  ],
+  "document_manifest_sha256": "5291759bc7127d1a62194bd14a5470eb1a59d141ceac019cdacbfc80f59eb256",
+  "modified_paths": [
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_DECISIONS.md",
+    "docs/CODEX_TASKS.md",
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+    "MASTER_TASKS_CHRONOLOGY.md",
+    "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+    "MASTER_HISTORICAL_INDEX.md",
+    "NotebookLM_Records/artifact_history.md",
+    "SAVED_CHECKPOINT.md",
+    "docs/audit/2026-10-30-complete/README.md",
+    "docs/audit/2026-10-30-complete/findings.json",
+    "docs/audit/2026-10-30-complete/coverage.json",
+    "docs/audit/2026-10-30-complete/recovery_gate.json",
+    "docs/audit/2026-10-30-complete/WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md",
+    "docs/audit/2026-10-30-complete/WINDOWS_V83_LIVE_VERIFICATION_RECORD208.json"
+  ],
+  "source_changes": false,
+  "source_build_pins": "70 native source files and version match frozen installed v83 inputs",
+  "patch": "C:\\AI-BS\\backups\\windows_v83_live_verification_20261031_record208\\records208.patch",
+  "patch_sha256": "10371f25d26d1ded1bedaa2bfcaea88694407c9a3120cd1293800cfbee7df53f",
+  "completed": [
+    "Launched actual installed native v5.329.83; verified exact executable hash",
+    "Navigated actual Broadcast workspace and clicked Start broadcast once",
+    "Verified Windows app4540 -> launcher21188 -> controller52852 -> FFmpeg43860; no OBS",
+    "Verified fresh automatic Fortnite video, advancing local/public HLS and exact public segment bytes",
+    "Decoded public game frame and192000 exactly zero audio samples",
+    "Returned focus to Fortnite; Windows app remains open",
+    "Preserved9 ledger original prefixes and retained failed pre-Start stale-output baseline"
+  ],
+  "verification": {
+    "actual_live_checks": "PASS",
+    "offline_tests_rerun": false,
+    "reason": "Production source unchanged; actual GUI and output checks performed",
+    "historical_offline_tests": 304,
+    "historical_offline_result": "PASS_RECORD207"
+  },
+  "holds": {
+    "live_trading": "DISABLED",
+    "DRY_RUN": "true",
+    "HOLD_DISPATCH": "true",
+    "microphones": "DEFERRED",
+    "audio": "generated_silence",
+    "outreach": "DISABLED"
+  },
+  "incomplete": [
+    "Individual remote platform dashboards/RTMP ingest acceptance unverified",
+    "Native video preview unavailable; old stopped-sender caller unknown",
+    "Encrypted full source/binary recovery remains blocked by E key custody; C originals retained",
+    "Remaining broad full-system audit work remains open"
+  ],
+  "architectural_decisions": "Operational verification only; no production design or source changes",
+  "cloud_folder": "https://drive.google.com/drive/folders/1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "exact_next_step": "Continue playing with Automatic game capture. Configure audio/microphones only when requested; preserve trading holds."
+}

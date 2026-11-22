@@ -1,0 +1,79 @@
+{
+  "kind": "project_preparation",
+  "request_id": "bdebe7c8ac75470491c6faa0a72cec84",
+  "owner": "firebase:fixture:alice",
+  "plan": {
+    "request_id": "bdebe7c8ac75470491c6faa0a72cec84",
+    "repository_id": "ai-bs",
+    "objective": "Explain how to change the returned value to42 and keep the existing checks.",
+    "files": [
+      {
+        "relative_path": "src/app.py",
+        "role": "editable"
+      },
+      {
+        "relative_path": "tests/test_app.py",
+        "role": "verification"
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "profile": "python_unittest",
+        "targets": [
+          "tests.test_app"
+        ]
+      }
+    ],
+    "limits": {
+      "check_seconds": 30,
+      "total_seconds": 180,
+      "output_bytes": 262144
+    }
+  },
+  "plan_sha256": "5826c9d9481a011adf572193277ed6fd334ffe2bce2c027fa3fed876ce9d453a",
+  "repository_policy_sha256": "f309eb1fcfe94a4c8f4a895c7b159dc068e28c85d47b8afd3f84edc9f2d9e1f6",
+  "snapshot": {
+    "schema_version": 1,
+    "state": "SNAPSHOT_ONLY",
+    "authorized": false,
+    "executed": false,
+    "commit": "d4ed195517fb71427b82c134ef4c485848f2f53f",
+    "files": [
+      {
+        "relative_path": "src/app.py",
+        "role": "editable",
+        "length": 10,
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886"
+      },
+      {
+        "relative_path": "tests/test_app.py",
+        "role": "verification",
+        "length": 50,
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8"
+      }
+    ],
+    "byte_count": 60,
+    "captured_at_utc": "2026-11-15T22:43:38.334225+00:00",
+    "snapshot_sha256": "60a84aa3a60d78aab1161af8d3cbce5f16f600e8ecfb0e1617f64aa0fc9e738a"
+  },
+  "checks": [
+    {
+      "check_id": "python",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "tests.test_app"
+      ]
+    }
+  ],
+  "review_digest": "ef5065c530858dc9e118f0be4f06dc594a7d7a313521c9166d34ab11dc777e86",
+  "state": "PREPARING",
+  "worker": {
+    "pid": 45380,
+    "created": 1794782611.6113763
+  },
+  "created_at_utc": "2026-11-15T22:43:38.334225+00:00",
+  "entry_sha256": "2c09cb40f9789c0282a9ec70258aff20fc34895c24e43d354adce7180bdfd820"
+}

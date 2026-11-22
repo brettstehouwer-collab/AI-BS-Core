@@ -1,0 +1,517 @@
+{
+  "record": 204,
+  "version": "v5.329.80",
+  "utc": "2026-10-31T17:04:58.643547+00:00",
+  "status": "VERIFIED_REPAIRS_AND_RELEASE_FULL_SYSTEM_AUDIT_IN_PROGRESS",
+  "parent_commit": "34259b20596b24f1036d4d46022c14277bb5c5d9",
+  "branch": "codex/audit-v532976-20261031",
+  "findings": [
+    {
+      "id": "G204-01",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Malformed model tool calls and permissive capability flags reached dispatch",
+      "change": "Strict shared envelope and declared-argument validation before effectful handler imports; no repair into execution. 129 advertised schemas and154existing dispatch names/aliases accounted.",
+      "paths": [
+        "backend/tools/tool_call_contract.py",
+        "backend/tools/tool_registry.py",
+        "backend/AI_BS_Backend.py",
+        "backend/AI_BS_Backend_shadow.py"
+      ]
+    },
+    {
+      "id": "G204-02",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Generated-code validation silently ran on the host and overstated isolation/promotion",
+      "change": "Existing VM guest adapters only, explicit isolation unavailable when no configured verified guest exists; no host fallback. Promotion uses staged fsync/replace and baseline comparison.",
+      "paths": [
+        "backend/bullshit_sandbox_executor.py",
+        "backend/core/ide_orchestrator/sandbox_runner.py",
+        "backend/core/ide_orchestrator/patch_promoter.py",
+        "backend/tools/tool_registry.py"
+      ]
+    },
+    {
+      "id": "G204-03",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Memory writes rewrote/truncated historical JSON and claimed success after all stores failed",
+      "change": "Retain original JSON bytes; locked append-only fsynced JSONL durability journal; truthful persistence result. No import-time/local Chroma fallback; bounded HTTP reconnect. Journal explicitly unindexed and reconciliation required.",
+      "paths": [
+        "backend/core/memory_bank.py"
+      ]
+    },
+    {
+      "id": "G204-04",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Broadcast starts/stops overclaimed success; credentials leaked to FFmpeg log; browser origins unrestricted",
+      "change": "Explicit process-only acknowledgements, immediate child-exit checks, pending-unverified ingest, no archive completion claims, credential redaction, exact browser-origin policy and pre-dispatch unsafe-method gate. Native noOrigin clients still unauthenticated local clients.",
+      "paths": [
+        "backend/aibs_broadcast_daemon.py",
+        "frontend/src/components/BroadcastStudio.jsx",
+        "native_studio/omni_broadcast_studio.py",
+        "native_studio/broadcast_control.py"
+      ]
+    },
+    {
+      "id": "G204-05",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Stream credential saves were plaintext and failed saves or decryption could destroy state",
+      "change": "Windows CurrentUser DPAPI protection on successful save, atomic config replacement, preserve unreadable original and unavailable ciphertext; failure leaves dialog open and does not emit applied success. Facebook URL/key controls added.",
+      "paths": [
+        "native_studio/broadcast_stream_engine.py"
+      ]
+    },
+    {
+      "id": "G204-06",
+      "severity": "MEDIUM",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Native/web broadcast and cockpit displayed invented readiness, timings, audio levels, meetings and crypto-active defaults",
+      "change": "Unmeasured/unavailable or explicitly backend-reported values, stale telemetry expiry, no random meters, local chat draft labels, unavailable disconnected meeting controls. Existing source records retained in authenticated recovery.",
+      "paths": [
+        "native_studio/omni_broadcast_studio.py",
+        "native_studio/broadcast_stream_engine.py",
+        "frontend/src/components/BroadcastStudio.jsx",
+        "frontend/src/components/ExecutiveCockpitTab.jsx"
+      ]
+    },
+    {
+      "id": "G204-07",
+      "severity": "MEDIUM",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Platform preset crashed on QComboBox.setValue; network settings were silently dropped",
+      "change": "Correct combo selection, save/restore delay and reconnect preferences, distinguish draft settings from live application. Nonzero broadcast delay prevents start until enforced by backend.",
+      "paths": [
+        "native_studio/broadcast_stream_engine.py"
+      ]
+    }
+  ],
+  "remaining": [
+    {
+      "severity": "HIGH",
+      "state": "OPEN_RECOVERY_REQUIRED",
+      "issue": "Prior Chroma corruption/identity-vector recovery remains unresolved; original stores were not regenerated or opened by this test pass."
+    },
+    {
+      "severity": "MEDIUM",
+      "state": "UNVERIFIED",
+      "issue": "Full desktop workflows, public platform ingest/recording file acceptance and real VM guest execution were not exercised. Desktop control remains paused."
+    },
+    {
+      "severity": "MEDIUM",
+      "state": "OPEN",
+      "issue": "Executive cockpit backend aggregate still reports unverified metrics; clients now label them as backend reported. Two advertised screenplay tool names have no dispatch implementation."
+    },
+    {
+      "severity": "MEDIUM",
+      "state": "OPEN",
+      "issue": "Learning-loop caller can cache a heuristic in memory despite store_heuristic returning False. The durability API is truthful; caller behavior is not claimed repaired."
+    },
+    {
+      "severity": "MEDIUM",
+      "state": "OPEN",
+      "issue": "Local broadcast clients without Origin remain unauthenticated; origin control protects browser dispatch only. Old daemon bitrate fallback can use configured bitrate instead of a measured sample."
+    },
+    {
+      "severity": "LOW",
+      "state": "OPEN",
+      "issue": "Unsupported legacy encoder labels may select a default; static platform specification text was not re-certified against current provider policy."
+    },
+    {
+      "severity": "LOW",
+      "state": "OPEN_UNREFERENCED",
+      "issue": "Legacy core/sandbox_executor.py, unused broadcast telemetry hook and unused seeded VRAM widget have no discovered active callers in this pass and remain uncertified."
+    },
+    {
+      "severity": "LOW",
+      "state": "LIMITATION",
+      "issue": "Promoter comparisons detect observed concurrent edits, not an OS compare-and-swap guarantee against an uncooperative writer in the final compare/replace interval."
+    }
+  ],
+  "tests": {
+    "combined_python_cases": 157,
+    "combined_failures": 0,
+    "combined_errors": 0,
+    "combined_skips": 0,
+    "python_effect_guard_denials": 0,
+    "new_native": 19,
+    "new_tool": 30,
+    "new_memory_sandbox_broadcast": 29,
+    "prior_cohort": 79,
+    "web_new": 26,
+    "web_combined": 82,
+    "canonical_python": 191,
+    "canonical_clients": 75,
+    "canonical_four_jobs_exit_zero": true,
+    "strict_typescript": true,
+    "version_paths_verified": 16,
+    "overlapping_cohorts_not_summed": true
+  },
+  "release": {
+    "status": "VERIFIED_RELEASE_WEB_AND_WINDOWS",
+    "version": "v5.329.80",
+    "utc": "2026-10-31T17:02:43.747018+00:00",
+    "windows": {
+      "installed_executable": "C:\\AI-BS\\native_studio\\releases\\v5.329.80\\AI_BS_Studio\\AI_BS_Studio.exe",
+      "file_count": 2257,
+      "package_bytes": 561009315,
+      "executable_sha256": "fa16989b211c3f87e1cd588e0a844c40fa6b52f8711e33c8f6dcf91b85140d57",
+      "pe_version": "5.329.80.0",
+      "source_modules": 67,
+      "frozen_support_verified": true,
+      "full_gui_acceptance_verified": false,
+      "signing": "UNSIGNED",
+      "main_launchers_verified": 3,
+      "v79_preserved_and_not_closed": true
+    },
+    "hosting": {
+      "record": 204,
+      "utc": "2026-10-31T16:59:36.416534+00:00",
+      "status": "VERIFIED_DEPLOYED",
+      "version": "v5.329.80",
+      "project": "ai-bs-dashboard",
+      "site": "ai-bs-dashboard",
+      "production_url": "https://ai-bs-dashboard.web.app",
+      "preview_url": "https://ai-bs-dashboard--audit-v80-0pb1ibul.web.app",
+      "hosting_stage_files": 1127,
+      "hosting_stage_bytes": 921347226,
+      "compiled_files": 143,
+      "preserved_public_files": 983,
+      "modules_transformed": 5679,
+      "preview_files_verified": 156,
+      "live_files_verified": 156,
+      "all_compiled_and_version_verified": true,
+      "preserved_public_samples": 12,
+      "all_preserved_public_files_remotely_verified": false,
+      "stage_manifest_sha256": "5f7de5a79ad37bebe9cc82a5ca0deb8a957c741945278879a831d91d0b8d6a8b",
+      "preview_proof_sha256": "2fbdeb811bfe89e64caa98dc55c1a4306415d1627baff4c25a450e9e7976e26e",
+      "live_proof_sha256": "bba260cdf968022d68a141d77c06d2ae47ec0e22b360f1d80fe7454d3bf1d1d0",
+      "rollback_clone_command_exit": 0,
+      "rollback_preview_url_or_readback_verified": false,
+      "rollout": "preview upload, exact static readback, server-side clone to live, exact live static readback",
+      "hosting_only": true,
+      "backend_or_firestore_deployed": false,
+      "application_javascript_executed": false,
+      "provider_or_trading_dispatch_invoked": false,
+      "secrets_exported": false,
+      "same_cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+    },
+    "inventory_helper": "Reusedpreviouslyregression-verifiedstrictinventoryhelperunchanged",
+    "native_delta": {
+      "format": 1,
+      "backup_id": "e9c76e8b109d4434af9a87a1dce06230",
+      "key_id": "df96242fbdf6b117",
+      "cipher_sha256": "1f4c2d6e164b79c713942fbb99526af2f8abbd17c2f8d50ef923ecf6ae2e6569",
+      "cipher_bytes": 34380988,
+      "file_entries": 8,
+      "existing_files": 8,
+      "record": 204,
+      "version": "v5.329.80",
+      "status": "VERIFIED",
+      "base_required": true,
+      "standalone_full_backup": false,
+      "base_version": "v5.329.79",
+      "base_archive_cipher_sha256": "99e53b8fb38706cbc2a220cfe0ae5ae7075464ce01ccf4e4abfb79f02af5eed6",
+      "base_archive_remote_part_ids": [
+        "1z_BQsnUF93PAU-5brIN7wkoW_SQkcLNV"
+      ],
+      "required_ancestor_chain": {
+        "record201_full_base_cipher_sha256": "51ddf1d56afc140abf4378ae133265966a2e699a084a6d15c426636b6a839c5d",
+        "record201_full_base_remote_part_ids": [
+          "1Z2vdTn362t8CewqNkSTW1TImDH6I9e7K",
+          "1OCxjUGegP3zmkHg9iUFlvKqIMb2Y7RIT",
+          "1FBnhFd3LJJPs7CAJs6UcA1K0gv3l-Wl5"
+        ],
+        "record203_delta_cipher_sha256": "99e53b8fb38706cbc2a220cfe0ae5ae7075464ce01ccf4e4abfb79f02af5eed6",
+        "record203_delta_remote_id": "1z_BQsnUF93PAU-5brIN7wkoW_SQkcLNV"
+      },
+      "target_package_files": 2257,
+      "target_package_bytes": 561009315,
+      "changed_or_new": [
+        "AI_BS_Studio.exe",
+        "_internal/base_library.zip",
+        "_internal/version.txt",
+        "_internal/web_baseline.json",
+        "_internal/win32/win32crypt.pyd"
+      ],
+      "deleted": [],
+      "local_payload_restore_files": 8,
+      "local_target_reconstruction": {
+        "status": "VERIFIED_RECONSTRUCTED_TARGET",
+        "base_version": "v5.329.79",
+        "target_version": "v5.329.80",
+        "base_required": true,
+        "files_verified": 2257,
+        "bytes_verified": 561009315,
+        "changed_files": 5,
+        "deleted_files": 0,
+        "destination": "E:\\AI_BS_Resources\\AI-BS-Audit\\2026-10-30-complete\\recovery\\record204_native_reconstruction_local",
+        "canonical_install_modified": false
+      },
+      "canonical_and_base_source_hashes_unchanged": true,
+      "cloud_uploaded": true,
+      "keys_uploaded": false,
+      "files_verified": 8,
+      "absent_paths": 0,
+      "remote_file_id": "1-TM8ZNSvUdzRCFXonzTXjsJ6-rkRj4w_",
+      "remote_bytes_sha256_verified": true,
+      "authenticated_isolated_restore_verified": true,
+      "source_precondition_verified": false,
+      "verified_utc": "2026-10-31T17:02:53Z",
+      "receipt_at_creation_cloud_uploaded": false,
+      "full_target_reconstruction_verified": true,
+      "target_package_files_verified": 2257,
+      "original_base_and_current_install_hashes_unchanged": true,
+      "requires_authenticated_record201_and_record203_chain": true
+    },
+    "holds": {
+      "live_trading": "DISABLED",
+      "protected_crypto_ledger_hashes_verified": 4
+    },
+    "desktop_control_used": false,
+    "no_credentials_or_recovery_keys_exported": true,
+    "provider_or_model_jobs_invoked_by_release": false,
+    "native_cloud_reconstruction": {
+      "status": "VERIFIED_CLOUD_DELTA_FULL_RECONSTRUCTION",
+      "base_version": "v5.329.79",
+      "target_version": "v5.329.80",
+      "base_required": true,
+      "files_verified": 2257,
+      "bytes_verified": 561009315,
+      "changed_files": 5,
+      "deleted_files": 0,
+      "destination": "E:\\AI_BS_Resources\\AI-BS-Audit\\2026-10-30-complete\\recovery\\record204_native_reconstruction_cloud",
+      "canonical_install_modified": false,
+      "utc": "2026-10-31T17:03:46.824526+00:00",
+      "remote_file_id": "1-TM8ZNSvUdzRCFXonzTXjsJ6-rkRj4w_",
+      "delta_cipher_sha256": "1f4c2d6e164b79c713942fbb99526af2f8abbd17c2f8d50ef923ecf6ae2e6569",
+      "cloud_payload_authenticated_and_hash_verified": true,
+      "original_authenticated_base_files_unchanged": true,
+      "canonical_installed_files_unchanged": true,
+      "all_target_file_hashes_and_exact_membership_verified": true,
+      "base_manifest_sha256": "39651b5032fdcf191383439afb54d068045287e3fdb043d290633dadd82e4b12",
+      "target_manifest_sha256": "22a707f5e76fd26e3d47250b78eb6f9a76a9ea30267639c2ce46033f16a54fec",
+      "required_ancestor_chain": {
+        "record201_full_base_cipher_sha256": "51ddf1d56afc140abf4378ae133265966a2e699a084a6d15c426636b6a839c5d",
+        "record201_full_base_remote_part_ids": [
+          "1Z2vdTn362t8CewqNkSTW1TImDH6I9e7K",
+          "1OCxjUGegP3zmkHg9iUFlvKqIMb2Y7RIT",
+          "1FBnhFd3LJJPs7CAJs6UcA1K0gv3l-Wl5"
+        ],
+        "record203_delta_cipher_sha256": "99e53b8fb38706cbc2a220cfe0ae5ae7075464ce01ccf4e4abfb79f02af5eed6",
+        "record203_delta_remote_id": "1z_BQsnUF93PAU-5brIN7wkoW_SQkcLNV"
+      },
+      "provider_calls": 0,
+      "application_launches": 0,
+      "canonical_mutations": 0,
+      "standalone_full_backup": false
+    }
+  },
+  "runtime": {
+    "status": "VERIFIED_LIVE_NON_GENERATING_ROUTING_WITH_AUTH_HELD_ALIAS",
+    "utc": "2026-10-31T16:59:33.488943+00:00",
+    "backend_listener_pid": 43500,
+    "cases": [
+      {
+        "case": "existing-native-v78",
+        "path": "/api/v1/hybrid-chat/stream",
+        "status": 200,
+        "seconds": 1.781,
+        "response": "ComfyUI is offline or not reachable on the configured local ComfyUI ports.\nNo generation was submitted, and no service or model was started.\n",
+        "verified": true
+      },
+      {
+        "case": "raw-intent-over-attachment",
+        "path": "/api/v1/hybrid-chat/stream",
+        "status": 200,
+        "seconds": 1.75,
+        "response": "ComfyUI is offline or not reachable on the configured local ComfyUI ports.\nNo generation was submitted, and no service or model was started.\n",
+        "verified": true
+      },
+      {
+        "case": "status-in-plan",
+        "path": "/api/v1/hybrid-chat/stream",
+        "status": 200,
+        "seconds": 1.719,
+        "response": "ComfyUI is offline or not reachable on the configured local ComfyUI ports.\nNo generation was submitted, and no service or model was started.\n",
+        "verified": true
+      },
+      {
+        "case": "legacy-openai-json",
+        "path": "/api/chat",
+        "status": 200,
+        "seconds": 1.719,
+        "response": "ComfyUI is offline or not reachable on the configured local ComfyUI ports.\nNo generation was submitted, and no service or model was started.\n",
+        "verified": true
+      },
+      {
+        "case": "legacy-openai-sse",
+        "path": "/v1/chat/completions",
+        "status": 401,
+        "seconds": 0.015,
+        "verification": "AUTH_BOUNDARY_PRESERVED_FUNCTIONAL_PATH_NOT_EXERCISED",
+        "verified": false,
+        "generation_endpoint_not_authorized": true
+      },
+      {
+        "case": "router-chat-json",
+        "path": "/api/chat/completions",
+        "status": 200,
+        "seconds": 1.719,
+        "response": "ComfyUI is offline or not reachable on the configured local ComfyUI ports.\nNo generation was submitted, and no service or model was started.\n",
+        "verified": true
+      },
+      {
+        "case": "capability-not-generation",
+        "path": "/api/v1/hybrid-chat/stream",
+        "status": 200,
+        "seconds": 0.0,
+        "response": "This is an informational media message; no generation was submitted. Ask \"Is ComfyUI running?\" for a read-only availability check, or explicitly request an image/video and describe the scene to create media.\n",
+        "verified": true
+      },
+      {
+        "case": "negation-not-generation",
+        "path": "/api/v1/hybrid-chat/stream",
+        "status": 200,
+        "seconds": 0.0,
+        "response": "No media generation was submitted. A negated, quoted or informational message is not permission to create media.\n",
+        "verified": true
+      }
+    ],
+    "requests": 8,
+    "functional_status_cases_passed": 7,
+    "auth_held_cases": 1,
+    "models_or_generation_endpoints_requested": false,
+    "private_key_exported": false,
+    "crypto8007_absent": true,
+    "desktop_automation_used": false,
+    "existing_windows_closed": false,
+    "initial_harness_assumptions_corrected": "/api/chat selectedrouter returns responseJSON; /v1commercialauth correctly rejectslocal-adminsecret. Auth-heldalias not countedfunctional."
+  },
+  "source_paths": [
+    "BroadcastStudioApp/package-lock.json",
+    "BroadcastStudioApp/package.json",
+    "BroadcastStudioApp/src/version.js",
+    "backend/AI_BS_Backend.py",
+    "backend/AI_BS_Backend_shadow.py",
+    "backend/aibs_broadcast_daemon.py",
+    "backend/bullshit_sandbox_executor.py",
+    "backend/core/ide_orchestrator/patch_promoter.py",
+    "backend/core/ide_orchestrator/sandbox_runner.py",
+    "backend/core/memory_bank.py",
+    "backend/tools/tool_call_contract.py",
+    "backend/tools/tool_registry.py",
+    "frontend/components/BroadcastStudio.jsx",
+    "frontend/components/ExecutiveCockpitTab.jsx",
+    "frontend/components/components/BroadcastStudio.jsx",
+    "frontend/components/components/ExecutiveCockpitTab.jsx",
+    "frontend/components/components/version.js",
+    "frontend/components/version.js",
+    "frontend/package-lock.json",
+    "frontend/package.json",
+    "frontend/public/version.json",
+    "frontend/src/components/BroadcastStudio.jsx",
+    "frontend/src/components/ExecutiveCockpitTab.jsx",
+    "frontend/src/components/components/BroadcastStudio.jsx",
+    "frontend/src/components/components/ExecutiveCockpitTab.jsx",
+    "frontend/src/components/components/version.js",
+    "frontend/src/components/version.js",
+    "frontend/src/version.js",
+    "frontend/version.js",
+    "native_studio/broadcast_control.py",
+    "native_studio/broadcast_stream_engine.py",
+    "native_studio/omni_broadcast_studio.py",
+    "package-lock.json",
+    "package.json",
+    "release.json",
+    "scripts/tests/test_broadcast_daemon_integrity.py",
+    "scripts/tests/test_broadcast_truth204.cjs",
+    "scripts/tests/test_executive_status_truth204.cjs",
+    "scripts/tests/test_legacy_sandbox_integrity.py",
+    "scripts/tests/test_memory_persistence_integrity.py",
+    "scripts/tests/test_native_broadcast_truth204.py",
+    "scripts/tests/test_tool_call_contract.py",
+    "version.txt"
+  ],
+  "desktop_control": "PAUSED_NOT_USED",
+  "live_trading": "DISABLED",
+  "google_drive_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "real_stream_credential_read_or_written_by_audit": false,
+  "cloud_verification_evidence": "reports/record204_final_verification_receipt.json (separate closing receipt)",
+  "architectural_decision": "Record204: retain existing adapters and storage owners; require verified guest isolation for generated code; retain unindexed durability evidence without silently recreating vector data. Gemini watcher/cache/HUD ideas remain proposals, not claimed implementations.",
+  "preexisting_target_changes": {
+    "preexisting_modified_targets": [
+      {
+        "path": "backend/AI_BS_Backend_shadow.py",
+        "preexisting_modified": true,
+        "head_bytes": 187424,
+        "before_bytes": 192354
+      },
+      {
+        "path": "backend/aibs_broadcast_daemon.py",
+        "preexisting_modified": true,
+        "head_bytes": 44683,
+        "before_bytes": 45705
+      },
+      {
+        "path": "backend/tools/tool_registry.py",
+        "preexisting_modified": true,
+        "head_bytes": 300287,
+        "before_bytes": 293979
+      },
+      {
+        "path": "frontend/components/BroadcastStudio.jsx",
+        "preexisting_modified": true,
+        "head_bytes": 144601,
+        "before_bytes": 147287
+      },
+      {
+        "path": "frontend/components/ExecutiveCockpitTab.jsx",
+        "preexisting_modified": true,
+        "head_bytes": 68201,
+        "before_bytes": 69824
+      },
+      {
+        "path": "frontend/components/components/BroadcastStudio.jsx",
+        "preexisting_modified": true,
+        "head_bytes": 144601,
+        "before_bytes": 147287
+      },
+      {
+        "path": "frontend/components/components/ExecutiveCockpitTab.jsx",
+        "preexisting_modified": true,
+        "head_bytes": 68201,
+        "before_bytes": 69824
+      },
+      {
+        "path": "frontend/src/components/BroadcastStudio.jsx",
+        "preexisting_modified": true,
+        "head_bytes": 144601,
+        "before_bytes": 147287
+      },
+      {
+        "path": "frontend/src/components/ExecutiveCockpitTab.jsx",
+        "preexisting_modified": true,
+        "head_bytes": 68201,
+        "before_bytes": 69824
+      },
+      {
+        "path": "frontend/src/components/components/BroadcastStudio.jsx",
+        "preexisting_modified": true,
+        "head_bytes": 144601,
+        "before_bytes": 147287
+      },
+      {
+        "path": "frontend/src/components/components/ExecutiveCockpitTab.jsx",
+        "preexisting_modified": true,
+        "head_bytes": 68201,
+        "before_bytes": 69824
+      }
+    ],
+    "exact_preimages_preserved": true,
+    "unrelated_dirty_paths_left_unstaged": true
+  }
+}

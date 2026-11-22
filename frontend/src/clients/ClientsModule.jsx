@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from "react";
 import JoeyHamilton from './JoeyHamilton.jsx';
 import ActionGlass from './ActionGlass.jsx';
 import JohnBarr from './JohnBarr.jsx';
 import RecreationalDebut from './RecreationalDebut.jsx';
 import FEExpressDispatcher from '../components/FEExpressDispatcher.jsx';
 
+/** @param {{"backendUrl": string}} props */
 export default function ClientsModule({ backendUrl }) {
   const getInitialClient = () => {
     try {

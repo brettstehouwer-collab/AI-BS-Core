@@ -1,0 +1,20 @@
+{
+  "utc": "2026-11-01T22:18:40.103516+00:00",
+  "free_bytes": {
+    "C": 58576322560,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "pagefile_current_observation_mib": {
+    "Name": "C:\\pagefile.sys",
+    "AllocatedBaseSize": 85115,
+    "CurrentUsage": 6593,
+    "PeakUsage": 17463
+  },
+  "prior_pagefile_measurement": "not available; do not attribute disk-space change solely from current allocation",
+  "paging_settings_changed": false,
+  "local_cleanup": false,
+  "drive_remaining_quota": "not exposed",
+  "archive_bytes": 13518579,
+  "note": "Upload does not free local disk space; originals/real saves/separate Unreal were not modified"
+}

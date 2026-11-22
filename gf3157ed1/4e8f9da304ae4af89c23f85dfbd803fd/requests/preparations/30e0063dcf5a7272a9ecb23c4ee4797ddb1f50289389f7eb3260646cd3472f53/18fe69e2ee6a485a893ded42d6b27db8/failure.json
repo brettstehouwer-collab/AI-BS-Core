@@ -1,0 +1,6 @@
+{
+  "state": "FAILED",
+  "intent_sha256": "79968a624ea928bf3abb993b3622bf4fe084419109dcca24e875bc6a39e83c91",
+  "reason": "retained_copy_or_confirmation_failed",
+  "entry_sha256": "7ff893654b6232ebf2c5987482ea94caab2b9af1b9359797578bc8e6b61c3286"
+}

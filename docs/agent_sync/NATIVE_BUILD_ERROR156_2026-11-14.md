@@ -1,0 +1,9 @@
+# Native builder dependency failure delivery — source156
+
+Before packaging, a full-widget/real-EngineBus missing-backend fixture showed seven build/run aliases silently losing worker import failures. Source156 connects all three corresponding task submissions to an existing GUI error delivery callback. It reports that no successful execution was confirmed, retains the draft and does not expose raw dependency details. No retry, fallback, shell command or EngineBus primitive change was added.
+
+The13-assertion full-source offscreen profile initially failed7assertions and then passed13/13: visible failure receipts, draft preservation, detail privacy, no false completion, all failures observed, native pool join and continued input usability. This simulates a missing builder import; it does not claim the backend exists inside a standalone package. Source156 metadata consistency passed through the existing release helper.
+
+A separate candidate156 was built from185declared inputs and passed static PE/PYZ/source/assets/package verification. Exact file count, bytes, executable hash and changed input list are in checkpoint.json. The application has not been executed by this checkpoint. Backend153/155fixes are not packaged or runtime-promoted by this game/Studio candidate. Native152 remains retained; web151/hosted146 and default launchers/services/private data remain unchanged.
+
+Next actual frozen156 BS-Chat failure-delivery and runtime acceptance before promotion. Original real-owner creative/game/worker/clean-machine/signing/release gates remain. Goal ACTIVE/incomplete. Evidence: backups/native_build_error156_20261114_v01/ and backups/studio156_candidate_20261114_v01/. Scoped engineering archive excludes raw logs/private profiles/runtime bytes; a clean runtime backup remains pending.

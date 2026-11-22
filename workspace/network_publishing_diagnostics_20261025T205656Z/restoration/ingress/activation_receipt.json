@@ -1,0 +1,174 @@
+{
+  "actor": "/root/publishing_origin",
+  "authorization": "Direct user site restoration; root origin-ready GO",
+  "started_utc": "2026-10-25T21:32:16.074771+00:00",
+  "status": "failed_preserved",
+  "live_sources_applied": true,
+  "user_task_replaced": true,
+  "api_connector_replaced": false,
+  "system_service_untouched": true,
+  "network_configuration_untouched": true,
+  "credentials_or_environment_logged": false,
+  "windows_termination": "Scoped API terminate is an interruption after zero concurrent-request gauge; redundant user connector remains healthy",
+  "events": [
+    {
+      "utc": "2026-10-25T21:32:16.581309+00:00",
+      "event": "api_health_before",
+      "checks": [
+        {
+          "target": "http://127.0.0.1:8000/health",
+          "status": 200
+        },
+        {
+          "target": "https://api.brettstehouwer.live/health",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "utc": "2026-10-25T21:32:16.582812+00:00",
+      "event": "admitted",
+      "origin_master_pid": 48724,
+      "peer_listeners": [
+        {
+          "port": 80,
+          "ip": "127.0.0.1",
+          "pid": 26312,
+          "created": 1792963882.3774002
+        },
+        {
+          "port": 80,
+          "ip": "::1",
+          "pid": 26312,
+          "created": 1792963882.3774002
+        },
+        {
+          "port": 5173,
+          "ip": "127.0.0.1",
+          "pid": 34864,
+          "created": 1792907269.7016542
+        },
+        {
+          "port": 8000,
+          "ip": "127.0.0.1",
+          "pid": 30912,
+          "created": 1792907269.683978
+        },
+        {
+          "port": 8080,
+          "ip": "127.0.0.1",
+          "pid": 50200,
+          "created": 1792960715.105764
+        },
+        {
+          "port": 8189,
+          "ip": "127.0.0.1",
+          "pid": 13264,
+          "created": 1792909812.7069051
+        },
+        {
+          "port": 11434,
+          "ip": "127.0.0.1",
+          "pid": 30896,
+          "created": 1792907269.6939056
+        },
+        {
+          "port": 20241,
+          "ip": "127.0.0.1",
+          "pid": 6252,
+          "created": 1792907174.92084
+        }
+      ]
+    },
+    {
+      "utc": "2026-10-25T21:32:16.606337+00:00",
+      "event": "source_applied",
+      "source": "user",
+      "sha256": "c93822c6b211ca39fe12553692188b1c160f78ab93f23cea24cc0c6842f57b3c"
+    },
+    {
+      "utc": "2026-10-25T21:32:16.608846+00:00",
+      "event": "source_applied",
+      "source": "scoped",
+      "sha256": "30bc88a23551fe7eb55e83c33c39b3b5b6b83c15944f0189ba05984856dc0b36"
+    },
+    {
+      "utc": "2026-10-25T21:32:16.613354+00:00",
+      "event": "source_applied",
+      "source": "boot",
+      "sha256": "9ccbed9820d7afdb2f62ad930d32c002170bf0fc7e7c50cd540eb7c7a0f8fc65"
+    },
+    {
+      "utc": "2026-10-25T21:32:18.411017+00:00",
+      "event": "old_user_task_stopped",
+      "pid": 16512
+    },
+    {
+      "utc": "2026-10-25T21:32:19.067963+00:00",
+      "event": "new_user_task_started",
+      "pid": 14588,
+      "created": 1792963938.9991512
+    },
+    {
+      "utc": "2026-10-25T21:32:26.994191+00:00",
+      "event": "api_health_after_user",
+      "checks": [
+        {
+          "target": "http://127.0.0.1:8000/health",
+          "status": 200
+        },
+        {
+          "target": "https://api.brettstehouwer.live/health",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "utc": "2026-10-25T21:32:26.994695+00:00",
+      "event": "user_task_ready",
+      "ha_connections": 4.0
+    },
+    {
+      "utc": "2026-10-25T21:32:27.248249+00:00",
+      "event": "old_api_connector_stopped",
+      "pid": 34912,
+      "termination": "Windows terminate after zero concurrent-request gauge"
+    },
+    {
+      "utc": "2026-10-25T21:32:27.258283+00:00",
+      "event": "new_api_connector_started",
+      "pid": 6720,
+      "created": 1792963947.253989
+    },
+    {
+      "utc": "2026-10-25T21:32:32.748258+00:00",
+      "event": "failure",
+      "error_type": "AssertionError"
+    },
+    {
+      "utc": "2026-10-25T21:32:32.752275+00:00",
+      "event": "rollback_source_restored",
+      "source": "boot"
+    },
+    {
+      "utc": "2026-10-25T21:32:32.757281+00:00",
+      "event": "rollback_source_restored",
+      "source": "scoped"
+    },
+    {
+      "utc": "2026-10-25T21:32:32.762454+00:00",
+      "event": "rollback_source_restored",
+      "source": "user"
+    },
+    {
+      "utc": "2026-10-25T21:32:32.762958+00:00",
+      "event": "new_api_retained_for_identity_review",
+      "pid": 6720,
+      "created": 1792963947.253989
+    }
+  ],
+  "new_user_pid": 14588,
+  "new_user_created": 1792963938.9991512,
+  "new_api_pid": 6720,
+  "new_api_created": 1792963947.253989
+}

@@ -1,0 +1,54 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: AI-BS Core Backend (Port 8000)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/AI_BS_Backend.py",
+            "cwd": "${workspaceFolder}/backend",
+            "python": "${workspaceFolder}/pyppeteer_env/Scripts/python.exe",
+            "console": "integratedTerminal",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "0",
+                "PYTHONPATH": "${workspaceFolder}/backend"
+            }
+        },
+        {
+            "name": "Node: Gateway Server (Port 8080)",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/server.js",
+            "cwd": "${workspaceFolder}/backend",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Chrome: Attach to Port 9222 (Developer Chrome)",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9222,
+            "webRoot": "${workspaceFolder}/frontend"
+        },
+        {
+            "name": "Python: Desktop Studio Server (Port 5173)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "C:/Program Files/AI-BS Sovereign Studio/serve_desktop.py",
+            "args": [
+                "5173"
+            ],
+            "cwd": "C:/Program Files/AI-BS Sovereign Studio",
+            "python": "${workspaceFolder}/pyppeteer_env/Scripts/python.exe",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Broadcast Kernel (Port 8088)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "C:/Program Files/AI-BS Sovereign Studio/backend/aibs_broadcast_kernel.py",
+            "cwd": "C:/Program Files/AI-BS Sovereign Studio/backend",
+            "python": "${workspaceFolder}/pyppeteer_env/Scripts/python.exe",
+            "console": "integratedTerminal"
+        }
+    ]
+}

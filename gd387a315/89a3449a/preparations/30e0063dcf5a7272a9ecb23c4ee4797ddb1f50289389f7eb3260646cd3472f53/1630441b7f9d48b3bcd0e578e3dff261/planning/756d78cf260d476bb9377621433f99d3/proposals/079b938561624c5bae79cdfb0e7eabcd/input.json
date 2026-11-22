@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "1630441b7f9d48b3bcd0e578e3dff261",
+  "plan_id": "756d78cf260d476bb9377621433f99d3",
+  "snapshot_sha256": "9477405ec523deaeb54d76bc599ad7b1e59a60a14cbe6a2c89cec4486b6d96e0",
+  "review_digest": "a1c657ead23f8cda19a06dc69b229124e33ce175415a03c58c39fac070b7eafd",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "079b938561624c5bae79cdfb0e7eabcd",
+  "reviewed_plan_sha256": "f3821d812bc53cd9201a2a2f8558623e952d93161cad748867117057d966557d",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 59156,
+    "created": 1794718679.0745277
+  },
+  "created_at_utc": "2026-11-15T04:58:03.490689+00:00",
+  "entry_sha256": "66aef6181420051472be2efd01f3530c3c4d3058632e307aadc105a837d728c8"
+}

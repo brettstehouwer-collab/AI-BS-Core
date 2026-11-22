@@ -1,0 +1,8 @@
+{
+  "at": "2026-11-04T00:48:11.462410+00:00",
+  "status": "passed_canonical0170SDK_publication_and_source_discovery",
+  "verification": "D:\\AI-BS-Game-Resources\\P66\\SDK0170Publication\\verification.json",
+  "next_step": "Finish the same P67candidate build, verify static package, then actual frozen creator/saved-play/hub/normal-startup and both bundled opening routes/restarts. Back up before launcher deployment. Final human/likeness/captions/performance remain incomplete.",
+  "active_build_execution_session": 6876,
+  "goal_complete": false
+}

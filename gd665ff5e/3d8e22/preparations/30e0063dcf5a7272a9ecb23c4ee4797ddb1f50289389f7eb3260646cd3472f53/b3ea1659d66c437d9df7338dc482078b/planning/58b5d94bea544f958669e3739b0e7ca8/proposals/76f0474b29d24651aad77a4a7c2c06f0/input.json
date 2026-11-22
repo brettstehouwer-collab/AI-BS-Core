@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "b3ea1659d66c437d9df7338dc482078b",
+  "plan_id": "58b5d94bea544f958669e3739b0e7ca8",
+  "snapshot_sha256": "6147fc7bc17703728f850bf910e906aa84a57593c951ef5ca4512f2eaecb57f5",
+  "review_digest": "04c46c0072f78c7cc92e2185ee53b1dd3d6a8a714b4a25fd6560aa2dbdc1d5d8",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "76f0474b29d24651aad77a4a7c2c06f0",
+  "reviewed_plan_sha256": "96ab0a68726be3be932bcb7386202a6099f1feadda2a4d539056f036a3c200c5",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 33484,
+    "created": 1794771330.1265812
+  },
+  "created_at_utc": "2026-11-15T19:35:32.100553+00:00",
+  "entry_sha256": "ced3f384a741a2515738ddf19a98d47c29dd3e3ec621ed96b3778a28c77248e6"
+}

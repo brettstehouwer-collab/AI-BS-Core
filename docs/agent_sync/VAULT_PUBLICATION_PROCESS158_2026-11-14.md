@@ -1,0 +1,9 @@
+# Cooperative publication process/interruption qualification
+
+Unchanged source158publisher passed14checks using separate owned Windows processes and disposable private generations. One publisher paused inside its held writer lock; a contender was refused without changing selection. The winner resumed, returned readback success and exited0.
+
+A second process used the actual journal path and exited23immediately before replacement. Old selection remained valid and staged bytes were retained. After inspecting the old generation, an explicit fresh publication succeeded, proving the terminated process no longer held its OS lock. A third process exited24immediately after actual replacement: the new generation remained valid without a returned success receipt; a request with the old expected generation was refused rather than replayed. All original generation bytes and application/original-fixture source hashes remained unchanged.
+
+Exit23/24are deliberate fixture interruption evidence, not hidden failed operations. These checks qualify observed cooperative process contention and those controlled interruption points on this host. They do not prove power-loss/filesystem durability, every malicious same-account writer, format/token/effective-config compatibility, live consumer behavior or full release. No real key/store, consumer, live selector, service or credential was accessed/changed. Source remains158.
+
+Next format/decryptability-aware candidate admission, before integrating publication with any live consumer. Operator review still precedes active credential/selection changes. Original goal ACTIVE/incomplete. Evidence: backups/vault_publish_interrupt158_20261114_v01/. The source/evidence archive excludes all generated keys/fixture trees/private snapshots and raw logs; older restricted payload remains excluded. Closing annotations may postdate archive seal.

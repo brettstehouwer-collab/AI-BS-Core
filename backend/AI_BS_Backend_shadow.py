@@ -1939,78 +1939,9 @@ import re
 
 
 def extract_and_parse_tool_call(content_text: str):
-    """
-    Extracts tool call JSON from content_text regardless of conversational text wrapper,
-    supports both {"name": ..., "arguments": ...} and {"tool_call": {"name": ..., "arguments": ...}},
-    and normalizes tool name aliases.
-    """
-    if not content_text:
-        return None, None
-
-    stripped = content_text.strip()
-    if stripped.startswith("```"):
-        lines = stripped.splitlines()
-        if lines[0].startswith("```"):
-            lines = lines[1:]
-        if lines and lines[-1].startswith("```"):
-            lines = lines[:-1]
-        stripped = "\n".join(lines).strip()
-
-    start_idx = stripped.find("{")
-    end_idx = stripped.rfind("}")
-
-    candidates = []
-    if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
-        candidates.append(stripped[start_idx : end_idx + 1])
-
-    cb_matches = re.findall(r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", content_text)
-    candidates.extend(cb_matches)
-
-    for cand in candidates:
-        try:
-            data = json.loads(cand.strip())
-            if (
-                isinstance(data, dict)
-                and "tool_call" in data
-                and isinstance(data["tool_call"], dict)
-            ):
-                data = data["tool_call"]
-
-            if isinstance(data, dict) and "name" in data:
-                raw_name = str(data.get("name", "")).strip()
-                args = data.get("arguments", {})
-                if not isinstance(args, dict):
-                    args = {}
-
-                # Normalize tool name
-                normalized_name = raw_name
-                if raw_name in [
-                    "generate_image",
-                    "create_image",
-                    "generate_comfy_image",
-                    "comfyui_image",
-                    "draw_image",
-                    "generate_photo",
-                ]:
-                    normalized_name = "generate_comfy_image"
-                elif raw_name in ["query_memory", "master_memory", "search_memory"]:
-                    normalized_name = "query_master_memory"
-                elif raw_name in ["query_database", "query_db", "sql_query"]:
-                    normalized_name = "query_large_knowledge_db"
-                elif raw_name in [
-                    "create_comfy_workflow",
-                    "create_workflow",
-                    "generate_workflow",
-                    "generate_video",
-                    "create_video",
-                ]:
-                    normalized_name = "create_comfy_workflow"
-
-                return normalized_name, args
-        except Exception:
-            continue
-
-    return None, None
+    """Parse one complete tool envelope; never repair examples into actions."""
+    from tools.tool_call_contract import parse_tool_call
+    return parse_tool_call(content_text)
 
 
 def resolve_ollama_model(requested_model: str) -> str:

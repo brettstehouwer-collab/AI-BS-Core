@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "36ae592d86b54153ab5824034d6007d9",
+  "plan_id": "2f48dd2e344e49a6914386972690a7aa",
+  "snapshot_sha256": "83708f9c7611de923674adbb1658abc4be9133458c49d13c724a2407744a63fe",
+  "review_digest": "facd4f1a9c71cd377170af2f60f257bbec7cad7d018367cc61502074393db90b",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "e7ce9306c3ae4a78b5c12e4ba999632b",
+  "reviewed_plan_sha256": "c96ecc88659e6746c03b79b5a8b89484c567d8f1a835f4f32788f22646f093de",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 33484,
+    "created": 1794771330.1265812
+  },
+  "created_at_utc": "2026-11-15T19:35:31.098993+00:00",
+  "entry_sha256": "5ea0b32db834a4b03d572d5a3401909b0b51f8a7622a8bc6d3424463969c4231"
+}

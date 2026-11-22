@@ -1,0 +1,11 @@
+﻿{
+    "State":  "PREPARED_AWAITING_HOST_VERIFICATION",
+    "Detail":  "Powered-off VM only. Host must inspect actual configuration before first boot. No Windows terms accepted.",
+    "VMName":  "AI-BS-Eval-Base-20261023",
+    "VMUUID":  "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+    "Step":  12,
+    "PID":  350920,
+    "TimestampUTC":  "2026-10-23T21:07:30.2390793Z",
+    "StartedGuest":  false,
+    "AcceptedWindowsTerms":  false
+}

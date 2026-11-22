@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import { getApiBase } from '../config/api.js';
 
+/** @param {{"backendUrl": string}} props */
 export default function PublicPlaygroundTab({ backendUrl }) {
   const apiHost = backendUrl || getApiBase() || `${backendUrl}`;
   const [passKey, setPassKey] = useState(() => {
@@ -23,13 +24,13 @@ export default function PublicPlaygroundTab({ backendUrl }) {
   const [imagePrompt, setImagePrompt] = useState('A futuristic glowing crystal synthwave city in Michigan');
   const [imageSize, setImageSize] = useState('1024x1024');
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  const [generatedImage, setGeneratedImage] = useState(null);
+  const [generatedImage, setGeneratedImage] = useState(/** @type {string | null} */ (null));
 
   // Video Gen State
   const [videoPrompt, setVideoPrompt] = useState('Cinematic drone flight through neon clouds, 4k');
   const [videoDuration, setVideoDuration] = useState(300); // 4s to 300s (5 Minutes)
   const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
-  const [generatedVideo, setGeneratedVideo] = useState(null);
+  const [generatedVideo, setGeneratedVideo] = useState(/** @type {string | null} */ (null));
 
   // Audio Gen State
   const [audioPrompt, setAudioPrompt] = useState('Relaxing retro synthwave background track with soft chill pads');
@@ -40,7 +41,7 @@ export default function PublicPlaygroundTab({ backendUrl }) {
   const [audioVocalStyle, setAudioVocalStyle] = useState('lead'); // 'lead', 'harmonies', 'whispered', 'vocoder', 'instrumental'
   const [audioArrangement, setAudioArrangement] = useState('verse_chorus'); // 'verse_chorus', 'build_drop', 'continuous_loop'
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
-  const [generatedAudio, setGeneratedAudio] = useState(null);
+  const [generatedAudio, setGeneratedAudio] = useState(/** @type {string | null} */ (null));
 
 
   // Chat State
@@ -49,7 +50,7 @@ export default function PublicPlaygroundTab({ backendUrl }) {
     { role: 'assistant', content: 'Hello! I am your AI-BS Studio Assistant. How can I help you generate audio, video, images, or code today?' }
   ]);
   
-  const chatEndRef = useRef(null);
+  const chatEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
@@ -58,8 +59,8 @@ export default function PublicPlaygroundTab({ backendUrl }) {
   // Developer Portal State
   const [devClientName, setDevClientName] = useState('My Creative App');
   const [devTier, setDevTier] = useState('starter');
-  const [newGeneratedPasskey, setNewGeneratedPasskey] = useState(null);
-  const [passkeyUsageInfo, setPasskeyUsageInfo] = useState(null);
+  const [newGeneratedPasskey, setNewGeneratedPasskey] = useState(/** @type {{"passkey": string} | null} */ (null));
+  const [passkeyUsageInfo, setPasskeyUsageInfo] = useState(/** @type {{"client_name": string, "tier": string, "total_requests_recorded": number, "remaining_units_today": string, "tier_daily_quota": string} | null} */ (null));
   const [isGeneratingPasskey, setIsGeneratingPasskey] = useState(false);
 
   // Speculative VRAM Pre-loader trigger
@@ -85,7 +86,7 @@ export default function PublicPlaygroundTab({ backendUrl }) {
         alert('Error generating passkey: ' + (data.message || JSON.stringify(data)));
       }
     } catch (e) {
-      alert('Passkey Request Failed: ' + e.message);
+      alert('Passkey Request Failed: ' + (e instanceof Error ? e.message : String(e)));
     } finally {
       setIsGeneratingPasskey(false);
     }
@@ -100,13 +101,13 @@ export default function PublicPlaygroundTab({ backendUrl }) {
       const data = await res.json();
       setPasskeyUsageInfo(data);
     } catch (e) {
-      alert('Usage check error: ' + e.message);
+      alert('Usage check error: ' + (e instanceof Error ? e.message : String(e)));
     }
   };
 
 
   // Saved Media Vault State
-  const [mediaVault, setMediaVault] = useState(() => {
+  const [mediaVault, setMediaVault] = useState(/** @returns {Array<{id: string, timestamp: string, type: string, prompt: string, url: string, metadata: Record<string, unknown>}>} */ () => {
     if (typeof window !== 'undefined') {
       try {
         const stored = localStorage.getItem('aibs_created_media_vault');
@@ -119,7 +120,8 @@ export default function PublicPlaygroundTab({ backendUrl }) {
   });
   const [vaultFilter, setVaultFilter] = useState('all'); // 'all', 'image', 'video', 'audio'
 
-  const saveToMediaVault = (type, prompt, url, metadata = {}) => {
+  /** @param {string} type @param {string} prompt @param {string} url */
+const saveToMediaVault = ( type,  prompt,  url, metadata = {}) => {
     const newItem = {
       id: Date.now().toString(),
       timestamp: new Date().toLocaleTimeString() + ' ' + new Date().toLocaleDateString(),
@@ -135,8 +137,10 @@ export default function PublicPlaygroundTab({ backendUrl }) {
     }
   };
 
-  const deleteFromVault = (id) => {
-    const updated = mediaVault.filter(item => item.id !== id);
+  /** @param {string} id */
+const deleteFromVault = ( id) => {
+    const updated = mediaVault.filter( 
+item => item.id !== id);
     setMediaVault(updated);
     if (typeof window !== 'undefined') {
       localStorage.setItem('aibs_created_media_vault', JSON.stringify(updated));
@@ -206,7 +210,7 @@ export default function PublicPlaygroundTab({ backendUrl }) {
         alert('Image generation completed, but no media URL could be extracted from server response: ' + JSON.stringify(data));
       }
     } catch (e) {
-      alert('Network Error: ' + e.message);
+      alert('Network Error: ' + (e instanceof Error ? e.message : String(e)));
     } finally {
       setIsGeneratingImage(false);
     }
@@ -242,7 +246,7 @@ export default function PublicPlaygroundTab({ backendUrl }) {
         alert('Chat Error: ' + data.error.message);
       }
     } catch (e) {
-      alert('Chat fault: ' + e.message);
+      alert('Chat fault: ' + (e instanceof Error ? e.message : String(e)));
     } finally {
       setIsChatting(false);
     }
@@ -284,7 +288,7 @@ export default function PublicPlaygroundTab({ backendUrl }) {
         alert('Video generation completed!');
       }
     } catch (e) {
-      alert('Network Error: ' + e.message);
+      alert('Network Error: ' + (e instanceof Error ? e.message : String(e)));
     } finally {
       setIsGeneratingVideo(false);
     }
@@ -338,7 +342,7 @@ export default function PublicPlaygroundTab({ backendUrl }) {
         alert('Audio synthesis completed!');
       }
     } catch (e) {
-      alert('Network Error: ' + e.message);
+      alert('Network Error: ' + (e instanceof Error ? e.message : String(e)));
     } finally {
       setIsGeneratingAudio(false);
     }
@@ -1019,7 +1023,8 @@ export default function PublicPlaygroundTab({ backendUrl }) {
           </div>
 
           {/* Media Items Grid */}
-          {mediaVault.filter(item => vaultFilter === 'all' || item.type === vaultFilter).length === 0 ? (
+          {mediaVault.filter( 
+item => vaultFilter === 'all' || item.type === vaultFilter).length === 0 ? (
             <div style={{ textAlign: 'center', padding: '48px 24px', background: '#0d1117', borderRadius: '12px', border: '1px solid #30363d', color: '#8b949e' }}>
               <div style={{ fontSize: '32px', marginBottom: '12px' }}>📁</div>
               <h3 style={{ fontSize: '16px', margin: '0 0 8px 0', color: '#e6edf3' }}>No Media Items Saved Yet</h3>
@@ -1030,8 +1035,10 @@ export default function PublicPlaygroundTab({ backendUrl }) {
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
               {mediaVault
-                .filter(item => vaultFilter === 'all' || item.type === vaultFilter)
-                .map(item => (
+                .filter( 
+item => vaultFilter === 'all' || item.type === vaultFilter)
+                .map( 
+item => (
                   <div
                     key={item.id}
                     style={{
@@ -1041,7 +1048,7 @@ export default function PublicPlaygroundTab({ backendUrl }) {
                       padding: '16px',
                       display: 'flex',
                       flexDirection: 'column',
-                      justify: 'space-between'
+                      justifyContent: 'space-between'
                     }}
                   >
                     <div>

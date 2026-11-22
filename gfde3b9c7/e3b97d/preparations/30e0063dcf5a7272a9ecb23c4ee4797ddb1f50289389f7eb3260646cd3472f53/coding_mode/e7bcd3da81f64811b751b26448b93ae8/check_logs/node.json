@@ -1,0 +1,1 @@
+{"argv":["C:\\AI-BS\\runtime\\devtools\\node-v24.22.1-win-x64\\node.exe","--test","tests/app.test.cjs"],"execution_time_ms":125,"returncode":0,"stderr":"","stdout":"\u2714 candidate (0.584ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 1\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 55.4838\n"}

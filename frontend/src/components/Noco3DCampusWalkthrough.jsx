@@ -1,23 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 import * as THREE from 'three';
 
 export default function Noco3DCampusWalkthrough() {
-  const mountRef = useRef(null);
+  const mountRef = useRef(/** @type {HTMLDivElement | null} */ (null));
   const [activeCamView, setActiveCamView] = useState('drone_orbit');
-  const [selectedHotspot, setSelectedHotspot] = useState(null);
+  const [selectedHotspot, setSelectedHotspot] = useState(/** @type {CampusWaypoint | null} */ (null));
   const [dayNightMode, setDayNightMode] = useState('dusk'); // 'day', 'dusk', 'night'
   const [isAutoTouring, setIsAutoTouring] = useState(false);
-  const [tourIndex, setTourIndex] = useState(0);
+  const [, setTourIndex] = useState(0);
   const [isGroundWalk, setIsGroundWalk] = useState(false);
 
   // DirectX 12, DXR Ray Tracing & 3D Splatting Engine State
   const [showSplatCloud, setShowSplatCloud] = useState(true);
   const [dxrRayTracing, setDxrRayTracing] = useState(true);
   const [lumenGi, setLumenGi] = useState(true);
-  const [dlssMode, setDlssMode] = useState('Quality (4K)'); // 'Quality (4K)', 'Balanced', 'Performance (120fps)'
+  const [] = useState('Quality (4K)'); // 'Quality (4K)', 'Balanced', 'Performance (120fps)'
 
   // Scene references for live animation & camera manipulation
-  const sceneRefs = useRef({
+  /** @typedef {{id: string, title: string, pos: THREE.Vector3, lookAt: THREE.Vector3, desc: string, zone: string, specs: string}} CampusWaypoint */
+  /** @typedef {{scene: THREE.Scene | null, camera: THREE.PerspectiveCamera | null, renderer: THREE.WebGLRenderer | null, structures: THREE.Object3D[], sunLight: THREE.DirectionalLight | null, ambientLight: THREE.AmbientLight | null, hemiLight: THREE.HemisphereLight | null, animFrameId: number | null, splatCloud?: THREE.Points | null, orbitAngle: number, targetCamPos: THREE.Vector3, targetLookAt: THREE.Vector3, isGroundWalk: boolean, activeCamView: string, yaw: number, pitch: number, keys: Record<'forward' | 'backward' | 'left' | 'right' | 'sprint', boolean>, isDragging: boolean, lastMouseX: number, lastMouseY: number}} CampusScene */
+  const sceneRefs = useRef(/** @type {CampusScene} */ ({
     scene: null,
     camera: null,
     renderer: null,
@@ -37,7 +39,7 @@ export default function Noco3DCampusWalkthrough() {
     isDragging: false,
     lastMouseX: 0,
     lastMouseY: 0
-  });
+  }));
 
   // Waypoints for Guided Walkthrough Tour
   const waypoints = [
@@ -222,10 +224,12 @@ export default function Noco3DCampusWalkthrough() {
     scene.add(pondMesh);
 
     // 4. STRUCTURES CREATION
+    /** @type {THREE.Object3D[]} */
     const structures = [];
 
     // Helper: Add clickable structure & label
-    const addStructure = (mesh, waypointId, labelText, colorHex = '#00ffff') => {
+    /** @param {THREE.Object3D} mesh @param {string} waypointId @param {string} labelText */
+const addStructure = ( mesh,  waypointId,  labelText, colorHex = '#00ffff') => {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
       mesh.userData = { id: waypointId, label: labelText, color: colorHex };
@@ -475,10 +479,12 @@ export default function Noco3DCampusWalkthrough() {
         scene.add(splatPoints);
         sceneRefs.current.splatCloud = splatPoints;
       })
-      .catch(e => console.warn('Could not load splat points:', e));
+      .catch( /** @param {string} e */
+e => console.warn('Could not load splat points:', e));
 
     // Save references
     sceneRefs.current = {
+      ...sceneRefs.current,
       scene,
       camera,
       renderer,
@@ -497,7 +503,8 @@ export default function Noco3DCampusWalkthrough() {
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
-    const onPointerDown = (event) => {
+    /** @param {MouseEvent} event */
+const onPointerDown = ( event) => {
       const state = sceneRefs.current;
       state.isDragging = true;
       state.lastMouseX = event.clientX;
@@ -522,7 +529,8 @@ export default function Noco3DCampusWalkthrough() {
       }
     };
 
-    const onPointerMove = (event) => {
+    /** @param {MouseEvent} event */
+const onPointerMove = ( event) => {
       const state = sceneRefs.current;
       if (state.isGroundWalk && state.isDragging) {
         const dx = event.clientX - state.lastMouseX;
@@ -543,7 +551,8 @@ export default function Noco3DCampusWalkthrough() {
     window.addEventListener('pointerup', onPointerUp);
 
     // Keyboard handlers for Ground Walk WASD
-    const onKeyDown = (e) => {
+    /** @param {KeyboardEvent} e */
+const onKeyDown = ( e) => {
       const state = sceneRefs.current;
       if (!state.isGroundWalk) return;
       if (['KeyW', 'ArrowUp'].includes(e.code)) state.keys.forward = true;
@@ -553,7 +562,8 @@ export default function Noco3DCampusWalkthrough() {
       if (['ShiftLeft', 'ShiftRight'].includes(e.code)) state.keys.sprint = true;
     };
 
-    const onKeyUp = (e) => {
+    /** @param {KeyboardEvent} e */
+const onKeyUp = ( e) => {
       const state = sceneRefs.current;
       if (!state.isGroundWalk) return;
       if (['KeyW', 'ArrowUp'].includes(e.code)) state.keys.forward = false;
@@ -568,7 +578,8 @@ export default function Noco3DCampusWalkthrough() {
 
     // 7. Animation / Render Loop
     let lastTime = performance.now();
-    const animate = (currentTime) => {
+    /** @param {number} currentTime */
+const animate = ( currentTime) => {
       const delta = (currentTime - lastTime) / 1000;
       lastTime = currentTime;
 
@@ -649,7 +660,8 @@ export default function Noco3DCampusWalkthrough() {
   }, []);
 
   // Camera Fly-to function
-  const flyToWaypoint = (wpId) => {
+  /** @param {typeof activeCamView} wpId */
+const flyToWaypoint = ( wpId) => {
     setActiveCamView(wpId);
     setIsGroundWalk(false);
     sceneRefs.current.isGroundWalk = false;
@@ -663,7 +675,8 @@ export default function Noco3DCampusWalkthrough() {
     }
   };
 
-  const toggleGroundWalk = (enable) => {
+  /** @param {boolean} [enable] */
+const toggleGroundWalk = ( enable) => {
     const nextVal = typeof enable === 'boolean' ? enable : !isGroundWalk;
     setIsGroundWalk(nextVal);
     setIsAutoTouring(false);
@@ -679,7 +692,8 @@ export default function Noco3DCampusWalkthrough() {
     }
   };
 
-  const setMoveKey = (key, val) => {
+  /** @param {keyof CampusScene['keys']} key @param {boolean} val */
+const setMoveKey = ( key,  val) => {
     if (sceneRefs.current.keys) {
       sceneRefs.current.keys[key] = val;
     }
@@ -699,10 +713,11 @@ export default function Noco3DCampusWalkthrough() {
   }, [isAutoTouring]);
 
   // Lighting Mode Change
-  const updateDayNight = (mode) => {
+  /** @param {typeof dayNightMode} mode */
+const updateDayNight = ( mode) => {
     setDayNightMode(mode);
     const { scene, ambientLight, sunLight, hemiLight } = sceneRefs.current;
-    if (!scene || !ambientLight || !sunLight) return;
+    if (!scene || !ambientLight || !sunLight || !hemiLight || !(scene.background instanceof THREE.Color) || !scene.fog) return;
 
     if (mode === 'day') {
       scene.background.setHex(0x38bdf8);

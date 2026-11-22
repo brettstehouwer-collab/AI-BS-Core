@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "at": "2026-11-03T07:48:42.355635+00:00",
+  "status": "user_requested_safe_pause_quiescent",
+  "goal_complete": false,
+  "goal_pause_update_pending": true,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree": "Existing dirty tree retained; selected-source verification only. No whole-repository equivalence claim.",
+  "owned_live_processes_reported": 0,
+  "deployed_launcher": "5.329.100",
+  "candidate101": "failed_normal_close_not_deployed",
+  "new_functional_changes": false,
+  "new_tests_or_app_runs": false,
+  "private_helper": "revised source only; uncompiled/unvalidated",
+  "lifetime_design": "PROPOSED, unimplemented; cause of SIP crash unproven",
+  "permission_issue": "Child configure failed at first D mkdir before compiler/Job; no retry. Root save capability recorded separately.",
+  "public_documents_written": [
+    "engine/out/warm_beginning/monitor_summary.json",
+    "engine/out/build_progress.json",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "engine/BUILD_STATUS.md",
+    "engine/WARM_BEGINNING.md"
+  ],
+  "public_documents_pending_permission": [],
+  "source_SHA256": {
+    "engine/CMakeLists.txt": "8d496c692219cc037a8798da28f46e3b70afb1234797aeb13d4a876c03f39b02",
+    "engine/apps/durable_world.cpp": "8fdbe95d63cf565155f50db0af33c76c5e5b38ab2fb1aae9142a932c8d33863f",
+    "engine/apps/chapter_aim_prompt.inl": "112937e2459a0b0c7ffe0c8e6d2fd5a049dce93c64378e01568bacb39f57587e",
+    "engine/tests/chapter_aim_prompt_tests.cpp": "b8d74e3d910d85f2530783cf9de28839097f73a88de9edfcfee849382f46b58f",
+    "native_studio/game_build_view.py": "c2af7d4a73b03b1bb096df1c524cf0b206cc96a553ad15cf14a4925e13e1e48c",
+    "engine/tests/test_game_build_runtime_discovery.py": "7a00614a37114b613fd533bfc1cb068ef735c718c767390bef16f7b89aec4982",
+    "version.txt": "b24d7be9ffacb25a8100f79ba20ba4eec136ca26edc63e3028d6ad16c6fe3b21",
+    "native_studio/engine.py": "5bbce2e12871dd4ba76c4eccbd316867e8baf8b53b3b5aaa7a7f8c55004ac5e1",
+    "native_studio/app.py": "b14d532f8b94d37a2050898e2962df808a8edf9e74a0611c14d03f2d264515ad",
+    "native_studio/chat_recovery.py": "c687eed66fa5368c2b21d75dce55f16c8b290aeadea871276f4ec84c68a1b9b1"
+  },
+  "space_free_bytes": {
+    "C": 64597004288,
+    "D": 88279605248,
+    "E": 146813599744
+  },
+  "next_step": "Only after user resumes: validate private debugger fixtures and obtain bounded native close trace; then diagnose/fix and verify a new candidate, preserving100/101.",
+  "cloud_backup": {
+    "status": "verified_authenticated_Drive_raw_readback",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\30P_Safe_Pause_20261103T074842Z.zip",
+    "bytes": 340668,
+    "sha256": "5f3a8fb9b24a64c857192f2625da6c86d9258ba04befa1be3b4fbe2ae7c9e904",
+    "members": 33,
+    "scope": "Selected pause increment only. Full current-source/art restore checkpoint remains pending; no family originals, dumps, credentials, Git data or private Master ledger.",
+    "canonical_handoff": "C:\\AI-BS\\docs\\agent_sync\\manifest_safe_pause_20261103T074842Z.json",
+    "local_manifest": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\P30_pause_20261103T074842Z\\manifest.json",
+    "public_documents_written": [
+      "engine/out/warm_beginning/monitor_summary.json",
+      "engine/out/build_progress.json",
+      "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+      "engine/BUILD_STATUS.md",
+      "engine/WARM_BEGINNING.md"
+    ],
+    "public_documents_pending_permission": [],
+    "space_free_bytes": {
+      "C": 64597004288,
+      "D": 88279605248,
+      "E": 146813599744
+    },
+    "verified_at": "2026-11-03T07:50:07.516161+00:00",
+    "Drive_file_id": "11cLi4ebrlH8O3MqCo5rtRpUteOx9AO89",
+    "Drive_url": "https://drive.google.com/file/d/11cLi4ebrlH8O3MqCo5rtRpUteOx9AO89/view?usp=drivesdk",
+    "parent_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+    "all_member_sizes_SHA256_CRC_and_exact_membership_verified": true,
+    "owned_processes_sessions_jobs_reported_live": 0,
+    "agents_quiescent": true,
+    "goal_complete": false
+  },
+  "family_originals": "Retained separately; excluded from this archive.",
+  "all_agents_quiescent": true,
+  "public_document_SHA256": {
+    "engine/out/warm_beginning/monitor_summary.json": "2830bff74ebc67b74acbf0df54f58557c5e0e425e2b1a3489745a5ae2dc8aa3f",
+    "engine/out/build_progress.json": "430f06bcc8c9882a431667b25a74e355551bb892016451e84035f8069059f0d0",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "b017d6211e7174504d8a0c6337bd37ba21faaef713e462ef0f27c79873b3c209",
+    "engine/BUILD_STATUS.md": "9afe65781ced9844151c95930a4cceb78aaa5ac1a0f4d557c2366d6470d65ef9",
+    "engine/WARM_BEGINNING.md": "faf7d90e79bb2a5e180bd72c7eda85bc9c2499e253d17d7d168a65ca641e4bbb"
+  }
+}

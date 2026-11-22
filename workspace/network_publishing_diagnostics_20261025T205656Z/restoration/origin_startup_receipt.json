@@ -1,0 +1,24 @@
+{
+  "actor": "/root",
+  "utc": "2026-10-25T21:31:20.254215+00:00",
+  "task": "Stehouwer-Publishing-Reviewed-Static-Origin",
+  "old_master_pid": 54672,
+  "old_master_created": 1792963672.3073928,
+  "registered": true,
+  "phase": "task_managed_origin_healthy",
+  "new_master_pid": 48724,
+  "new_master_created": 1792963881.7564092,
+  "listener_bindings": [
+    {
+      "ip": "127.0.0.1",
+      "pid": 26312
+    },
+    {
+      "ip": "::1",
+      "pid": 26312
+    }
+  ],
+  "local_root_status": 200,
+  "local_root_hash_match": true,
+  "reboot_test_performed": false
+}

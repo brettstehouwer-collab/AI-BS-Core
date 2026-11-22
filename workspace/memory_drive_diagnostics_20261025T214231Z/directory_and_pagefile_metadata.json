@@ -1,0 +1,64 @@
+{
+  "utc": "2026-10-25T21:46:04.5957215Z",
+  "directories": [
+    {
+      "path": "C:\\Users\\footb\\.ollama",
+      "exists": true,
+      "link_type": "Junction",
+      "target": [
+        "C:\\AI-BS\\models\\ollama"
+      ],
+      "recursive_size_verified": false
+    },
+    {
+      "path": "C:\\Users\\footb\\.cache",
+      "exists": true,
+      "link_type": "",
+      "target": [
+        null
+      ],
+      "recursive_size_verified": false
+    },
+    {
+      "path": "C:\\Users\\footb\\Downloads",
+      "exists": true,
+      "link_type": "",
+      "target": [
+        null
+      ],
+      "recursive_size_verified": false
+    },
+    {
+      "path": "C:\\Users\\footb\\AppData\\Local\\Google",
+      "exists": true,
+      "link_type": "",
+      "target": [
+        null
+      ],
+      "recursive_size_verified": false
+    },
+    {
+      "path": "C:\\Users\\footb\\Documents",
+      "exists": true,
+      "link_type": "",
+      "target": [
+        null
+      ],
+      "recursive_size_verified": false
+    },
+    {
+      "path": "C:\\Users\\footb\\.gemini",
+      "exists": true,
+      "link_type": "",
+      "target": [
+        null
+      ],
+      "recursive_size_verified": false
+    }
+  ],
+  "pagefile_metadata": {
+    "length": 142438567936,
+    "last_write_utc": "2026-10-25T21:46:04.2787784Z",
+    "method": "File metadata only; content not opened"
+  }
+}

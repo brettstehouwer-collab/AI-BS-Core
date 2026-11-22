@@ -1,0 +1,40 @@
+{
+  "kind": "coding_mode_execution_input",
+  "owner": "firebase:fixture:alice",
+  "payload": {
+    "execution_id": "2667ab9a7c394b17beed3b4741823ec2",
+    "request_id": "26f93493ca3f46c29f7fc9fde984584f",
+    "plan_id": "59593f359f95429996335fd5eee6d823",
+    "proposal_id": "77b0ad03e8c34a1f8e3331b4456cd839"
+  },
+  "proposal_sha256": "90ac556b9f26d1aacf37a37ba98467de444af21d1cd8f63176f2ca60f302633f",
+  "files": [
+    {
+      "relative_path": "src/app.py",
+      "role": "editable",
+      "length": 10,
+      "sha256": "c1bb3e61e8eef01e55df2114c52005f4eb5ad4be2836b6d44aa645e4c40cfbe8"
+    },
+    {
+      "relative_path": "tests/test_app.py",
+      "role": "verification",
+      "length": 50,
+      "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8"
+    }
+  ],
+  "checks": [
+    {
+      "check_id": "python",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "tests.test_app"
+      ],
+      "status": "not_run"
+    }
+  ],
+  "review_diff": "--- a/src/app.py\n+++ b/src/app.py\n@@ -1 +1 @@\n-value = 1\n+value = (\n",
+  "created_at_utc": "2026-11-14T13:53:35.277225+00:00",
+  "entry_sha256": "5044488542c8ec1480016ebb2d495b5d492d3edf0178331bf0bad874fc2836b1"
+}

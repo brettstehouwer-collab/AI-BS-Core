@@ -1,0 +1,454 @@
+{
+  "handoff_id": "native_record201",
+  "protocol": "AI-BS-UADP-1.0",
+  "utc": "2026-10-31T13:48:53.539591+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next Codex or Antigravity executor",
+  "branch": "codex/audit-v532976-20261031",
+  "source_commit": "6eaa515b6d5908a10a37fcac4bad86fa6e95dbd9",
+  "native_source_parent_commit": "84c2505e0043bc00af3a2bf297fa34702095031d",
+  "version": "v5.329.78",
+  "source_manifest_sha256": "cf2cef52aa88d7002a289e27b84f26a2681031da570146d1dbb5616327947613",
+  "documentation_files": [
+    {
+      "path": "docs/CODEX_JOURNAL.md",
+      "bytes": 744782,
+      "sha256": "b885625956a4d1fc2698eee4d96dc3ff32bdc895c3603ee82ccd208a81795d6d"
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "bytes": 1118955,
+      "sha256": "253b06fcebf1b8a12334a0c9c6976cd91ebd21b1b3033893326624d371dfc78d"
+    },
+    {
+      "path": "docs/CODEX_DECISIONS.md",
+      "bytes": 234749,
+      "sha256": "abf474091b36516bf5c0d6c99260ff5b68b0437713359eab4e8f92d8f8b97d64"
+    },
+    {
+      "path": "docs/CODEX_TASKS.md",
+      "bytes": 340949,
+      "sha256": "0bea02eb98f7105314db3835865c5e04fd320f0a31e158a53a0e694ea68f0499"
+    },
+    {
+      "path": "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+      "bytes": 1136103,
+      "sha256": "91badaa4af0fae1ad7626de2483013ff521d35d473109906a861f49ee3aaefdf"
+    },
+    {
+      "path": "MASTER_TASKS_CHRONOLOGY.md",
+      "bytes": 221089,
+      "sha256": "fd8b67a9abd97a183f8f62e474d799af7da21535803d5de7be33d55b2ed1b256"
+    },
+    {
+      "path": "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+      "bytes": 96144,
+      "sha256": "4a14c9e0bbce81d93c3b45224a816da44fb124c6aa8540a31dc7898f6a17698d"
+    },
+    {
+      "path": "MASTER_HISTORICAL_INDEX.md",
+      "bytes": 110547,
+      "sha256": "6210c86851614882c346990a930ab31fee94ef0475fbd105968a7d72cf7f3f32"
+    },
+    {
+      "path": "NotebookLM_Records/artifact_history.md",
+      "bytes": 159182,
+      "sha256": "5501d58e752b4d9428546c54460bf27cc5a04dee20598482a28810aad7aa5580"
+    },
+    {
+      "path": "SAVED_CHECKPOINT.md",
+      "bytes": 12525,
+      "sha256": "da27a81fc19df135a22377b714493c748ede59a0855a67a0f72e0b577a61321a"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/WINDOWS_BUILD_v5.329.78.md",
+      "bytes": 4939,
+      "sha256": "be4b4cb497a085db1dfcea822de0621aa42067a0961dd22bd4ed51704a23ac74"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/WINDOWS_BUILD_v5.329.78.json",
+      "bytes": 14950,
+      "sha256": "7226803b69fd9b837b343d0e6a465be5b90b3768a1ee06d550fe1a72e5b3162d"
+    }
+  ],
+  "native_frozen_sources": [
+    {
+      "path": "native_studio/__init__.py",
+      "sha256": "731235db95122aef1ec73f5585a84556c6b942b26e14b44931842899fd1edafc",
+      "bytes": 779
+    },
+    {
+      "path": "native_studio/accounting_view.py",
+      "sha256": "225df8b8f7e2f0ca34d3e9386a1a84661418418be2d95c3741bd0a7f86488e94",
+      "bytes": 51983
+    },
+    {
+      "path": "native_studio/ai_compute.py",
+      "sha256": "5e7054e6e838892bff9c7a4eef6558a0a04a99c839276c1d258c74bdf6c2145e",
+      "bytes": 6454
+    },
+    {
+      "path": "native_studio/app.py",
+      "sha256": "940783191017c575a1fd035e5d2ddb795ef219c3b853db351bc6571aae36b126",
+      "bytes": 47054
+    },
+    {
+      "path": "native_studio/audio_kernel.py",
+      "sha256": "271409cf43cc6b67ab6d10475f7b8289c8a14c82475b88d4ec55a0acf14cf60d",
+      "bytes": 23916
+    },
+    {
+      "path": "native_studio/automation_console_view.py",
+      "sha256": "29f13dddf285365c8341329ca22d22897b03c64984bb9866235e6490e86394b5",
+      "bytes": 15636
+    },
+    {
+      "path": "native_studio/banquet_cad_view.py",
+      "sha256": "9ba22277a2a9170b9acfd567a8dad690785d1ee9790d4b0ead5728823df743d1",
+      "bytes": 11802
+    },
+    {
+      "path": "native_studio/bible_hub_view.py",
+      "sha256": "fe1ff00f596d6fe59d798467162081d2e21a857955c34278aee0dfdd0fd1cbe8",
+      "bytes": 11382
+    },
+    {
+      "path": "native_studio/broadcast_stream_engine.py",
+      "sha256": "e4820c27150507d4c3cdb2f465d97da1f4300c6886a4bae1437bbc7858ddebdb",
+      "bytes": 52178
+    },
+    {
+      "path": "native_studio/bs_chat_ide_full.py",
+      "sha256": "eefa887c39ef824d1e2389bc0b191101bb7dff107e2b8962e51bc2a9f9e83f19",
+      "bytes": 118766
+    },
+    {
+      "path": "native_studio/calendar_view.py",
+      "sha256": "ffe4a865df5d91633a07abd70de0a48aa0f52defc8f4db0f185a6f459b5d3450",
+      "bytes": 12413
+    },
+    {
+      "path": "native_studio/chat_recovery.py",
+      "sha256": "6e1b348424a5fabece9c54a2c1ace216db928a7450854bcde8cc466f459e05a7",
+      "bytes": 14634
+    },
+    {
+      "path": "native_studio/chat_service.py",
+      "sha256": "f6293f0bcbfba26682442d040e32675b8aca61964e7f2dce05096573d3ab029a",
+      "bytes": 6591
+    },
+    {
+      "path": "native_studio/clients_crm_view.py",
+      "sha256": "a20651607add30276b3da18b22f6b944c6039cce9271c595219355023d90a60e",
+      "bytes": 20973
+    },
+    {
+      "path": "native_studio/cloud_drive_view.py",
+      "sha256": "2d1e69dff38ea0ddf3d27f3cdc933427b4fb33e5434c76dc771e7d08264f5bcc",
+      "bytes": 15563
+    },
+    {
+      "path": "native_studio/cluster_view.py",
+      "sha256": "05cbea1cf35a7a3f6fe8f4e285a7e813786b2c22fae0d1ed16625132711c43d5",
+      "bytes": 11206
+    },
+    {
+      "path": "native_studio/comfy_workspace_view.py",
+      "sha256": "539c9c3cc22a1266ef04a112667700b705abd214ab6b8b9e50365db1ac9e5df6",
+      "bytes": 19793
+    },
+    {
+      "path": "native_studio/compute_view.py",
+      "sha256": "1981813679862ca173791c2ea4e83026a1e3b0ba257c26990f55544253e6fdb8",
+      "bytes": 9119
+    },
+    {
+      "path": "native_studio/creation_suite_subtools.py",
+      "sha256": "d89c6dc7f9b287c5522d2fcb918896f1e9d9d8d73c11198326ecf4bb3e39dbf8",
+      "bytes": 63121
+    },
+    {
+      "path": "native_studio/creative_suite_views.py",
+      "sha256": "64727f0e413de460d62e793dcf679f677f18d88d4ad35cccdba07b2eacd8bf93",
+      "bytes": 52581
+    },
+    {
+      "path": "native_studio/crypto_swarm_view.py",
+      "sha256": "92b4d2c4ef419a8b4160c12080c66899f0404a81292ba93000fc5e876376162c",
+      "bytes": 11433
+    },
+    {
+      "path": "native_studio/daw_subviews.py",
+      "sha256": "858974a2cb8b57258019c8ddc4566f37c8a714b43b223e538f218b944993be25",
+      "bytes": 36491
+    },
+    {
+      "path": "native_studio/dpg_hud.py",
+      "sha256": "1019acfcbd4c189700191f407549f693e52c235bbe61c2e1f238597286cf4a2c",
+      "bytes": 9065
+    },
+    {
+      "path": "native_studio/ecosystem_blueprint_view.py",
+      "sha256": "d72735a76803edf83fca5cee5f753b0bebbfa250d2f4c36751da1c76e1911f70",
+      "bytes": 35850
+    },
+    {
+      "path": "native_studio/email_client_view.py",
+      "sha256": "472db27f6fcd0b801bedd954062f360ffa4fc2de52042b2d4ac81e391eebf036",
+      "bytes": 54364
+    },
+    {
+      "path": "native_studio/engine.py",
+      "sha256": "555c344377a1594ef937555f366099e774a890bb24d77fb43a013cad3dd80608",
+      "bytes": 15823
+    },
+    {
+      "path": "native_studio/engineering_views.py",
+      "sha256": "6d6e6ff17b68b0877d533bc469de99a7269e796606d2ca0ff0afab8f653b4dec",
+      "bytes": 9530
+    },
+    {
+      "path": "native_studio/executive_cockpit_full.py",
+      "sha256": "c4a967d5ba65e33781ceb131bdfd4582a88e46595a6a98e115aebcee7855797b",
+      "bytes": 21090
+    },
+    {
+      "path": "native_studio/executive_service.py",
+      "sha256": "a3368adb053af9f68466fb4f26ddcdd0439b0b8a8ab4b239c042a9000f3a0380",
+      "bytes": 7680
+    },
+    {
+      "path": "native_studio/fe_express_service.py",
+      "sha256": "ac517c3cee9a9ddf40470ce13bc4abf0babd505f23f18a8a635751452ab83e8d",
+      "bytes": 6659
+    },
+    {
+      "path": "native_studio/fe_express_view.py",
+      "sha256": "21beec2e8158c63d75f1e7dc9fb91ac4e60b87f0e270b5c4b9e9afd89ef8aefa",
+      "bytes": 51261
+    },
+    {
+      "path": "native_studio/intelligence_views.py",
+      "sha256": "b9515abae45991c9a8462a2ce227748cc1fe9d48ba61fcf9a19f9d19d3d60df7",
+      "bytes": 108559
+    },
+    {
+      "path": "native_studio/lexicon_view.py",
+      "sha256": "884343be5574cbc5b937ab043a5c57495961b0a9fabaa09f0d03049e4e810797",
+      "bytes": 12329
+    },
+    {
+      "path": "native_studio/local_connection.py",
+      "sha256": "e0c25f3215754f69f0491ec1621440e57b44b4afc3136a51a56bd86ca6166975",
+      "bytes": 10945
+    },
+    {
+      "path": "native_studio/media_client.py",
+      "sha256": "69c1f7cb349fccb996faa9024b56cfc4993bded218c3e53fd3d227deeeba7377",
+      "bytes": 7472
+    },
+    {
+      "path": "native_studio/media_view.py",
+      "sha256": "668472dcb189ba3aa0da3a7ec23af896af1ae9c6139b9b2edc591e55deedb906",
+      "bytes": 7199
+    },
+    {
+      "path": "native_studio/music_daw_view.py",
+      "sha256": "c3abafef24418ba8c9ca91bc2d75a2a1292af03497c941f090d40f05c6b8424b",
+      "bytes": 65960
+    },
+    {
+      "path": "native_studio/navigation_registry.py",
+      "sha256": "4b9913e2b528bdd132a9c1198c935f713775076ac6805332871ad1930d61e86e",
+      "bytes": 12217
+    },
+    {
+      "path": "native_studio/neural_swarm_router.py",
+      "sha256": "637ecd121ed499f8e0700a02ccae8b5b752477101329380c8bbbd0d0e243bb53",
+      "bytes": 16739
+    },
+    {
+      "path": "native_studio/noto_inventory_view.py",
+      "sha256": "563f5303463726cc1ee75e386cb5dc0db1594599c5815427d9bf85f3a4b5d873",
+      "bytes": 13524
+    },
+    {
+      "path": "native_studio/nutrition_view.py",
+      "sha256": "cc79e6d16f8a32adc40ccd46e5bd45aaf4ee64fa4d1c98c57eb35e1beded31a6",
+      "bytes": 24164
+    },
+    {
+      "path": "native_studio/omni_broadcast_studio.py",
+      "sha256": "d5fd30d65d6a5640d58bfe508e7e6cd8a43f10defcec9a3ac51a9d3b7581c809",
+      "bytes": 112340
+    },
+    {
+      "path": "native_studio/onboarding_view.py",
+      "sha256": "ccbd18f2385e6117300f93165ac8e7fea1748cefbd0bce412385216ce5a276a8",
+      "bytes": 18116
+    },
+    {
+      "path": "native_studio/operations_views.py",
+      "sha256": "d2abd08e9b46f752a5f073c83d226144759bcc7651d03aed628105ddfc5bb5fa",
+      "bytes": 43215
+    },
+    {
+      "path": "native_studio/pattern_export.py",
+      "sha256": "74bd78996af6de43fd189a18ea28b65cba62b436621f47b574f96d65d0b60b5a",
+      "bytes": 5547
+    },
+    {
+      "path": "native_studio/phone_repair_view.py",
+      "sha256": "51988d47f520ce3038f25c332d3993b54a12d1210391dad2f03c0381b30b3752",
+      "bytes": 11052
+    },
+    {
+      "path": "native_studio/power_washing_view.py",
+      "sha256": "966843a584539739da0f9fccebf69e336c12bc456b0d63a20cda66a2fdc427b3",
+      "bytes": 13994
+    },
+    {
+      "path": "native_studio/rec_debut_view.py",
+      "sha256": "93f4bc97159daace83589621b054662ceb2e343e2a346fbe4686d9dbcdd504a2",
+      "bytes": 22741
+    },
+    {
+      "path": "native_studio/runtime_policy.py",
+      "sha256": "fd116e82955dc271a6a8108acf5ab237c55bf9ae7c898abfc0e290f51927e5ad",
+      "bytes": 1908
+    },
+    {
+      "path": "native_studio/screen_mirror_view.py",
+      "sha256": "34ca616805eecf629b1ceac5b415488e7e73d61432eee7d98f0df7c1831bade6",
+      "bytes": 10219
+    },
+    {
+      "path": "native_studio/screenplay_client.py",
+      "sha256": "c452d8bc4d03e9bbbee31d52443599b081d8f2296f511b88bc02aad2a358bb73",
+      "bytes": 18411
+    },
+    {
+      "path": "native_studio/screenwriting_modals.py",
+      "sha256": "3071739f28c7cf3a04a1a206a388b17595ad5dea3aa159d51076078a161307ea",
+      "bytes": 255035
+    },
+    {
+      "path": "native_studio/screenwriting_view.py",
+      "sha256": "6b9a4c346283ab9cae90422bfd6acfdf37ef47fc4488717e7a24411e18ce7e44",
+      "bytes": 129545
+    },
+    {
+      "path": "native_studio/service_orchestrator.py",
+      "sha256": "37ee7f04037a8f3093aa28bee778f2d26cc396758b520de7ceb329d364b129b8",
+      "bytes": 21664
+    },
+    {
+      "path": "native_studio/steam_gaming_view.py",
+      "sha256": "7f88b078644ac4d425fbb4541395cc19dd0d53d3d53b5e6a7c3d9503f4717bf2",
+      "bytes": 20748
+    },
+    {
+      "path": "native_studio/subsystem_views.py",
+      "sha256": "6877cb52c5d100ad7353f8c8a039b57fc00b7ec84318b45353eecb8eea0cd85e",
+      "bytes": 11411
+    },
+    {
+      "path": "native_studio/syndication_view.py",
+      "sha256": "9fd9eb878dc9ccd9b26e084eaba3f5ace39f6a107bf41c4a2b4fc3f3e1618bc4",
+      "bytes": 20439
+    },
+    {
+      "path": "native_studio/system_health_view.py",
+      "sha256": "ea2dd8e8c994d697194c7d222b2cb28eb3ddadbaf8e21fe88d78b967872d3555",
+      "bytes": 21665
+    },
+    {
+      "path": "native_studio/telemetry_hub.py",
+      "sha256": "9d28888d442fc1978f1cc4dae459d7be5ecd91add12b83d6d138cd4f44aad8a6",
+      "bytes": 6306
+    },
+    {
+      "path": "native_studio/telemetry_shm.py",
+      "sha256": "47f202f9d0a5d21354f129d748c010b1476ddb128d3054cc60bd05edc2a79ff4",
+      "bytes": 4036
+    },
+    {
+      "path": "native_studio/theme.py",
+      "sha256": "19461f62e63eff93482f1affd56e7129a7a1bf273cd70a133a25273816a37492",
+      "bytes": 8451
+    },
+    {
+      "path": "native_studio/updater.py",
+      "sha256": "438b16bc19203301c459baf0dbaad6b3347aac82ad26157254ce2dbca0809897",
+      "bytes": 18061
+    },
+    {
+      "path": "native_studio/views.py",
+      "sha256": "9d9ecd5f601b784f15cb137364406044a59f5c18a93906288ba5afd75057f6b6",
+      "bytes": 22133
+    },
+    {
+      "path": "native_studio/web_telemetry_view.py",
+      "sha256": "b39b61b3948f36d94cb802884e160f520f01fa2d412f1c52c81be4229f40fcca",
+      "bytes": 15600
+    },
+    {
+      "path": "native_studio/widgets.py",
+      "sha256": "5e6f173a78d65c39488d12289e9803ca665e3ab30989e3deb03247b489f2943c",
+      "bytes": 4594
+    },
+    {
+      "path": "native_studio/widgets_web_parity.py",
+      "sha256": "91a02d3a0055d458858e26eaa1e30b0d3b2d8e33b830aaf64c83446435cc8228",
+      "bytes": 4861
+    }
+  ],
+  "working_tree": {
+    "dirty": true,
+    "status_raw_sha256": "678c35f5a51898d9a7fa01463e7799720b4a693f5ba9ec574c2442925276de92",
+    "full_status_in_encrypted_evidence": "evidence/native201/worktree_after.z",
+    "unrelated_changes_preserved": true
+  },
+  "changes": [
+    "Fresh current66-module native snapshot built/installed; no product code edits",
+    "Exact2256-file package membership and byte hashes verified",
+    "Desktop and2mainStartMenu aliases repaired with raw preimages",
+    "Existinglegacy/candidate/partialbundle left intact",
+    "Nineledgerprefixes preserved and Record201 appended"
+  ],
+  "verification": {
+    "focused_native_tests": 48,
+    "wrapper_tests": 8,
+    "inventory_promotion_tests": 10,
+    "binary_packaging_tests": 5,
+    "pe_version": "5.329.78.0",
+    "bundled_version": "v5.329.78",
+    "frozen_support_passed": true,
+    "network_requests_sent": false,
+    "credential_profile_written": false,
+    "full_gui_acceptance_verified": false,
+    "signing": "UNSIGNED"
+  },
+  "decisions": [
+    "ADR-125: preserve prior artifacts and exactsource; install newversioneddirectory; do not weaken serviceownership/signing/dispatchholds"
+  ],
+  "known_limits": [
+    "FullGUI/provider/everytab acceptance notrun; existing native and wholeaudit limits remain",
+    "KnownChroma native graph corruption/recovery remains open",
+    "One oldpartialdir metadata check failed beforepromotion, diagnosisdidnotreproduce; no falsepositive/cause claim",
+    "No eligible publisher signingcertificate; unsignedbinary withouttrustchanges",
+    "Firebase staysv77; native/sourcev78; webcontext doesnotclaim full parity"
+  ],
+  "test_commands": [
+    "E bootstrap/build_native201.py stage|build under systemPython312",
+    "E bootstrap/verify_native201.py (actual frozen --check-local-connection)",
+    "E bootstrap/install_native201.py (exacthashpromotion+shortcutreadback)"
+  ],
+  "holds": {
+    "live_trading": "DISABLED",
+    "crypto8007": "ABSENT",
+    "payment_outreach_background": "HELD"
+  },
+  "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "next_step": "Use newWindowsv78 launcher; continue existing Chroma identity recovery/duplicate route ownership and OS-isolated held integration work; do not count nativebuild as full GUI certification."
+}

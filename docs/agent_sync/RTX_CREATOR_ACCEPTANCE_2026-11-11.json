@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "utc": "2026-11-11T12:39:34.820252+00:00",
+  "status": "VERIFIED_CONTROLLED_CURRENT_SOURCE_CREATOR_SDK174_QT611",
+  "run_root": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Creator_LH_20261111_v05",
+  "scope": "Actual current-source ContentView configured with explicit AI-disabled adapter, isolated Qt6.11 and pinned SDK174 owners/hidden native viewport. Not installedStudio107, ordinary desktop interaction, currentplayer/performance/release.",
+  "actions": [
+    "Exactoutlinerhero selection andrealhiddennativeviewport pixels/debug/UUID/binarypath",
+    "Actualrepeatedpack inspect/adopt/Preview/Apply",
+    "Delete/Undo/Redo withcompletebaseline UUID/type/name/fieldmaps",
+    "Hero Preview/Apply/Undo/Redo/restore",
+    "AcknowledgedjournalSave andseparatecreate-onlycurrentAIBDexport",
+    "NewPython/nativehostepochreopen exactcurrentexport/typedfields/enclosedproxies/savedbytes",
+    "Normalretained-native-handle closeexit0; viewportanddependencydrain",
+    "FreshDX12reopen 0pixel differences/0debugerrors/warnings"
+  ],
+  "results": {
+    "baseline_rows": 116,
+    "content_revision_before": 4,
+    "content_revision_after": 6,
+    "author_python_pid": 5920,
+    "reopen_python_pid": 31236,
+    "native_hosts": [
+      {
+        "pid": 37492,
+        "created": 1794400349.9507904,
+        "retained_exact_handle": true,
+        "terminal": true,
+        "exit_code": 0
+      },
+      {
+        "pid": 500,
+        "created": 1794400353.9999745,
+        "retained_exact_handle": true,
+        "terminal": true,
+        "exit_code": 0
+      }
+    ],
+    "all_stage_processes": [
+      {
+        "pid": 36168,
+        "created": 1794400349.631684,
+        "terminal": true,
+        "exit_code": 0,
+        "stage": "author"
+      },
+      {
+        "pid": 37572,
+        "created": 1794400353.6802735,
+        "terminal": true,
+        "exit_code": 0,
+        "stage": "reopen"
+      },
+      {
+        "pid": 34784,
+        "created": 1794400355.5583177,
+        "terminal": true,
+        "exit_code": 0,
+        "stage": "gpu_reopen"
+      }
+    ],
+    "zero_network_provider_calls": true,
+    "viewport_nonbackground_pixels": 811449,
+    "viewport_selected_uuid": "cd8c08f8-c811-422b-893d-7c2ba34438b9",
+    "gpu_context_pixel_diff": 0,
+    "gpu_closeup_pixel_diff": 0,
+    "seed_and_tools_unchanged": true
+  },
+  "qt": {
+    "site_packages": "C:\\AI-BS\\runtime\\qt-layout-check-20261111\\Lib\\site-packages",
+    "qt_version": "6.11.0",
+    "pyqt_version": "6.11.0",
+    "core_extension": {
+      "bytes": 2666496,
+      "sha256": "91dd5166110b88a4f4d3acda6fe6c10ed699882dd3602328a59e9f656cc766b1"
+    },
+    "font_family_count_before": 0,
+    "font_family_count_after": 2,
+    "process_local_fonts": [
+      {
+        "name": "segoeui.ttf",
+        "families": [
+          "Segoe UI"
+        ],
+        "bytes": 960076,
+        "sha256": "704eada12961a27fd271f7d3b09e2066520e758390c1776744eff430fee30f6e"
+      },
+      {
+        "name": "segoeuib.ttf",
+        "families": [
+          "Segoe UI"
+        ],
+        "bytes": 947364,
+        "sha256": "b169e636719880976a97e94e3b1cb3dbe5f4a38eabc037bf9f2a9165154c3ad2"
+      },
+      {
+        "name": "consola.ttf",
+        "families": [
+          "Consolas"
+        ],
+        "bytes": 453088,
+        "sha256": "cf00b507b3286870cc5064ebd0633c303f70b491a4af25eec2d32df413db0179"
+      },
+      {
+        "name": "consolab.ttf",
+        "families": [
+          "Consolas"
+        ],
+        "bytes": 391756,
+        "sha256": "7e8de70c92a891722bd3fbd623db005caab2bfe267e5dab5be46b95a44e0c7f1"
+      }
+    ],
+    "label_glyphs_verified": true
+  },
+  "visible_repairs": {
+    "offscreenfonts": "Genericoffscreenfontdbhad0families; process-onlyregistration ofexistingWindowsSegoeUI/Consolas, noOSinstall/preferenceschange. Actualnewcapture readable.",
+    "source_labels": {
+      "scope": "Only known mojibake in creator UI string constants; all other AST nodes identical",
+      "replacements": 25,
+      "before_sha256": "4f51323a46fd65f91f0d9c19f7ab55cab1e46af871d65be9e770f9ae96e6dd74",
+      "after_sha256": "d3387d6d3c09b04aeff861ececde772428452f0c5e61be0e48ce699582e9cda8",
+      "source_preimage": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Creator_LH_20261111_v04\\content_view-before-label-fix.py"
+    },
+    "save_semantics": "SeedAIBDretainedseparately; create/delete advances documentrevision4to6 despite116samefields. GUI_Save commitsjournal, explicitexportcreatesnewartifact. Freshread provesexactnewexport; neverexpectseedbyteequality."
+  },
+  "preserved_failures": [
+    "v01missingQtinrecoveryinterpreter; nohoststarted",
+    "v02falseassumptionseedopeningupdatedbySave; hostnormalclosed0, sourcepreserved",
+    "Read-onlycopied-journal diagnostic provedonlybyteoffset126 differs andalltypedfieldsequal; revisionmetadataexpected",
+    "v03functionalPASSbutvisualcapturefonttofu; v04fontedfunctionalPASSbutsource-labelmojibake; v05bothcorrectedandPASS"
+  ],
+  "unexercised": "Dirty/pending failurecontrol retentionpaths source-reviewed, not runtimequalified by normal/cleanfailure checks. DefaultAIstartup/providereligibility notqualified.",
+  "local_archive": {
+    "status": "VERIFIED_LOCAL_NEW_CREATOR_ARCHIVE_MEMBER_READBACK",
+    "archive": "D:\\AI-BS-Game-Resources\\RTX_Local_Checkpoints\\Creator_LH_20261111_v01_v05.zip",
+    "archive_bytes": 54702666,
+    "archive_sha256": "0f86dfe0bacdf9fabca24db8e57c80982b3e70c60e28a6acdf1511ce606722f0",
+    "members": 207,
+    "source_bytes": 355280608,
+    "not_cloud_uploaded": true,
+    "scope": "Complete newlycreated creator v01-v05 and read-onlydiagnostic scopes; prior originals/SDK/wholeproject remain separate"
+  },
+  "remaining": [
+    "Freshcurrentplayer/saved-world integration usingnewqualifiedpack andisolatedsave",
+    "Nsightcapture versusordinaryperformance qualification",
+    "InstalledStudio/currentSDK/hostedrelease acceptance",
+    "Originalcreativeexport, browser/mobile/account, anddeclinedhumanpacing/likeness/captiongates"
+  ],
+  "cloud_status": "VERIFIED_PRIVATE_SCOPED_SOURCE_EVIDENCE_124147Z",
+  "drive_receipt": "C:\\AI-BS\\backups\\rtx_creator_20261111T124147Z\\drive_verified.json"
+}

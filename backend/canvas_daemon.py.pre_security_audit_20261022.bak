@@ -1,0 +1,467 @@
+# =========================================================================
+# AI-BS Sovereign Intelligence Ecosystem - Tap-To-Run Canvas Daemon
+# File: C:\AI-BS\backend\canvas_daemon.py
+# Description: Click-Triggered Execution Endpoint, Asset Synthesizer,
+#              Display Flip Monkey-Patcher, and Headless SDL2 Frame Streamer
+# Architecture: Zero Browser Engine for Desktop / High-Speed WebSocket Canvas
+# =========================================================================
+
+import os
+import sys
+import io
+import json
+import time
+import asyncio
+import subprocess
+from pathlib import Path
+from typing import List, Optional, Dict, Any
+
+from fastapi import FastAPI, APIRouter, WebSocket, WebSocketDisconnect, HTTPException, Response
+from pydantic import BaseModel
+import pygame
+from PIL import Image
+
+# Setup Headless SDL2 Video Driver for Server-side Pygame rendering
+os.environ["SDL_VIDEODRIVER"] = "dummy"
+
+router = APIRouter(prefix="", tags=["tap_to_run_canvas"])
+app = FastAPI(title="AI-BS Tap-To-Run Canvas Daemon", version="1.0.0")
+
+# Canonical paths
+DEFAULT_TARGET_DIR = r"C:\AI-BS\backend\chess\animated_chess"
+DEFAULT_FRAME_PATH = os.path.join(DEFAULT_TARGET_DIR, "_frame.bmp")
+INPUT_EVENTS_PATH = os.path.join(DEFAULT_TARGET_DIR, "_events.json")
+
+# Process state
+active_proc: Optional[subprocess.Popen] = None
+active_session: Dict[str, Any] = {
+    "label": "None",
+    "status": "idle",
+    "pid": None,
+    "started_at": None,
+    "target_dir": DEFAULT_TARGET_DIR,
+    "frame_file": DEFAULT_FRAME_PATH
+}
+
+class CanvasExecRequest(BaseModel):
+    label: str = "Interactive Canvas"
+    target_dir: str = DEFAULT_TARGET_DIR
+    bash_commands: List[str] = []
+    python_scripts: List[str] = []
+
+def ensure_neon_chess_assets(target_dir: str) -> int:
+    """
+    Prevents FileNotFoundError on pygame.image.load('images/{piece}.png').
+    Synthesizes crisp high-contrast neon chess piece sprites (100x100 PNG)
+    into target_dir/images using Segoe UI Symbol or Unicode fallbacks.
+    """
+    img_dir = os.path.join(target_dir, "images")
+    os.makedirs(img_dir, exist_ok=True)
+
+    if not pygame.get_init():
+        pygame.init()
+    if not pygame.font.get_init():
+        pygame.font.init()
+
+    # Font resolution with robust Windows fallbacks
+    font = None
+    for font_name in ["segoeuisymbol", "segoeui", "arial", "dejavusans"]:
+        try:
+            f = pygame.font.SysFont(font_name, 64)
+            if f:
+                font = f
+                break
+        except Exception:
+            continue
+    if not font:
+        font = pygame.font.Font(None, 64)
+
+    glyphs = {
+        'b': '♟', 'p': '♟', 'n': '♞', 'q': '♛', 'r': '♜', 'k': '♚',
+        'B': '♗', 'P': '♙', 'N': '♘', 'Q': '♕', 'R': '♖', 'K': '♔',
+        'bP': '♟', 'bR': '♜', 'bN': '♞', 'bB': '♝', 'bQ': '♛', 'bK': '♚',
+        'wP': '♙', 'wR': '♖', 'wN': '♘', 'wB': '♗', 'wQ': '♕', 'wK': '♔'
+    }
+
+    count = 0
+    for code, char in glyphs.items():
+        out_path = os.path.join(img_dir, f"{code}.png")
+        if os.path.exists(out_path) and os.path.getsize(out_path) > 100:
+            count += 1
+            continue
+
+        surf = pygame.Surface((100, 100), pygame.SRCALPHA)
+        # White/Upper -> Neon Cyan (0, 255, 255), Black/Lower -> Neon Magenta/Pink (255, 0, 128)
+        is_white = code.isupper() or code.startswith('w')
+        color = (0, 255, 255) if is_white else (255, 0, 128)
+        glow_color = (0, 120, 180, 120) if is_white else (180, 0, 90, 120)
+
+        try:
+            # Draw glow shadow
+            glow_txt = font.render(char, True, glow_color)
+            surf.blit(glow_txt, glow_txt.get_rect(center=(51, 51)))
+            # Draw main glyph
+            txt = font.render(char, True, color)
+            surf.blit(txt, txt.get_rect(center=(50, 50)))
+        except Exception:
+            # Fallback geometric shape if glyph rendering fails
+            pygame.draw.circle(surf, color, (50, 50), 36, 4)
+            if is_white:
+                pygame.draw.line(surf, color, (50, 20), (50, 80), 4)
+            else:
+                pygame.draw.line(surf, color, (20, 50), (80, 50), 4)
+
+        pygame.image.save(surf, out_path)
+        count += 1
+
+    return count
+
+def generate_default_animated_chess_script(target_dir: str) -> str:
+    """Generates a standalone animated chess game loop with interactive pieces and neon styling."""
+    return '''# Animated Neon Chess Game (Autonomous Staged Canvas App)
+import os
+import sys
+import json
+import math
+import time
+import pygame
+
+pygame.init()
+WIDTH, HEIGHT = 800, 800
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("AI-BS Sovereign Animated Chess")
+clock = pygame.time.Clock()
+
+IMG_DIR = os.path.join(os.path.dirname(__file__), "images")
+EVENTS_FILE = os.path.join(os.path.dirname(__file__), "_events.json")
+
+# Load Piece Images
+pieces_imgs = {}
+glyphs = ['bP', 'bR', 'bN', 'bB', 'bQ', 'bK', 'wP', 'wR', 'wN', 'wB', 'wQ', 'wK', 'b', 'p', 'n', 'q', 'r', 'k', 'B', 'P', 'N', 'Q', 'R', 'K']
+for g in glyphs:
+    p = os.path.join(IMG_DIR, f"{g}.png")
+    if os.path.exists(p):
+        try:
+            pieces_imgs[g] = pygame.transform.smoothscale(pygame.image.load(p), (74, 74))
+        except Exception:
+            pass
+
+# 8x8 Board Setup
+board = [
+    ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
+    ["bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP"],
+    ["",   "",   "",   "",   "",   "",   "",   ""  ],
+    ["",   "",   "",   "",   "",   "",   "",   ""  ],
+    ["",   "",   "",   "",   "",   "",   "",   ""  ],
+    ["",   "",   "",   "",   "",   "",   "",   ""  ],
+    ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
+    ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"],
+]
+
+selected_cell = None
+pulse_phase = 0.0
+last_move_time = time.time()
+running = True
+
+def check_external_input():
+    global selected_cell, board
+    if os.path.exists(EVENTS_FILE):
+        try:
+            with open(EVENTS_FILE, "r") as f:
+                evt = json.load(f)
+            os.remove(EVENTS_FILE)
+            if evt.get("type") == "MOUSEBUTTONDOWN":
+                x = evt.get("x", 0)
+                y = evt.get("y", 0)
+                c, r = x // 100, y // 100
+                if 0 <= r < 8 and 0 <= c < 8:
+                    if selected_cell is None:
+                        if board[r][c]:
+                            selected_cell = (r, c)
+                    else:
+                        sr, sc = selected_cell
+                        board[r][c] = board[sr][sc]
+                        board[sr][sc] = ""
+                        selected_cell = None
+        except Exception:
+            pass
+
+# Autonomous AI Demo Moves every 4 seconds if no manual click
+def auto_step():
+    global last_move_time, board
+    if time.time() - last_move_time > 4.0:
+        last_move_time = time.time()
+        # Find a movable pawn or knight
+        for r in range(1, 7):
+            for c in range(8):
+                if board[r][c] == "wP" and r > 1 and not board[r-1][c]:
+                    board[r-1][c] = "wP"
+                    board[r][c] = ""
+                    return
+                elif board[r][c] == "bP" and r < 6 and not board[r+1][c]:
+                    board[r+1][c] = "bP"
+                    board[r][c] = ""
+                    return
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            c, r = event.pos[0] // 100, event.pos[1] // 100
+            if 0 <= r < 8 and 0 <= c < 8:
+                if selected_cell is None:
+                    if board[r][c]:
+                        selected_cell = (r, c)
+                else:
+                    sr, sc = selected_cell
+                    board[r][c] = board[sr][sc]
+                    board[sr][sc] = ""
+                    selected_cell = None
+
+    check_external_input()
+    auto_step()
+
+    # Draw Futuristic Cyber Chess Board
+    pulse_phase += 0.05
+    screen.fill((10, 10, 20))
+    glow_val = int(35 + 20 * math.sin(pulse_phase))
+
+    for r in range(8):
+        for c in range(8):
+            rect = pygame.Rect(c * 100, r * 100, 100, 100)
+            if (r + c) % 2 == 0:
+                color = (20, 24, 38)
+            else:
+                color = (13, 16, 27)
+
+            pygame.draw.rect(screen, color, rect)
+            pygame.draw.rect(screen, (30, 41, 59), rect, 1)
+
+            # Selected cell highlight
+            if selected_cell == (r, c):
+                pygame.draw.rect(screen, (0, 255, 255, glow_val), rect, 3)
+
+            # Draw Piece
+            piece = board[r][c]
+            if piece and piece in pieces_imgs:
+                img = pieces_imgs[piece]
+                screen.blit(img, img.get_rect(center=rect.center))
+
+    # Outer Neon Border
+    pygame.draw.rect(screen, (124, 58, 237), (0, 0, WIDTH, HEIGHT), 3)
+
+    pygame.display.flip()
+    clock.tick(30)
+
+pygame.quit()
+'''
+
+@router.post("/api/canvas/execute")
+async def execute_on_tap(req: CanvasExecRequest):
+    """
+    ROOT-LEVEL EXECUTION RESTRICTION:
+    This endpoint executes strictly and only when the user taps the Run button in the UI.
+    It provisions missing neon sprites, injects the headless display flip hook, writes
+    the staged script, and spawns the subprocess.
+    """
+    global active_proc, active_session
+
+    # 1. Terminate any previous instance
+    if active_proc and active_proc.poll() is None:
+        try:
+            active_proc.terminate()
+            active_proc.wait(timeout=1.0)
+        except Exception:
+            try:
+                active_proc.kill()
+            except Exception:
+                pass
+        active_proc = None
+
+    target_dir = req.target_dir or DEFAULT_TARGET_DIR
+    os.makedirs(target_dir, exist_ok=True)
+
+    # 2. Provision missing neon chess sprites
+    sprites_count = ensure_neon_chess_assets(target_dir)
+
+    # 3. Resolve staged Python script
+    raw_code = ""
+    if req.python_scripts and len(req.python_scripts) > 0:
+        raw_code = req.python_scripts[-1]
+    else:
+        # Fallback to existing or default animated chess game
+        existing_script = os.path.join(target_dir, "animated_chess.py")
+        if os.path.exists(existing_script):
+            with open(existing_script, "r", encoding="utf-8") as f:
+                raw_code = f.read()
+        else:
+            raw_code = generate_default_animated_chess_script(target_dir)
+
+    # 4. Inject headless display flip monkey-patch
+    frame_path = os.path.join(target_dir, "_frame.bmp").replace("\\", "\\\\")
+    hook_header = (
+        "# --- AI-BS HEADLESS DISPLAY FLIP STREAMING HOOK ---\n"
+        "import os, sys\n"
+        "os.environ['SDL_VIDEODRIVER'] = 'dummy'\n"
+        "import pygame as _pg\n"
+        "_orig_flip = _pg.display.flip\n"
+        f"_frame_path = r'{frame_path}'\n"
+        "def _stream_flip():\n"
+        "    _orig_flip()\n"
+        "    try:\n"
+        "        surf = _pg.display.get_surface()\n"
+        "        if surf:\n"
+        "            _pg.image.save(surf, _frame_path)\n"
+        "    except Exception:\n"
+        "        pass\n"
+        "_pg.display.flip = _stream_flip\n"
+        "# --------------------------------------------------\n\n"
+    )
+
+    script_path = os.path.join(target_dir, "active_canvas_app.py")
+    with open(script_path, "w", encoding="utf-8") as f:
+        f.write(hook_header + raw_code)
+
+    # 5. Spawn headless subprocess using current Python environment
+    py_exec = sys.executable or "python"
+    active_proc = subprocess.Popen(
+        [py_exec, script_path],
+        cwd=target_dir,
+        creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0
+    )
+
+    active_session = {
+        "label": req.label or "Interactive Canvas",
+        "status": "running",
+        "pid": active_proc.pid,
+        "started_at": time.time(),
+        "target_dir": target_dir,
+        "frame_file": os.path.join(target_dir, "_frame.bmp"),
+        "sprites_count": sprites_count
+    }
+
+    return {
+        "status": "running",
+        "pid": active_proc.pid,
+        "script": script_path,
+        "label": req.label,
+        "sprites_provisioned": sprites_count
+    }
+
+@router.post("/api/canvas/stop")
+async def stop_canvas():
+    """Immediately stops and terminates the running canvas subprocess."""
+    global active_proc, active_session
+    stopped_pid = None
+    if active_proc:
+        stopped_pid = active_proc.pid
+        if active_proc.poll() is None:
+            try:
+                active_proc.terminate()
+                active_proc.wait(timeout=1.0)
+            except Exception:
+                try:
+                    active_proc.kill()
+                except Exception:
+                    pass
+        active_proc = None
+
+    active_session["status"] = "terminated"
+    active_session["pid"] = None
+    return {"status": "terminated", "stopped_pid": stopped_pid}
+
+@router.get("/api/canvas/status")
+async def get_canvas_status():
+    """Returns the live lifecycle status and PID of the staged canvas subprocess."""
+    global active_proc, active_session
+    is_alive = active_proc is not None and active_proc.poll() is None
+    return {
+        "status": "running" if is_alive else "idle",
+        "pid": active_proc.pid if is_alive else None,
+        "label": active_session.get("label", "None"),
+        "frame_ready": os.path.exists(active_session.get("frame_file", DEFAULT_FRAME_PATH))
+    }
+
+@router.get("/api/canvas/frame")
+async def get_canvas_frame():
+    """
+    Fallback HTTP frame endpoint: returns the latest 800x800 rendered frame
+    as a high-quality JPEG. Allows mobile/HTTPS/remote devices to render at ~30 FPS
+    even when WebSocket is blocked.
+    """
+    frame_path = active_session.get("frame_file", DEFAULT_FRAME_PATH)
+    if os.path.exists(frame_path):
+        try:
+            with Image.open(frame_path) as im:
+                buf = io.BytesIO()
+                im.convert("RGB").save(buf, format="JPEG", quality=82)
+                return Response(content=buf.getvalue(), media_type="image/jpeg")
+        except Exception as e:
+            pass
+
+    # Placeholder Neon Grid
+    buf = io.BytesIO()
+    placeholder = Image.new("RGB", (800, 800), color=(10, 10, 20))
+    placeholder.save(buf, format="JPEG")
+    return Response(content=buf.getvalue(), media_type="image/jpeg")
+
+@router.post("/api/canvas/input")
+async def post_canvas_input(event_data: Dict[str, Any]):
+    """Receives click/pointer interaction from client and queues it for the game loop."""
+    try:
+        events_file = os.path.join(active_session.get("target_dir", DEFAULT_TARGET_DIR), "_events.json")
+        with open(events_file, "w") as f:
+            json.dump(event_data, f)
+        return {"status": "ok"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@router.websocket("/ws/canvas")
+@router.websocket("/ws/canvas/{session_id}")
+async def stream_canvas_frames(ws: WebSocket, session_id: Optional[str] = None):
+    """
+    Streams JPEG frames over WebSocket at ~30 FPS (0.033s interval).
+    Also listens for incoming mouse/touch JSON events and pipes them to the running game.
+    """
+    await ws.accept()
+    frame_file = active_session.get("frame_file", DEFAULT_FRAME_PATH)
+
+    async def incoming_listener():
+        try:
+            while True:
+                msg = await ws.receive_text()
+                try:
+                    data = json.loads(msg)
+                    events_file = os.path.join(active_session.get("target_dir", DEFAULT_TARGET_DIR), "_events.json")
+                    with open(events_file, "w") as f:
+                        json.dump(data, f)
+                except Exception:
+                    pass
+        except (WebSocketDisconnect, Exception):
+            pass
+
+    listener_task = asyncio.create_task(incoming_listener())
+
+    try:
+        while True:
+            if os.path.exists(frame_file):
+                try:
+                    with Image.open(frame_file) as im:
+                        buf = io.BytesIO()
+                        im.convert("RGB").save(buf, format="JPEG", quality=82)
+                        await ws.send_bytes(buf.getvalue())
+                except Exception:
+                    pass
+            await asyncio.sleep(0.033)  # ~30 FPS stream
+    except (WebSocketDisconnect, Exception):
+        pass
+    finally:
+        listener_task.cancel()
+
+# Include router in standalone app
+app.include_router(router)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("canvas_daemon:app", host="0.0.0.0", port=8080, reload=False)

@@ -1,0 +1,9 @@
+{
+  "state": "INTERRUPTED",
+  "input_sha256": "b2e9dfdb56b4342565b702dc05e1b16d43017dc76680c4e03eb6239fbf736c05",
+  "proposal": null,
+  "error_code": "worker_ended_no_replay",
+  "finished_at_utc": "2026-11-15T19:35:14.209238+00:00",
+  "elapsed_seconds": null,
+  "entry_sha256": "7e4806f0c5ae3916b87889a37ee53142c3ece66ca20b85decdc1d17aa1c27f69"
+}

@@ -1,0 +1,42 @@
+{
+  "kind": "coding_mode_execution_input",
+  "owner": "local_admin",
+  "payload": {
+    "execution_id": "5afc37729650424694a371f5324fc910",
+    "request_id": "23945f4f1f424540a5fc703d624d436e",
+    "plan_id": "f9499bb997b94553a9d7428aa91318d2",
+    "proposal_id": "d3a03b321fac4bb2a1369e7308e8e610",
+    "execution_backend": "trusted_host",
+    "trusted_local_ack": true
+  },
+  "proposal_sha256": "5456b657c6505b98116c38daead619d0f5059d52934dd4dc0e388a6dd9d44608",
+  "files": [
+    {
+      "relative_path": "native_app.py",
+      "role": "editable",
+      "length": 11,
+      "sha256": "88f92d58d9706e16b293aacf471dd930213780b70cbf773d31c716c3e1e84682"
+    },
+    {
+      "relative_path": "test_native_app.py",
+      "role": "verification",
+      "length": 151,
+      "sha256": "619e0d3458c24a2059863dc0d980243b13fb37c03091ece0f3e4b67dada1d0cf"
+    }
+  ],
+  "checks": [
+    {
+      "check_id": "python_unittest",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "test_native_app"
+      ],
+      "status": "not_run"
+    }
+  ],
+  "review_diff": "--- a/native_app.py\n+++ b/native_app.py\n@@ -1 +1 @@\n-value = 1\n+value = 42\n",
+  "created_at_utc": "2026-11-14T23:08:19.926498+00:00",
+  "entry_sha256": "d3a643aab03877e9ff05b97724b441a9209e146b0017f8b3ce808e35c669d330"
+}

@@ -1,13 +1,5 @@
-import React, { useState } from 'react';
-import { 
-  Layers, Rocket, ShieldAlert, Activity, Cpu, Code, Database, Globe, Home, Scale, 
-  ShoppingCart, TrendingUp, BookOpen, Factory, Sprout, Film,
-  Users, Headset, Truck, Shield, HardHat, Car, Plane, Gamepad, Heart, Newspaper,
-  Calendar, Landmark, Zap, Signal, Hammer, Pill, Scissors, Coffee,
-  Mic, Video, Camera, PlayCircle, PenTool, Search, MessageSquare, Speaker, Trophy,
-  Leaf, Building2, Thermometer, Droplets, Sparkles, Bug, Trash2,
-  Server, GitMerge, Cloud, Atom, Bot, Eye, Link, Dna, Box, Radio
-} from 'lucide-react';
+import { useState } from 'react';
+import { Rocket, ShieldAlert, Activity, Cpu, Globe, Home, Scale, ShoppingCart, TrendingUp, BookOpen, Factory, Sprout, Film, Users, Headset, Truck, Shield, HardHat, Car, Plane, Gamepad, Heart, Newspaper, Calendar, Landmark, Zap, Signal, Hammer, Pill, Scissors, Coffee, Mic, Video, Camera, PlayCircle, PenTool, Search, MessageSquare, Speaker, Trophy, Leaf, Thermometer, Droplets, Sparkles, Bug, Trash2, Server, GitMerge, Cloud, Atom, Bot, Eye, Link, Box, Radio } from 'lucide-react';
 
 import RealEstateSuiteTab from './industry_suites/RealEstateSuiteTab.jsx';
 import LegalSuiteTab from './industry_suites/LegalSuiteTab.jsx';
@@ -88,9 +80,10 @@ import DeepSpaceSuiteTab from './industry_suites/DeepSpaceSuiteTab.jsx';
 
 import UnrealEngineToolsTab from './industry_suites/UnrealEngineToolsTab.jsx';
 
+/** @param {{backendUrl?: string}} props */
 export default function EnterpriseIndustryHubTab({ backendUrl }) {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [activeModule, setActiveModule] = useState(null);
+  const [activeModule, setActiveModule] = useState(/** @type {(typeof modules)[number]|null} */ (null));
 
   const categories = [
     { id: 'all', label: 'All Industries' },
@@ -205,7 +198,7 @@ export default function EnterpriseIndustryHubTab({ backendUrl }) {
           </button>
         </div>
         <div className="flex-1 overflow-hidden">
-          <ActiveComponent backendUrl={backendUrl} />
+          <ActiveComponent backendUrl={backendUrl || ''} />
         </div>
       </div>
     );

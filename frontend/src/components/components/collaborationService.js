@@ -1,3 +1,8 @@
+/** @typedef {{email?:string|null,displayName?:string|null}} CollaborationUser */
+/** @typedef {{tab:string,url:string,name:string,icon:string}} TeamToolLink */
+/** @typedef {{id:string,email:string,aliases:string[],name:string,role:string,avatar:string,color:string,status:string,currentTab:string,activeDevices?:{device:string,tab:string,email:string}[],deviceBadge?:string|null}} TeamPresence */
+/** @typedef {{id:string,channelId?:string,senderEmail?:string,senderName?:string,senderAvatar?:string,senderRole?:string,senderDevice?:string,text?:string,toolLink?:TeamToolLink|null,reactions?:Record<string,string[]>,timestamp?:number}} TeamMessage */
+/** @typedef {{id:string,_id?:string,userEmail?:string,userName?:string,userAvatar?:string,userRole?:string,action?:string,toolName?:string,tabKey?:string,details?:string,timestamp?:number}} TeamActivity */
 import { db, auth } from '../firebase';
 import { 
   collection, 
@@ -95,8 +100,9 @@ export const KNOWN_TEAM_MEMBERS = [
   }
 ];
 
+/** @param {string|null} email */
 export const getFriendlyUserName = (email = '') => {
-  const lower = email.toLowerCase().trim();
+  const lower = (email || '').toLowerCase().trim();
   if (lower.includes('julie')) return 'Julie Stehouwer (Mom)';
   if (lower.includes('theseandaley') || lower.includes('sean@stehouwer')) return 'Sean Daley';
   if (lower.includes('brett') || lower.includes('footballstar') || lower.includes('footballsyat')) return 'Brett Stehouwer';
@@ -109,8 +115,9 @@ export const getFriendlyUserName = (email = '') => {
   return email.split('@')[0];
 };
 
+/** @param {string|null} email */
 export const getFriendlyUserRole = (email = '') => {
-  const lower = email.toLowerCase().trim();
+  const lower = (email || '').toLowerCase().trim();
   if (lower.includes('julie')) return 'Executive Partner';
   if (lower.includes('theseandaley') || lower.includes('sean@stehouwer')) return 'Production & Creative Partner';
   if (lower.includes('brett') || lower.includes('footballstar') || lower.includes('footballsyat')) return 'Founder & CTO';
@@ -120,8 +127,9 @@ export const getFriendlyUserRole = (email = '') => {
   return 'Stehouwer Publishing Admin';
 };
 
+/** @param {string|null} email */
 export const getFriendlyUserAvatar = (email = '') => {
-  const lower = email.toLowerCase().trim();
+  const lower = (email || '').toLowerCase().trim();
   if (lower.includes('julie')) return '🌸';
   if (lower.includes('theseandaley') || lower.includes('sean@stehouwer')) return '🎬';
   if (lower.includes('brett') || lower.includes('footballstar') || lower.includes('footballsyat')) return '👑';
@@ -131,20 +139,23 @@ export const getFriendlyUserAvatar = (email = '') => {
   return '👤';
 };
 
+/** @type {ReturnType<typeof setInterval>|null} */
 let presenceInterval = null;
 
+/** @param {CollaborationUser|null|undefined} currentUser */
 export const startPresenceHeartbeat = (currentUser, activeTab = 'dashboard') => {
   if (!currentUser?.email || !db) return;
   // Guard against unauthenticated Firestore channel write attempts in dev
   if (auth && !auth.currentUser) return;
 
-  const emailKey = currentUser.email.toLowerCase().replace(/[^a-zA-Z0-9_]/g, '_');
+  const presenceEmail = currentUser.email;
+  const emailKey = presenceEmail.toLowerCase().replace(/[^a-zA-Z0-9_]/g, '_');
   const presenceRef = doc(db, 'admin_presence', emailKey);
 
   const sendHeartbeat = async () => {
     try {
       await setDoc(presenceRef, {
-        email: currentUser.email.toLowerCase(),
+        email: presenceEmail.toLowerCase(),
         displayName: currentUser.displayName || getFriendlyUserName(currentUser.email),
         avatar: getFriendlyUserAvatar(currentUser.email),
         role: getFriendlyUserRole(currentUser.email),
@@ -154,7 +165,7 @@ export const startPresenceHeartbeat = (currentUser, activeTab = 'dashboard') => 
         updatedAt: serverTimestamp()
       }, { merge: true });
     } catch (err) {
-      console.warn('[Presence] Heartbeat failed:', err.message);
+      console.warn('[Presence] Heartbeat failed:', errorMessage(err));
     }
   };
 
@@ -179,6 +190,7 @@ export const stopPresenceHeartbeat = () => {
   }
 };
 
+/** @param {(members:TeamPresence[])=>void} callback */
 export const subscribeToPresence = (callback) => {
   if (!db) return () => {};
 
@@ -195,10 +207,11 @@ export const subscribeToPresence = (callback) => {
   const presenceCol = collection(db, 'admin_presence');
   return onSnapshot(presenceCol, (snapshot) => {
     const now = Date.now();
+    /** @type {Record<string,{email:string,lastSeen:number,currentTab:string,status:string,secondsAgo:number}>} */
     const presenceMap = {};
 
     snapshot.forEach(docSnap => {
-      const data = docSnap.data();
+      const data = /** @type {{email:string,lastSeen:number,currentTab:string,isOnline:boolean}} */ (docSnap.data());
       const lastSeenTime = data.lastSeen || 0;
       const secondsAgo = (now - lastSeenTime) / 1000;
 
@@ -264,6 +277,7 @@ export const subscribeToPresence = (callback) => {
   });
 };
 
+/** @param {{channelId?:string,senderEmail?:string|null,senderName?:string|null,text:string,toolLink?:TeamToolLink|null,senderDevice?:string}} options */
 export const sendTeamMessage = async ({
   channelId = 'general_team',
   senderEmail,
@@ -295,6 +309,7 @@ export const sendTeamMessage = async ({
   }
 };
 
+/** @param {string} messageId @param {string} emoji @param {string|null|undefined} userEmail */
 export const toggleMessageReaction = async (messageId, emoji, userEmail) => {
   if (!db || !messageId || !emoji || !userEmail) return;
   try {
@@ -306,7 +321,7 @@ export const toggleMessageReaction = async (messageId, emoji, userEmail) => {
     const userList = currentReactions[emoji] || [];
     let updatedList;
     if (userList.includes(email)) {
-      updatedList = userList.filter(e => e !== email);
+      updatedList = userList.filter(/** @param {unknown} e */ e => e !== email);
     } else {
       updatedList = [...userList, email];
     }
@@ -316,10 +331,11 @@ export const toggleMessageReaction = async (messageId, emoji, userEmail) => {
     }
     await updateDoc(msgRef, { reactions: updatedReactions });
   } catch (err) {
-    console.warn('[Chat] Failed to toggle reaction:', err.message);
+    console.warn('[Chat] Failed to toggle reaction:', errorMessage(err));
   }
 };
 
+/** @param {string} channelId @param {(messages:TeamMessage[])=>void} callback */
 export const subscribeToChannelMessages = (channelId, callback) => {
   if (!db) return () => {};
 
@@ -337,6 +353,7 @@ export const subscribeToChannelMessages = (channelId, callback) => {
   );
 
   return onSnapshot(q, (snapshot) => {
+    /** @type {TeamMessage[]} */
     const msgs = [];
     snapshot.forEach(docSnap => {
       msgs.push({ id: docSnap.id, ...docSnap.data() });
@@ -353,6 +370,7 @@ export const subscribeToChannelMessages = (channelId, callback) => {
   });
 };
 
+/** @param {{user?:CollaborationUser|null,action:string,toolName?:string,tabKey?:string,details?:string}} options */
 export const logTeamActivity = async ({
   user,
   action,
@@ -380,10 +398,11 @@ export const logTeamActivity = async ({
       createdAt: serverTimestamp()
     });
   } catch (err) {
-    console.warn('[Activity] Failed to log activity:', err.message);
+    console.warn('[Activity] Failed to log activity:', errorMessage(err));
   }
 };
 
+/** @param {(activities:TeamActivity[])=>void} callback */
 export const subscribeToTeamActivity = (callback, maxItems = 20) => {
   if (!db) return () => {};
 
@@ -400,6 +419,7 @@ export const subscribeToTeamActivity = (callback, maxItems = 20) => {
   );
 
   return onSnapshot(q, (snapshot) => {
+    /** @type {TeamActivity[]} */
     const activities = [];
     snapshot.forEach(docSnap => {
       activities.push({ id: docSnap.id, ...docSnap.data() });
@@ -413,3 +433,9 @@ export const subscribeToTeamActivity = (callback, maxItems = 20) => {
     console.warn('[Activity] Snapshot error:', err.message);
   });
 };
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}

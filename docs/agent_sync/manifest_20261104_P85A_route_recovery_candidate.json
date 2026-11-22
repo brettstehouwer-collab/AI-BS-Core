@@ -1,0 +1,38 @@
+{
+  "id": "20261104_P85A_route_recovery_candidate",
+  "at": "2026-11-04T17:51:36.519445+00:00",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "checkpoint": {
+    "at": "2026-11-04T17:51:14.300400+00:00",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\85A_RouteAware_Recovery_Candidate.zip",
+    "bytes": 963087,
+    "sha256": "f83a166d83b0adf80c3691877ea563a6da6ec80a30679c986c405115ffbb4c46",
+    "members": 321,
+    "all_members_verified": true,
+    "goal_complete": false,
+    "drive_folder_id": "1_obUfmxSeGoL70o6FWI2TZmyZTlv1N-d",
+    "drive_file_id": "1OZzQ7py92heZrub_JQMWDdkN76oClRQz",
+    "drive_restore_verified": true
+  },
+  "changed_source": [
+    "engine/apps/durable_world.cpp"
+  ],
+  "source_and_patch": "D:\\AI-BS-Game-Resources\\P85\\RouteAwareRecoveryCandidate\\durable-world.patch",
+  "candidate_build": "D:/AI-BS-Game-Resources/P79/ReturnViewAndSwitch/build/Release/aibs_motherboard.exe",
+  "deployed": "Studio107/SDK0171 unchanged; all2301installed files compared",
+  "verified": [
+    "Both routes claimed-door cycle/departure/return",
+    "Both routes actual walk-off-board recovery to supported anchor without invented outcomes",
+    "Native reload and exact subsequent history",
+    "36legacy native processes with0GPUdebugerrors",
+    "31owned jobs joined; no forced termination",
+    "85ArawDrive restore321members exact"
+  ],
+  "failed": [
+    "Two relay-rebuild probes retained: first incorrectly expected power before required retest; revised omitted explicit old-binding disconnect before new connect"
+  ],
+  "next_step": "In the diagnostic only, if fault.bypass_connected remains true after dismantling, use ordinary E to acknowledge disconnect, verify false, then ordinary E to connect replacement; verify fault.bypass_relay is replacement. Keep the retest and bench commissioning requirements. Do not weaken the planner or reuse old tested_signature.",
+  "qualification_boundary": "Candidate only; installed package untouched. Rebuild probe needs correction and fresh evidence before candidate qualification or SDK/release publication. No third rebuild attempt in this phase.",
+  "goal_complete": false
+}

@@ -5,18 +5,19 @@
 // Execution Guarantee: Strictly passive until the user explicitly taps "Run"
 // =========================================================================
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from "react";
 
 /**
  * Extracts BASH and PYTHON code blocks from raw message text to populate
  * the stagedPayloads queue without executing any code.
  */
-export function extractStagedPayloads(messageText) {
+/** @param {string} messageText */
+export function extractStagedPayloads( messageText) {
   if (!messageText || typeof messageText !== 'string') {
     return { bash: [], python: [] };
   }
 
-  const stagedPayloads = { bash: [], python: [] };
+  const stagedPayloads = /** @type {{bash: string[], python: string[]}} */ ({ bash: [], python: [] });
   const codeBlockRegex = /```([a-zA-Z0-9_-]*)\s*\n([\s\S]*?)```/g;
   let match;
 
@@ -42,6 +43,7 @@ export function extractStagedPayloads(messageText) {
  * TapToRunCanvas renders an interactive trigger button for staged code payloads.
  * Nothing runs during LLM streaming. Execution only begins when the user taps "Run".
  */
+/** @param {{"label"?: string, "stagedPayloads"?: {"bash": Array<string>, "python": Array<string>}, "backendUrl"?: string, "targetDir"?: string}} props */
 export default function TapToRunCanvas({
   label = 'Interactive Canvas',
   stagedPayloads = { bash: [], python: [] },
@@ -50,13 +52,13 @@ export default function TapToRunCanvas({
 }) {
   const [isRunning, setIsRunning] = useState(false);
   const [status, setStatus] = useState('STAGED (IDLE)');
-  const [pid, setPid] = useState(null);
+  const [, setPid] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [showPayloadDetails, setShowPayloadDetails] = useState(false);
 
-  const canvasRef = useRef(null);
-  const wsRef = useRef(null);
-  const fallbackPollRef = useRef(null);
+  const canvasRef = useRef(/** @type {HTMLCanvasElement | null} */ (null));
+  const wsRef = useRef(/** @type {WebSocket | null} */ (null));
+  const fallbackPollRef = useRef(/** @type {ReturnType<typeof setInterval> | null} */ (null));
   const isRunningRef = useRef(false);
 
   // Keep isRunningRef in sync for cleanup/listeners
@@ -101,7 +103,8 @@ export default function TapToRunCanvas({
   }, []);
 
   // Forward mouse / touch coordinates to backend
-  const handlePointerDown = (e) => {
+  /** @param {import('react').MouseEvent<HTMLElement>} e */
+const handlePointerDown = ( e) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -203,11 +206,12 @@ export default function TapToRunCanvas({
       }
     } catch (err) {
       setStatus('ERROR');
-      setErrorMessage(err.message || 'Could not connect to root daemon (Port 8080).');
+      setErrorMessage((err instanceof Error ? err.message : String(err)) || 'Could not connect to root daemon (Port 8080).');
     }
   };
 
-  const connectWebSocket = (wsBase, httpBase) => {
+  /** @param {string} wsBase @param {string} httpBase */
+const connectWebSocket = ( wsBase,  httpBase) => {
     try {
       if (wsRef.current) {
         wsRef.current.close();
@@ -255,7 +259,8 @@ export default function TapToRunCanvas({
     }
   };
 
-  const startFallbackHttpPolling = (httpBase) => {
+  /** @param {string} httpBase */
+const startFallbackHttpPolling = ( httpBase) => {
     if (fallbackPollRef.current) return;
 
     fallbackPollRef.current = setInterval(async () => {

@@ -4,12 +4,12 @@ from typing import Dict, List, Any, Tuple
 class SovereignDocumentEngine:
     """
     Sovereign Document Context Engine for AI-BS BS-Chat.
-    Intelligently parses, indexes, and slices large attached files (.md, .txt, .json, .py, etc.)
-    so that local models (like stehouwer_llm with 8,192 token limit) can ingest documents of ANY size
-    without crashing, overflowing context, or dropping connections.
+    Selects inline text or section windows for the current request. Its transient
+    header list is not a durable search index. Shared inference admission must
+    separately check the complete system/history/source/output context budget.
     """
 
-    MAX_SAFE_DOC_CHARS = 22000  # ~5,500 tokens, safely leaves ~2,600 tokens for system prompt + response
+    MAX_SAFE_DOC_CHARS = 22000  # Legacy selection bound, not a token or model-context guarantee.
 
     @classmethod
     def parse_attachments_and_query(cls, raw_prompt: str) -> Tuple[List[Dict[str, Any]], str]:
@@ -103,18 +103,24 @@ class SovereignDocumentEngine:
     @classmethod
     def optimize_document_for_context(cls, attachment: Dict[str, Any], user_query: str) -> str:
         """
-        Takes an attachment and formats it into an optimized context payload that stays
-        within the 8,192 token window while maximizing informative depth.
+        Select inline text without claiming durable indexing or context admission.
+        The complete assembled request is independently budgeted before inference.
         """
         content = attachment["content"]
         filename = attachment["filename"]
         size_str = attachment["size_str"]
         total_chars = len(content)
+        import hashlib
+        text_sha256 = hashlib.sha256(content.encode("utf-8")).hexdigest()
+        source_scope = (f"Inline text: {total_chars:,} characters; {len(content.encode('utf-8')):,} UTF-8 bytes; "
+                        f"text SHA-256 {text_sha256}. This describes the supplied text, not original-file bytes. "
+                        "Durable indexing and model-context admission are not established by this selector.")
 
         # Case 1: Fits comfortably within token limits
         if total_chars <= cls.MAX_SAFE_DOC_CHARS:
             return (
-                f"[ATTACHED FILE: {filename} ({size_str}) — Complete Ingestion]\n"
+                f"[ATTACHED FILE: {filename} ({size_str}) — Full Inline Text]\n"
+                f"{source_scope}\n"
                 f"```{attachment.get('ext', 'md')}\n"
                 f"{content}\n"
                 f"```"
@@ -126,16 +132,18 @@ class SovereignDocumentEngine:
 
         # Check if user is asking about specific chapters or sections
         targeted_sections = []
+        requested_numbers = {int(number) for number in re.findall(r"\b(?:chapter\s+|ch\s*)(\d+)\b", user_q_lower)}
+        if not requested_numbers and re.fullmatch(r"\s*\d+\s*", user_q_lower):
+            requested_numbers = {int(user_q_lower)}
         if sections:
             for s in sections:
                 title_lower = s["title"].lower()
-                # Check for chapter number match e.g. "chapter 1", "chapter 5", "ch 1"
-                words = re.findall(r"\b(?:chapter\s+\d+|ch\s*\d+|\d+)\b", user_q_lower)
-                for w in words:
-                    num_match = re.search(r"\d+", w)
-                    if num_match and re.search(rf"\b(?:chapter\s+{num_match.group(0)}|{num_match.group(0)})\b", title_lower):
+                # Explicit chapter numbers take precedence over the generic
+                # word 'chapter', which otherwise selects the wrong first part.
+                if requested_numbers:
+                    if any(re.search(rf"\b{number}\b", title_lower) for number in requested_numbers):
                         targeted_sections.append(s)
-                        break
+                    continue
                 # Check for topic match in title
                 if not targeted_sections:
                     clean_title = re.sub(r"[#*_]", "", title_lower).strip()
@@ -153,10 +161,11 @@ class SovereignDocumentEngine:
                 section_titles = ", ".join(s["title"] for s in targeted_sections)
                 return (
                     f"[ATTACHED FILE: {filename} ({size_str}) — Target Sections Extracted: {section_titles}]\n"
+                    f"{source_scope}\n"
                     f"```{attachment.get('ext', 'md')}\n"
                     f"{targeted_text}\n"
                     f"```\n"
-                    f"*(Extracted from full {total_chars:,} character document across {len(sections)} indexed sections)*"
+                    f"*(Selected {len(targeted_sections)} of {len(sections)} transient header sections; unselected text is not included.)*"
                 )
 
         # Case 3: Comprehensive Structural Indexing & Multi-Window Synthesis
@@ -184,18 +193,18 @@ class SovereignDocumentEngine:
             open_sections = sections[:2]
             open_chunk = "\n\n".join(f"### {s['title']}:\n{s['content']}" for s in open_sections)
             if len(open_chunk) > 9000:
-                open_chunk = open_chunk[:9000] + "\n... [Chapter continued]"
+                open_chunk = open_chunk[:9000] + "\n... [Opening excerpt ends; additional text omitted]"
 
             # Middle chapter (e.g. Chapter 14 or midpoint)
             mid_idx = len(sections) // 2
             mid_section = sections[mid_idx]
-            mid_chunk = f"### {mid_section['title']} (Midpoint Milestone):\n{mid_section['content'][:5000]}\n... [Midpoint continued]"
+            mid_chunk = f"### {mid_section['title']} (Middle excerpt):\n{mid_section['content'][:5000]}\n... [Additional middle text may be omitted]"
 
             # Final 1-2 chapters
             tail_sections = sections[-2:]
             tail_chunk = "\n\n".join(f"### {s['title']}:\n{s['content']}" for s in tail_sections)
             if len(tail_chunk) > 7000:
-                tail_chunk = tail_chunk[:7000] + "\n... [Final Chapter concluded]"
+                tail_chunk = tail_chunk[:7000] + "\n... [Closing excerpt ends; additional text omitted]"
         else:
             # Document has no clear section headers, use head + mid + tail slicing
             slice_size = 6500
@@ -205,14 +214,16 @@ class SovereignDocumentEngine:
             tail_chunk = "... [Culminating Document Section] ...\n\n" + content[-slice_size:]
 
         optimized_block = (
-            f"[ATTACHED FILE: {filename} ({size_str}) — High-Capacity Smart Index Ingestion]\n"
-            f"**Document Telemetry:** {total_lines:,} lines | {word_count:,} words | {total_chars:,} bytes | {len(sections)} Structural Chapters Indexed\n\n"
-            f"**Comprehensive Chapter Index:**\n{toc_summary}\n\n"
-            f"**Detailed Content Windows (Ingested for Analysis):**\n\n"
-            f"--- [PART 1: OPENING CHAPTERS & FOUNDATIONAL THESIS] ---\n{open_chunk}\n\n"
-            f"--- [PART 2: MIDPOINT DEVELOPMENT & CORE MILESTONES] ---\n{mid_chunk}\n\n"
-            f"--- [PART 3: CULMINATING CHAPTERS & RESOLUTION] ---\n{tail_chunk}\n\n"
-            f"*(System Note: The full document has been cataloged. You can ask for granular details on ANY specific chapter or verse, and the Sovereign Engine will instantly retrieve it.)*"
+            f"[ATTACHED FILE: {filename} ({size_str}) — Partial Inline Windows]\n"
+            f"{source_scope}\n"
+            f"**Text counts:** {total_lines:,} lines | {word_count:,} words | {len(sections)} transient header sections\n\n"
+            f"**Header list (may be partial):**\n{toc_summary}\n\n"
+            f"**Selected excerpts; substantial source text is omitted:**\n\n"
+            f"--- [PART 1: OPENING EXCERPTS] ---\n{open_chunk}\n\n"
+            f"--- [PART 2: MIDDLE EXCERPT] ---\n{mid_chunk}\n\n"
+            f"--- [PART 3: CLOSING EXCERPTS] ---\n{tail_chunk}\n\n"
+            f"*(Only these excerpts accompany this request. This is not full-document review or proof that omitted passages can be retrieved later. "
+            f"Use an explicitly retained, owner-scoped indexed source or request a bounded section when more source text is needed.)*"
         )
         return optimized_block
 

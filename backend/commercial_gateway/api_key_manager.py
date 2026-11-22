@@ -155,32 +155,13 @@ def init_usage_db():
             units_consumed INTEGER
         )
     """)
-    # Provision Perpetual Master Dev Key for Owner Testing
-    master_key = "sk_aibs_dev_master_key_2026"
-    master_hash = _hash_key(master_key)
-    cursor.execute(
-        """
-        INSERT OR REPLACE INTO api_keys (key_hash, key_prefix, client_name, tier, created_at, expires_at, is_active)
-        VALUES (?, ?, ?, ?, ?, ?, 1)
-    """,
-        (
-            master_hash,
-            "sk_aibs_dev",
-            "Brett Stehouwer (Dev Master Owner)",
-            "enterprise",
-            time.time(),
-            time.time() + (365 * 86400 * 10),
-        ),
-    )
-
+    # Never seed development credentials into the commercial registry.
     conn.commit()
     conn.close()
 
 
 # Initialize tables on module load
-init_usage_db()
-
-
+# Initialization is explicit; importing authentication never writes a database.
 def create_api_key(
     tier: str = "sandbox",
     client_name: str = "TestClient",
@@ -266,26 +247,36 @@ def verify_api_key(
     if not raw_key or not isinstance(raw_key, str):
         return None
 
+    # Deny the retired development credential even if an old registry still contains it.
+    if hashlib.sha256(raw_key.encode()).hexdigest() == "3d4c8a8630f95924b4609e1f078e080e595edeb23d4475dfdc70018b54b05388":
+        return None
+    if not os.path.isfile(USAGE_DB_PATH):
+        return None
     key_hash = _hash_key(raw_key)
 
-    conn = sqlite3.connect(USAGE_DB_PATH, timeout=20.0)
+    # Authorization reads must never initialize or rewrite the registry.
+    from pathlib import Path
+    conn = None
     try:
-        conn.execute("PRAGMA journal_mode=WAL;")
-        conn.execute("PRAGMA synchronous=NORMAL;")
-    except Exception:
-        pass
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT key_hash, key_prefix, client_name, tier, expires_at, is_active, allowed_ips FROM api_keys WHERE key_hash = ?",
-        (key_hash,),
-    )
-    row = cursor.fetchone()
-    conn.close()
+        conn = sqlite3.connect(Path(USAGE_DB_PATH).resolve().as_uri()+'?mode=ro', uri=True, timeout=5)
+        row = conn.execute(
+            "SELECT key_hash,key_prefix,client_name,tier,expires_at,is_active,allowed_ips FROM api_keys WHERE key_hash=?",
+            (key_hash,),
+        ).fetchone()
+    except sqlite3.Error:
+        return None
+    finally:
+        if conn is not None: conn.close()
 
     if not row:
         return None
 
     _, prefix, client_name, tier, expires_at, is_active, allowed_ips_raw = row
+
+    # Legacy paid grants have no trusted receipt provenance. Hold access until
+    # a separately reviewed owner-scoped entitlement migration exists.
+    if tier != "sandbox":
+        return None
 
     if not is_active:
         return None
@@ -295,25 +286,22 @@ def verify_api_key(
 
     # IP Whitelist Enforcement
     if allowed_ips_raw and allowed_ips_raw.strip():
+        if not client_ip:
+            return None
         try:
             import json
 
             allowed_list = json.loads(allowed_ips_raw)
+            if not isinstance(allowed_list, list) or not allowed_list or not all(isinstance(item,str) for item in allowed_list):
+                return None
             if isinstance(allowed_list, list) and len(allowed_list) > 0:
                 if (
                     client_ip
                     and client_ip not in allowed_list
                     and "*" not in allowed_list
                 ):
-                    # Auto-authorize and bind Owner IP for Brett Stehouwer
-                    if "Brett Stehouwer" in client_name or "Owner" in client_name:
-                        allowed_list.append(client_ip)
-                        bind_ip_whitelist(raw_key, allowed_list)
-                        logger.info(
-                            f"Auto-bound new Owner IP '{client_ip}' to Passkey [{prefix}...]"
-                        )
                     # Check loopback equivalence
-                    elif client_ip in ["127.0.0.1", "::1", "localhost"] and any(
+                    if client_ip in ["127.0.0.1", "::1", "localhost"] and any(
                         h in allowed_list for h in ["127.0.0.1", "::1", "localhost"]
                     ):
                         pass
@@ -327,7 +315,8 @@ def verify_api_key(
                             "allowed_ips": allowed_list,
                         }
         except Exception as e:
-            logger.error(f"IP whitelist check error: {e}")
+            logger.error("IP whitelist validation failed")
+            return None
 
     specs = TIER_SPECS.get(tier, TIER_SPECS["sandbox"])
     return {
@@ -407,9 +396,7 @@ def init_research_db():
         logger.error(f"Failed to init research DB: {e}")
 
 
-init_research_db()
-
-
+# Initialization is explicit; importing authentication never writes a database.
 def log_social_intelligence_telemetry(
     key_hash: str,
     interaction_type: str,
@@ -475,9 +462,7 @@ def init_learning_db():
         logger.error(f"Failed to init learning DB: {e}")
 
 
-init_learning_db()
-
-
+# Initialization is explicit; importing authentication never writes a database.
 def log_request_outcome(
     key_hash: str,
     endpoint: str,

@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "handoff_id": "checkpoint27_sdk0162_local_20261103",
+  "timestamp_UTC": "2026-11-03T00:45:53.503046+00:00",
+  "outgoing_agent": "Codex /root",
+  "receiving_agent": "next executor; selected snapshot acknowledgement required",
+  "branch": "codex/audit-v532976-20261031",
+  "commit_SHA": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree": "dirty; full status retained privately and excluded from archive and ordinary cloud receipts",
+  "archive": {
+    "schema_version": 1,
+    "checkpoint": "27A",
+    "status": "locally_sealed_verified",
+    "archive_path": "D:\\AI-BS-Game-Resources\\Backups\\27A_SDK0162_SavedChapter_Software_Increment.zip",
+    "archive_bytes": 3736086,
+    "archive_sha256": "cdf9497c1cf8bf6a0a6b5beca7356e1d9ce024ce206236b34c74cf13b80d8184",
+    "manifest_sha256": "9c589e5bad14e5106f9840161f3ae15c5501614051a24240e07abbd246b757ca",
+    "selected_files": 1124,
+    "selected_bytes": 12236137,
+    "zip_members": 1127,
+    "every_member_size_SHA256_CRC_exact": true,
+    "base26A_required": true,
+    "cloud_uploaded": false,
+    "goal_complete": false,
+    "created_at": "2026-11-03T00:39:55.714509+00:00",
+    "private_status_retained_not_in_archive": true,
+    "drive_free_bytes": {
+      "C": 72543203328,
+      "D": 94884212736,
+      "E": 146813599744
+    }
+  },
+  "source_manifest_checksum": "9c589e5bad14e5106f9840161f3ae15c5501614051a24240e07abbd246b757ca",
+  "scope": "Exact selected complete source overlay on26A; no whole-repository equivalence claim",
+  "code_files_still_match_archive": 464,
+  "postseal_document_changes": {
+    "engine/out/warm_beginning/monitor_summary.json": "fcb4c849b98feed109c2cd862084d1a744d3b4a564beb3623cc8b4a6cbc79168",
+    "engine/out/build_progress.json": "92b37ac8ee9f77b1f3d416b53547b2fe0ccb049b344ef224b44988fa88d23f4a",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "c2acced4e57b607c0f67b521b72283899191579e21bb4fb9ab2356e1bf71ca6b",
+    "engine/BUILD_STATUS.md": "28e8109fe0f2e8b106b945c3579c21a463eb841161579fa24207a99cc3b5705c",
+    "engine/WARM_BEGINNING.md": "4370a01a0096a356a2a6b071d49e7376fd81d02c72a9199bdbc454a774e0daaf"
+  },
+  "completed": [
+    "SDK0.16.2 R/D builds and448-file installs",
+    "93 CPU entries passed each configuration",
+    "45 actual current-world native cases/501 checks/all46 children joined",
+    "16.1 guide metadata rebind and16.2 transient grounding visual continuity fixes",
+    "source lazy Creator/runtime discovery regression fixed",
+    "small complete-file software archive independently verified",
+    "face shape/features priority recorded; likeness remains unapproved"
+  ],
+  "verification": {
+    "route_Root_readback": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\P27-R06-root-readback.json",
+    "independent_archive_readback": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\P27_checkpoint_plan\\independent_archive_readback.json"
+  },
+  "incomplete": [
+    "24 original native entries per configuration,48 commands total",
+    "C: runtime mirror and Studio101 package/frozen saved-play smoke/deployment",
+    "naturalistic Adam likeness, user selected face shape/features first",
+    "8-12 minute human pacing and complete-opening1080p60 measurements",
+    "fresh walkthrough",
+    "current Google Drive backup; pending earlier specific archive authorization"
+  ],
+  "known_limitations": [
+    "Original switch center ray obstructed by tester; real west approach works, readability review pending",
+    "Companion/route tests use synthetic elapsed ticks and prove no human pacing or performance",
+    "Current native usesv10; separate Unreal retainsv09 and session-only progress; v12 study unintegrated",
+    "Original podium caption listening explicitly deferred; original audio not bound as reviewed"
+  ],
+  "next_implementation_step": "Use WS/native_remaining27/readiness.json to request a fresh exclusive GPU lease and execute the exact48 prepared original native commands against SDK0.16.2. Then freeze Studio101 with require-saved-play and run the real frozen smoke. In parallel, refine Adam face shape/features against private references in a separate master.",
+  "next_readiness_SHA256": "074a9b8282b38a2e77be4f7c3061d4f0ce8d3de522452281ee8119dc99719942",
+  "goal_complete": false,
+  "cloud_uploaded": false,
+  "deployed_Studio": "5.329.100",
+  "preimages": "D:\\AI-BS-Game-Resources\\Backups\\P27_Closeout_Preimages\\020922e6df7846f383ba13c0ed130064",
+  "storage_free_bytes": {
+    "C": 72521437184,
+    "D": 94883602432,
+    "E": 146813599744
+  }
+}

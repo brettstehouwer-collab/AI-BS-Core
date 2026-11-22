@@ -1,0 +1,21 @@
+{
+  "state": "FAILED",
+  "input_sha256": "a866731290ebaa17106502223883ff20ef884b454cfd5457c5e236fabce9a424",
+  "proposal": null,
+  "error_code": "invalid_model_output",
+  "finished_at_utc": "2026-11-14T14:20:52.892056+00:00",
+  "elapsed_seconds": 0.016,
+  "response_sha256": "2777763228a11be007f25ab6c9160576eb70f9f5892f4a57e9667a1a198dacd4",
+  "response_bytes": 128,
+  "public_json": {
+    "summary": "Update the selected implementation only.",
+    "steps": [
+      {
+        "path": "../outside.py",
+        "change": "Edit"
+      }
+    ],
+    "questions": []
+  },
+  "entry_sha256": "7b3e6dab99c2c8d733595275cb8ccd9bff74ffe01630c60c89c3101dfb09cd6d"
+}

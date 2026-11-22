@@ -1,0 +1,10 @@
+allContacts:
+  email: 'stehouwerjulie@gmail.com'
+  phoneNumber: '+1.6164067993'
+  postalAddress:
+    regionCode: 'US'
+    postalCode: '49503'
+    administrativeArea: 'MI'
+    locality: 'Grand Rapids'
+    addressLines: ['P.O. Box 100']
+    recipients: ['Julie Stehouwer']

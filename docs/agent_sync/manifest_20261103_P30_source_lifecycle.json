@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "at": "2026-11-03T13:17:49.566780+00:00",
+  "goal_status": "active",
+  "goal_complete": false,
+  "previous_goal_turn": "progress: verified pause checkpoint30P",
+  "classification": "progress: actual source lifetime fix and39 distinct passing CPU tests; debugger diagnostic path halted after two failed normal fixtures",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree": "Existing dirty/untracked tree preserved; selected current complete files and exact source diff archived. No global status or Master-ledger data included.",
+  "source_fix": {
+    "path": "native_studio/chat_recovery.py",
+    "before_sha256": "c687eed66fa5368c2b21d75dce55f16c8b290aeadea871276f4ec84c68a1b9b1",
+    "after_sha256": "279e15b1b0eaed88399e256497a322f446c7852f83726345d9c21122c3c7edb0",
+    "behavior": "Remember exact application filter installer; detach once during shutdown; closed guard prevents stale direct callbacks accessing view. Active close still saves and vetoes on save failure/streaming.",
+    "new_tests": "scripts/tests/test_native_chat_recovery_lifetime.py",
+    "RED": "6 tests,3 expected failures before edit; clean joined process",
+    "GREEN": "6/6 new lifecycle tests",
+    "regression": "20/20 recovery tests including6new;19/19 executive/shared-chat consumer tests;39 distinct tests",
+    "scope": "CPU/offscreen source only; no native rendering or full package acceptance claim"
+  },
+  "debugger": {
+    "status": "HALTED_after_two_fixture_cleanup_failures",
+    "builds": "R01/R02 MSVC Release strict warnings builds passed CPU2; all owned build jobs joined",
+    "attempts": [
+      {
+        "attempt": "R01",
+        "helper_fixture_status": "FAILED_handle_cleanup_contract",
+        "target_exit_code": 0,
+        "target_and_all_owned_jobs_joined": true,
+        "helper_handles_before": 100,
+        "helper_handles_after": 103,
+        "intentional_AV_fixture_run": false,
+        "Studio101_run": false
+      },
+      {
+        "attempt": "R02",
+        "helper_fixture_status": "FAILED_handle_cleanup_contract",
+        "target_exit_code": 0,
+        "target_and_all_owned_jobs_joined": true,
+        "helper_handles_before": 100,
+        "helper_handles_after": 102,
+        "intentional_AV_fixture_run": false,
+        "Studio101_run": false
+      }
+    ],
+    "observed_R02_own_job_members": "Exact target plus C:/Windows/System32/conhost.exe, both stopped. No process leak claimed; helper handle delta remains unexplained.",
+    "SIP_crash_cause": "UNPROVEN; actual Studio101 not launched this turn",
+    "dumps_created": false
+  },
+  "EngineBus_hazard": "still unfixed; shutdown3000 may return with a live worker; MainWindow does not gate close on actual pool drain",
+  "deployed_launcher": "5.329.100 unchanged",
+  "candidate101": "immutable failed normal-close candidate; source fix not packaged or deployed",
+  "SDK": "0.16.3 existing baseline unchanged; no new GPU/CTest claim",
+  "owned_live_jobs_or_sessions": 0,
+  "space_free_bytes": {
+    "C": 64321380352,
+    "D": 88280834048,
+    "E": 146813599744
+  },
+  "next_step": "Implement and test bounded EngineBus drain plus nonblocking MainWindow/sampler close coordination, preserving final chat save veto and allowing edits/retry before teardown. Resolve private debugger handle evidence separately before reusing it. Build a fresh candidate only after the complete close contract is verified; preserve100/101.",
+  "remaining": "Full packaged normal-close acceptance, Adam likeness,8\u201312 minute human pacing,1080p60 measurement,current walkthrough,complete latest source/art backup remain unfinished.",
+  "backup": "30A selected current source/design/evidence increment; not standalone complete project restoration. Excludes original family media, private memory/WER, credentials, Git metadata and Master ledger.",
+  "backup30A": {
+    "status": "verified_authenticated_Drive_raw_restore",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\30A_Chat_Filter_Lifetime_Source_20261103.zip",
+    "bytes": 348729,
+    "sha256": "a5f913e66a45db49aff59bb7817aac934197ba94bc7fc34497b09e4d3dd04085",
+    "members": 47,
+    "scope": "30A selected current source/design/evidence increment; not standalone complete project restoration. Excludes original family media, private memory/WER, credentials, Git metadata and Master ledger.",
+    "source_fix_tests_distinct": 39,
+    "goal_complete": false,
+    "owned_jobs_live": 0,
+    "handoff": "C:\\AI-BS\\docs\\agent_sync\\manifest_20261103_P30_source_lifecycle.json",
+    "space_free_bytes": {
+      "C": 64321380352,
+      "D": 88280834048,
+      "E": 146813599744
+    },
+    "at": "2026-11-03T13:18:45.854779+00:00",
+    "Drive_file_id": "1Ifsmnnf_7x5ujDOO56sPBqmwk_qd2Enk",
+    "Drive_url": "https://drive.google.com/file/d/1Ifsmnnf_7x5ujDOO56sPBqmwk_qd2Enk/view?usp=drivesdk",
+    "parent_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+    "every_member_SHA256_size_CRC_and_exact_set_verified": true
+  },
+  "source_SHA256": {
+    "native_studio/chat_recovery.py": "279e15b1b0eaed88399e256497a322f446c7852f83726345d9c21122c3c7edb0",
+    "scripts/tests/test_native_chat_recovery_lifetime.py": "42c73e8fb2516cf4ed89174b6fac71779daf7c4fe18a9985f559bb247165b21e",
+    "native_studio/engine.py": "5bbce2e12871dd4ba76c4eccbd316867e8baf8b53b3b5aaa7a7f8c55004ac5e1",
+    "native_studio/app.py": "b14d532f8b94d37a2050898e2962df808a8edf9e74a0611c14d03f2d264515ad"
+  },
+  "public_document_SHA256": {
+    "engine/out/warm_beginning/monitor_summary.json": "79063019dc8ff9551039bd07e35379afa4c140c3e0da8340cb53808556be0102",
+    "engine/out/build_progress.json": "3b751d5c29072cae6755f8c866bea2ab321b87b7deeccd4c9694d0dd70137343",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "dfac2f9f765a807bb9a2608535158b282ffee52ca8b7c9b155d31019f4d2e97a",
+    "engine/BUILD_STATUS.md": "a346403ccf9044be5a8b0d762d137596799a3ed1bdc962f82875d7ea391232bb",
+    "engine/WARM_BEGINNING.md": "991801f6e78b35d2e1ba5d4c46b4078bc17e70d6f329e627a2a047154d8f348e"
+  }
+}

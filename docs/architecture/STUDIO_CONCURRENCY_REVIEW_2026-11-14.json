@@ -1,0 +1,171 @@
+{
+  "schema": 1,
+  "utc": "2026-11-14T12:18:35.8179851Z",
+  "status": "REVIEWED_PROPOSED_NOT_IMPLEMENTED",
+  "ready_for_execution": false,
+  "implementation_performed": false,
+  "markdown": "docs/architecture/STUDIO_CONCURRENCY_REVIEW_2026-11-14.md",
+  "branch": "codex/audit-v532976-20261031",
+  "head": "64fad2871e0a716d9964f506bdef1050612b173d",
+  "review_scope": "Bounded current-source review and official Qt/Python documentation; no exhaustive caller audit",
+  "actual_namespace": "native_studio",
+  "absent_paths": [
+    "ai_bs_studio",
+    "ai_bs_studio/core",
+    "native_studio/core",
+    "native_studio/ai_bs_ide.py"
+  ],
+  "runtime_evidence": {
+    "pyqt": "6.11.0",
+    "python": "3.12.14",
+    "qt": "6.11.0",
+    "new_runtime_tests_for_this_review": false,
+    "path": "backups/resume_20261114_creative_qualification_v01/probe-result.json"
+  },
+  "source_evidence": [
+    {
+      "classification": "VERIFIED_SOURCE",
+      "sha256": "6a87fab20d1a2e535478fc2dddf85678e23b18dae45497436894287bf6f36fce",
+      "scope": "WorkerSignals/Task/relay/EngineBus lifecycle and admission",
+      "line": 76,
+      "path": "native_studio/engine.py"
+    },
+    {
+      "classification": "VERIFIED_SOURCE",
+      "sha256": "51d1bfbfdef6eaa044652ddafed35f715803eae8a315f49e3b726fb23105c29e",
+      "scope": "JobSpec and owned process batch lifecycle",
+      "line": 42,
+      "path": "native_studio/process_batch.py"
+    },
+    {
+      "classification": "VERIFIED_SOURCE",
+      "sha256": "c5e8960061b0a21e7a307f4a78312da277c65fc90d215872cc947b8aa54a3c4c",
+      "scope": "QProcess transport and serial terminal ownership",
+      "line": 176,
+      "path": "native_studio/ai_bs_ide_terminal.py"
+    },
+    {
+      "classification": "VERIFIED_SOURCE",
+      "sha256": "6a4d59f07122d466c3080a945b806b58813dcc2662df220346de9931891c278e",
+      "scope": "Application close barriers",
+      "line": 1170,
+      "path": "native_studio/app.py"
+    },
+    {
+      "classification": "VERIFIED_SOURCE",
+      "sha256": "5bc5ab1847f6eb4ec98213d4fdd0c5479f967dd8b8421594d1951dfaac593049",
+      "scope": "Nonblocking close/drain",
+      "line": 51,
+      "path": "native_studio/work_controls_app.py"
+    },
+    {
+      "classification": "VERIFIED_SOURCE",
+      "sha256": "65aea467f3f849386367b41dfe905c92872f70ed24623ff1e02517895c45adaa",
+      "scope": "Creative pool close boundary",
+      "line": 34,
+      "path": "native_studio/native_creative_entry.py"
+    },
+    {
+      "classification": "VERIFIED_SOURCE",
+      "sha256": "28b98ace71b75d2284ab8cb01e9be715678a051ee7f51d8f7bdbc6b1e2ee3f3f",
+      "scope": "Actual application/package entry",
+      "line": 29,
+      "path": "native_studio/AI_BS_Studio.spec"
+    }
+  ],
+  "decision": "Extend compatible Task/EngineBus adapters and logical workspace admission; preserve existing shared pool, queued GUI relays and native-drain ownership",
+  "requested_features": [
+    "Opt-in generic callable adapter and progress callback/task context",
+    "Opaque task IDs and task/result/error/finished/progress envelopes",
+    "Bounded safe error tuple with no live traceback retention",
+    "Workspace/owner/revision/generation binding",
+    "Workload-aware LLM/Chroma/AST/process routing"
+  ],
+  "preserved_contracts": [
+    "Existing submit/dispatch call signatures and legacy signal payloads",
+    "setAutoDelete(False) and pool barrier retention",
+    "Default admission semantics and shared aggregate cap",
+    "Existing cooperative cancellation and GUI lifecycle",
+    "ProcessBatchController/OwnedProcess/QProcess helper boundaries",
+    "Provider and GPU admission, Chroma storage bins and SQLite authority",
+    "Creative owner/CAS, editor journal and reviewed source pins"
+  ],
+  "gaps": [
+    "No generic progress/task ID/workspace quota in current Task",
+    "Task callable does not automatically receive cancellation event",
+    "Declared TASK_TIMEOUT_S not enforced in Task.run",
+    "String error public/diagnostic separation requires new policy",
+    "Workspace fairness and owner/revision commit gates need caller-specific adapters"
+  ],
+  "phases": [
+    "Contract and measured read-only baseline",
+    "Opt-in compatible context/progress/error adapter",
+    "Logical workspace admission and bounded progress",
+    "Synthetic lifecycle/context/load qualification",
+    "One harmless caller migration then separate release/pin review"
+  ],
+  "acceptance": [
+    "GUI receiver thread identity and explicit queued slots",
+    "Progress payload/rate bounds, coalescing, terminal delivery",
+    "Queued and cooperative running cancellation",
+    "Owner/revision/generation stale commit rejection",
+    "Exactly one terminal outcome and no finish-as-drain shortcut",
+    "Real pool/child/helper join before owner destruction",
+    "No model/provider/private-store use in synthetic qualification"
+  ],
+  "performance_claims": {
+    "workspace_limits": "PROPOSED_TO_BE_MEASURED",
+    "new_benchmark_run": false,
+    "sub_millisecond_guarantee": "REJECTED_UNMEASURED",
+    "suggested_progress_hz": 10,
+    "multicore_python_thread_speedup": "NOT_ASSUMED_CPYTHON_GIL"
+  },
+  "official_references": [
+    {
+      "status": "READ",
+      "url": "https://doc.qt.io/qt-6.11/threads-qobject.html",
+      "supports": "Thread affinity, main-thread widgets, queued delivery, event loops and QObject disposal"
+    },
+    {
+      "status": "READ",
+      "url": "https://doc.qt.io/qt-6.11/qthreadpool.html",
+      "supports": "Admission/ownership, queue removal, joins and blocking destructor"
+    },
+    {
+      "status": "READ",
+      "url": "https://doc.qt.io/qt-6.11/qrunnable.html",
+      "supports": "Runnable ownership, autoDelete and reuse race"
+    },
+    {
+      "status": "READ",
+      "url": "https://doc.qt.io/qt-6.11/qprocess.html",
+      "supports": "Asynchronous child transport and blocking-wait boundary"
+    },
+    {
+      "status": "READ",
+      "url": "https://docs.python.org/3.12/library/threading.html",
+      "supports": "CPython GIL and I/O concurrency"
+    },
+    {
+      "status": "UNAVAILABLE_TOOL_RETRIEVAL",
+      "url": "https://www.riverbankcomputing.com/static/Docs/PyQt6/signals_slots.html",
+      "supports": "No claims based on unavailable content; binding-specific tests remain required"
+    }
+  ],
+  "retrieval_limit": "Documentation connector rejected search schema; built-in web retrieved only primary Qt/Python sources. Official PyQt page inaccessible; no third-party or PySide substitute used.",
+  "open_gates": [
+    "Proposal not implemented or authorized for automatic execution",
+    "New binding-specific ownership/progress adapter tests",
+    "Measured responsiveness/resource thresholds",
+    "Shared-engine pin reconciliation before any future reuse",
+    "Normal fixed-launcher close/browser and release gates remain separate; root reports retained90-second normal-close timeout"
+  ],
+  "not_performed": [
+    "Implementation or package creation",
+    "Model/provider requests",
+    "Services or browser interaction",
+    "Private document/database content reads",
+    "Manifest promotion, deployment or root plan/pointer edits"
+  ],
+  "next": "Separately authorized contract/baseline phase; retain REVIEWED_PROPOSED_NOT_IMPLEMENTED status"
+}

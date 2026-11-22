@@ -48,6 +48,8 @@ export default defineConfig({
 
   resolve: {
     dedupe: [
+      'react',
+      'react-dom',
       'firebase',
       'firebase/app',
       'firebase/auth',

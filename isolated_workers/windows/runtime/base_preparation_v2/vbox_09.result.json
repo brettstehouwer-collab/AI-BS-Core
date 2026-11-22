@@ -1,0 +1,15 @@
+﻿{
+    "Arguments":  [
+                      "storagectl",
+                      "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                      "--name=SATA",
+                      "--add=sata",
+                      "--controller=IntelAhci",
+                      "--portcount=2",
+                      "--bootable=on"
+                  ],
+    "PID":  88516,
+    "ExitCode":  0,
+    "TimedOut":  false,
+    "TimestampUTC":  "2026-10-23T21:07:30.1112503Z"
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { Atom, FileText, Database } from 'lucide-react';
 
 export default function QuantumComputingSuiteTab() {

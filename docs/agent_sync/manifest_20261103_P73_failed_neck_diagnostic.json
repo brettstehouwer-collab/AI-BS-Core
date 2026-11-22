@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-04T02:30:27.304813+00:00",
+  "status": "FAILED",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "verification": "D:\\AI-BS-Game-Resources\\P73\\Adam_NeckSurfaceStudy\\verification.json",
+  "all_owned_jobs_joined": true,
+  "goal_complete": false,
+  "next_step": "Do not repeat the failed smoothing operations. Review a repair with explicit cumulative displacement/triangle constraints or local retopology before another neck build. Independent hair/clothing work and prepared user-started opening review remain available. Caption review, human pacing/performance and final package acceptance remain required."
+}

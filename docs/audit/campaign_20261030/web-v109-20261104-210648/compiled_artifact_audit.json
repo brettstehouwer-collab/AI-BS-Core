@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "files": 1137,
+  "resolved_module_dependencies": 122,
+  "selected_files": [
+    "assets/bs-game-native-preview.png",
+    "bs-game/index.html",
+    "bs-game/vendor/three-r128.min.js",
+    "css/ExecutiveCockpitTab.BmmORqWr.css",
+    "css/ScreenwritingTab.BygOmaJ2.css",
+    "css/main.za8UzT5A.css",
+    "css/vendor.DULRuONn.css",
+    "css/writer.FSu0jXfB.css",
+    "index.html",
+    "js/ExecutiveCockpitTab.CyFUt9qS.js",
+    "js/ScreenwritingTab.6xyF4hgx.js",
+    "js/main.CUw-8oxI.js",
+    "js/vendor.wLS_oeq3.js",
+    "js/writer.j51cT_UF.js",
+    "sw.js",
+    "version.json",
+    "web-release.json",
+    "writer.html"
+  ],
+  "overview_files": [
+    "css/ExecutiveCockpitTab.BmmORqWr.css",
+    "js/ExecutiveCockpitTab.CyFUt9qS.js"
+  ]
+}

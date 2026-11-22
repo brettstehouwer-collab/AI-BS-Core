@@ -1,0 +1,31 @@
+{
+  "actor": "/root/network_baseline",
+  "timestamp_utc": "2026-10-25T21:24:59.807003+00:00",
+  "timezone": "UTC",
+  "confidence": "OBSERVED",
+  "target": "C:\\AI-BS\\backend\\commercial_gateway\\site_analytics.db",
+  "site_filter": "stehouwer_publishing",
+  "method": "Existing-file SQLite URI mode=ro&immutable=1; PRAGMA query_only=ON; aggregate SELECT only; no application imports or route calls",
+  "raw_visitor_records_read_into_python": false,
+  "credentials_or_identifiers_exported": false,
+  "db_writes_performed": false,
+  "status": "stable_aggregate_read",
+  "before_metadata": {
+    "bytes": 6946816,
+    "mtime_ns": 1792962865969928900,
+    "wal_exists": false,
+    "wal_bytes": null
+  },
+  "after_metadata": {
+    "bytes": 6946816,
+    "mtime_ns": 1792962865969928900,
+    "wal_exists": false,
+    "wal_bytes": null
+  },
+  "aggregates": {
+    "event_rows": 4932,
+    "distinct_session_count": 606,
+    "max_event_timestamp_epoch": 1792777492.6529877
+  },
+  "interpretation": "COUNT(*) includes every event type, not only pageviews; distinct sessions are not distinct people. With analytics scripts excluded and raw HTTP probes that do not execute JavaScript, no new analytics rows are expected. A lack of new rows does not prove static website failure. Immutable mode ignores WAL, so admission requires no WAL and unchanged size/mtime before and after."
+}

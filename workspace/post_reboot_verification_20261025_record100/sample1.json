@@ -1,0 +1,157 @@
+{
+  "observed_utc": "2026-10-25T22:25:02.5401118Z",
+  "last_boot_utc": "2026-10-25T22:12:53.5000000Z",
+  "windows_user": "footb",
+  "total_physical_bytes": 66193207296,
+  "free_physical_bytes": 43138428928,
+  "committed_bytes": 27576381440,
+  "commit_limit_bytes": 132386414592,
+  "commit_percent": 20.830220022943667,
+  "pagefiles": [
+    {
+      "Name": "C:\\pagefile.sys",
+      "AllocatedBaseSize": 63126,
+      "CurrentUsage": 0,
+      "PeakUsage": 0
+    }
+  ],
+  "pagefile_file_bytes": 66193207296,
+  "automatic_managed_pagefile": false,
+  "pagefile_settings": [
+    {
+      "Name": "C:\\pagefile.sys",
+      "InitialSize": 0,
+      "MaximumSize": 0
+    }
+  ],
+  "registry_paging_files": [
+    "C:\\pagefile.sys 0 0"
+  ],
+  "drives": [
+    {
+      "DeviceID": "C:",
+      "Size": 1796861837312,
+      "FreeSpace": 157376466944
+    },
+    {
+      "DeviceID": "D:",
+      "Size": 510770802688,
+      "FreeSpace": 60686950400
+    },
+    {
+      "DeviceID": "E:",
+      "Size": 899427594240,
+      "FreeSpace": 115392757760
+    },
+    {
+      "DeviceID": "F:",
+      "Size": 79990812672,
+      "FreeSpace": 65971441664
+    }
+  ],
+  "codex": [
+    {
+      "pid": 22512,
+      "name": "codex",
+      "exe": "C:\\Users\\footb\\AppData\\Local\\OpenAI\\Codex\\bin\\2993767bd1dfb009\\codex.exe",
+      "private_bytes": 13758464,
+      "working_set_bytes": 70852608,
+      "created_utc": "2026-10-25T22:14:03.2799639Z"
+    },
+    {
+      "pid": 30896,
+      "name": "codex",
+      "exe": "C:\\Users\\footb\\AppData\\Local\\OpenAI\\Codex\\bin\\2993767bd1dfb009\\codex.exe",
+      "private_bytes": 4596248576,
+      "working_set_bytes": 3208953856,
+      "created_utc": "2026-10-25T22:13:50.4026599Z"
+    }
+  ],
+  "top_processes": [
+    {
+      "pid": 30896,
+      "name": "codex",
+      "private_bytes": 4596248576,
+      "working_set_bytes": 3208953856,
+      "created_utc": "2026-10-25T22:13:50.4026599Z"
+    },
+    {
+      "pid": 24840,
+      "name": "vmmemWSL",
+      "private_bytes": 4354043904,
+      "working_set_bytes": 4240715776,
+      "created_utc": "2026-10-25T22:13:15.5626073Z"
+    },
+    {
+      "pid": 35908,
+      "name": "python",
+      "private_bytes": 1625284608,
+      "working_set_bytes": 821448704,
+      "created_utc": "2026-10-25T22:13:53.4099434Z"
+    },
+    {
+      "pid": 6404,
+      "name": "MsMpEng",
+      "private_bytes": 708661248,
+      "working_set_bytes": 728670208,
+      "created_utc": "2026-10-25T22:13:06.0324418Z"
+    },
+    {
+      "pid": 34500,
+      "name": "ChatGPT",
+      "private_bytes": 543879168,
+      "working_set_bytes": 613588992,
+      "created_utc": "2026-10-25T22:13:50.2330557Z"
+    },
+    {
+      "pid": 35992,
+      "name": "node",
+      "private_bytes": 487682048,
+      "working_set_bytes": 431345664,
+      "created_utc": "2026-10-25T22:13:53.4406276Z"
+    },
+    {
+      "pid": 2916,
+      "name": "dwm",
+      "private_bytes": 479944704,
+      "working_set_bytes": 124870656,
+      "created_utc": "2026-10-25T22:13:05.4554326Z"
+    },
+    {
+      "pid": 33644,
+      "name": "ChatGPT",
+      "private_bytes": 422264832,
+      "working_set_bytes": 541663232,
+      "created_utc": "2026-10-25T22:13:46.0231599Z"
+    },
+    {
+      "pid": 13616,
+      "name": "explorer",
+      "private_bytes": 352915456,
+      "working_set_bytes": 440545280,
+      "created_utc": "2026-10-25T22:13:08.2700728Z"
+    },
+    {
+      "pid": 11156,
+      "name": "Salad.Bowl.Service",
+      "private_bytes": 270467072,
+      "working_set_bytes": 308752384,
+      "created_utc": "2026-10-25T22:13:07.0841234Z"
+    },
+    {
+      "pid": 37900,
+      "name": "ChatGPT",
+      "private_bytes": 269242368,
+      "working_set_bytes": 335339520,
+      "created_utc": "2026-10-25T22:14:03.0438105Z"
+    },
+    {
+      "pid": 31840,
+      "name": "RadeonSoftware",
+      "private_bytes": 267223040,
+      "working_set_bytes": 81215488,
+      "created_utc": "2026-10-25T22:13:43.3910030Z"
+    }
+  ],
+  "scope": "Read-only OS/process queries; no environment, command line, memory dump, deletion or settings changes"
+}

@@ -1,0 +1,1 @@
+print('PY_MULTI_OK', 21 * 2)

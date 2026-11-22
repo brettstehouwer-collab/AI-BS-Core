@@ -1,0 +1,517 @@
+{
+  "root": "C:/AI-BS",
+  "directories": [
+    {
+      "name": "Agent Vector Memory",
+      "file_count": 0
+    },
+    {
+      "name": "Agent_Handoff_Summaries",
+      "file_count": 25
+    },
+    {
+      "name": "Agent_Implementation_Plans_History",
+      "file_count": 95
+    },
+    {
+      "name": "Agent_Tasks_History",
+      "file_count": 97
+    },
+    {
+      "name": "AI-BS-Models",
+      "file_count": 11
+    },
+    {
+      "name": "AI-BS_Knowledge_Vaults",
+      "file_count": 0
+    },
+    {
+      "name": "AI-BS_Modual_Video_Editing",
+      "file_count": 83
+    },
+    {
+      "name": "AI-BS_Module_Video_Editing",
+      "file_count": 1
+    },
+    {
+      "name": "AI_History_BS",
+      "file_count": 2
+    },
+    {
+      "name": "Android Studio",
+      "file_count": 3190
+    },
+    {
+      "name": "antigravity-sdk-python",
+      "file_count": 268
+    },
+    {
+      "name": "apps",
+      "file_count": 7808
+    },
+    {
+      "name": "Archive_Legacy",
+      "file_count": 3
+    },
+    {
+      "name": "aria2-1.37.0-win-64bit-build1",
+      "file_count": 8
+    },
+    {
+      "name": "assets",
+      "file_count": 23
+    },
+    {
+      "name": "backend",
+      "file_count": 67519
+    },
+    {
+      "name": "blobs",
+      "file_count": 33
+    },
+    {
+      "name": "BroadcastStudioApp",
+      "file_count": 76620
+    },
+    {
+      "name": "build",
+      "file_count": 16
+    },
+    {
+      "name": "Buissnessuit",
+      "file_count": 823
+    },
+    {
+      "name": "chroma_db",
+      "file_count": 106
+    },
+    {
+      "name": "cloudflare-agent",
+      "file_count": 2
+    },
+    {
+      "name": "ComfyUI",
+      "file_count": 94426
+    },
+    {
+      "name": "Context_Memory_Swap",
+      "file_count": 0
+    },
+    {
+      "name": "Crypto-Swarm",
+      "file_count": 2487
+    },
+    {
+      "name": "data",
+      "file_count": 11
+    },
+    {
+      "name": "database",
+      "file_count": 29
+    },
+    {
+      "name": "datasets",
+      "file_count": 0
+    },
+    {
+      "name": "docs",
+      "file_count": 488
+    },
+    {
+      "name": "Documents",
+      "file_count": 29
+    },
+    {
+      "name": "downloads_archive",
+      "file_count": 3
+    },
+    {
+      "name": "frontend",
+      "file_count": 237948
+    },
+    {
+      "name": "Gemini_Takeout_Data",
+      "file_count": 1
+    },
+    {
+      "name": "Gemini_Takeout_Dataparrent",
+      "file_count": 1424
+    },
+    {
+      "name": "genkit_server",
+      "file_count": 20415
+    },
+    {
+      "name": "go-core",
+      "file_count": 12
+    },
+    {
+      "name": "go_telemetry_gateway",
+      "file_count": 1
+    },
+    {
+      "name": "Heuristics",
+      "file_count": 2
+    },
+    {
+      "name": "InstallerEXE's",
+      "file_count": 11
+    },
+    {
+      "name": "JuliesPlace",
+      "file_count": 8
+    },
+    {
+      "name": "llm_training_data",
+      "file_count": 5
+    },
+    {
+      "name": "logs",
+      "file_count": 37
+    },
+    {
+      "name": "MASTER_KNOWLEDGE_VAULT",
+      "file_count": 135
+    },
+    {
+      "name": "MP4 medial screen recordings",
+      "file_count": 51
+    },
+    {
+      "name": "music",
+      "file_count": 6
+    },
+    {
+      "name": "New folder",
+      "file_count": 0
+    },
+    {
+      "name": "New folder (2)",
+      "file_count": 0
+    },
+    {
+      "name": "NoCo Vision",
+      "file_count": 3
+    },
+    {
+      "name": "NotebookLM_Records",
+      "file_count": 1
+    },
+    {
+      "name": "obs-core",
+      "file_count": 2148
+    },
+    {
+      "name": "output",
+      "file_count": 11
+    },
+    {
+      "name": "PrestigeMobileWash",
+      "file_count": 26448
+    },
+    {
+      "name": "pyppeteer_env",
+      "file_count": 74408
+    },
+    {
+      "name": "rust_master_worker",
+      "file_count": 4
+    },
+    {
+      "name": "sandbox",
+      "file_count": 18738
+    },
+    {
+      "name": "sandbox_scratch",
+      "file_count": 175
+    },
+    {
+      "name": "saved_data",
+      "file_count": 129
+    },
+    {
+      "name": "schemas",
+      "file_count": 4
+    },
+    {
+      "name": "scratch",
+      "file_count": 388
+    },
+    {
+      "name": "screenplay_projects",
+      "file_count": 707
+    },
+    {
+      "name": "ScreenShots",
+      "file_count": 21
+    },
+    {
+      "name": "scripts",
+      "file_count": 63
+    },
+    {
+      "name": "self_hosted_supabase",
+      "file_count": 2
+    },
+    {
+      "name": "shared_cloud_drive",
+      "file_count": 56410
+    },
+    {
+      "name": "skills",
+      "file_count": 23
+    },
+    {
+      "name": "state",
+      "file_count": 17
+    },
+    {
+      "name": "stehouwer_vector_memory",
+      "file_count": 5636
+    },
+    {
+      "name": "streams",
+      "file_count": 0
+    },
+    {
+      "name": "summaries",
+      "file_count": 1
+    },
+    {
+      "name": "temp_unzip",
+      "file_count": 22
+    },
+    {
+      "name": "tests",
+      "file_count": 23
+    },
+    {
+      "name": "tools",
+      "file_count": 62709
+    },
+    {
+      "name": "tts_output",
+      "file_count": 0
+    },
+    {
+      "name": "UnrealHub",
+      "file_count": 84
+    },
+    {
+      "name": "uploads",
+      "file_count": 2
+    },
+    {
+      "name": "vast_logs",
+      "file_count": 18
+    },
+    {
+      "name": "VRAM_Tensor_Swap",
+      "file_count": 0
+    },
+    {
+      "name": "workflows",
+      "file_count": 2
+    },
+    {
+      "name": "Workflows for comfy ui",
+      "file_count": 11
+    },
+    {
+      "name": "workspace",
+      "file_count": 1
+    },
+    {
+      "name": "zmomreasarch",
+      "file_count": 17
+    },
+    {
+      "name": "_archive_v1",
+      "file_count": 89592
+    },
+    {
+      "name": "__pycache__",
+      "file_count": 229
+    }
+  ],
+  "databases": [
+    {
+      "name": "audio_catalog.db",
+      "size_kb": 128328.0,
+      "tables": [
+        "audio_assets",
+        "sqlite_sequence",
+        "audio_assets_fts",
+        "audio_assets_fts_data",
+        "audio_assets_fts_idx",
+        "audio_assets_fts_docsize",
+        "audio_assets_fts_config",
+        "audio_corpus_fts",
+        "audio_corpus_fts_data",
+        "audio_corpus_fts_idx",
+        "audio_corpus_fts_content",
+        "audio_corpus_fts_docsize",
+        "audio_corpus_fts_config"
+      ]
+    },
+    {
+      "name": "calendar.db",
+      "size_kb": 24.0,
+      "tables": [
+        "appointments",
+        "sqlite_sequence",
+        "calendar_action_tasks"
+      ]
+    },
+    {
+      "name": "cro_quantitative_ledger.db",
+      "size_kb": 20.0,
+      "tables": [
+        "cro_trade_ledger",
+        "sqlite_sequence",
+        "cro_price_history",
+        "macro_events_log"
+      ]
+    },
+    {
+      "name": "drip_ledger.db",
+      "size_kb": 16.0,
+      "tables": [
+        "ledger_state",
+        "trades",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "name": "leads_store.db",
+      "size_kb": 20.0,
+      "tables": [
+        "leads",
+        "joey_enriched_leads"
+      ]
+    },
+    {
+      "name": "learning_data.db",
+      "size_kb": 8.0,
+      "tables": [
+        "learning_data"
+      ]
+    },
+    {
+      "name": "LLM_CrossCheck_Ledger.db",
+      "size_kb": 376.0,
+      "tables": [
+        "crosscheck_ledger",
+        "sqlite_sequence"
+      ]
+    },
+    {
+      "name": "message_broker.db",
+      "size_kb": 16.0,
+      "tables": [
+        "broker_messages",
+        "sqlite_sequence",
+        "broker_stats"
+      ]
+    },
+    {
+      "name": "model_state.db",
+      "size_kb": 4.0,
+      "tables": []
+    },
+    {
+      "name": "reasoning_traces_pending.db",
+      "size_kb": 12.0,
+      "tables": [
+        "pending"
+      ]
+    },
+    {
+      "name": "security_events.db",
+      "size_kb": 24.0,
+      "tables": [
+        "security_events",
+        "sqlite_sequence",
+        "ip_blacklist",
+        "admin_access_logs"
+      ]
+    },
+    {
+      "name": "stehouwer_chronology.db",
+      "size_kb": 1156.0,
+      "tables": [
+        "sqlite_sequence",
+        "chronology_fts",
+        "chronology_fts_data",
+        "chronology_fts_idx",
+        "chronology_fts_content",
+        "chronology_fts_docsize",
+        "chronology_fts_config",
+        "chronology_meta"
+      ]
+    },
+    {
+      "name": "vision_sync_state.db",
+      "size_kb": 644.0,
+      "tables": [
+        "processed_images"
+      ]
+    }
+  ],
+  "ollama_fleet": [
+    "nemotron-3.5-lightning:latest",
+    "gemma4:12b",
+    "qwen3.6:latest",
+    "stehouwer_llm:latest",
+    "stehouwer_dolphin:latest",
+    "stehouwer_qwen:latest",
+    "stehouwer_hermes:latest",
+    "qwen2.5-coder:latest",
+    "llama3.1:latest",
+    "command-r:latest",
+    "mixtral:latest",
+    "llama3:latest",
+    "nomic-embed-text:latest"
+  ],
+  "active_ports": {
+    "8000": {
+      "desc": "Go Matrix / FastAPI Gateway (Port 8000)",
+      "status": "ONLINE",
+      "http_status": 404
+    },
+    "8189": {
+      "desc": "ComfyUI RTX 4090 (Port 8189)",
+      "status": "ONLINE",
+      "http_status": 200
+    },
+    "8080": {
+      "desc": "Unreal Engine 5.8 Bridge (Port 8080)",
+      "status": "ONLINE",
+      "http_status": 200
+    },
+    "8088": {
+      "desc": "OBS Zero-Copy Direct3D11 Streamer (Port 8088)",
+      "status": "IDLE / OFFLINE"
+    },
+    "11434": {
+      "desc": "Ollama Multi-Model Swarm Daemon (Port 11434)",
+      "status": "ONLINE",
+      "http_status": 200
+    },
+    "5173": {
+      "desc": "Vite React Local Dev Server (Port 5173)",
+      "status": "ONLINE",
+      "http_status": 200
+    }
+  },
+  "storage_summary": {
+    "total_top_level_directories": 83,
+    "total_indexed_files": 852309
+  },
+  "reasoning_engine_status": {
+    "status": "HEALTHY",
+    "math_autograd": "AVAILABLE",
+    "memory_vault": "ONLINE",
+    "fts5_ledger": "ATTACHED"
+  }
+}

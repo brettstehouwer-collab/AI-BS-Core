@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "32184bfd18f64b4b8663f9ca747dacab",
+  "plan_id": "e688a56d3d67484aa74366749f4c9d89",
+  "snapshot_sha256": "ffb8597535615de2007abe8f7a948475fe4f0446d644c9c472dc1aaace8b7b95",
+  "review_digest": "db42994db9b968ea4b434a3f628144f97edc99a697143bac02bf0c92cd850278",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "82c434e2cb1f47ccbc876493c1bab5e8",
+  "reviewed_plan_sha256": "b9ede0afa027599500474d505b9bb59d88392468a237e7b19ce27403c07a5e68",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 35052,
+    "created": 1794664412.676453
+  },
+  "created_at_utc": "2026-11-14T13:53:34.908195+00:00",
+  "entry_sha256": "1c74d67966a70355e589bfe3ca745c5d90511881c6f80b0396921a0cad232bd0"
+}

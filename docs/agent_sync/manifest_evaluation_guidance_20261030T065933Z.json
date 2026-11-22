@@ -1,0 +1,163 @@
+{
+  "handoff_id": "evaluation_guidance_20261030T065933Z",
+  "timestamp_utc": "20261030T065933Z",
+  "protocol": "AI-BS-UADP-1.0",
+  "record": 186,
+  "adr": 113,
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "next authorized engineering agent",
+  "repository": "C:\\AI-BS",
+  "commit": "e45f1b5075619bd3ae7f4bbb506c0ea021eb6732",
+  "branch": "main",
+  "version": "v5.329.72",
+  "working_tree": "shared dirty checkout preserved; no staging or commit",
+  "changed_paths": [
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_DECISIONS.md",
+    "docs/CODEX_TASKS.md",
+    "scripts/agent_sync/sync_gateway.py",
+    "scripts/import_historical_knowledge.py",
+    "scripts/tests/test_import_historical_knowledge.py",
+    "learning/historical_knowledge/README.md",
+    "scripts/tests/test_sync_gateway_evidence.py",
+    "learning/LLM_EVALUATION_GUIDE_2026-10-30.md",
+    "learning/llm_evaluation_sources_2026-10-30.json",
+    "learning/LLM_EVALUATION_INTEGRATION_2026-10-30.md"
+  ],
+  "source_file_hashes": {
+    "AGENTS.md": {
+      "sha256": "46e5541ddef2e02f01ca6b21dae7db3882f458a12d421a8540fde55e3a7647a3",
+      "bytes": 4551
+    },
+    "docs/CODEX_HANDOFF.md": {
+      "sha256": "2cadea993a805941d2dc5cbc9ff6daf7c85df9823ed1bc5e53d0125eb162119a",
+      "bytes": 1084350
+    },
+    "docs/CODEX_JOURNAL.md": {
+      "sha256": "e2b3c46d2d7abe48ff18a41a1db3c9d737cb24401f1d484192c44330b3b11271",
+      "bytes": 710528
+    },
+    "docs/CODEX_DECISIONS.md": {
+      "sha256": "6081bf3703ee83c34667cfe37776ea4ad7f34a48f6886e554b9ce5005427f856",
+      "bytes": 201500
+    },
+    "docs/CODEX_TASKS.md": {
+      "sha256": "3d035e5f66e020798fbe4c434c32db8cd51f1db15ae6a75d40417ae5b570a8fc",
+      "bytes": 312065
+    },
+    "scripts/agent_sync/sync_gateway.py": {
+      "sha256": "329575e0d30483dc3e3cf74b44f356b3141ae3182deda6be1f2ac71dd90eb521",
+      "bytes": 16032
+    },
+    "scripts/import_historical_knowledge.py": {
+      "sha256": "ac988c00a2ea6bdfa8f861f937e12e0613c18e08e09bacfbd5125973e6e0cd5f",
+      "bytes": 17478
+    },
+    "scripts/tests/test_import_historical_knowledge.py": {
+      "sha256": "687be457e29cc103a447ad91924965bc0206512a0f8dc0f9f8dd05317b920d5d",
+      "bytes": 11959
+    },
+    "learning/historical_knowledge/README.md": {
+      "sha256": "c78a663eb8f7065d28d26fe1f2cd3cc717a0f59e4a930e4bfda03a332c0e179b",
+      "bytes": 8616
+    },
+    "learning/QWEN_CODER_PROBLEM_SOLVING_CARD_2026-10-30.md": {
+      "sha256": "75195f7f8e1ef98cb07792a5fdcb47dd00f53d85e774a00c43b6dd2770cbafe4",
+      "bytes": 4398
+    },
+    "version.txt": {
+      "sha256": "d4e06bc33a12ff4f7cfe450043fe58cbd3283f7e0d210eb2306bd52818bb4f7d",
+      "bytes": 10
+    },
+    "scripts/tests/test_sync_gateway_evidence.py": {
+      "sha256": "48e19fc1851f4d34fcc4a977ed48b407a2cb632eaef681cd28f48055486b06b8",
+      "bytes": 7139
+    },
+    "learning/LLM_EVALUATION_GUIDE_2026-10-30.md": {
+      "sha256": "8fdbcf7cc52424ace2f15bc1b812f2dbc58830bc68fd91a5700d6b58bbe3052f",
+      "bytes": 7103
+    },
+    "learning/llm_evaluation_sources_2026-10-30.json": {
+      "sha256": "72fb8cd6a3651cec8511edf14a473e546ce038ae757d5f778c07dbb1969b5192",
+      "bytes": 6822
+    },
+    "learning/LLM_EVALUATION_INTEGRATION_2026-10-30.md": {
+      "sha256": "eb0854f04b1d67d645026aa0bf178bb0ee1b122010b3dc243299b01dffd2b527",
+      "bytes": 4508
+    }
+  },
+  "source_manifest_sha256": "c03338f8af985c5da29ad7e94a6ef3730e5072a98b410b531733af922f974fd1",
+  "patch": "C:\\AI-BS\\backups\\evaluation_guidance_20261030\\source_changes.patch",
+  "patch_sha256": "db35d5436060b3c6b355e6f27f4851e5733ee671b8fdba3a88829a4bf7c08f5c",
+  "focused_tests": {
+    "schema": "aibs.focused_test_record.v1",
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "-m",
+      "unittest",
+      "scripts.tests.test_import_historical_knowledge",
+      "scripts.tests.test_sync_gateway_evidence",
+      "scripts.tests.test_historical_reference_context",
+      "scripts.tests.test_local_ollama_http",
+      "scripts.tests.test_gpu_dispatcher_integration"
+    ],
+    "cwd": "C:\\AI-BS",
+    "returncode": 0,
+    "tests_run": 70,
+    "unittest_reported_seconds": 1.316,
+    "status": "passed",
+    "observed_combined_output": "..........................................................Primary model first failed (500), attempting fallback second...\n............\n----------------------------------------------------------------------\nRan 70 tests in 1.316s\n\nOK\n",
+    "evidence_note": "Recorded from the successful terminal result in this task; combined output is not represented as separate captured stdout and stderr streams. The fallback500 message is an expected mocked fixture.",
+    "scope": "focused offline importer, receipt, retrieval and mocked transport/dispatcher regressions",
+    "gateway_vm_acceptance_suite_run": false,
+    "loaded_application_acceptance_run": false,
+    "model_quality_evaluation_run": false
+  },
+  "import_verification": {
+    "records": 5,
+    "records_sha256": "81ab8e57f7ca257834f7bfcc00b59bb2711fb2ced6153cf0d7909f6af3523da8",
+    "weight_training": false,
+    "owner_scope": "local_admin",
+    "source_sha256": "8fdbcf7cc52424ace2f15bc1b812f2dbc58830bc68fd91a5700d6b58bbe3052f",
+    "sanitized_text_reassembled_without_loss": true,
+    "existing_rows_unchanged": 360849,
+    "new_rows": 5,
+    "full_readback_matches": 5,
+    "duplicate_fingerprints": 0,
+    "vault_rows_after": 360854,
+    "retrieval": {
+      "query": "observable_test_evidence",
+      "references": 1,
+      "characters": 1400,
+      "new_card_retrieved": true,
+      "sources": [
+        "vault_item:360850"
+      ]
+    },
+    "unbound_and_foreign_owner_empty": true,
+    "previous_source_hashes_unchanged": 2006
+  },
+  "model_quality_evaluation": {
+    "status": "not_run",
+    "affects_acceptance": false,
+    "scores": []
+  },
+  "full_gateway_vm_acceptance": "not_run",
+  "loaded_application_acceptance": "not_run",
+  "runtime_or_activation_changes": false,
+  "external_sync_publication_sending": "not_attempted",
+  "dependency_changes": false,
+  "frontend_changes": false,
+  "dependency_evidence": {
+    "package.json": "cf727b6276d3436f25494d6c131705c17de62a84bf218df73647e02a0b5bece5",
+    "package-lock.json": "6d26b9bd78be835469d37961ae62fba500f2cfc0802d7a813105eb4fec53447a",
+    "backend/requirements.txt": "d96e43aa5f9dc9d760fca1415e43298913c529eef7b5d03baf42812ec2697bff"
+  },
+  "unresolved_diagnostics": [],
+  "receiving_agent_snapshot_acknowledgement": "pending",
+  "next_step": "Define a versioned representative task set and fixed rubric for a bounded matched baseline/candidate evaluation; preserve independent executable acceptance and current runtime/owner gates.",
+  "final_checkpoint_verification": "C:\\AI-BS\\backups\\evaluation_guidance_20261030\\checkpoint_verification.json"
+}

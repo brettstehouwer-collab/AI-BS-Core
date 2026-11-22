@@ -1,0 +1,30 @@
+{
+  "state": "PLAN_PROPOSED",
+  "input_sha256": "415e14dd0cbdba82267deab300567d0688b3610116a39c51ed7df112ca18d589",
+  "proposal": {
+    "summary": "Change selected value.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Change1 to42."
+      }
+    ],
+    "questions": []
+  },
+  "error_code": null,
+  "finished_at_utc": "2026-11-15T04:58:02.678125+00:00",
+  "elapsed_seconds": 0.0,
+  "response_sha256": "2636fbdee286f6aa3d59d6c687cd260086f0bc34fefe1c875956886160bcf589",
+  "response_bytes": 116,
+  "public_json": {
+    "summary": "Change selected value.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Change1 to42."
+      }
+    ],
+    "questions": []
+  },
+  "entry_sha256": "03af91b39ed10edb3825771a90bfd28f6b4b183786433ef30f98815090ad90c0"
+}

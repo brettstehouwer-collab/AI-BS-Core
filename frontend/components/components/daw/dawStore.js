@@ -29,7 +29,7 @@ masterVolumeNode.connect(masterAnalyser);
 const reverbFX = new Tone.Reverb({ decay: 2.5, preDelay: 0.01, wet: 1 }).connect(masterVolumeNode);
 const delayFX = new Tone.FeedbackDelay({ delayTime: '8n', feedback: 0.4, wet: 1 }).connect(masterVolumeNode);
 const distortionFX = new Tone.Distortion({ distortion: 0.3, wet: 0.2 }).connect(masterVolumeNode);
-const filterFX = new Tone.Filter({ frequency: 2000, type: 'lowpass' }).connect(masterVolumeNode);
+new Tone.Filter({ frequency: 2000, type: 'lowpass' }).connect(masterVolumeNode);
 const pitchShiftFX = new Tone.PitchShift({ pitch: 0, windowSize: 0.1, delayTime: 0, feedback: 0, wet: 1 }).connect(masterVolumeNode);
 
 class VSTBridgeNode {
@@ -48,16 +48,19 @@ class VSTBridgeNode {
     this.context = Tone.getContext();
   }
   
+  /** @param {Tone.InputNode} destination */
   connect(destination) {
     this.output.connect(destination);
     return this;
   }
   
+  /** @param {Tone.InputNode} destination */
   disconnect(destination) {
     this.output.disconnect(destination);
     return this;
   }
   
+  /** @param {string | null} pluginId */
   async setPlugin(pluginId) {
     if (this.ws) {
       this.ws.close();
@@ -115,7 +118,7 @@ class VSTBridgeNode {
       };
       
       this.ws.onmessage = (event) => {
-         this.workletNode.port.postMessage(event.data, [event.data]);
+         if (this.workletNode && event.data instanceof ArrayBuffer) this.workletNode.port.postMessage(event.data, [event.data]);
       };
     } else {
       // Revert to bypass
@@ -134,7 +137,8 @@ vstBridgeFX.connect(masterVolumeNode);
 // INSTRUMENT SYNTHESIS FACTORY
 // ═══════════════════════════════════════════════════════════════════════════
 
-const createChannelNodes = (trackIndex) => {
+/** @param {number} _trackIndex */
+const createChannelNodes = (_trackIndex) => {
   const eq = new Tone.EQ3(0, 0, 0);
   const channel = new Tone.Channel({ volume: 0, pan: 0 }).connect(eq);
   eq.connect(masterVolumeNode);
@@ -178,24 +182,24 @@ const snareBody = new Tone.MembraneSynth({
 // 3. Closed Hi-Hat (Crisp Metallic)
 const hihatNodes = createChannelNodes(3);
 const hihatSynth = new Tone.MetalSynth({
-  frequency: 250,
   envelope: { attack: 0.001, decay: 0.04, release: 0.02 },
   harmonicity: 5.1,
   modulationIndex: 32,
   resonance: 4000,
   octaves: 1.5
 }).connect(hihatNodes.channel);
+hihatSynth.frequency.value = 250;
 
 // 4. Open Hi-Hat
 const openHatNodes = createChannelNodes(4);
 const openHatSynth = new Tone.MetalSynth({
-  frequency: 220,
   envelope: { attack: 0.001, decay: 0.35, release: 0.2 },
   harmonicity: 4.5,
   modulationIndex: 28,
   resonance: 3500,
   octaves: 1.5
 }).connect(openHatNodes.channel);
+openHatSynth.frequency.value = 220;
 
 // 5. Clap / Perc
 const clapNodes = createChannelNodes(5);
@@ -240,10 +244,16 @@ const metronomeSynth = new Tone.MembraneSynth({
 // UNIFIED SAFE CHANNEL TRIGGER HELPER
 // ═══════════════════════════════════════════════════════════════════════════
 
+/**
+ * @param {import('/types/daw').DawChannel | null | undefined} channel
+ * @param {Tone.Unit.Frequency | null} note
+ * @param {Tone.Unit.Time} duration
+ * @param {number} time
+ * @param {number} velocity
+ */
 export const triggerChannel = (channel, note, duration = '16n', time = Tone.now(), velocity = 1) => {
   if (!channel || channel.mute) return;
-  const synth = channel.synth;
-  if (!synth) return;
+  if (!channel.synth) return;
 
   try {
     let durSec;
@@ -263,31 +273,31 @@ export const triggerChannel = (channel, note, duration = '16n', time = Tone.now(
 
     switch (channel.type) {
       case 'snare':
-        if (typeof synth.trigger === 'function') {
-          synth.trigger(scheduleTime, durSec, velocity);
-        } else if (typeof synth.triggerAttackRelease === 'function') {
-          synth.triggerAttackRelease(note || 'G2', durSec, scheduleTime);
+        if (typeof channel.synth.trigger === 'function') {
+          channel.synth.trigger(scheduleTime, durSec, velocity);
+        } else if (typeof channel.synth.triggerAttackRelease === 'function') {
+          channel.synth.triggerAttackRelease(note || 'G2', durSec, scheduleTime);
         }
         break;
 
       case 'clap':
         // NoiseSynth takes (duration, time, velocity)
-        if (typeof synth.triggerAttackRelease === 'function') {
-          synth.triggerAttackRelease(durSec, scheduleTime, velocity);
+        if (typeof channel.synth.triggerAttackRelease === 'function') {
+          channel.synth.triggerAttackRelease(durSec, scheduleTime, velocity);
         }
         break;
 
       case 'hihat':
       case 'openhat':
         // MetalSynth takes (note, duration, time, velocity)
-        if (typeof synth.triggerAttackRelease === 'function') {
-          synth.triggerAttackRelease(note || channel.note || 'C5', durSec, scheduleTime, velocity);
+        if (typeof channel.synth.triggerAttackRelease === 'function') {
+          channel.synth.triggerAttackRelease(note || channel.note || 'C5', durSec, scheduleTime, velocity);
         }
         break;
 
       case 'audio':
-        if (synth.player && synth.player.loaded) {
-          synth.player.start(scheduleTime);
+        if (channel.synth.player && channel.synth.player.loaded) {
+          channel.synth.player.start(scheduleTime);
         }
         break;
 
@@ -296,8 +306,8 @@ export const triggerChannel = (channel, note, duration = '16n', time = Tone.now(
       case 'lead':
       case 'pluck':
       default:
-        if (typeof synth.triggerAttackRelease === 'function') {
-          synth.triggerAttackRelease(note || channel.note || 'C4', durSec, scheduleTime, velocity);
+        if (typeof channel.synth.triggerAttackRelease === 'function') {
+          channel.synth.triggerAttackRelease(note || channel.note || 'C4', durSec, scheduleTime, velocity);
         }
         break;
     }
@@ -310,6 +320,7 @@ export const triggerChannel = (channel, note, duration = '16n', time = Tone.now(
 // INITIAL CHANNEL DEFINITIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
+/** @type {import('/types/daw').DawChannel[]} */
 const DEFAULT_CHANNELS = [
   { 
     id: 'c1', 
@@ -492,10 +503,11 @@ const DEFAULT_CHANNELS = [
   }
 ];
 
+/** @type {number | null} */
 let repeatEventId = null;
 let transportStepIndex = 0;
 
-export const useDawStore = create((set, get) => ({
+export const useDawStore = create(/** @type {import('zustand').StateCreator<import('/types/daw').DawState>} */ ((set, get) => ({
   compositorNodes: [
     { id: '1', type: 'videoSource', position: { x: 50, y: 150 }, data: { trackName: 'V1' } },
     { id: '2', type: 'colorTransform', position: { x: 300, y: 150 }, data: { lut: 'Rec.709' } },
@@ -520,7 +532,7 @@ export const useDawStore = create((set, get) => ({
   isEngineStarted: false,
   masterVolume: 0,
   activeView: 'multimedia', // 'multimedia', 'all', 'channel_rack', 'playlist', 'mixer', 'vst_thematic'
-  setActiveView: (view) => set({ activeView: view }),
+  
   
   channels: DEFAULT_CHANNELS,
   
@@ -534,42 +546,9 @@ export const useDawStore = create((set, get) => ({
     vst: { enabled: false, pluginId: null, availablePlugins: [] }
   },
   
-  fetchAvailableVstPlugins: async () => {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1500);
-      let res = await fetch('http://localhost:8013/api/vst/scan', { signal: controller.signal }).catch(() => null);
-      clearTimeout(timeoutId);
-      if (!res || !res.ok) {
-        // Fallback to FastAPI Port 8080 VST scan endpoint
-        res = await fetch('http://127.0.0.1:8080/api/vst/scan').catch(() => null);
-      }
-      if (!res || !res.ok) return;
-      const data = await res.json();
-      if (data && data.status === 'success') {
-        set(state => ({ fxState: { ...state.fxState, vst: { ...state.fxState.vst, availablePlugins: data.plugins || [] } } }));
-      }
-    } catch(e) {
-      // VST daemon is optional, silent fallback
-    }
-  },
   
-  loadVstPlugin: async (pluginPath) => {
-    try {
-      const res = await fetch('http://localhost:8013/api/vst/load', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: pluginPath })
-      });
-      const data = await res.json();
-      if (data && data.status === 'success') {
-        set(state => ({ fxState: { ...state.fxState, vst: { ...state.fxState.vst, pluginId: data.plugin_id } } }));
-        vstBridgeFX.setPlugin(data.plugin_id);
-      }
-    } catch(e) {
-      console.warn('Failed to load VST plugin:', e);
-    }
-  },
+  
+  
 
   // Node Compositor state actions
   setCompositorNodes: (fn) => set(state => ({ compositorNodes: typeof fn === 'function' ? fn(state.compositorNodes) : fn })),
@@ -594,6 +573,7 @@ export const useDawStore = create((set, get) => ({
   })),
 
   addPlaylistClip: (trackIdOrClip, maybeClip) => set(state => {
+    /** @type {import('/types/daw').TrackId | import('/types/daw').PlaylistClipInput | null} */
     let targetTrackId = trackIdOrClip;
     let clipData = maybeClip;
 
@@ -676,7 +656,8 @@ export const useDawStore = create((set, get) => ({
       }
       // Rock-solid 45ms scheduling buffer to prevent thread starvation & playback slowdown
       Tone.context.lookAhead = 0.045;
-      Tone.context.updateInterval = 0.025;
+      const context = Tone.getContext();
+      if (context instanceof Tone.Context) context.updateInterval = 0.025;
     } catch (e) {
       console.warn("Tone.start() waiting for user gesture:", e);
     }
@@ -844,7 +825,7 @@ export const useDawStore = create((set, get) => ({
   },
 
   // Piano Roll Actions
-  addOrToggleMidiNote: (channelId, note, step) => {
+  addOrToggleMidiNote: (channelId, note, step, duration = 2) => {
     set(state => ({
       channels: state.channels.map(ch => {
         if (ch.id === channelId) {
@@ -853,7 +834,7 @@ export const useDawStore = create((set, get) => ({
           if (existingIndex >= 0) {
             newNotes.splice(existingIndex, 1); // Remove
           } else {
-            newNotes.push({ note, step, duration: 2 }); // Add
+            newNotes.push({ note, step, duration }); // Add
           }
           return { ...ch, midiNotes: newNotes };
         }
@@ -893,7 +874,7 @@ export const useDawStore = create((set, get) => ({
     if (!ch || !ch.synth) return;
     const now = Tone.now();
     
-    if (typeof ch.synth.triggerRelease === 'function') {
+    if ('triggerRelease' in ch.synth && typeof ch.synth.triggerRelease === 'function') {
       try {
         if (ch.type === 'lead' || ch.type === 'pluck') {
           ch.synth.triggerRelease(note, now);
@@ -943,6 +924,7 @@ export const useDawStore = create((set, get) => ({
   toggleChannelSolo: (channelId) => {
     set(state => {
       const target = state.channels.find(c => c.id === channelId);
+      if (!target) return {};
       const newSolo = !target.solo;
       return {
         channels: state.channels.map(c => {
@@ -971,7 +953,7 @@ export const useDawStore = create((set, get) => ({
 
   setChannelEnvelope: (channelId, param, value) => {
     const ch = get().channels.find(c => c.id === channelId);
-    if (ch && ch.synth && ch.synth.envelope) {
+    if (ch && ch.synth && 'envelope' in ch.synth && ch.synth.envelope) {
       ch.synth.envelope[param] = value;
     }
   },
@@ -1189,16 +1171,18 @@ export const useDawStore = create((set, get) => ({
           case 'MUTE_CHANNEL':
             if (act.channelId) store.toggleChannelMute(act.channelId);
             break;
-          case 'SET_FX':
-            if (act.fx && store.fxState && store.fxState[act.fx]) {
+          case 'SET_FX': {
+            const fx = act.fx;
+            if (fx && store.fxState && store.fxState[fx]) {
               set(s => ({
                 fxState: {
                   ...s.fxState,
-                  [act.fx]: { ...s.fxState[act.fx], enabled: true, ...(act.params || {}) }
+                  [fx]: { ...s.fxState[fx], enabled: true, ...(act.params || {}) }
                 }
               }));
             }
             break;
+          }
           case 'SEND_TO_STUDIO':
           case 'LOAD_TO_STUDIO': {
             const octStems = [
@@ -1244,6 +1228,7 @@ export const useDawStore = create((set, get) => ({
     }
 
     const newId = `c${get().channels.length + 1}_${Date.now()}`;
+    /** @type {import('/types/daw').DawChannel} */
     const newChannel = {
       id: newId,
       name,
@@ -1251,7 +1236,7 @@ export const useDawStore = create((set, get) => ({
       synth: {
         player,
         triggerAttack: () => player.start(),
-        triggerAttackRelease: (note, dur, time) => player.start(time || Tone.now()),
+        triggerAttackRelease: (_note, _dur, time) => player.start(time || Tone.now()),
         triggerRelease: () => player.stop(),
         envelope: null
       },
@@ -1336,7 +1321,7 @@ export const useDawStore = create((set, get) => ({
         const data = await res.json();
         if (data.status === 'success') {
           const pluginId = data.plugin_id;
-          set({ activeLoadedVstId: pluginId });
+          set(state => ({ activeLoadedVstId: pluginId, fxState: { ...state.fxState, vst: { ...state.fxState.vst, pluginId } } }));
           await vstBridgeFX.setPlugin(pluginId);
           await get().fetchVstParameters(pluginId);
         }
@@ -1394,6 +1379,7 @@ export const useDawStore = create((set, get) => ({
         inputs.forEach(input => {
           input.onmidimessage = (msg) => {
             if (!get().isMidiRecording) return;
+            if (!msg.data || msg.data.length < 3) return;
             const [status, noteNum, velocity] = msg.data;
             const command = status >> 4;
             // 9 = note on, 8 = note off
@@ -1404,7 +1390,7 @@ export const useDawStore = create((set, get) => ({
               const activeChId = get().activeChannelId;
               const curStep = get().currentStep;
               get().previewNote(activeChId, noteName);
-              get().addOrToggleMidiNote(activeChId, curStep, noteName, 1);
+              get().addOrToggleMidiNote(activeChId, noteName, curStep, 1);
             }
           };
         });
@@ -1445,7 +1431,7 @@ export const useDawStore = create((set, get) => ({
     set(state => ({ theatricalSyncEnabled: !state.theatricalSyncEnabled }));
   },
 
-  broadcastTheatricalEvent: async (eventName, payload = {}) => {
+  broadcastTheatricalEvent: async (_eventName, payload = {}) => {
     if (!get().theatricalSyncEnabled) return;
     try {
       // Broadcast to Port 8013 VST daemon and Port 8080 Unreal / Matrix EventBus
@@ -1464,5 +1450,4 @@ export const useDawStore = create((set, get) => ({
       console.debug("Theatrical sync broadcast suppressed:", e);
     }
   }
-}));
-
+})));

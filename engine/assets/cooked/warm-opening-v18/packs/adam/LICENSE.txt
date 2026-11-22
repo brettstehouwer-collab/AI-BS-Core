@@ -1,0 +1,13 @@
+AI-BS Adam v15 local-feature/pigment STUDY; likeness NOT approved.
+
+Inherited anatomical head is the official MakeHuman base.obj CC0-1.0 data,
+pinned a8bc2d54ff0ac92e78ff71431b1023eda42bf482; license texts retained in
+SourceData/MakeHuman-a8bc2d54. Original body data is official Blender Human Base
+Meshes v1.2.0 CC0. No downloaded add-on/application code was executed. Retain
+complete contribution history in LICENSE_HISTORY.txt. The project owns the
+new local coordinate/pigment changes, rig/clips and authored cloth print.
+Family originals and their separate rights remain outside the art/export.
+No photo/video pixels, photo-derived textures, recordings or synthetic voice
+are embedded. This establishes no approval to distribute a family likeness.
+
+V16 contribution: bounded lower-face/neck/lid/fringe coordinate changes and owned low-contrast beard pigment. Reference appearances are qualitative, not a calibrated reconstruction. Rig/UV/weights/topology/clothing remain retained. Separate unapproved private development study; not installed or approved as a final likeness. No family reference pixels or recordings embedded.

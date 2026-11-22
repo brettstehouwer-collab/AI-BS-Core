@@ -1,0 +1,61 @@
+{
+  "actor": "/root/publishing_origin",
+  "utc": "2026-10-25T21:24:17.495865+00:00",
+  "results": [
+    {
+      "config": "scoped",
+      "check": "validate",
+      "exit_code": 0,
+      "log": "scoped_validate.log",
+      "output_bytes": 134,
+      "local_parser_only": true
+    },
+    {
+      "config": "scoped",
+      "check": "publishing_rule",
+      "exit_code": 0,
+      "log": "scoped_publishing_rule.log",
+      "output_bytes": 208,
+      "local_parser_only": true,
+      "expected_service_reported": true
+    },
+    {
+      "config": "scoped",
+      "check": "api_sse_rule",
+      "exit_code": 0,
+      "log": "scoped_api_sse_rule.log",
+      "output_bytes": 215,
+      "local_parser_only": true,
+      "expected_service_reported": true
+    },
+    {
+      "config": "user",
+      "check": "validate",
+      "exit_code": 0,
+      "log": "user_validate.log",
+      "output_bytes": 132,
+      "local_parser_only": true
+    },
+    {
+      "config": "user",
+      "check": "publishing_rule",
+      "exit_code": 0,
+      "log": "user_publishing_rule.log",
+      "output_bytes": 206,
+      "local_parser_only": true,
+      "expected_service_reported": true
+    },
+    {
+      "config": "user",
+      "check": "api_sse_rule",
+      "exit_code": 0,
+      "log": "user_api_sse_rule.log",
+      "output_bytes": 213,
+      "local_parser_only": true,
+      "expected_service_reported": true
+    }
+  ],
+  "status": "passed",
+  "live_changes": false,
+  "tunnel_run_invoked": false
+}

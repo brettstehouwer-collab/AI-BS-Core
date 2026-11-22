@@ -1,0 +1,139 @@
+{
+  "utc": "2026-11-14T15:59:51.542323+00:00",
+  "status": "HOSTING_STATIC_AND_RECONNECTED_API_BOUNDARIES_VERIFIED",
+  "version": "5.329.146",
+  "version_newly_incremented_in_this_phase": false,
+  "repository": {
+    "branch": "codex/audit-v532976-20261031",
+    "commit": "64fad2871e0a716d9964f506bdef1050612b173d",
+    "dirty": true
+  },
+  "deployment": {
+    "project": "ai-bs-dashboard",
+    "site": "ai-bs-dashboard",
+    "firebase_version": "projects/ai-bs-dashboard/sites/ai-bs-dashboard/versions/d3cda13a6ebc7a28",
+    "exit_code": 0,
+    "url": "https://ai-bs-dashboard.web.app",
+    "chat_url": "https://ai-bs-dashboard.web.app/chat",
+    "scope": "Hosting only; no Auth/Firestore deployment",
+    "command_cwd": "C:\\AI-BS",
+    "config": "C:\\AI-BS\\backups\\production_release_20261114_v01\\build-stage\\frontend\\firebase.json"
+  },
+  "build": {
+    "result": "PASS",
+    "command": "pinned node vite build --config vite.bs-chat.config.mjs --outDir dist-final",
+    "npm_run_build_executed": false,
+    "reason": "Avoid default mirror regeneration",
+    "smoke_passed": 12,
+    "smoke_total": 12,
+    "candidate_manifest": "C:\\AI-BS\\backups\\production_release_20261114_v01\\candidate-final-manifest.json",
+    "candidate_manifest_sha256": "136605c26dbbca162018c36440203e2f739c7210e7bb9d11999bf28bf804da15",
+    "locked_manifest_sha256": "ae1a7ef00ee58538f03012401437d19d7b0f83b2c46284c3f3bcd07dddc45800",
+    "locked_code_pins_match_at_close": true
+  },
+  "hosted_parity": {
+    "files": 1141,
+    "excluded": 0,
+    "bytes": 922179349,
+    "all_sha256_and_lengths_match": true,
+    "html_routes": [
+      "/",
+      "/chat",
+      "/chat/",
+      "/writer.html"
+    ],
+    "html_bytes_and_csp_match": true,
+    "version_verified_in_matching_assets": [
+      "js/main.D2aFJnLj.js"
+    ],
+    "cache_inventory_match": true
+  },
+  "public_api": {
+    "health": 200,
+    "anonymous_protected": 403,
+    "invalid_token_protected": 403,
+    "cors_status": 204,
+    "cors_valid": true,
+    "publishing": 200,
+    "saved_tunnel_reconnected": true,
+    "tunnel_pid_at_observation": 8052,
+    "dns_access_firewall_ingress_credential_changes": false,
+    "reboot_persistence_qualified": false
+  },
+  "localhost": {
+    "ide": "http://localhost:5173/?tab=ide",
+    "ide_status": 200,
+    "backend": "http://127.0.0.1:8080",
+    "gateway": "http://127.0.0.1:8000",
+    "staged_static": "http://127.0.0.1:3000",
+    "interactive_acceptance": false,
+    "existing_ollama_preserved": true
+  },
+  "data_preservation": {
+    "scope": "Controlled core restoration pre/post evidence",
+    "sqlite_backups": 10,
+    "quick_check": "10/10 ok",
+    "logical_hashes_unchanged": true,
+    "backend_master_mode": "wal",
+    "cdz_audit_mode": "delete",
+    "separate_databases_preserved": true,
+    "private_snapshots_uploaded": false
+  },
+  "android": {
+    "status": "VERIFIED_APK_DRIVE_ROUNDTRIP",
+    "utc": "2026-11-14T15:46:18.168703+00:00",
+    "id": "1i46AK3QZ6E4pWQvD-DPcyVygGFrIa7X_",
+    "url": "https://drive.google.com/file/d/1i46AK3QZ6E4pWQvD-DPcyVygGFrIa7X_/view?usp=drivesdk",
+    "bytes": 12617,
+    "sha256": "f258061d89974efc08fa1fc4c71111a99f93f0dfe599e37a88e057678eacfe83",
+    "parent": "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m",
+    "shared": true,
+    "permissions_changed": false,
+    "download_equals_local": true,
+    "debug_signature_only": true,
+    "device_acceptance": false,
+    "version": "1.0/1",
+    "apk_local": "C:/AI-BS/android/bs-chat/app/build/outputs/apk/debug/app-debug.apk",
+    "google_webview_sign_in_qualified": false,
+    "production_signed": false
+  },
+  "diagnostic_registry": {
+    "status": "SOURCE_ONLY_DISABLED_BY_DEFAULT",
+    "bridge_checks": 15,
+    "registry_checks": 12,
+    "flag": "AI_BS_ENABLE_CHAT_TOOL_BRIDGE=1",
+    "flag_activated": false,
+    "service_restarted_for_integration": false
+  },
+  "native_release": {
+    "retained": [
+      "144",
+      "145"
+    ],
+    "held_inconsistent_146_promoted": false,
+    "new_native_package_qualified": false,
+    "game_launchers_changed": false
+  },
+  "failed_evidence": [
+    "firebase-deploy.exit-code.txt",
+    "initial-deploy-quarantine.json",
+    "hosted-verification.json",
+    "public-api-reconnected.json"
+  ],
+  "failure_interpretation": {
+    "hosted_verifier": "Static parity passed; initial API530 retained",
+    "cors_followup": "Exact200 assertion failed; observed204 is valid with the recorded origin/header"
+  },
+  "goal_status": "ACTIVE",
+  "all_ten_goals_complete": false,
+  "remaining": [
+    "Authenticated mounted browser/native workflows",
+    "Android device/sign-in/streaming qualification",
+    "Production Android signing",
+    "Reboot persistence",
+    "Native release parity",
+    "FE route/UI integration and device offline recovery",
+    "Original ten goals and six additions"
+  ],
+  "model_calls": 0
+}

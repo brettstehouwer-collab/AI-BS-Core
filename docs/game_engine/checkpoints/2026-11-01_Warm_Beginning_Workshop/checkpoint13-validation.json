@@ -1,0 +1,787 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "created_at": "2026-11-02T07:51:54.217615+00:00",
+  "checks": 111,
+  "failures": [],
+  "checked_records": [
+    {
+      "label": "audio_pipeline/files/CMakeLists.txt",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\CMakeLists.txt",
+      "bytes": 1090,
+      "sha256": "9810b1de3abd4bdc99cf438c3b1729ed87ec626cebaaf1482f179b7b14d1d0f7",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/include/aibs/audio_assets.hpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\include\\aibs\\audio_assets.hpp",
+      "bytes": 1783,
+      "sha256": "d7d65513a87f3f48d7ea8a568e0fe73333286d94a966f7b3ab42b87010a8173d",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/include/aibs/audio_codec.hpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\include\\aibs\\audio_codec.hpp",
+      "bytes": 346,
+      "sha256": "fdc8ea8d92e24d9a59a1ec16964622e74a9cda6bc36a66f382d6759e6de1883d",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/src/audio_detail.hpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\src\\audio_detail.hpp",
+      "bytes": 4573,
+      "sha256": "22bf73e49e2dd98c323ab7e3881324d268ad3ab3e71b29fc3b89f1f358b7b9c1",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/src/audio_assets.cpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\src\\audio_assets.cpp",
+      "bytes": 4071,
+      "sha256": "c5eeae2a88e5f46f55f9e83b810da5347dc2c20efea13327f05df8a7ad333f96",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/src/audio_codec.cpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\src\\audio_codec.cpp",
+      "bytes": 5001,
+      "sha256": "012bbc8099baefb736edb64fca0ebb81898039d84dc0563d7fcef8f2d86a8f8f",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/tests/audio_tests.cpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\tests\\audio_tests.cpp",
+      "bytes": 17237,
+      "sha256": "cbc546a2d0671427aadd8c11c5f66e2937d5639d8b72bba94590f8285db51d20",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/AUDIO_ASSETS.md",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\AUDIO_ASSETS.md",
+      "bytes": 8858,
+      "sha256": "d965bf02bf24e8aa4c51bb2faa821cabaf18bbf0285f22a3f12da56618a60d7f",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/missing-header-red.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\missing-header-red.log",
+      "bytes": 596,
+      "sha256": "544b96d6bcaf4e8930b53a87641042f8a81ca0ed709e3c180ee547817ddeb1b9",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/caption-api-red.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\caption-api-red.log",
+      "bytes": 25008,
+      "sha256": "06638b1657dc9cf8f2e2b0a7e82c315afaeb0d615c3052bb9803ede45efc3ba3",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/build-release-initial-warning.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\build-release-initial-warning.log",
+      "bytes": 2467,
+      "sha256": "623999e33346b365b61e1500e4ed69c0d43540005276b94af5abd4a984a56518",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/final-build-release.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\final-build-release.log",
+      "bytes": 1128,
+      "sha256": "476cbbee3ac998e80ac1e6ed78617e4d65051d0cf59e5077b71e5abb665ecbc4",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/final-ctest-release.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\final-ctest-release.log",
+      "bytes": 295,
+      "sha256": "6bde9565565a4a1bd65b2160f519e8589037084026f8dad6d3e4f09a2733ad57",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/final-original-release.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\final-original-release.log",
+      "bytes": 101,
+      "sha256": "1aaa6ac9df2dd2091e5534bf48f20e46d65d35f035837185db4806f8f92da65d",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/final-original-release.json",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\final-original-release.json",
+      "bytes": 556,
+      "sha256": "bc097a77d2ca13be01aa4e3ed6bee07440924bbf3c02660792bc951210391d68",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/final-build-debug.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\final-build-debug.log",
+      "bytes": 1941,
+      "sha256": "2b5e81aa854a691045bb75fe0d9656cd2f39b949cadb330de9afe5307f9dcaa1",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/final-ctest-debug.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\final-ctest-debug.log",
+      "bytes": 293,
+      "sha256": "25c333511bcb1ca6cda644e24d7150d14725c1a79f405667610a515cca000946",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/final-original-debug.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\final-original-debug.log",
+      "bytes": 101,
+      "sha256": "1aaa6ac9df2dd2091e5534bf48f20e46d65d35f035837185db4806f8f92da65d",
+      "passed": true
+    },
+    {
+      "label": "audio_pipeline/files/final-original-debug.json",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\final-original-debug.json",
+      "bytes": 556,
+      "sha256": "2ec162be4d0b76ec1bb8b819ab1b33d8260861ddb376fa12fca47665dc378b3c",
+      "passed": true
+    },
+    {
+      "label": "audio_store/source_files/0",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\include\\aibs\\asset_store.hpp",
+      "bytes": 5465,
+      "sha256": "132d597378517d25965033a3ff5dd7523606f0c7fea50f88ffe2e36d3de356b0",
+      "passed": true
+    },
+    {
+      "label": "audio_store/source_files/1",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\src\\asset_store.cpp",
+      "bytes": 25742,
+      "sha256": "e022ecb78daebfd6c1b1a5945a82106348904dcc62ba6de6a595daf24a89996c",
+      "passed": true
+    },
+    {
+      "label": "audio_store/source_files/2",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\apps\\asset_cooker.cpp",
+      "bytes": 29513,
+      "sha256": "8b99c71e6eeb35f6ce6482bf93934e3fb722b5771895b26ba7cff268b82b334b",
+      "passed": true
+    },
+    {
+      "label": "audio_store/source_files/3",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\apps\\audio_cooker.inl",
+      "bytes": 7961,
+      "sha256": "d07aef21f844f788b4bd6a9fcc66895faa099901b65661e1eed76869f6975e09",
+      "passed": true
+    },
+    {
+      "label": "audio_store/source_files/4",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\tests\\audio_store_tests.cpp",
+      "bytes": 8742,
+      "sha256": "55ea34c125a04519e3f0359f63da0bb08a01e79c7016b27d4c47dcf170e3573f",
+      "passed": true
+    },
+    {
+      "label": "audio_store/source_files/5",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\tests\\verify_audio_cooker.py",
+      "bytes": 9212,
+      "sha256": "abf755bffd7c558bffe7843f36fee442fe555777b781569b37161e4d40a2060e",
+      "passed": true
+    },
+    {
+      "label": "audio_store/source_files/6",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\CMakeLists.txt",
+      "bytes": 1508,
+      "sha256": "d665d35ef8b5640374b006765239d61f47a661e8fd122f62c822d0d54f50143e",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/0",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\baseline-character-debug.log",
+      "bytes": 188,
+      "sha256": "e52afe951a9c555abd43e0d7cc976456eb0991c63a84b749841d57623acc848b",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/1",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\baseline-character-release.log",
+      "bytes": 187,
+      "sha256": "9175fba3b122d92fcb5684410b6e22d743fb797c0a539f65e201fb514ca02a10",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/2",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\baseline-obj-debug.json",
+      "bytes": 6406,
+      "sha256": "1f65c12d380aeef8b199c9e11299470a8c874dea36195aac01dd7d0577101fe6",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/3",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\baseline-obj-debug.log",
+      "bytes": 73,
+      "sha256": "0a1cc05b40cf9f3030a2354c18c5d5189d1b9eb8ac5fe05d536b08b5be1f5b40",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/4",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\baseline-obj-release.json",
+      "bytes": 6402,
+      "sha256": "9d50d540c3b5c5ad07f4a9a3763f1c0b821cf804d89c1ab7c8a0d06945612c8e",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/5",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\baseline-obj-release.log",
+      "bytes": 75,
+      "sha256": "1f0d6abce9adc88bddbb1b96f9b45cb6198896bf69a00c62392e4e28095ee0d8",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/6",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\baseline-surface-debug.json",
+      "bytes": 2531,
+      "sha256": "c621fa317b5c5c81327be5dc36999e3bd9ce1c9b2220a520305d50b45a463271",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/7",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\baseline-surface-debug.log",
+      "bytes": 36,
+      "sha256": "bbc1593421cfd073b4ff580d4f162bd5b3f936aec8ad2763f11e0e7ddf41dd6e",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/8",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\baseline-surface-release.json",
+      "bytes": 2531,
+      "sha256": "cd2b3253ee657cf7d81d467fec53808d9facd931e33b8b38586fee1db033bf91",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/9",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\baseline-surface-release.log",
+      "bytes": 36,
+      "sha256": "bbc1593421cfd073b4ff580d4f162bd5b3f936aec8ad2763f11e0e7ddf41dd6e",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/10",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\build-cli-release.log",
+      "bytes": 1300,
+      "sha256": "565ae46b750e21330b61c96d3b26fcf867bbbd93371fd87bab1fdb089676e6a6",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/11",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\build-final-debug-correct-sdk.log",
+      "bytes": 2703,
+      "sha256": "6204c523e11494d54e82c5a6ee62e4bf1ede59a97eb685accea464390c52064a",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/12",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\build-final-debug.log",
+      "bytes": 7819,
+      "sha256": "908698c064fdb8428ed70cab75f71a895482588c59221da5360a9e485de78561",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/13",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\build-final-release.log",
+      "bytes": 2593,
+      "sha256": "e72a015d4c1073ff45a9a287a951f015597e426a0d76baac4b7a00491ac1da80",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/14",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\ch\\fb16b099-verification.json",
+      "bytes": 4026,
+      "sha256": "8257ddcb447316a98e6b1cf69d733389457f043d3e8e9e8d438616cbd039b6b0",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/15",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\chd\\c3aff929-verification.json",
+      "bytes": 4027,
+      "sha256": "9f4dd31c8aedd8a941b421295f34d214e8e8ed92c7054295e238e4dc8879565d",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/16",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\configure-debug.log",
+      "bytes": 689,
+      "sha256": "2542f3009e21c5e7e62645d51b150d4af6ee4a79e068a65d3a6aba00e8874da1",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/17",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\cook-audio-long-path-red.log",
+      "bytes": 299,
+      "sha256": "706b70931345b2c093f0c1942b90008a8d357eb50b91984134b10654233dfdbe",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/18",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\cook-audio-red.log",
+      "bytes": 295,
+      "sha256": "7fb043163e4f0af9e318db6376050bca79975e098dc1e9ecc76a407db2cb635d",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/19",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\long-path-test-harness-red.log",
+      "bytes": 46,
+      "sha256": "9163499a17984eeede417776f28994d98dd5bea3b5f9a983263c5bd1362a2b15",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/20",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\missing-api-red.log",
+      "bytes": 8545,
+      "sha256": "8871f92045ad55ef6124c5ec8a9637fc84291ed54f2d3973ef77f6e8238f28ec",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/21",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\out\\final-cli-release\\audio-cooker-f6c51f62-c7b2-4949-bdaa-d0a642bc18b7-verification.json",
+      "bytes": 12099,
+      "sha256": "109845ae48a47316803c53a067e59722a9d3f3e06b48630ee9e44a12d82d9273",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/22",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\out-debug\\final-cli-debug\\audio-cooker-bd4dbd95-eadc-43f6-b534-6e120265741b-verification.json",
+      "bytes": 12215,
+      "sha256": "472e7ce3b7b06a32e81a0d623a02d2ade430cdfba6f37fe3aa769d4db5d36456",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/23",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\tests-final-cli-debug.log",
+      "bytes": 267,
+      "sha256": "bf8052b93bcf2a38fb403df68b802aab9d15278353d710b4b9974d797a19689c",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/24",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\tests-final-cli-release.log",
+      "bytes": 263,
+      "sha256": "525748bbb40680646a5c30928361a1502ad35c24edb8129629e29ed4c2c842df",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/25",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\tests-final-store-debug.log",
+      "bytes": 95,
+      "sha256": "f0c3b2067e1272ccb0e57ba2ce6f903aeb28221c21eff07d15a56d26242d3f3d",
+      "passed": true
+    },
+    {
+      "label": "audio_store/evidence_files/26",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\tests-final-store-release.log",
+      "bytes": 91,
+      "sha256": "a3f99046797b6c954db894dce144f6b2533ca54ea3a11dfa8e85be97b098acf4",
+      "passed": true
+    },
+    {
+      "label": "audio_store/unchanged_character_cooker",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\apps\\character_cooker.inl",
+      "bytes": 9921,
+      "sha256": "cdae8e3a2a3e86299103b9868c310f09212de84aed79552064e84b96d3d05e4f",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/CMakeLists.txt",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\CMakeLists.txt",
+      "bytes": 2210,
+      "sha256": "a6d903a0ed19da5434a349fc6182457b257df84607db88f58b7f2073923396f5",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/tests/audio_content_tests.cpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\tests\\audio_content_tests.cpp",
+      "bytes": 16620,
+      "sha256": "3a08cc926e5e42bd27d0be967fcce0cdd955bd5f42f15a1624eace97a97f4ee4",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/AUDIO_CONTENT.md",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\AUDIO_CONTENT.md",
+      "bytes": 6462,
+      "sha256": "98c625ec172c8d2df6071e49f1b4f62081c5b6ee20f629fe1043c0f7547d76ea",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/copied_source_baseline.json",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\copied_source_baseline.json",
+      "bytes": 994,
+      "sha256": "2b934a7539926389ce7c7a9d935ce6460a2c4c0e5f41e525e5f15194157e305b",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/integration_changes.patch",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\integration_changes.patch",
+      "bytes": 7429,
+      "sha256": "b3b62284f0cf0194ab608bc23bdae8328c86771e33f5d9f88813685ba944eb6d",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/games/first_boot_chapter.cpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\games\\first_boot_chapter.cpp",
+      "bytes": 54780,
+      "sha256": "5e98c785278cb8221c9e7f19e20370202ec4806f409136974a3d2604158df002",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/games/first_boot_content.cpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\games\\first_boot_content.cpp",
+      "bytes": 42031,
+      "sha256": "1bb33a05572c3a91304393458e14f4776080c8a24468493e406db20610167009",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/games/content_authoring.cpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\games\\content_authoring.cpp",
+      "bytes": 43167,
+      "sha256": "9791a64821ddd2ed022c7534eae9325437dd0d4f20084aab56e4b6ace229adff",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/src/content_dependencies.cpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\src\\content_dependencies.cpp",
+      "bytes": 3765,
+      "sha256": "86abe1dc0607ea918d707ab0648206e881bf6182522c9bf7b3bca3613d612532",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/src/placed_assets.cpp",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\src\\placed_assets.cpp",
+      "bytes": 7949,
+      "sha256": "210ee41bfd2bbe0f1643662f44936de3c90d1c19fa18b4d1d1fc6af001843656",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/configure-red.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\configure-red.log",
+      "bytes": 653,
+      "sha256": "502b6411e23c53173590c665f3ab83c99ee3aa63e0f92c3ccbaca7535ffd0d3b",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/build-red.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\build-red.log",
+      "bytes": 2343,
+      "sha256": "5d9b91321acd783a41c28755f01281115fde5fab728e0449b1cbefc0756a8d02",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/unimplemented-audio-red.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\unimplemented-audio-red.log",
+      "bytes": 55,
+      "sha256": "bcb9ef76efb0aa14bb35a9c1d0e590859b172795287f484e1c115387934c8ce9",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/content-release-initial-long-path.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\content-release-initial-long-path.log",
+      "bytes": 38,
+      "sha256": "dadbf2a6e58d4122b3eabb75bacbb0067828d540b632593569b81103e50dcb15",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/build-release-expanded.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\build-release-expanded.log",
+      "bytes": 2137,
+      "sha256": "c2cece37f005ba31e1002903a1ae892edcbcb29e7a477828d61eb4baef15a1e4",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/ctest-release-expanded.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\ctest-release-expanded.log",
+      "bytes": 302,
+      "sha256": "0fb64b657d579babc30b6ee12220839995faac4d001d9fb1a3315ae2c809b618",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/configure-debug.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\configure-debug.log",
+      "bytes": 651,
+      "sha256": "89011ef8736336b7dc5b8c0558783e88e26c766ab5f66bd34c8fc2974c7632c8",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/build-debug.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\build-debug.log",
+      "bytes": 2319,
+      "sha256": "e2712259c324d61d87b3e99d315b3dc49c835e7d7ad9a061b7d0f0a40fc75dc5",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/ctest-debug.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\ctest-debug.log",
+      "bytes": 300,
+      "sha256": "0b2fe2c8a13631abdf24b52acf43fc53271dbaa085e2cc6d32f8c41d6d2dbe1e",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/out-release/Testing/Temporary/LastTest.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\out-release\\Testing\\Temporary\\LastTest.log",
+      "bytes": 1301,
+      "sha256": "4315caf44467a6413dea56e3bbeb10f56601aa927d6451e5a216bcf71d09983b",
+      "passed": true
+    },
+    {
+      "label": "audio_content/files/out-debug/Testing/Temporary/LastTest.log",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_content\\out-debug\\Testing\\Temporary\\LastTest.log",
+      "bytes": 1287,
+      "sha256": "d5c4d23b6f2780576b071877d001e5fbd43cf271ace00f930fa76cdce3a56e99",
+      "passed": true
+    },
+    {
+      "label": "audio_content/shared_dependency_hashes",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\include\\aibs\\asset_store.hpp",
+      "bytes": 5465,
+      "sha256": "132d597378517d25965033a3ff5dd7523606f0c7fea50f88ffe2e36d3de356b0",
+      "passed": true
+    },
+    {
+      "label": "audio_content/shared_dependency_hashes",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_store\\src\\asset_store.cpp",
+      "bytes": 25742,
+      "sha256": "e022ecb78daebfd6c1b1a5945a82106348904dcc62ba6de6a595daf24a89996c",
+      "passed": true
+    },
+    {
+      "label": "audio_content/shared_dependency_hashes",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\include\\aibs\\audio_assets.hpp",
+      "bytes": 1783,
+      "sha256": "d7d65513a87f3f48d7ea8a568e0fe73333286d94a966f7b3ab42b87010a8173d",
+      "passed": true
+    },
+    {
+      "label": "audio_content/shared_dependency_hashes",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\include\\aibs\\audio_codec.hpp",
+      "bytes": 346,
+      "sha256": "fdc8ea8d92e24d9a59a1ec16964622e74a9cda6bc36a66f382d6759e6de1883d",
+      "passed": true
+    },
+    {
+      "label": "audio_content/shared_dependency_hashes",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\src\\audio_assets.cpp",
+      "bytes": 4071,
+      "sha256": "c5eeae2a88e5f46f55f9e83b810da5347dc2c20efea13327f05df8a7ad333f96",
+      "passed": true
+    },
+    {
+      "label": "audio_content/shared_dependency_hashes",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\src\\audio_codec.cpp",
+      "bytes": 5001,
+      "sha256": "012bbc8099baefb736edb64fca0ebb81898039d84dc0563d7fcef8f2d86a8f8f",
+      "passed": true
+    },
+    {
+      "label": "audio_content/shared_dependency_hashes",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\src\\audio_detail.hpp",
+      "bytes": 4573,
+      "sha256": "22bf73e49e2dd98c323ab7e3881324d268ad3ab3e71b29fc3b89f1f358b7b9c1",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/source_files/0",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\AUDIO_PLAYBACK.md",
+      "bytes": 9201,
+      "sha256": "567a965e7a356ceab405ad4ebecd94721a7b910745449e42d474cf540e24754a",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/source_files/1",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\CMakeLists.txt",
+      "bytes": 2454,
+      "sha256": "2e22db79e3379853a101406ca0489b8acd7761d4dd0e0c6c386d79cf4c483636",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/source_files/2",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\include\\aibs\\audio_playback.hpp",
+      "bytes": 2515,
+      "sha256": "176c635370fb807b9b6691b724477b7018f88497f517f0395a3960a56782a7d4",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/source_files/3",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\src\\audio_device.hpp",
+      "bytes": 1022,
+      "sha256": "6124d041ca2e85d3a2c453c945522aead5a3894ebfe9b551773a967ea1b304a4",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/source_files/4",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\src\\audio_playback.cpp",
+      "bytes": 7170,
+      "sha256": "19a6f782781200cfdfd27245505093991eac9ef97720d7bc6646822b76bb00b9",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/source_files/5",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\src\\audio_xaudio2.cpp",
+      "bytes": 5140,
+      "sha256": "a6d337e3aadc99a88c1cf28153a5dce4ae9a71e678b007a9b03fd44c40f0e49c",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/source_files/6",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\tests\\audio_playback_api_red.cpp",
+      "bytes": 450,
+      "sha256": "53655aec4d8c2e382e19ebe73411ed5c9564dc1f841ebf88277bf36945867ba8",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/source_files/7",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\tests\\audio_playback_device_tests.cpp",
+      "bytes": 6749,
+      "sha256": "382b763925feb890607e3289bdfa7001169e9c440cd496cfc1db73e35aaf9748",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/source_files/8",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\tests\\audio_playback_tests.cpp",
+      "bytes": 11289,
+      "sha256": "934195233e364f2dc20a6f5bd7ee2232ef1e55b81de0ee297c6ca89dc6112f44",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/frozen_audio_assets_inputs/0",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\include\\aibs\\audio_assets.hpp",
+      "bytes": 1783,
+      "sha256": "d7d65513a87f3f48d7ea8a568e0fe73333286d94a966f7b3ab42b87010a8173d",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/frozen_audio_assets_inputs/1",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\include\\aibs\\audio_codec.hpp",
+      "bytes": 346,
+      "sha256": "fdc8ea8d92e24d9a59a1ec16964622e74a9cda6bc36a66f382d6759e6de1883d",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/frozen_audio_assets_inputs/2",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\src\\audio_assets.cpp",
+      "bytes": 4071,
+      "sha256": "c5eeae2a88e5f46f55f9e83b810da5347dc2c20efea13327f05df8a7ad333f96",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/frozen_audio_assets_inputs/3",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\src\\audio_codec.cpp",
+      "bytes": 5001,
+      "sha256": "012bbc8099baefb736edb64fca0ebb81898039d84dc0563d7fcef8f2d86a8f8f",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/frozen_audio_assets_inputs/4",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\src\\audio_detail.hpp",
+      "bytes": 4573,
+      "sha256": "22bf73e49e2dd98c323ab7e3881324d268ad3ab3e71b29fc3b89f1f358b7b9c1",
+      "passed": true
+    },
+    {
+      "label": "audio_playback/frozen_audio_assets_inputs/5",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\verification.json",
+      "bytes": 6186,
+      "sha256": "a2aa8070ca3594e3fcd5a9d6dceb134af064d1649ab31eb3f7416ecc5acd97d0",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/source_files/0",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_memory\\CMakeLists.txt",
+      "bytes": 2630,
+      "sha256": "9f3050b275311f7dbc974254b7fe028f8b0381e946252950fac1e4facdacb264",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/source_files/1",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_memory\\include\\aibs\\memory_playback.hpp",
+      "bytes": 2707,
+      "sha256": "66581e7a9023a7bcd92bcc1a454d898fd54aa543b71ba485b8c03a44596e9468",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/source_files/2",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_memory\\MEMORY_PLAYBACK.md",
+      "bytes": 7035,
+      "sha256": "cb5e7aec8f6dc461c2552d55f5b558dc679fbc716e33c2f1205cddf052595596",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/source_files/3",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_memory\\src\\memory_detail.hpp",
+      "bytes": 276,
+      "sha256": "e5387adbff0e9d1a332c375899415c3d2c98c4fda14de1bf41fa963ad01c813a",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/source_files/4",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_memory\\src\\memory_playback.cpp",
+      "bytes": 8233,
+      "sha256": "4735fe51b714f1a4d97f2d97b08592962bb9e47f655177ce90df5fcec2455834",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/source_files/5",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_memory\\tests\\memory_playback_api_red.cpp",
+      "bytes": 223,
+      "sha256": "24bc637de2f349e91338af25af77aca499c416dc9379232e32d80d9c8fe5a8b4",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/source_files/6",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_memory\\tests\\memory_playback_device_tests.cpp",
+      "bytes": 6281,
+      "sha256": "0aef4e6a488af4441bb318d43d7e726f0c7b451433f624eb4ff00f83d8aed46a",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/source_files/7",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_memory\\tests\\memory_playback_tests.cpp",
+      "bytes": 10286,
+      "sha256": "8c221ece2da36d2d8f57d4fe469da754fd6335df24f27aae6068768a6c312d25",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/frozen_inputs/0",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\verification.json",
+      "bytes": 5742,
+      "sha256": "1178ee5410946ca89a16ee649d27b6ccdc4996a40987ce678b321d1931651cb7",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/frozen_inputs/1",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\include\\aibs\\audio_playback.hpp",
+      "bytes": 2515,
+      "sha256": "176c635370fb807b9b6691b724477b7018f88497f517f0395a3960a56782a7d4",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/frozen_inputs/2",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\out-release\\Release\\audio_playback.lib",
+      "bytes": 186106,
+      "sha256": "7ee2cffdf4f5dd5a185adac7dbca708be2c543cf01beb63a5a90330f764f4486",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/frozen_inputs/3",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_playback\\out-release\\Release\\staged_audio_assets.lib",
+      "bytes": 457896,
+      "sha256": "d6a9b797c899a86687845992d69a49f8819f2ece30ae60030f1da8450b9cd387",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/frozen_inputs/4",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\verification.json",
+      "bytes": 6186,
+      "sha256": "a2aa8070ca3594e3fcd5a9d6dceb134af064d1649ab31eb3f7416ecc5acd97d0",
+      "passed": true
+    },
+    {
+      "label": "audio_memory/frozen_inputs/5",
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\audio_pipeline\\include\\aibs\\audio_assets.hpp",
+      "bytes": 1783,
+      "sha256": "d7d65513a87f3f48d7ea8a568e0fe73333286d94a966f7b3ab42b87010a8173d",
+      "passed": true
+    }
+  ],
+  "scope": "Independent file-length/SHA validation of frozen module source/evidence and recorded frozen dependency inputs. Original media content and semantic caption accuracy are not validated."
+}

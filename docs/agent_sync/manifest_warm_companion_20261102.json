@@ -1,0 +1,360 @@
+{
+  "handoff_id": "warm-companion-20261102",
+  "timestamp_utc": "2026-11-02T04:49:49.496281+00:00",
+  "outgoing_agent": "OpenAI Codex /root",
+  "receiving_agent": "Next authorized AI-BS continuation",
+  "status": "VERIFIED_SELECTED_SOURCE_CHECKPOINT",
+  "repository": {
+    "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "branch": "codex/audit-v532976-20261031",
+    "working_tree": "Dirty/untracked state preserved exactly as captured in checkpoint/checkpoint06-git-status.txt; no staging/commit/reset"
+  },
+  "source_snapshot": {
+    "archive_drive_url": "https://drive.google.com/file/d/1PkBtg7vPcwFgPVPGBJFAT0gHUx3W2WxE/view?usp=drivesdk",
+    "archive_sha256": "d3e0434f2e909b7390f605246558ab9a920aea5af2ea1be021cdff356223b6f2",
+    "source_manifest_sha256": "536dc9455086f45b8259fbd7ff4cf5bf2cdbe3e23adb853be6b5be48b415f732",
+    "runtime_source_sha256": "9774833c71487c4d0065b2bf4b15c8f655d4bdbb0a9bce227acd079d694f2539",
+    "scope": "Incremental06 native companion movement/intent/controls/restart plus CPU indexed character contracts; planned likeness checkpoint6 and full opening unfinished"
+  },
+  "selected_source_changes_since_checkpoint05": [
+    {
+      "path": "docs/agent_sync/character_render_next.md",
+      "change": "added",
+      "sha256": "5d8bcd7ccdc2ee5fb9b38af73db1a07f55b3c36b1165e8e3dd775573c00a661a"
+    },
+    {
+      "path": "docs/agent_sync/manifest_studio_overview_20261102T042646Z.json",
+      "change": "added",
+      "sha256": "804224dc15b0da915f28254ae8a7fdae5f9db1a81813a475b13e5f38ae1b7c06"
+    },
+    {
+      "path": "docs/agent_sync/studio_overview_engine_reconcile_20261102.json",
+      "change": "added",
+      "sha256": "7806cebfa15aa80cdfab514996c4b9c56c75792a481204ce4efb3e87ca781666"
+    },
+    {
+      "path": "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+      "change": "modified",
+      "sha256": "c9294f6ae9e1009b8df594d191c49749da41340dbed48ce1c197a7de0a1e7f2a"
+    },
+    {
+      "path": "docs/game_engine/resource_catalog.json",
+      "change": "modified",
+      "sha256": "9f74dec5406648f53ed97391544d3b883af1e05f31196a402589ab03d7f628fb"
+    },
+    {
+      "path": "engine/apps/durable_world.cpp",
+      "change": "modified",
+      "sha256": "534712513ad17a007d4954be9ff04a4029eee76c5d2a415eed37b86a5d87bf9f"
+    },
+    {
+      "path": "engine/BUILD_STATUS.md",
+      "change": "modified",
+      "sha256": "6fa92d5f82ae2128a03cf6f0a3a52e8e3ad675b47ad1c3549d9c552654ee1d67"
+    },
+    {
+      "path": "engine/CHARACTER_SCENE.md",
+      "change": "added",
+      "sha256": "c6190c00bf52e8dbb326f33e95f355d2299707c5c61f649bb9b0c8854e6b0adf"
+    },
+    {
+      "path": "engine/CMakeLists.txt",
+      "change": "modified",
+      "sha256": "78d55b7c859886a1c98d46b40136630bda7d8c53886d1312e3ed0f43905fb34f"
+    },
+    {
+      "path": "engine/COMPANION_RUNTIME.md",
+      "change": "added",
+      "sha256": "59a10a452b7e77981a96f517a05175a1b039adc8e6f60f33758bb4646a2810ad"
+    },
+    {
+      "path": "engine/CONTENT_V3.md",
+      "change": "modified",
+      "sha256": "0cc0be63d952cb3d32d724f9d8008519542d932d5af74dd8c51481067b7cdbc4"
+    },
+    {
+      "path": "engine/examples/sdk_consumer/CMakeLists.txt",
+      "change": "modified",
+      "sha256": "19fd7a053f7d4ec1f138fbc342afff96165b0e03614aa0c47a085923a5ecc7de"
+    },
+    {
+      "path": "engine/examples/sdk_consumer/main.cpp",
+      "change": "modified",
+      "sha256": "1fbe2654fa4044ea93394f85b2836d76ab1a3884c8ba1e351a702b3d01148d15"
+    },
+    {
+      "path": "engine/games/first_boot_chapter.cpp",
+      "change": "modified",
+      "sha256": "5e98c785278cb8221c9e7f19e20370202ec4806f409136974a3d2604158df002"
+    },
+    {
+      "path": "engine/games/first_boot_content.cpp",
+      "change": "modified",
+      "sha256": "1bb33a05572c3a91304393458e14f4776080c8a24468493e406db20610167009"
+    },
+    {
+      "path": "engine/GUIDE_CONTROLLER.md",
+      "change": "modified",
+      "sha256": "fe9cfc301f21d040fe382340b273aa59123e70d18a0c41ca7ec6ec927a455c22"
+    },
+    {
+      "path": "engine/include/aibs/character_scene.hpp",
+      "change": "added",
+      "sha256": "d50acb18f9b5c9371eb5db38c1d8514a1e10c2edbb8ae3b0d5964bd0747f49ed"
+    },
+    {
+      "path": "engine/include/aibs/companion_runtime.hpp",
+      "change": "added",
+      "sha256": "0b4891be645e0e419bd6eebe1056bb420f0637e39961325aedb0703add134a9e"
+    },
+    {
+      "path": "engine/include/aibs/first_boot_content.hpp",
+      "change": "modified",
+      "sha256": "f6b476c77b8b7c479fa43ffdfd4004bf0630ef9576352b5f664aeafa028a585f"
+    },
+    {
+      "path": "engine/include/aibs/gameplay.hpp",
+      "change": "modified",
+      "sha256": "19be9eef8e8facc6b80209942a467b9489d5ac3be8ca38aff25ec036685ce537"
+    },
+    {
+      "path": "engine/include/aibs/platform.hpp",
+      "change": "modified",
+      "sha256": "3afbff0d40452e3ea136060bbe8318a599a36e57ec2ef733579256643bb94ad3"
+    },
+    {
+      "path": "engine/milestone_queue.json",
+      "change": "modified",
+      "sha256": "6539497e6674d6cb88a97d70541b4f57ecffa60d837abbb96810be3ccefbef4f"
+    },
+    {
+      "path": "engine/src/character_scene.cpp",
+      "change": "added",
+      "sha256": "b97123df134f89343db0b60505f19459d15ccca6f848ab9636f345fce3259f93"
+    },
+    {
+      "path": "engine/src/companion_runtime.cpp",
+      "change": "added",
+      "sha256": "9fada5eb8d8970fbb6e37d86433b48c055f1d0f737cb1fc5e2f9ab5373c787df"
+    },
+    {
+      "path": "engine/src/gameplay.cpp",
+      "change": "modified",
+      "sha256": "5eb7c66f5739b9fefbb0da4006e58e867bf1610f74911115b96f281dba8139f5"
+    },
+    {
+      "path": "engine/src/gameplay_codec.cpp",
+      "change": "modified",
+      "sha256": "ac032d06a74799fcfb45f60f75b04bd01a81ac2158f471f583a2a0addb7dc2ae"
+    },
+    {
+      "path": "engine/src/guide_controller.cpp",
+      "change": "modified",
+      "sha256": "06d746a48dad862c7f751c5065fc2457711ba809e56d66205544f076518676d2"
+    },
+    {
+      "path": "engine/src/platform_win32.cpp",
+      "change": "modified",
+      "sha256": "c59ad5dcb438146e39e706e145424f32c68bc9ff6c90a1c270f18a0c1d4c939b"
+    },
+    {
+      "path": "engine/tests/character_scene_tests.cpp",
+      "change": "added",
+      "sha256": "59315405011d2ad316f8ff324a20b11d2d0824e8273c3d5cecd4e683f01eb486"
+    },
+    {
+      "path": "engine/tests/companion_content_tests.cpp",
+      "change": "added",
+      "sha256": "2db5d488c301d5d0b088b1264bfb5db4f2030028abca9f3b018102166b2f8948"
+    },
+    {
+      "path": "engine/tests/companion_native_fixture.cpp",
+      "change": "added",
+      "sha256": "cbd89daf52313a916700877dc41580418bc5a0377c81425ca50106b4a6b36948"
+    },
+    {
+      "path": "engine/tests/companion_runtime_tests.cpp",
+      "change": "added",
+      "sha256": "bf7b9934cf739f205e9c7fab404b34e851648eff49f7bf7dcda88713c5043347"
+    },
+    {
+      "path": "engine/tests/companion_semantics_tests.cpp",
+      "change": "added",
+      "sha256": "a8c8de1e6e87c9520968bc1448866454e42836c1a1a7902d6699e77a9269dbd8"
+    },
+    {
+      "path": "engine/tests/fixtures/semantic_v2_golden.hpp",
+      "change": "added",
+      "sha256": "f12f94a5b6579891509a46359f5f70174411d870d63b70c95c1f092b866228cb"
+    },
+    {
+      "path": "engine/tests/guide_controller_tests.cpp",
+      "change": "modified",
+      "sha256": "4ee185401e55b0c30fa983c5afbddab75ff6321b44e7a5b4aadf42e9a3e6716a"
+    },
+    {
+      "path": "engine/tests/verify_companion_native.py",
+      "change": "added",
+      "sha256": "afa68c92371c7e68a6315966cd7d78f58607adddc2e5c067613cb2642b1012b4"
+    },
+    {
+      "path": "engine/WARM_BEGINNING.md",
+      "change": "modified",
+      "sha256": "d26e8ea381c2571642994298c35311e40e09bf5076e38a23d5e73f8eac533345"
+    },
+    {
+      "path": "frontend/components/components/ExecutiveCockpitTab.jsx",
+      "change": "added",
+      "sha256": "a77e08d66d5a2282804664d1593a542e113a01e5c03fe4a0a3732f0d44a37b19"
+    },
+    {
+      "path": "frontend/components/components/StudioOverview.css",
+      "change": "added",
+      "sha256": "dd5b93b55942db70e91d7693794e65f6cdc22bd0e85b1d0a0ba643e548fed987"
+    },
+    {
+      "path": "frontend/components/components/StudioOverview.tokens.css",
+      "change": "added",
+      "sha256": "f33503d1217cb8cb939f6de79e550ad4c775cf289ae5e7c0a181fef41d46a991"
+    },
+    {
+      "path": "frontend/components/ExecutiveCockpitTab.jsx",
+      "change": "added",
+      "sha256": "a77e08d66d5a2282804664d1593a542e113a01e5c03fe4a0a3732f0d44a37b19"
+    },
+    {
+      "path": "frontend/components/StudioOverview.css",
+      "change": "added",
+      "sha256": "dd5b93b55942db70e91d7693794e65f6cdc22bd0e85b1d0a0ba643e548fed987"
+    },
+    {
+      "path": "frontend/components/StudioOverview.tokens.css",
+      "change": "added",
+      "sha256": "f33503d1217cb8cb939f6de79e550ad4c775cf289ae5e7c0a181fef41d46a991"
+    },
+    {
+      "path": "frontend/src/components/components/ExecutiveCockpitTab.jsx",
+      "change": "added",
+      "sha256": "a77e08d66d5a2282804664d1593a542e113a01e5c03fe4a0a3732f0d44a37b19"
+    },
+    {
+      "path": "frontend/src/components/components/StudioOverview.css",
+      "change": "added",
+      "sha256": "dd5b93b55942db70e91d7693794e65f6cdc22bd0e85b1d0a0ba643e548fed987"
+    },
+    {
+      "path": "frontend/src/components/components/StudioOverview.tokens.css",
+      "change": "added",
+      "sha256": "f33503d1217cb8cb939f6de79e550ad4c775cf289ae5e7c0a181fef41d46a991"
+    },
+    {
+      "path": "frontend/src/components/ExecutiveCockpitTab.jsx",
+      "change": "added",
+      "sha256": "a77e08d66d5a2282804664d1593a542e113a01e5c03fe4a0a3732f0d44a37b19"
+    },
+    {
+      "path": "frontend/src/components/StudioOverview.css",
+      "change": "added",
+      "sha256": "dd5b93b55942db70e91d7693794e65f6cdc22bd0e85b1d0a0ba643e548fed987"
+    },
+    {
+      "path": "frontend/src/components/StudioOverview.tokens.css",
+      "change": "added",
+      "sha256": "f33503d1217cb8cb939f6de79e550ad4c775cf289ae5e7c0a181fef41d46a991"
+    },
+    {
+      "path": "native_studio/chat_recovery.py",
+      "change": "added",
+      "sha256": "c687eed66fa5368c2b21d75dce55f16c8b290aeadea871276f4ec84c68a1b9b1"
+    },
+    {
+      "path": "native_studio/executive_cockpit_full.py",
+      "change": "added",
+      "sha256": "905094082208a035b55cc51bc50835c816f8f14eb2cc50518d40c2f9fd5925d8"
+    },
+    {
+      "path": "scripts/tests/test_executive_status_truth204.cjs",
+      "change": "added",
+      "sha256": "6c6ca4e85a4badc7ce2821e40a2371d475ee0557dba17338e9b034c7965694a5"
+    },
+    {
+      "path": "ui_modernization/compile_overview.py",
+      "change": "added",
+      "sha256": "524e2d80e99ef85daecabc33a2bb6ee1485c1c8a5674b0e06c40a81ba602197f"
+    },
+    {
+      "path": "ui_modernization/compiler.py",
+      "change": "added",
+      "sha256": "43e90972f9065c4dc68b8b825c1711377d0b30febf67ac8efe6e44c5dc02be95"
+    },
+    {
+      "path": "ui_modernization/generated/studio_overview.py",
+      "change": "added",
+      "sha256": "129b7a03350f05cde307d677243c4de43fb952fe6ef17e4b8702d278ef144f5b"
+    },
+    {
+      "path": "ui_modernization/generated/studio_overview.qss",
+      "change": "added",
+      "sha256": "219e6f40fa44ff0b47a117726c8fcc1b72c9e039e294d11b4e56b08dc11bd9e3"
+    },
+    {
+      "path": "ui_modernization/schema.json",
+      "change": "added",
+      "sha256": "819ce1be27d8af0157bcd9301a3f98683fd8b9f0326ed8c4bd8f4048e0f7f76b"
+    },
+    {
+      "path": "ui_modernization/tokens.json",
+      "change": "added",
+      "sha256": "37815fe939fad0178e482b7c90cd4f3cdfb7d7ce52f5cebcd8e8d1e18bbf66b9"
+    }
+  ],
+  "exact_source_diff": {
+    "path": "C:\\AI-BS\\docs\\agent_sync\\checkpoint06_source_changes.patch",
+    "sha256": "266d187ba5e9c92fbc040da4e08558274511f556dfeb4fe8a16204dee578d231",
+    "scope": "Full UTF-8 code/config source diffs for selected added/modified files; attribution is snapshot comparison, not sole-agent authorship. Full files and binary assets retained in archive."
+  },
+  "validation": {
+    "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:/AI-BS/engine/out/warm_beginning/verify_checkpoint06.ps1",
+    "actual_exit_code": 0,
+    "registered_native_tests_per_configuration": 81,
+    "installed_sdk_consumer_per_configuration": 1,
+    "native_companion_checks_per_configuration": 62,
+    "creator_checks_per_configuration": 23,
+    "evidence": "engine/out/warm_beginning/companion_integration_verification.json",
+    "backup": "Authenticated full cloud byte length/SHA verified"
+  },
+  "completed": [
+    "Optional companion registry +honest v3events preservinglegacywire",
+    "Staged nativeFollow/Wait/Recall andreal admissionrejection",
+    "Blocked saved-anchor recovery without vetoingBS",
+    "Actual native both-route following andfreshprocessrestart",
+    "CPU indexedCharacterScene andinstalledSDKexports"
+  ],
+  "incomplete": [
+    "No visible/indexed GPU character yet; native report explicitly character_rendered=false",
+    "GLB cooking/import, authored likeness/animations and optional original audio playback/caption review unfinished",
+    "Detailed8\u201312minute opening,1080p60 measurement, frozen launcher promotion and walkthrough unfinished",
+    "No GPU device-removal/timeout injection"
+  ],
+  "decisions": [
+    "Only explicitintent/anchor choicespersist; nofootstep/bonehistory",
+    "Rejected admission preservesAdam; postacceptanceCOMMITfailure remains visiblyunsaved",
+    "Recall validates final settled personalspace",
+    "Temporary invisibleruntimepose is explicitly not GPUcharactercompletion"
+  ],
+  "next_implementation_step": "Implement dedicated indexed CharacterScene GPU skinning/hologram path with readback oracles, then articulated placeholder and Adam likeness",
+  "next_design": "docs/agent_sync/character_render_next.md",
+  "post_seal_annotations": [
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "engine/BUILD_STATUS.md",
+    "engine/milestone_queue.json",
+    "docs/game_engine/resource_catalog.json"
+  ],
+  "post_seal_new_receipts": [
+    "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint06-local.json",
+    "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint06-drive.json",
+    "docs/agent_sync/checkpoint06_source_changes.patch",
+    "docs/agent_sync/manifest_warm_companion_20261102.json"
+  ],
+  "goal_status": "active; not complete"
+}

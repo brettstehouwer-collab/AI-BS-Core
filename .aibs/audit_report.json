@@ -1,0 +1,52 @@
+{
+  "status": "FAIL",
+  "target_scope_count": 130,
+  "files_scanned": [
+    "backend\\core\\emails_cache.json",
+    "backend\\matrix_health_report.json",
+    "backend\\session_history_archive.json",
+    "frontend\\components\\BetaAnalyticsTab.jsx",
+    "frontend\\components\\UnifiedMediaVaultTab.jsx",
+    "frontend\\components\\UniversalCreationSuite.jsx",
+    "frontend\\components\\components\\BetaAnalyticsTab.jsx",
+    "frontend\\components\\components\\UnifiedMediaVaultTab.jsx",
+    "frontend\\components\\components\\UniversalCreationSuite.jsx",
+    "frontend\\src\\components\\BetaAnalyticsTab.jsx",
+    "frontend\\src\\components\\UnifiedMediaVaultTab.jsx",
+    "frontend\\src\\components\\UniversalCreationSuite.jsx",
+    "frontend\\src\\components\\components\\BetaAnalyticsTab.jsx",
+    "frontend\\src\\components\\components\\UnifiedMediaVaultTab.jsx",
+    "frontend\\src\\components\\components\\UniversalCreationSuite.jsx",
+    "AI_BS_Master_Worker.py",
+    "AI_BS_Swarm_Commander.py",
+    "AI_BS_Vector_Seeder.py",
+    "Agent_Implementation_Plans_History\\plan_12345.json",
+    "Agent_Tasks_History\\archive_artifacts.py"
+  ],
+  "ast_syntax_clean": false,
+  "syntax_errors": [
+    "check_chat_inputs.py: Line 1: invalid non-printable character U+FEFF",
+    "check_chat_inputs2.py: Line 1: invalid non-printable character U+FEFF",
+    "live_check.py: Line 1: invalid non-printable character U+FEFF",
+    "run_full_scan.py: Line 1: invalid non-printable character U+FEFF",
+    "run_scan.py: Line 1: invalid non-printable character U+FEFF"
+  ],
+  "secret_scan_clean": false,
+  "secret_violations": [
+    "emails_cache.json: Line 2129 contains API Key (OpenAI/Bearer)",
+    "lighthouse_report.json: Line 1020 contains Google API Key",
+    "lighthouse_report.json: Line 1072 contains Google API Key",
+    "lighthouse_report.json: Line 1090 contains Google API Key",
+    "lighthouse_report.json: Line 1107 contains Google API Key",
+    "lighthouse_report.json: Line 1124 contains Google API Key",
+    "lighthouse_report.json: Line 1203 contains Google API Key",
+    "lighthouse_report.json: Line 1209 contains Google API Key",
+    "lighthouse_report.json: Line 1213 contains Google API Key",
+    "lighthouse_report.json: Line 4172 contains Google API Key",
+    "lighthouse_report.json: Line 4363 contains Google API Key"
+  ],
+  "mirror_parity_clean": true,
+  "mirror_message": "Parity verified",
+  "timestamp": 1789804838.6308095,
+  "iso_time": "2026-09-19 04:00:38"
+}

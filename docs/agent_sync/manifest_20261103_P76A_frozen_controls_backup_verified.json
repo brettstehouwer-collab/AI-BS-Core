@@ -1,0 +1,44 @@
+{
+  "at": "2026-11-04T03:20:17.336035+00:00",
+  "status": "VERIFIED_CURRENT_FROZEN_ISOLATED_CONTROLS_BACKUP",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "shared_dirty_checkout_preserved": true,
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\76A_Frozen106_Isolated_Control_Acceptance.zip",
+    "bytes": 20633836,
+    "sha256": "fb712c2dc3d788cee80d93605c11b241179581dd425f5f17f22422cc8ffedc81",
+    "members": 215,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-04T03:17:48.124537+00:00",
+    "drive_folder_id": "1nJBFETCP6PAl2sR-Gw5yh2NNKM6eyJxG",
+    "drive_file_id": "1TXTql5Lu522KwQOTb3wV3CLkf_qe-wcv",
+    "all_members_verified": true,
+    "goal_complete": false
+  },
+  "receipt_drive_id": "1Iue0jjzVj5PPw_19pwPUUdHTvwdxeUFL",
+  "verification": "D:\\AI-BS-Game-Resources\\P76\\Frozen106ControlMatrix\\verification.json",
+  "project_files": {
+    "C:\\AI-BS\\docs\\game_engine\\AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "bc577ebea610f0dea871545f2e5bf67c9ce2d9867d4488d5c99bdfb0062084de",
+    "C:\\AI-BS\\engine\\out\\warm_beginning\\monitor_summary.json": "faf9224e340cb9ddcb747fc8c485aa295c796fd6d2113bdfe59f9e6d55c8a98b",
+    "C:\\AI-BS\\docs\\game_engine\\FROZEN106_CONTROL_ACCEPTANCE.md": "e3d29328ede3a363f5a57da1e585712fdb06779df20454a5d8d2b60e339387db",
+    "C:\\AI-BS\\docs\\game_engine\\WARM_BEGINNING_ACCEPTANCE_AUDIT.md": "88995e7f34515528657b1516d074d9ab77729d4b43d850037b7c21ff5db92875"
+  },
+  "actual_opening_controls": 37,
+  "actual_companion_controls_and_new_process_history": true,
+  "scope": "temporary_play, actual bundled106chapter/assets/player; not normal player-world input/human/FPS acceptance",
+  "persistent_proof_guard_retained": true,
+  "initial_wrong_scope_rejected_before_database": true,
+  "all_owned_processes_joined": true,
+  "installed106_unchanged": true,
+  "runtime_or_SDK_changed": false,
+  "cloud_upload_reconciliation": {
+    "initial_attempt": "Connector call returned without structured upload metadata; the JS wrapper then raised TypeError reading id. No file id was obtained.",
+    "read_only_reconciliation": "Drive folder listing was empty before retry. After successful retry, listing contains exactly one archive with confirmed id1TXTql5Lu522KwQOTb3wV3CLkf_qe-wcv and20,633,836bytes. No file deleted.",
+    "confirmed_archive_id": "1TXTql5Lu522KwQOTb3wV3CLkf_qe-wcv",
+    "raw_restore_all_215_members_verified": true
+  },
+  "goal_complete": false,
+  "next_step": "76Abackup verified. Continue bounded ordinary Persistent Play input and remaining Workshop edge-case acceptance in fresh D:slots, keeping destructive proofs isolated and persistent guard intact. Resource restart question remains pending; no forced foreground/app termination/pagefile edits or FPS claim. Human pacing/captions/likeness and final package acceptance/backup remain required."
+}

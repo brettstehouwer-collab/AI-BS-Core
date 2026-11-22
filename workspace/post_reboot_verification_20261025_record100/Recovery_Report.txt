@@ -1,0 +1,20 @@
+POST-REBOOT RECOVERY — RECORD100
+Saved 2026-10-25T22:29:27.039192+00:00 / 2026-10-25T18:29:27.039192-04:00 Eastern
+Boot verified 2026-10-25T22:12:53.5000000Z; Windows user footb.
+
+Publishing root/www and public API health are HTTP200 after real reboot/logon. Local backend/gateway/frontend/Ollama read-only checks also pass. 17 bounded rawGET checks pass including8expected404private/tracking paths;19reviewed site files exactly match the prior manifest. NoJavaScript/forms/analytics/model jobs were executed. This accepts startup/basicavailability, not full business/media/device workflows.
+
+Fresh runtime: backend35908, gateway35916, frontend35992, Ollama35964, Nginxmaster14176/worker26640, publishingconnector14092 and scopedAPIconnector36028. Owner/executable/creation/arguments/config inspected; core and origin loopbackonly; sixcontrolsfalse;8888off. BothpublishingtasksRunning asfootb. Eachreviewed connectorreadiness200/fourHAconnections. ThreeRecord99source/config hashes and pairedcorepin match. SYSTEMconnector6180 preserved. PIDs remain dated evidence and must be rediscovered before any action.
+
+RESOURCE FINDINGS: restart relieved earlier critical pressure but did not establish a fixed Codex issue. At22:25:02UTC Codex30896private4.281GiB;22:25:44UTC8.3GiB;22:27:10UTC16.316GiB. Same creation identity22:13:50UTC. A37secondintermediate sample was flat, followed by anotherlargejump; do not call stable or prove an unboundedleak/codepath from this short observation. Systemcommit at22:27:10UTC34.50% (42.54GiB), RAMused31.225GiB. WSLalsoholds8.077GiBprivate; noWSL/VMchangesperformed.
+
+C:146.568GiBfree at22:25:02UTC,133.989GiB at22:27:10UTC, then146.122GiB at22:27:34UTC. Lastvalue is about21.43GiBmorethan lastpreboot124.69GiB; about105.82GiBabove earlierlow40.307GiB. Do notattribute allrecoveredspace to reboot: substantialrecovery precededrestart. The temporarydip/rebound is observed; causeunattributed. Pagefilelengthstayed61.647GiB; WMI63126MBallocated/0MBused/0peak in retainedsnapshots. GlobalautomaticFalse withperdrive0/0 remains unchanged. Pagefilecapacity is distinct from currentuse. No files deleted, cache/modelscan, dump, processstop, reboot, pagingchange orcleanup.
+
+NETWORK: primaryEthernet2 2.5Gbps/DHCP192.168.4.35/22 via192.168.4.1; separateEthernet1Gbps/static192.168.10.50/24/noGW; IPEnableRouter0. NewUDP67ownerSYSTEMSharedAccess5736 at192.168.137.1 mapsWi-Fi4, not primaryEthernetpath. ICS COMreturned6connections sharingdisabled but omittedWi-Fi4; householdforwarding remainsunverified. Do notenableICSorforcehistoricaltopology. No networkmutations.
+
+DECISION: recoverycheckscomplete; memorygrowthunresolved. Preserve state and keepmajorworkdeferred. Safest next troubleshooting step is close/reopenCodex afteractiveworkends, then start a small fresh task from this checkpoint to compare boundedidle/active readings. This is a suggested diagnostic, not a confirmedfix. Noapprestart/update/settingchange ornewtaskcreated. OfficialOpenAIDocs reviewed: https://learn.chatgpt.com/docs/reference/troubleshooting (restart recovery, focusedfreshchat, reviewlogprivacy; doesnotestablishspecificmemorybug). No bugreport orlogs sent.
+
+Deferred site items: privacy-safeanalytics;135px390pxoverflow; missingbackground/threePDFs; completeguestbook/API/HLS/native/deviceacceptance. CreationSuite documentraces/recovery/losslessedits/longblocks/print/theatricalpolicy andVM/security gatesremainopen. Automaticgoalremainspaused. No cloudledger/globalmemorywrites.
+
+Evidence: C:\AI-BS\workspace\post_reboot_verification_20261025_record100
+Checkpoint: C:\AI-BS\backups\post_reboot_verification_20261025_record100

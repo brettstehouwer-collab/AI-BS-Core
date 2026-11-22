@@ -1,0 +1,2253 @@
+--- pause/engine/CMakeLists.txt
++++ current/engine/CMakeLists.txt
+@@ -29,6 +29,8 @@
+ target_link_libraries(aibs_Authoring PUBLIC AIBS::World)
+ aibs_module(Persistence src/persistence.cpp)
+ target_link_libraries(aibs_Persistence PUBLIC AIBS::Authoring)
++aibs_module(CreatorHost src/creator_host.cpp)
++target_link_libraries(aibs_CreatorHost PUBLIC AIBS::Persistence)
+ aibs_module(Gameplay src/gameplay.cpp)
+ target_link_libraries(aibs_Gameplay PUBLIC AIBS::Authoring)
+ aibs_module(GameplayCodec src/gameplay_codec.cpp)
+@@ -85,11 +87,16 @@
+ add_library(aibs_Engine INTERFACE)
+ set_target_properties(aibs_Engine PROPERTIES EXPORT_NAME Engine)
+ add_library(AIBS::Engine ALIAS aibs_Engine)
+-target_link_libraries(aibs_Engine INTERFACE AIBS::Core AIBS::Authoring AIBS::Persistence AIBS::Scene AIBS::Player AIBS::Gameplay AIBS::GameplayCodec AIBS::GameplayStore AIBS::GameplayWorker AIBS::GameplayWorld AIBS::LegacyImport)
++target_link_libraries(aibs_Engine INTERFACE AIBS::Core AIBS::Authoring AIBS::Persistence AIBS::CreatorHost AIBS::Scene AIBS::Player AIBS::Gameplay AIBS::GameplayCodec AIBS::GameplayStore AIBS::GameplayWorker AIBS::GameplayWorld AIBS::LegacyImport)
+ add_executable(aibs_player apps/first_boot.cpp)
+ target_link_libraries(aibs_player PRIVATE AIBS::Engine)
+ add_executable(aibs_creator apps/creator.cpp)
+ target_link_libraries(aibs_creator PRIVATE AIBS::Engine)
++add_executable(aibs_creator_host apps/creator_host.cpp)
++target_link_libraries(aibs_creator_host PRIVATE AIBS::CreatorHost)
++if(MSVC)
++  target_compile_options(aibs_creator_host PRIVATE /W4 /WX /permissive- /EHsc)
++endif()
+ add_executable(aibs_motherboard apps/motherboard_sandbox.cpp apps/native_world.cpp apps/obstacle_course.cpp apps/durable_world.cpp)
+ target_link_libraries(aibs_motherboard PRIVATE AIBS::FirstBoot AIBS::Persistence AIBS::Player AIBS::MovementCourse AIBS::DurableFirstBoot AIBS::FirstBootChapter)
+ add_dependencies(aibs_motherboard aibs_shaders)
+@@ -124,9 +131,43 @@
+   add_executable(aibs_persistence_tests tests/persistence_tests.cpp)
+   target_link_libraries(aibs_persistence_tests PRIVATE AIBS::Persistence)
+   add_test(NAME persistence COMMAND aibs_persistence_tests)
++  add_executable(aibs_creator_introspection_tests tests/creator_introspection_tests.cpp)
++  target_link_libraries(aibs_creator_introspection_tests PRIVATE AIBS::Persistence)
++  add_test(NAME creator_introspection COMMAND aibs_creator_introspection_tests)
++  add_executable(aibs_checkpoint_assessment_tests tests/checkpoint_assessment_tests.cpp)
++  target_link_libraries(aibs_checkpoint_assessment_tests PRIVATE AIBS::Persistence)
++  add_test(NAME checkpoint_assessment COMMAND aibs_checkpoint_assessment_tests)
++  add_executable(aibs_creator_host_tests tests/creator_host_tests.cpp)
++  target_link_libraries(aibs_creator_host_tests PRIVATE AIBS::CreatorHost)
++  add_test(NAME creator_host COMMAND aibs_creator_host_tests)
++  add_executable(aibs_creator_host_contract_tests tests/creator_host_validation_tests.cpp)
++  target_link_libraries(aibs_creator_host_contract_tests PRIVATE AIBS::CreatorHost)
++  add_test(NAME creator_host_contracts COMMAND aibs_creator_host_contract_tests)
+   add_executable(aibs_checkpoint_probe tests/checkpoint_probe.cpp)
+   target_link_libraries(aibs_checkpoint_probe PRIVATE AIBS::Persistence)
+   find_package(Python3 COMPONENTS Interpreter REQUIRED)
++  add_executable(aibs_creator_wire_probe tests/creator_wire_probe.cpp)
++  target_link_libraries(aibs_creator_wire_probe PRIVATE AIBS::Core)
++  if(MSVC)
++    target_compile_options(aibs_creator_wire_probe PRIVATE /W4 /WX /permissive- /EHsc)
++  endif()
++  add_test(NAME creator_wire_cross_language COMMAND ${Python3_EXECUTABLE}
++    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_creator_wire.py $<TARGET_FILE:aibs_creator_wire_probe>
++    ${CMAKE_CURRENT_SOURCE_DIR}/out/creator-wire-cross.$<CONFIG>.json)
++  set_tests_properties(creator_wire_cross_language PROPERTIES TIMEOUT 120)
++  add_executable(aibs_creator_payload_probe tests/creator_payload_probe.cpp)
++  target_link_libraries(aibs_creator_payload_probe PRIVATE AIBS::Core)
++  if(MSVC)
++    target_compile_options(aibs_creator_payload_probe PRIVATE /W4 /WX /permissive- /EHsc)
++  endif()
++  add_test(NAME creator_payload_cross_language COMMAND ${Python3_EXECUTABLE}
++    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_creator_payload.py $<TARGET_FILE:aibs_creator_payload_probe>
++    ${CMAKE_CURRENT_SOURCE_DIR}/out/creator-payload-cross.$<CONFIG>.json)
++  set_tests_properties(creator_payload_cross_language PROPERTIES TIMEOUT 120)
++  add_test(NAME creator_owner_process COMMAND ${Python3_EXECUTABLE}
++    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_creator_process.py $<TARGET_FILE:aibs_creator_host>
++    ${CMAKE_CURRENT_SOURCE_DIR}/out/creator-process.$<CONFIG>.json)
++  set_tests_properties(creator_owner_process PROPERTIES TIMEOUT 120)
+   add_executable(aibs_gameplay_codec_tests tests/gameplay_codec_tests.cpp)
+   target_link_libraries(aibs_gameplay_codec_tests PRIVATE AIBS::GameplayCodec)
+   add_test(NAME gameplay_codec COMMAND aibs_gameplay_codec_tests)
+@@ -216,9 +257,9 @@
+     ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_checkpoint_bounds.py
+     $<TARGET_FILE:aibs_checkpoint_probe> ${CMAKE_CURRENT_SOURCE_DIR}/out)
+ endif()
+-install(TARGETS aibs_Core aibs_World aibs_Authoring aibs_Persistence aibs_Gameplay aibs_GameplayCodec aibs_GameplayStore aibs_GameplayWorker aibs_GameplayWorld aibs_LegacyImport aibs_Platform aibs_Render aibs_Scene aibs_Physics aibs_PlayerRuntime aibs_FirstBoot aibs_DurableFirstBoot aibs_FirstBootChapter aibs_MovementCourse aibs_Engine EXPORT AIBSTargets
++install(TARGETS aibs_Core aibs_World aibs_Authoring aibs_Persistence aibs_CreatorHost aibs_Gameplay aibs_GameplayCodec aibs_GameplayStore aibs_GameplayWorker aibs_GameplayWorld aibs_LegacyImport aibs_Platform aibs_Render aibs_Scene aibs_Physics aibs_PlayerRuntime aibs_FirstBoot aibs_DurableFirstBoot aibs_FirstBootChapter aibs_MovementCourse aibs_Engine EXPORT AIBSTargets
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-install(TARGETS aibs_player aibs_creator aibs_motherboard RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++install(TARGETS aibs_player aibs_creator aibs_creator_host aibs_motherboard RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/aibs_capabilities.json DESTINATION ${CMAKE_INSTALL_BINDIR})
+ install(FILES ${AIBS_SHADER_DIR}/motherboard.vs.cso ${AIBS_SHADER_DIR}/motherboard.ps.cso
+   DESTINATION ${CMAKE_INSTALL_BINDIR}/shaders)
+--- pause/engine/examples/sdk_consumer/main.cpp
++++ current/engine/examples/sdk_consumer/main.cpp
+@@ -1,4 +1,5 @@
+ #include <aibs/persistence.hpp>
++#include <aibs/creator_host.hpp>
+ #include <aibs/render.hpp>
+ #include <aibs/scene.hpp>
+ #include <aibs/first_boot.hpp>
+@@ -108,6 +109,17 @@
+  if (!aibs::CheckpointStore::save(path, session).ok) return 1;
+  aibs::CreatorSession restored(registry, "external-sdk-project", "main");
+  if (!aibs::CheckpointStore::load(path, restored).ok || restored.world() != session.world() || restored.memory().events() != session.memory().events()) return 1;
++ aibs::CreatorHost creator(std::move(restored));
++ const auto authored = creator.snapshot();
++ const aibs::Transaction edit{"sdk.creator.edit", authored->revision,
++  {aibs::SetField{"core", "capacity", 75, authored->world.at("core").persistent_id}}, "SDK creator edit"};
++ const auto preview = creator.preview(authored->scope, edit);
++ if (preview.status != aibs::CreatorHostStatus::prepared || !preview.change || !preview.change->dependencies().save.compatible ||
++     creator.snapshot() != authored || creator.apply(preview.change).status != aibs::CreatorHostStatus::applied ||
++     creator.save(path).status != aibs::CreatorHostStatus::saved) return 1;
++ auto reopened_creator = aibs::CreatorHost::open(path, registry, "external-sdk-project", "main");
++ if (reopened_creator.snapshot()->scope != authored->scope || reopened_creator.snapshot()->world.at("core").fields.at("capacity") != 75 ||
++     reopened_creator.apply(authored->scope, edit).status != aibs::CreatorHostStatus::duplicate) return 1;
+  std::filesystem::remove(path);
+  auto lock = path; lock += L".lock"; std::filesystem::remove(lock);
+  std::cout << "Installed AIBS SDK linked and executed successfully.\n";
+--- pause/engine/include/aibs/creator_host.hpp
++++ current/engine/include/aibs/creator_host.hpp
+@@ -0,0 +1,116 @@
++#pragma once
++#include <aibs/persistence.hpp>
++#include <functional>
++#include <memory>
++
++namespace aibs {
++struct CreatorScope {
++ std::string project, branch, world_id;
++ bool operator==(const CreatorScope&) const = default;
++};
++struct CreatorHostLimits {
++ std::size_t maximum_live_entities = 10000;
++ std::size_t maximum_fields_per_entity = 64;
++ std::size_t maximum_string_bytes = 4096;
++ std::size_t maximum_edits = 256;
++ std::size_t maximum_request_bytes = 1024 * 1024;
++ std::size_t maximum_session_bytes = 64 * 1024 * 1024;
++ std::size_t maximum_prepared = 8;
++ std::size_t maximum_prepared_bytes = 64 * 1024 * 1024;
++ std::size_t maximum_history_receipts = 1024;
++};
++// References retain a private immutable session; publication never mutates it.
++// Logical storage budgets do not bound RSS, temporary Core copies, or snapshots
++// and Play contexts retained by a client after the host releases them.
++class CreatorSnapshot {
++ std::shared_ptr<const CreatorSession> owner_;
++ friend class CreatorHost;
++ explicit CreatorSnapshot(std::shared_ptr<const CreatorSession> owner, std::size_t reserved_checkpoint_bytes);
++public:
++ const CreatorScope scope;
++ const std::uint64_t revision;
++ const World& world;
++ const std::vector<MemoryEvent>& history;
++ const std::map<std::string, FieldSchema>& schemas;
++ const std::string& checkpoint_id;
++ const std::size_t undo_depth, redo_depth, receipt_count, charged_bytes;
++ CreatorSnapshot(const CreatorSnapshot&) = delete;
++ CreatorSnapshot& operator=(const CreatorSnapshot&) = delete;
++};
++struct CreatorDependencyPreview {
++ bool valid = true;
++ bool render_rebuild = false, collision_rebuild = false;
++ bool navigation_validated = false;
++ std::vector<std::string> changed_uuids, dependency_keys, notes;
++ CheckpointAssessment save{false, 0, "Not assessed"};
++ bool operator==(const CreatorDependencyPreview&) const = default;
++};
++using CreatorAssessor = std::function<CreatorDependencyPreview(const CreatorSnapshot&, const CreatorSnapshot&, const Transaction&)>;
++namespace detail { struct CreatorEpoch; }
++class CreatorPreparedChange {
++ friend class CreatorHost;
++ std::shared_ptr<const detail::CreatorEpoch> owner_;
++ std::uint64_t generation_;
++ Transaction request_;
++ std::shared_ptr<const CreatorSnapshot> before_, after_;
++ CreatorDependencyPreview dependencies_;
++ CreatorAssessor assessor_;
++ CreatorPreparedChange(std::shared_ptr<const detail::CreatorEpoch>, std::uint64_t,
++  Transaction, std::shared_ptr<const CreatorSnapshot>, std::shared_ptr<const CreatorSnapshot>,
++  CreatorDependencyPreview, CreatorAssessor);
++public:
++ std::shared_ptr<const CreatorSnapshot> snapshot() const noexcept { return after_; }
++ const CreatorDependencyPreview& dependencies() const noexcept { return dependencies_; }
++ CreatorPreparedChange(const CreatorPreparedChange&) = delete;
++ CreatorPreparedChange& operator=(const CreatorPreparedChange&) = delete;
++};
++using CreatorPreparedPtr = std::shared_ptr<const CreatorPreparedChange>;
++enum class CreatorHostStatus { prepared, applied, duplicate, undone, redone, saved, playing, stopped, rejected };
++struct CreatorHostResult {
++ CreatorHostStatus status;
++ std::string message;
++ std::uint64_t revision;
++ CreatorPreparedPtr change{};
++};
++enum class CreatorHistoryDirection { undo, redo };
++struct CreatorHistoryRequest {
++ std::string id, host_epoch;
++ CreatorScope scope;
++ std::uint64_t expected_revision;
++ CreatorHistoryDirection direction;
++ bool operator==(const CreatorHistoryRequest&) const = default;
++};
++struct CreatorPlaySession {
++ const std::string epoch;
++ const CreatorScope scope;
++ const std::uint64_t authored_revision;
++ World world;
++};
++// Single-threaded owner; UI/SDK/proposals share these exact admission rules.
++// Dependency callbacks are bounded observations; reentrant mutations reject.
++// Chapter topology and navigation require a game-specific assessor, not guesses.
++class CreatorHost {
++ struct State;
++ std::unique_ptr<State> state_;
++ static std::shared_ptr<const CreatorSnapshot> describe(std::shared_ptr<const CreatorSession>, std::size_t reserved_checkpoint_bytes = 0);
++ CreatorDependencyPreview assess(const std::shared_ptr<const CreatorSnapshot>&,
++  const std::shared_ptr<const CreatorSnapshot>&, const Transaction&, const CreatorAssessor&) const;
++public:
++ explicit CreatorHost(CreatorSession&&, CreatorHostLimits = {});
++ ~CreatorHost();
++ CreatorHost(const CreatorHost&) = delete;
++ CreatorHost& operator=(const CreatorHost&) = delete;
++ static CreatorHost open(const std::filesystem::path&, SchemaRegistry, std::string project,
++  std::string branch, CreatorHostLimits = {});
++ std::shared_ptr<const CreatorSnapshot> snapshot() const noexcept;
++ const std::string& epoch_id() const noexcept;
++ CreatorHostResult preview(const CreatorScope&, const Transaction&, CreatorAssessor = {});
++ CreatorHostResult apply(CreatorPreparedPtr);
++ CreatorHostResult apply(const CreatorScope&, const Transaction&, CreatorAssessor = {});
++ CreatorHostResult travel(const CreatorHistoryRequest&);
++ CreatorHostResult save(const std::filesystem::path&);
++ CreatorHostResult start_play(const CreatorScope&, std::uint64_t expected_revision);
++ CreatorHostResult stop_play(const std::string& play_epoch);
++ std::shared_ptr<CreatorPlaySession> play() const noexcept;
++};
++}
+--- pause/engine/include/aibs/creator_payload.hpp
++++ current/engine/include/aibs/creator_payload.hpp
+@@ -0,0 +1,109 @@
++#pragma once
++#include <aibs/creator_host.hpp>
++#include <aibs/creator_wire.hpp>
++#include <bit>
++#include <cmath>
++#include <string_view>
++
++namespace aibs::creator_payload {
++inline constexpr std::size_t maximum_bytes=1024*1024;
++struct EditRequest { CreatorScope scope; std::string host_epoch; Transaction transaction; };
++class PayloadError : public std::runtime_error { public: using std::runtime_error::runtime_error; };
++namespace detail {
++inline void ensure(bool value,const char* reason) { if(!value) throw PayloadError(reason); }
++inline bool utf8(std::string_view text) noexcept {
++ std::size_t i=0;
++ while(i<text.size()) {
++  const auto first=static_cast<unsigned char>(text[i++]);
++  if(first==0) return false;
++  if(first<0x80) continue;
++  unsigned count=0; std::uint32_t code=0, minimum=0;
++  if(first>=0xc2&&first<=0xdf) {count=1;code=first&0x1f;minimum=0x80;}
++  else if(first>=0xe0&&first<=0xef) {count=2;code=first&0xf;minimum=0x800;}
++  else if(first>=0xf0&&first<=0xf4) {count=3;code=first&7;minimum=0x10000;}
++  else return false;
++  if(count>text.size()-i) return false;
++  for(unsigned j=0;j<count;++j) {
++   const auto next=static_cast<unsigned char>(text[i++]);
++   if(next<0x80||next>0xbf) return false;
++   code=(code<<6)|(next&0x3f);
++  }
++  if(code<minimum||code>0x10ffff||(code>=0xd800&&code<=0xdfff)) return false;
++ }
++ return true;
++}
++inline void uuid(const std::string& value,bool optional=false) {ensure((optional&&value.empty())||is_uuid(value),"Invalid canonical UUID");}
++struct Writer {
++ std::vector<unsigned char> data;
++ void number(std::uint64_t value,unsigned width) {
++  ensure(width<=maximum_bytes-data.size(),"Payload size limit");
++  creator_wire::detail::append(data,value,width);
++ }
++ void text(const std::string& value,bool required=false) {
++  ensure(value.size()<=4096&&utf8(value)&&(!required||!value.empty()),"Invalid bounded UTF-8 text");
++  number(value.size(),4);ensure(value.size()<=maximum_bytes-data.size(),"Payload size limit");
++  data.insert(data.end(),value.begin(),value.end());
++ }
++ void real(double value) {ensure(std::isfinite(value),"Non-finite number");number(std::bit_cast<std::uint64_t>(value),8);}
++};
++struct Reader {
++ std::span<const unsigned char> data;std::size_t offset=0;
++ std::uint64_t number(unsigned width) {
++  ensure(width<=data.size()-offset,"Truncated payload");
++  const auto value=creator_wire::detail::number(data,offset,width);offset+=width;return value;
++ }
++ std::string text(bool required=false) {
++  const auto size=number(4);ensure(size<=4096&&size<=data.size()-offset,"Invalid text length");
++  const auto view=std::string_view(reinterpret_cast<const char*>(data.data()+offset),static_cast<std::size_t>(size));
++  ensure(utf8(view)&&(!required||!view.empty()),"Invalid bounded UTF-8 text");offset+=static_cast<std::size_t>(size);return std::string(view);
++ }
++ double real() {const auto value=std::bit_cast<double>(number(8));ensure(std::isfinite(value),"Non-finite number");return value;}
++};
++}
++inline std::vector<unsigned char> encode_edit(const EditRequest& request) {
++ detail::Writer w;w.number(1,2);
++ detail::uuid(request.scope.world_id);detail::uuid(request.host_epoch);
++ w.text(request.scope.project,true);w.text(request.scope.branch,true);w.text(request.scope.world_id,true);w.text(request.host_epoch,true);
++ const auto& t=request.transaction;w.text(t.id,true);w.number(t.expected_revision,8);w.text(t.description);
++ detail::ensure(!t.edits.empty()&&t.edits.size()<=256,"Edit count limit");w.number(t.edits.size(),4);
++ for(const auto& edit:t.edits) {
++  w.number(edit.index(),1);
++  if(const auto* c=std::get_if<Create>(&edit)) {
++   const auto& e=c->entity;w.text(e.id,true);w.text(e.name);detail::uuid(e.persistent_id,true);w.text(e.persistent_id);
++   detail::ensure(e.fields.size()<=64,"Field count limit");w.number(e.fields.size(),4);
++   for(const auto& [field,value]:e.fields) {w.text(field,true);w.real(value);}
++  } else if(const auto* e=std::get_if<Erase>(&edit)) {w.text(e->entity,true);detail::uuid(e->persistent_id,true);w.text(e->persistent_id);}
++  else {
++   const auto& s=std::get<SetField>(edit);w.text(s.entity,true);w.text(s.field,true);w.real(s.value);
++   detail::uuid(s.persistent_id,true);w.text(s.persistent_id);
++  }
++ }
++ return w.data;
++}
++inline EditRequest decode_edit(std::span<const unsigned char> bytes) {
++ detail::ensure(bytes.size()<=maximum_bytes,"Payload size limit");detail::Reader r{bytes};
++ detail::ensure(r.number(2)==1,"Unsupported payload version");EditRequest request;
++ request.scope.project=r.text(true);request.scope.branch=r.text(true);request.scope.world_id=r.text(true);request.host_epoch=r.text(true);
++ detail::uuid(request.scope.world_id);detail::uuid(request.host_epoch);
++ auto& t=request.transaction;t.id=r.text(true);t.expected_revision=r.number(8);t.description=r.text();
++ const auto count=r.number(4);detail::ensure(count>0&&count<=256,"Edit count limit");
++ for(std::uint64_t i=0;i<count;++i) {
++  const auto tag=r.number(1);detail::ensure(tag<=2,"Unknown edit tag");auto alias=r.text(true);
++  if(tag==0) {
++   Entity entity;entity.id=std::move(alias);entity.name=r.text();entity.persistent_id=r.text();detail::uuid(entity.persistent_id,true);
++   const auto fields=r.number(4);detail::ensure(fields<=64,"Field count limit");
++   for(std::uint64_t j=0;j<fields;++j) {
++    auto key=r.text(true);const auto value=r.real();
++    detail::ensure(entity.fields.emplace(std::move(key),value).second,"Duplicate field key");
++   }
++   t.edits.push_back(Create{std::move(entity)});
++  } else if(tag==1) {
++   auto uuid=r.text();detail::uuid(uuid,true);t.edits.push_back(Erase{std::move(alias),std::move(uuid)});
++  } else {
++   auto field=r.text(true);const auto value=r.real();auto uuid=r.text();detail::uuid(uuid,true);
++   t.edits.push_back(SetField{std::move(alias),std::move(field),value,std::move(uuid)});
++  }
++ }
++ detail::ensure(r.offset==bytes.size(),"Trailing payload bytes");return request;
++}
++}
+--- pause/engine/include/aibs/creator_wire.hpp
++++ current/engine/include/aibs/creator_wire.hpp
+@@ -0,0 +1,106 @@
++#pragma once
++#include <algorithm>
++#include <array>
++#include <cstdint>
++#include <limits>
++#include <span>
++#include <stdexcept>
++#include <vector>
++
++namespace aibs::creator_wire {
++inline constexpr std::size_t maximum_payload = 4 * 1024 * 1024;
++inline constexpr std::size_t maximum_chunk = 65536;
++inline constexpr std::size_t maximum_burst = 8;
++inline constexpr std::uint64_t unscoped_revision = (std::numeric_limits<std::uint64_t>::max)();
++enum class Opcode : std::uint16_t {
++ hello=1, open=0x10, describe=0x11, snapshot_page=0x12,
++ preview=0x20, apply_prepared=0x21, apply_transaction=0x22, release_prepared=0x23,
++ history=0x30, save=0x40, start_play=0x50, stop_play=0x51, shutdown=0xff
++};
++struct Frame {
++ Opcode opcode;
++ std::uint64_t request_id;
++ std::array<unsigned char,16> epoch;
++ std::uint64_t revision;
++ std::vector<unsigned char> payload;
++ bool response = false;
++ bool operator==(const Frame&) const = default;
++};
++class WireError : public std::runtime_error { public: using std::runtime_error::runtime_error; };
++namespace detail {
++inline void ensure(bool condition, const char* message) { if (!condition) throw WireError(message); }
++inline bool known(std::uint64_t op) noexcept {
++ switch(op) {
++ case 1: case 0x10: case 0x11: case 0x12: case 0x20: case 0x21: case 0x22: case 0x23:
++ case 0x30: case 0x40: case 0x50: case 0x51: case 0xff: return true;
++ default: return false;
++ }
++}
++inline std::uint64_t number(std::span<const unsigned char> bytes, std::size_t offset, unsigned width) {
++ std::uint64_t value=0;
++ for (unsigned i=0;i<width;++i) value |= static_cast<std::uint64_t>(bytes[offset+i]) << (8*i);
++ return value;
++}
++inline void append(std::vector<unsigned char>& bytes, std::uint64_t value, unsigned width) {
++ for(unsigned i=0;i<width;++i) bytes.push_back(static_cast<unsigned char>(value >> (8*i)));
++}
++}
++inline std::vector<unsigned char> encode(const Frame& frame) {
++ detail::ensure(detail::known(static_cast<std::uint16_t>(frame.opcode)), "Unknown creator opcode");
++ detail::ensure(frame.request_id && frame.payload.size()<=maximum_payload, "Invalid creator request or payload size");
++ std::vector<unsigned char> bytes; bytes.reserve(48+frame.payload.size());
++ for(const auto c : {'A','I','B','C'}) bytes.push_back(static_cast<unsigned char>(c));
++ detail::append(bytes,1,2); detail::append(bytes,48,2);
++ detail::append(bytes,static_cast<std::uint16_t>(frame.opcode),2); detail::append(bytes,frame.response?1:0,2);
++ detail::append(bytes,frame.payload.size(),4); detail::append(bytes,frame.request_id,8);
++ bytes.insert(bytes.end(),frame.epoch.begin(),frame.epoch.end()); detail::append(bytes,frame.revision,8);
++ bytes.insert(bytes.end(),frame.payload.begin(),frame.payload.end()); return bytes;
++}
++// Framing only; payload schemas, epoch negotiation and owner dispatch are later
++// layers. Dispatch returned batches only after feed succeeds. Errors terminate
++// the connection. Per-read bounds do not replace the client's pending queue cap.
++class Parser {
++ std::vector<unsigned char> buffer_;
++ Frame pending_{};
++ std::size_t payload_size_=0;
++ bool pending_header_=false, failed_=false, closed_=false;
++ void header() {
++  const std::span<const unsigned char> bytes(buffer_);
++  detail::ensure(bytes[0]=='A'&&bytes[1]=='I'&&bytes[2]=='B'&&bytes[3]=='C'&&
++   detail::number(bytes,4,2)==1&&detail::number(bytes,6,2)==48,"Unsupported creator header");
++  const auto op=detail::number(bytes,8,2), flags=detail::number(bytes,10,2);
++  const auto length=detail::number(bytes,12,4), request=detail::number(bytes,16,8);
++  detail::ensure(detail::known(op)&&flags<=1&&length<=maximum_payload&&request,"Invalid creator header fields");
++  pending_.opcode=static_cast<Opcode>(op); pending_.request_id=request;
++  std::copy(bytes.begin()+24,bytes.begin()+40,pending_.epoch.begin());
++  pending_.revision=detail::number(bytes,40,8); pending_.response=flags==1;
++  payload_size_=static_cast<std::size_t>(length); pending_header_=true; buffer_.clear();
++ }
++public:
++ std::size_t buffered_bytes() const noexcept { return buffer_.size(); }
++ std::vector<Frame> feed(std::span<const unsigned char> chunk) {
++  detail::ensure(!failed_&&!closed_,"Creator connection closed");
++  try {
++   detail::ensure(chunk.size()<=maximum_chunk,"Creator pipe chunk too large");
++   std::size_t offset=0; std::vector<Frame> result;
++   while(offset<chunk.size()||pending_header_) {
++    const auto target=pending_header_?payload_size_:48;
++    const auto take=(std::min)(target-buffer_.size(),chunk.size()-offset);
++    buffer_.insert(buffer_.end(),chunk.begin()+static_cast<std::ptrdiff_t>(offset),chunk.begin()+static_cast<std::ptrdiff_t>(offset+take)); offset+=take;
++    if(buffer_.size()<target) break;
++    if(!pending_header_) header();
++    else {
++     detail::ensure(result.size()<maximum_burst,"Creator frame burst too large");
++     pending_.payload=std::move(buffer_); result.push_back(std::move(pending_));
++     buffer_.clear(); pending_=Frame{}; pending_header_=false;
++    }
++   }
++   return result;
++  } catch(...) { failed_=true; buffer_.clear(); pending_=Frame{}; pending_header_=false; throw; }
++ }
++ void finish() {
++  if(failed_||!buffer_.empty()||pending_header_) { failed_=true; throw WireError("Truncated creator connection"); }
++  closed_=true;
++ }
++};
++}
+--- pause/engine/include/aibs/engine.hpp
++++ current/engine/include/aibs/engine.hpp
+@@ -1,5 +1,6 @@
+ #pragma once
+ 
++#include <cstddef>
+ #include <cstdint>
+ #include <map>
+ #include <set>
+@@ -15,6 +16,7 @@
+ public:
+  bool add(FieldSchema schema);
+  bool accepts(const std::string& field, double value) const;
++ const std::map<std::string, FieldSchema>& fields() const noexcept { return fields_; }
+ private:
+  friend struct SnapshotCodec;
+  std::map<std::string, FieldSchema> fields_;
+@@ -76,6 +78,15 @@
+  // including alive entities and identities retired by deletion or undo.
+  const std::set<std::string>& known_entity_ids() const noexcept { return used_entity_ids_; }
+  const AdamMemory& memory() const noexcept { return memory_; }
++ const SchemaRegistry& schemas() const noexcept { return schemas_; }
++ std::size_t undo_depth() const noexcept { return undo_.size(); }
++ std::size_t redo_depth() const noexcept { return redo_.size(); }
++ std::size_t receipt_count() const noexcept { return receipts_.size(); }
++ // Original accepted request, before UUID realization; invalidated by mutation.
++ const Transaction* accepted_transaction(const std::string& id) const noexcept;
++ // Saturating logical storage charge for owned content, including retained
++ // history/receipts. Not measured RSS, spare capacity, or transient copy memory.
++ std::size_t charged_storage_bytes() const noexcept;
+  World start_play() const { return world_; }
+ private:
+  friend struct SnapshotCodec;
+--- pause/engine/include/aibs/persistence.hpp
++++ current/engine/include/aibs/persistence.hpp
+@@ -14,10 +14,20 @@
+  std::uint64_t revision;
+  std::string checkpoint_id;
+ };
++struct CheckpointAssessment {
++ bool compatible;
++ std::size_t encoded_bytes;
++ std::string message;
++ bool operator==(const CheckpointAssessment&) const = default;
++};
+ class CheckpointStore {
+ public:
+  static constexpr unsigned format_version = 1;
+  static constexpr std::size_t maximum_file_bytes = 16 * 1024 * 1024;
++ // Exact format-1 validation/encoding without filesystem access or publication.
++ // Copies the complete session: callers must bound its logical storage first.
++ // Compatibility promises neither durable publication nor available disk space.
++ static CheckpointAssessment assess(const CreatorSession& session);
+  static CheckpointResult save(const std::filesystem::path& path, CreatorSession& session, SaveObserver observer = nullptr);
+  static CheckpointResult load(const std::filesystem::path& path, CreatorSession& session, CheckpointValidator validator = nullptr);
+ };
+--- pause/engine/src/authoring.cpp
++++ current/engine/src/authoring.cpp
+@@ -1,14 +1,91 @@
+ #include <aibs/engine.hpp>
++#include <limits>
+ #include <stdexcept>
+ #include <type_traits>
+ #include <utility>
+ 
+ namespace aibs {
++namespace {
++// Fixed node overhead is a logical allocation allowance, independent of the
++// standard library's node layout. Object bodies and every owned string payload
++// are charged separately, including duplicated keys and history Worlds.
++constexpr std::size_t node_charge = 64;
++struct StorageCharge {
++ std::size_t bytes = 0;
++ void add(std::size_t value) noexcept {
++  const auto maximum = (std::numeric_limits<std::size_t>::max)();
++  bytes = value > maximum - bytes ? maximum : bytes + value;
++ }
++ void text(const std::string& value) noexcept { add(value.size()); add(1); }
++ void entity(const Entity& value) noexcept {
++  text(value.id); text(value.name); text(value.persistent_id);
++  for (const auto& [key, number] : value.fields) {
++   (void)number;
++   add(node_charge); add(sizeof(std::map<std::string, double>::value_type)); text(key);
++  }
++ }
++ void world(const World& value) noexcept {
++  for (const auto& [key, item] : value) {
++   add(node_charge); add(sizeof(World::value_type)); text(key); entity(item);
++  }
++ }
++ void edits(const std::vector<Edit>& values) noexcept {
++  for (const auto& edit : values) {
++   add(sizeof(Edit));
++   std::visit([&](const auto& operation) {
++    using T = std::decay_t<decltype(operation)>;
++    if constexpr (std::is_same_v<T, Create>) entity(operation.entity);
++    else if constexpr (std::is_same_v<T, Erase>) {
++     text(operation.entity); text(operation.persistent_id);
++    } else {
++     text(operation.entity); text(operation.field); text(operation.persistent_id);
++    }
++   }, edit);
++  }
++ }
++ void transaction(const Transaction& value) noexcept {
++  text(value.id); text(value.description); edits(value.edits);
++ }
++};
++}
+ CreatorSession::CreatorSession(SchemaRegistry schemas, std::string project, std::string branch)
+  : schemas_(std::move(schemas)), project_(std::move(project)), branch_(std::move(branch)), world_id_(new_uuid()) {
+  if (project_.empty() || branch_.empty()) throw std::invalid_argument("Project and branch must be specified");
+ }
+ Result CreatorSession::fail(std::string message) const { return {false, std::move(message), revision_}; }
++const Transaction* CreatorSession::accepted_transaction(const std::string& id) const noexcept {
++ const auto found = receipts_.find(id);
++ return found == receipts_.end() ? nullptr : &found->second.transaction;
++}
++std::size_t CreatorSession::charged_storage_bytes() const noexcept {
++ StorageCharge charge;
++ charge.add(sizeof(CreatorSession));
++ charge.text(project_); charge.text(branch_); charge.text(world_id_); charge.text(checkpoint_id_);
++ for (const auto& [key, field] : schemas_.fields()) {
++  charge.add(node_charge); charge.add(sizeof(std::map<std::string, FieldSchema>::value_type));
++  charge.text(key); charge.text(field.id);
++ }
++ for (const auto& id : used_entity_ids_) {
++  charge.add(node_charge); charge.add(sizeof(std::string)); charge.text(id);
++ }
++ charge.world(world_);
++ for (const auto& event : memory_.events_) {
++  charge.add(sizeof(MemoryEvent));
++  charge.text(event.project); charge.text(event.branch); charge.text(event.operation);
++  charge.text(event.kind); charge.text(event.world_id); charge.text(event.description);
++  charge.edits(event.edits);
++ }
++ for (const auto& [key, receipt] : receipts_) {
++  charge.add(node_charge); charge.add(sizeof(decltype(receipts_)::value_type));
++  charge.text(key); charge.transaction(receipt.transaction); charge.text(receipt.result.message);
++ }
++ for (const auto* stack : {&undo_, &redo_}) {
++  for (const auto& history : *stack) {
++   charge.add(sizeof(History)); charge.world(history.before); charge.world(history.after);
++  }
++ }
++ return charge.bytes;
++}
+ Result CreatorSession::apply(const Transaction& transaction) {
+  if (transaction.id.empty()) return fail("Operation ID is required");
+  if (auto it = receipts_.find(transaction.id); it != receipts_.end()) {
+--- pause/engine/src/creator_host.cpp
++++ current/engine/src/creator_host.cpp
+@@ -0,0 +1,288 @@
++#include <aibs/creator_host.hpp>
++#include <algorithm>
++#include <bit>
++#include <limits>
++#include <stdexcept>
++#include <type_traits>
++#include <utility>
++
++namespace aibs {
++namespace detail { struct CreatorEpoch { const std::string id = new_uuid(); }; }
++namespace {
++std::size_t add(std::size_t a, std::size_t b) noexcept {
++ return b > (std::numeric_limits<std::size_t>::max)() - a ? (std::numeric_limits<std::size_t>::max)() : a + b;
++}
++void ensure(bool condition, const char* message) { if (!condition) throw std::runtime_error(message); }
++bool exact_entity(const Entity& a, const Entity& b) {
++ if (a.id != b.id || a.name != b.name || a.persistent_id != b.persistent_id || a.fields.size() != b.fields.size()) return false;
++ auto it = b.fields.begin();
++ for (const auto& [key, value] : a.fields) {
++  if (key != it->first || std::bit_cast<std::uint64_t>(value) != std::bit_cast<std::uint64_t>(it->second)) return false;
++  ++it;
++ }
++ return true;
++}
++bool exact_request(const Transaction& a, const Transaction& b) {
++ if (a.id != b.id || a.expected_revision != b.expected_revision || a.description != b.description || a.edits.size() != b.edits.size()) return false;
++ for (std::size_t i = 0; i < a.edits.size(); ++i) {
++  const auto& lhs = a.edits[i]; const auto& rhs = b.edits[i];
++  if (lhs.index() != rhs.index()) return false;
++  if (const auto* create = std::get_if<Create>(&lhs)) { if (!exact_entity(create->entity, std::get<Create>(rhs).entity)) return false; }
++  else if (const auto* erase = std::get_if<Erase>(&lhs)) { if (*erase != std::get<Erase>(rhs)) return false; }
++  else {
++   const auto& x = std::get<SetField>(lhs); const auto& y = std::get<SetField>(rhs);
++   if (x.entity != y.entity || x.field != y.field || x.persistent_id != y.persistent_id || std::bit_cast<std::uint64_t>(x.value) != std::bit_cast<std::uint64_t>(y.value)) return false;
++  }
++ }
++ return true;
++}
++void text_bound(const std::string& value, const CreatorHostLimits& limits) {
++ ensure(value.size() <= limits.maximum_string_bytes, "Creator string limit exceeded");
++}
++void document_bound(const CreatorSession& session, const CreatorHostLimits& limits) {
++ ensure(session.charged_storage_bytes() <= limits.maximum_session_bytes, "Creator logical session storage limit exceeded");
++ ensure(session.world().size() <= limits.maximum_live_entities, "Creator live entity limit exceeded");
++ text_bound(session.project_id(), limits); text_bound(session.branch_id(), limits);
++ text_bound(session.world_id(), limits); text_bound(session.checkpoint_id(), limits);
++ for (const auto& [id, field] : session.schemas().fields()) { text_bound(id, limits); text_bound(field.id, limits); }
++ for (const auto& [id, entity] : session.world()) {
++  text_bound(id, limits); text_bound(entity.id, limits); text_bound(entity.name, limits); text_bound(entity.persistent_id, limits);
++  ensure(entity.fields.size() <= limits.maximum_fields_per_entity, "Creator entity field limit exceeded");
++  for (const auto& [field, value] : entity.fields) { (void)value; text_bound(field, limits); }
++ }
++}
++std::size_t request_bound(const Transaction& request, const CreatorHostLimits& limits) {
++ ensure(!request.id.empty(), "Operation ID required"); text_bound(request.id, limits); text_bound(request.description, limits);
++ ensure(!request.edits.empty() && request.edits.size() <= limits.maximum_edits, "Creator request edit limit exceeded");
++ auto charge = add(sizeof(Transaction), add(request.id.size(), request.description.size()));
++ for (const auto& edit : request.edits) {
++  charge = add(charge, sizeof(Edit) + 64);
++  std::visit([&](const auto& op) {
++   using T = std::decay_t<decltype(op)>;
++   if constexpr (std::is_same_v<T, Create>) {
++    text_bound(op.entity.id, limits); text_bound(op.entity.name, limits); text_bound(op.entity.persistent_id, limits);
++    ensure(is_uuid(op.entity.persistent_id), "Every creation needs an explicit persistent UUID");
++    ensure(op.entity.fields.size() <= limits.maximum_fields_per_entity, "Creator entity field limit exceeded");
++    charge = add(charge, add(op.entity.id.size(), add(op.entity.name.size(), op.entity.persistent_id.size())));
++    for (const auto& [field, value] : op.entity.fields) { (void)value; text_bound(field, limits); charge = add(charge, add(128, field.size())); }
++   } else {
++    text_bound(op.entity, limits); text_bound(op.persistent_id, limits);
++    ensure(is_uuid(op.persistent_id), "Every target needs an explicit persistent UUID");
++    charge = add(charge, add(op.entity.size(), op.persistent_id.size()));
++    if constexpr (std::is_same_v<T, SetField>) { text_bound(op.field, limits); charge = add(charge, op.field.size()); }
++   }
++  }, edit);
++ }
++ ensure(charge <= limits.maximum_request_bytes, "Creator logical request storage limit exceeded"); return charge;
++}
++void sequential_targets(const CreatorSession& session, const Transaction& request, const CreatorHostLimits& limits) {
++ std::map<std::string, std::string> targets;
++ for (const auto& [id, entity] : session.world()) targets.emplace(id, entity.persistent_id);
++ for (const auto& edit : request.edits) {
++  if (const auto* create = std::get_if<Create>(&edit)) {
++   ensure(!create->entity.id.empty() && targets.emplace(create->entity.id, create->entity.persistent_id).second, "Empty or duplicate entity alias");
++   ensure(targets.size() <= limits.maximum_live_entities, "Creator live entity limit exceeded");
++  } else {
++   const auto& alias = std::holds_alternative<Erase>(edit) ? std::get<Erase>(edit).entity : std::get<SetField>(edit).entity;
++   const auto& uuid = std::holds_alternative<Erase>(edit) ? std::get<Erase>(edit).persistent_id : std::get<SetField>(edit).persistent_id;
++   const auto it = targets.find(alias);
++   ensure(it != targets.end() && it->second == uuid, "Missing target or stale entity UUID");
++   if (std::holds_alternative<Erase>(edit)) targets.erase(it);
++  }
++ }
++}
++std::size_t dependency_bound(const CreatorDependencyPreview& value, const CreatorHostLimits& limits) {
++ std::size_t charge = sizeof(value);
++ for (const auto* values : {&value.changed_uuids, &value.dependency_keys, &value.notes}) {
++  ensure(values->size() <= limits.maximum_live_entities, "Creator dependency count limit exceeded");
++  for (const auto& text : *values) { text_bound(text, limits); charge = add(charge, add(sizeof(std::string), text.size())); }
++ }
++ ensure(charge <= limits.maximum_request_bytes, "Creator dependency storage limit exceeded"); return charge;
++}
++struct BusyGuard {
++ bool& flag;
++ explicit BusyGuard(bool& value) : flag(value) { flag = true; }
++ ~BusyGuard() { flag = false; }
++};
++CreatorSession load_session(const std::filesystem::path& path, SchemaRegistry schemas, std::string project, std::string branch) {
++ CreatorSession session(std::move(schemas), std::move(project), std::move(branch));
++ const auto loaded = CheckpointStore::load(path, session);
++ if (!loaded.ok) throw std::runtime_error(loaded.message);
++ return session;
++}
++}
++CreatorSnapshot::CreatorSnapshot(std::shared_ptr<const CreatorSession> owner, std::size_t reserved_checkpoint_bytes)
++ : owner_(std::move(owner)), scope{owner_->project_id(), owner_->branch_id(), owner_->world_id()},
++ revision(owner_->revision()), world(owner_->world()), history(owner_->memory().events()), schemas(owner_->schemas().fields()),
++ checkpoint_id(owner_->checkpoint_id()), undo_depth(owner_->undo_depth()), redo_depth(owner_->redo_depth()),
++ receipt_count(owner_->receipt_count()), charged_bytes(add(owner_->charged_storage_bytes(), reserved_checkpoint_bytes)) {}
++CreatorPreparedChange::CreatorPreparedChange(std::shared_ptr<const detail::CreatorEpoch> owner, std::uint64_t generation,
++ Transaction request, std::shared_ptr<const CreatorSnapshot> before, std::shared_ptr<const CreatorSnapshot> after,
++ CreatorDependencyPreview dependencies, CreatorAssessor assessor)
++ : owner_(std::move(owner)), generation_(generation), request_(std::move(request)), before_(std::move(before)), after_(std::move(after)),
++ dependencies_(std::move(dependencies)), assessor_(std::move(assessor)) {}
++struct CreatorHost::State {
++ struct Slot { std::weak_ptr<const CreatorPreparedChange> token; std::size_t charge; };
++ struct HistoryReceipt { CreatorHistoryRequest request; CreatorHostResult result; };
++ CreatorHostLimits limits;
++ std::shared_ptr<const detail::CreatorEpoch> epoch = std::make_shared<detail::CreatorEpoch>();
++ std::shared_ptr<const CreatorSession> session;
++ std::shared_ptr<const CreatorSnapshot> head;
++ std::vector<Slot> prepared;
++ std::map<std::string, HistoryReceipt> history_receipts;
++ std::shared_ptr<CreatorPlaySession> play;
++ std::uint64_t generation = 0;
++ bool busy = false;
++ CreatorHostResult result(CreatorHostStatus status, std::string message) const { return {status, std::move(message), head->revision}; }
++ CreatorHostResult reject(std::string message) const { return result(CreatorHostStatus::rejected, std::move(message)); }
++ void publish(std::shared_ptr<const CreatorSession> next, std::shared_ptr<const CreatorSnapshot> view) noexcept {
++  session.swap(next); head.swap(view); ++generation; prepared.clear();
++ }
++ void check_generation() const { ensure(generation < (std::numeric_limits<std::uint64_t>::max)(), "Creator generation exhausted"); }
++ std::size_t prepared_charge() {
++  std::erase_if(prepared, [](const Slot& item) { return item.token.expired(); });
++  std::size_t total = 0; for (const auto& slot : prepared) total = add(total, slot.charge); return total;
++ }
++};
++std::shared_ptr<const CreatorSnapshot> CreatorHost::describe(std::shared_ptr<const CreatorSession> session, std::size_t reserved_checkpoint_bytes) {
++ return std::shared_ptr<const CreatorSnapshot>(new CreatorSnapshot(std::move(session), reserved_checkpoint_bytes));
++}
++CreatorHost::CreatorHost(CreatorSession&& session, CreatorHostLimits limits) : state_(std::make_unique<State>()) {
++ document_bound(session, limits); state_->limits = limits;
++ state_->session = std::make_shared<const CreatorSession>(std::move(session)); state_->head = describe(state_->session);
++}
++CreatorHost::~CreatorHost() = default;
++CreatorHost CreatorHost::open(const std::filesystem::path& path, SchemaRegistry schemas, std::string project, std::string branch, CreatorHostLimits limits) {
++ return CreatorHost(load_session(path, std::move(schemas), std::move(project), std::move(branch)), limits);
++}
++std::shared_ptr<const CreatorSnapshot> CreatorHost::snapshot() const noexcept { return state_->head; }
++const std::string& CreatorHost::epoch_id() const noexcept { return state_->epoch->id; }
++CreatorDependencyPreview CreatorHost::assess(const std::shared_ptr<const CreatorSnapshot>& before,
++ const std::shared_ptr<const CreatorSnapshot>& after, const Transaction& request, const CreatorAssessor& assessor) const {
++ auto result = assessor ? assessor(*before, *after, request) : CreatorDependencyPreview{};
++ dependency_bound(result, state_->limits);
++ result.changed_uuids.clear();
++ for (const auto& edit : request.edits) {
++  result.changed_uuids.push_back(std::visit([](const auto& op) {
++   if constexpr (std::is_same_v<std::decay_t<decltype(op)>, Create>) return op.entity.persistent_id;
++   else return op.persistent_id;
++  }, edit));
++ }
++ std::sort(result.changed_uuids.begin(), result.changed_uuids.end());
++ result.changed_uuids.erase(std::unique(result.changed_uuids.begin(), result.changed_uuids.end()), result.changed_uuids.end());
++ result.navigation_validated = false;
++ result.notes.push_back("Navigation: unimplemented.");
++ result.save = CheckpointStore::assess(*after->owner_);
++ dependency_bound(result, state_->limits); return result;
++}
++CreatorHostResult CreatorHost::preview(const CreatorScope& scope, const Transaction& request, CreatorAssessor assessor) {
++ auto& s = *state_; if (s.busy) return s.reject("Creator owner is busy in an observation callback"); BusyGuard guard(s.busy);
++ try {
++  ensure(scope == s.head->scope, "Creator project/branch/world scope mismatch");
++  // Original request identity precedes live revision/target validation. Core's
++  // default double equality remains unchanged; this boundary compares bits.
++  if (const auto* original = s.session->accepted_transaction(request.id)) {
++   ensure(exact_request(*original, request), "Operation ID already used for different request bits");
++   return {CreatorHostStatus::duplicate, "Previously accepted request; no effect repeated", original->expected_revision + 1};
++  }
++  ensure(request.expected_revision == s.head->revision, "Creator authored revision conflict");
++  const auto request_charge = request_bound(request, s.limits); s.check_generation();
++  const auto held = s.prepared_charge();
++  ensure(s.prepared.size() < s.limits.maximum_prepared, "Creator prepared token count limit exceeded");
++  ensure(s.session->charged_storage_bytes() <= s.limits.maximum_session_bytes, "Creator session exceeds copy budget");
++  sequential_targets(*s.session, request, s.limits);
++  // The caller may own a mutable alias captured by an observation callback.
++  // Freeze accepted request bits before invoking any caller-provided code.
++  Transaction frozen = request;
++  auto candidate = std::make_shared<CreatorSession>(*s.session);
++  const auto applied = candidate->apply(frozen); ensure(applied.ok, applied.message.c_str());
++  document_bound(*candidate, s.limits);
++  const auto after = describe(candidate); auto dependencies = assess(s.head, after, frozen, assessor);
++  ensure(dependencies.valid, "Creator dependency assessor rejected candidate");
++  const auto snapshot_overhead = add(sizeof(CreatorPreparedChange) + sizeof(CreatorSnapshot),
++   add(after->scope.project.size(), add(after->scope.branch.size(), after->scope.world_id.size())));
++  const auto charge = add(snapshot_overhead, add(candidate->charged_storage_bytes(), add(request_charge, dependency_bound(dependencies, s.limits))));
++  ensure(add(held, charge) <= s.limits.maximum_prepared_bytes, "Creator prepared logical storage limit exceeded");
++  CreatorPreparedPtr token(new CreatorPreparedChange(s.epoch, s.generation, std::move(frozen), s.head, after, std::move(dependencies), std::move(assessor)));
++  s.prepared.push_back({token, charge}); return {CreatorHostStatus::prepared, "Prepared in memory; not published or saved", s.head->revision, token};
++ } catch (const std::exception& error) { return s.reject(error.what()); }
++}
++CreatorHostResult CreatorHost::apply(CreatorPreparedPtr token) {
++ auto& s = *state_; if (s.busy) return s.reject("Creator owner is busy in an observation callback"); BusyGuard guard(s.busy);
++ try {
++  ensure(token && token->owner_ == s.epoch, "Missing or foreign creator preparation");
++  ensure(token->before_->scope == s.head->scope, "Creator scope mismatch");
++  if (const auto* original = s.session->accepted_transaction(token->request_.id)) {
++   ensure(exact_request(*original, token->request_), "Operation ID already used for different request bits");
++   return {CreatorHostStatus::duplicate, "Previously accepted request; no effect repeated", original->expected_revision + 1};
++  }
++  ensure(token->generation_ == s.generation && token->before_ == s.head, "Creator preparation is stale");
++  ensure(std::any_of(s.prepared.begin(), s.prepared.end(), [&](const State::Slot& slot) { return slot.token.lock() == token; }), "Creator preparation no longer admitted");
++  s.check_generation();
++  const auto refreshed = assess(s.head, token->after_, token->request_, token->assessor_);
++  ensure(refreshed.valid && refreshed == token->dependencies_, "Creator dependencies changed; prepare again");
++  CreatorHostResult result{CreatorHostStatus::applied, "Applied in memory; not durably saved", token->after_->revision};
++  s.publish(token->after_->owner_, token->after_); return result;
++ } catch (const std::exception& error) { return s.reject(error.what()); }
++}
++CreatorHostResult CreatorHost::apply(const CreatorScope& scope, const Transaction& request, CreatorAssessor assessor) {
++ auto prepared = preview(scope, request, std::move(assessor));
++ return prepared.status == CreatorHostStatus::prepared ? apply(std::move(prepared.change)) : prepared;
++}
++CreatorHostResult CreatorHost::travel(const CreatorHistoryRequest& request) {
++ auto& s = *state_; if (s.busy) return s.reject("Creator owner is busy in an observation callback"); BusyGuard guard(s.busy);
++ try {
++  ensure(request.host_epoch == s.epoch->id && request.scope == s.head->scope, "History request belongs to another host epoch or document");
++  if (const auto found = s.history_receipts.find(request.id); found != s.history_receipts.end()) {
++   ensure(found->second.request == request, "History request ID already used for different content");
++   auto result = found->second.result; result.status = CreatorHostStatus::duplicate; return result;
++  }
++  ensure(!request.id.empty(), "History request ID required"); text_bound(request.id, s.limits);
++  ensure(request.expected_revision == s.head->revision, "Creator authored revision conflict"); s.check_generation();
++  ensure(s.history_receipts.size() < s.limits.maximum_history_receipts, "Creator history receipt limit exceeded");
++  ensure(request.direction == CreatorHistoryDirection::undo || request.direction == CreatorHistoryDirection::redo, "Unknown history direction");
++  auto candidate = std::make_shared<CreatorSession>(*s.session);
++  const auto moved = request.direction == CreatorHistoryDirection::undo ? candidate->undo() : candidate->redo();
++  ensure(moved.ok, moved.message.c_str()); document_bound(*candidate, s.limits);
++  const auto view = describe(candidate);
++  CreatorHostResult result{request.direction == CreatorHistoryDirection::undo ? CreatorHostStatus::undone : CreatorHostStatus::redone, "History applied in memory; receipt is valid only in this host epoch", view->revision};
++  // Allocate the receipt before no-throw document publication.
++  s.history_receipts.emplace(request.id, State::HistoryReceipt{request, result});
++  s.publish(candidate, view); return result;
++ } catch (const std::exception& error) { return s.reject(error.what()); }
++}
++CreatorHostResult CreatorHost::save(const std::filesystem::path& path) {
++ auto& s = *state_; if (s.busy) return s.reject("Creator owner is busy in an observation callback"); BusyGuard guard(s.busy);
++ try {
++  s.check_generation(); document_bound(*s.session, s.limits);
++  // Format 1 always publishes a 36-character checkpoint UUID. Reserve its
++  // first-save charge before filesystem work and snapshot allocation.
++  const std::size_t checkpoint_growth = s.session->checkpoint_id().empty() ? 36 : 0;
++  ensure(s.limits.maximum_string_bytes >= 36, "Creator checkpoint UUID exceeds string limit");
++  ensure(add(s.session->charged_storage_bytes(), checkpoint_growth) <= s.limits.maximum_session_bytes,
++   "Creator first checkpoint exceeds logical session storage limit");
++  auto candidate = std::make_shared<CreatorSession>(*s.session);
++  const auto view = describe(candidate, checkpoint_growth); // Allocate before durable publication.
++  auto saved = CheckpointStore::save(path, *candidate);
++  if (!saved.ok) return s.reject(std::move(saved.message));
++  s.publish(candidate, view); return s.result(CreatorHostStatus::saved, std::move(saved.message));
++ } catch (const std::exception& error) { return s.reject(error.what()); }
++}
++CreatorHostResult CreatorHost::start_play(const CreatorScope& scope, std::uint64_t revision) {
++ auto& s = *state_; if (s.busy) return s.reject("Creator owner is busy in an observation callback"); BusyGuard guard(s.busy);
++ try {
++  ensure(scope == s.head->scope && revision == s.head->revision, "Play document scope/revision conflict");
++  ensure(!s.play, "A Play context is already active"); document_bound(*s.session, s.limits);
++  auto play = std::make_shared<CreatorPlaySession>(CreatorPlaySession{new_uuid(), scope, revision, s.session->start_play()});
++  auto result = s.result(CreatorHostStatus::playing, "Isolated in-process World; no authored apply-back or child process");
++  s.play.swap(play); return result;
++ } catch (const std::exception& error) { return s.reject(error.what()); }
++}
++CreatorHostResult CreatorHost::stop_play(const std::string& epoch) {
++ auto& s = *state_; if (s.busy) return s.reject("Creator owner is busy in an observation callback"); BusyGuard guard(s.busy);
++ if (!s.play || s.play->epoch != epoch) return s.reject("Play epoch mismatch");
++ auto result = s.result(CreatorHostStatus::stopped, "Host released Play context; client-retained copies remain isolated");
++ s.play.reset(); return result;
++}
++std::shared_ptr<CreatorPlaySession> CreatorHost::play() const noexcept { return state_->play; }
++}
+--- pause/engine/src/persistence.cpp
++++ current/engine/src/persistence.cpp
+@@ -297,6 +297,19 @@
+  }
+ };
+ 
++CheckpointAssessment CheckpointStore::assess(const CreatorSession& session) {
++ try {
++  auto snapshot = session;
++  // Encoding requires an identity even before the first save. A fixed valid
++  // placeholder has the real checkpoint UUID's byte width and uses no entropy.
++  if (snapshot.checkpoint_id_.empty()) snapshot.checkpoint_id_ = "00000000-0000-4000-8000-000000000000";
++  const auto bytes = SnapshotCodec::encode(snapshot);
++  return {true, bytes.size(), "Compatible with checkpoint format 1; not published"};
++ } catch (const std::exception& error) {
++  return {false, 0, error.what()};
++ }
++}
++
+ CheckpointResult CheckpointStore::save(const std::filesystem::path& path, CreatorSession& session, SaveObserver observer) {
+  std::filesystem::path temporary;
+  try {
+--- pause/engine/tests/checkpoint_assessment_tests.cpp
++++ current/engine/tests/checkpoint_assessment_tests.cpp
+@@ -0,0 +1,111 @@
++#include <aibs/persistence.hpp>
++#include <filesystem>
++#include <fstream>
++#include <iostream>
++#include <stdexcept>
++
++namespace {
++using namespace aibs;
++void require(bool condition, const char* message) {
++ if (!condition) throw std::runtime_error(message);
++}
++SchemaRegistry schemas() {
++ SchemaRegistry result;
++ require(result.add({"x", -100, 100}), "register schema");
++ return result;
++}
++void same_source(const CreatorSession& before, const CreatorSession& after) {
++ require(before.world() == after.world(), "assessment preserves live entities");
++ require(before.memory().events() == after.memory().events(), "assessment preserves original journal");
++ require(before.known_entity_ids() == after.known_entity_ids(), "assessment preserves retired identities");
++ require(before.revision() == after.revision() && before.world_id() == after.world_id(), "assessment preserves revision/world");
++ require(before.checkpoint_id() == after.checkpoint_id(), "assessment never sets original checkpoint ID");
++ require(before.project_id() == after.project_id() && before.branch_id() == after.branch_id(), "assessment preserves scope");
++}
++CreatorSession small_session() {
++ CreatorSession session(schemas(), "assessment-project", "main");
++ require(session.apply({"seed", 0, {Create{{"cube", "Cube", {{"x", 1}}, new_uuid()}}}, "Authored cube"}).ok, "seed");
++ return session;
++}
++void assessment_without_publication(const std::filesystem::path& directory) {
++ auto source = small_session();
++ const auto original = source;
++ const auto assessment = CheckpointStore::assess(source);
++ require(assessment.compatible && assessment.encoded_bytes >= 24, "unsaved session has an exact encoding assessment");
++ require(source.checkpoint_id().empty(), "unsaved source stays unsaved");
++ same_source(original, source);
++ require(std::filesystem::is_empty(directory), "assessment writes no files/lock/temp files");
++ const auto slot = directory / "checkpoint.aibs";
++ require(CheckpointStore::save(slot, source).ok, "publish independent actual save");
++ require(assessment.encoded_bytes == std::filesystem::file_size(slot), "assessed bytes equal real format-1 output bytes");
++ const auto saved = source;
++ const auto saved_assessment = CheckpointStore::assess(source);
++ require(saved_assessment.compatible && saved_assessment.encoded_bytes == assessment.encoded_bytes, "saved session remains exactly compatible");
++ same_source(saved, source);
++ require(std::filesystem::file_size(slot) == saved_assessment.encoded_bytes, "assessment leaves existing output unchanged");
++ auto expected_history = saved;
++ auto assessed_history = source;
++ require(expected_history.undo().ok && assessed_history.undo().ok, "history remains operational after assessment");
++ same_source(expected_history, assessed_history);
++ require(expected_history.redo().ok && assessed_history.redo().ok, "redo remains operational after assessment");
++ same_source(expected_history, assessed_history);
++}
++void oversized_string() {
++ auto source = small_session();
++ require(source.apply({"long-description", source.revision(), {SetField{"cube", "x", 2, source.world().at("cube").persistent_id}}, std::string(4097, 'd')}).ok, "Core accepts in-memory oversized description");
++ const auto before = source;
++ const auto assessment = CheckpointStore::assess(source);
++ require(!assessment.compatible && assessment.encoded_bytes == 0, "oversized description is incompatible");
++ require(assessment.message.find("string/size limit") != std::string::npos, "exact encoder identifies oversized string");
++ same_source(before, source);
++}
++void undo_collection_limit() {
++ CreatorSession source(schemas(), "assessment-project", "main");
++ constexpr std::size_t count = 5001;
++ for (std::size_t begin = 0; begin < count; begin += 1024) {
++  Transaction transaction{"batch-" + std::to_string(begin), source.revision(), {}, "Batch authored nodes"};
++  for (std::size_t index = begin; index < count && index < begin + 1024; ++index) {
++   transaction.edits.push_back(Create{{"node-" + std::to_string(index), "N", {{"x", 0}}, new_uuid()}});
++  }
++  require(source.apply(transaction).ok, "batch create under existing 1024-edit limit");
++ }
++ require(source.apply({"adjust", source.revision(), {SetField{"node-0", "x", 1, source.world().at("node-0").persistent_id}}, "Adjust one field"}).ok, "small update to a large world");
++ require(source.undo().ok, "undo realizes 5001 erase plus 5001 create edits");
++ require(source.world().size() == count && source.memory().events().back().edits.size() == 10002, "fixture crosses exact format-1 collection limit");
++ const auto before = source;
++ const auto assessment = CheckpointStore::assess(source);
++ require(!assessment.compatible && assessment.message.find("collection limit") != std::string::npos, "exact format-1 assessment catches oversize undo event");
++ same_source(before, source);
++}
++void replay_byte_limit() {
++ CreatorSession source(schemas(), "assessment-project", "main");
++ Transaction seed{"seed", 0, {}, "Dense-history fixture"};
++ for (unsigned index = 0; index < 64; ++index) seed.edits.push_back(Create{{"node-" + std::to_string(index), std::string(4096, 'n'), {{"x", 0}}, new_uuid()}});
++ require(source.apply(seed).ok, "seed long-name world with legal strings");
++ const auto uuid = source.world().at("node-0").persistent_id;
++ for (unsigned index = 0; index < 80; ++index) {
++  require(source.apply({"update-" + std::to_string(index), source.revision(), {SetField{"node-0", "x", static_cast<double>(index % 2), uuid}}, "Change one field"}).ok, "accumulate existing Core history");
++ }
++ const auto before = source;
++ const auto assessment = CheckpointStore::assess(source);
++ require(!assessment.compatible && assessment.message.find("replay byte budget") != std::string::npos, "exact validation catches replay byte expansion before publication");
++ same_source(before, source);
++}
++}
++int main() {
++ const auto directory = std::filesystem::temp_directory_path() / ("aibs-assessment-" + aibs::new_uuid());
++ std::filesystem::create_directories(directory);
++ try {
++  assessment_without_publication(directory);
++  oversized_string();
++  undo_collection_limit();
++  replay_byte_limit();
++  std::filesystem::remove_all(directory);
++  std::cout << "PASS: read-only exact encoding assessment, actual-size parity, original state/history, string/undo/replay bounds\n";
++  return 0;
++ } catch (const std::exception& error) {
++  std::cerr << "FAIL: " << error.what() << '\n';
++  std::filesystem::remove_all(directory);
++  return 1;
++ }
++}
+--- pause/engine/tests/creator_host_validation_tests.cpp
++++ current/engine/tests/creator_host_validation_tests.cpp
+@@ -0,0 +1,426 @@
++#include <aibs/creator_host.hpp>
++#include <bit>
++#include <cmath>
++#include <filesystem>
++#include <iostream>
++#include <limits>
++#include <stdexcept>
++#include <type_traits>
++
++namespace {
++using namespace aibs;
++unsigned checks = 0;
++void require(bool condition, const char* message) {
++ ++checks;
++ if (!condition) throw std::runtime_error(message);
++}
++SchemaRegistry schemas() {
++ SchemaRegistry result;
++ require(result.add({"x", -100, 100}), "register x");
++ require(result.add({"half_x", .1, 10}), "register extent");
++ return result;
++}
++CreatorSession authored() {
++ CreatorSession session(schemas(), "generic-tools", "main");
++ require(session.apply({"seed", 0, {Create{{"cube", "Cube", {{"x", 0}, {"half_x", 1}}, new_uuid()}}}, "Seed cube"}).ok,
++         "seed authored document");
++ return session;
++}
++Transaction set(const CreatorHost& host, std::string id, double value = 3) {
++ const auto snapshot = host.snapshot();
++ return {std::move(id), snapshot->revision,
++         {SetField{"cube", "x", value, snapshot->world.at("cube").persistent_id}}, "Move cube"};
++}
++CreatorHistoryRequest history(const CreatorHost& host, std::string id, CreatorHistoryDirection direction) {
++ const auto snapshot = host.snapshot();
++ return {std::move(id), host.epoch_id(), snapshot->scope, snapshot->revision, direction};
++}
++void rejected_unchanged(CreatorHost& host, const CreatorScope& scope, const Transaction& transaction, const char* message) {
++ const auto before = host.snapshot();
++ require(host.apply(scope, transaction).status == CreatorHostStatus::rejected, message);
++ require(host.snapshot() == before, "rejected command preserves snapshot identity");
++}
++
++void grouped_and_strict_identity() {
++ CreatorHost host(authored());
++ const auto initial = host.snapshot();
++ const auto added_uuid = new_uuid();
++ const Transaction create_set{"create-set", initial->revision,
++  {Create{{"added", "Added", {{"x", 1}}, added_uuid}}, SetField{"added", "x", 7, added_uuid}}, "Create then set"};
++ auto preview = host.preview(initial->scope, create_set);
++ require(preview.status == CreatorHostStatus::prepared && preview.change, "grouped Create then Set prepares");
++ require(host.snapshot() == initial && !initial->world.contains("added"), "group preview never publishes");
++ require(preview.change->snapshot()->world.at("added").fields.at("x") == 7, "sequential created target available");
++ require(host.apply(preview.change).status == CreatorHostStatus::applied, "grouped Create then Set applies");
++ require(host.snapshot()->revision == initial->revision + 1 && host.snapshot()->undo_depth == initial->undo_depth + 1,
++         "one group creates one revision and undo item");
++ const auto old_uuid = host.snapshot()->world.at("cube").persistent_id;
++ const auto replacement_uuid = new_uuid();
++ const Transaction replace{"replace", host.snapshot()->revision,
++  {Erase{"cube", old_uuid}, Create{{"cube", "Replacement", {{"x", 0}}, replacement_uuid}},
++   SetField{"cube", "x", 9, replacement_uuid}}, "Erase, replace, then set"};
++ require(host.apply(host.snapshot()->scope, replace).status == CreatorHostStatus::applied, "sequential alias replacement applies");
++ require(host.snapshot()->world.at("cube").persistent_id == replacement_uuid && host.snapshot()->world.at("cube").fields.at("x") == 9,
++         "replacement resolves new UUID");
++ rejected_unchanged(host, host.snapshot()->scope,
++  {"stale-uuid", host.snapshot()->revision, {SetField{"cube", "x", 1, old_uuid}}, "Old UUID"}, "stale UUID rejected");
++ rejected_unchanged(host, host.snapshot()->scope,
++  {"missing-uuid", host.snapshot()->revision, {SetField{"cube", "x", 1, {}}}, "No UUID"}, "missing target UUID rejected");
++ rejected_unchanged(host, host.snapshot()->scope,
++  {"erase-no-uuid", host.snapshot()->revision, {Erase{"cube", {}}}, "No UUID"}, "erase requires target UUID");
++ rejected_unchanged(host, host.snapshot()->scope,
++  {"create-no-uuid", host.snapshot()->revision, {Create{{"other", "Other", {{"x", 0}}, {}}}}, "No UUID"}, "create requires explicit UUID");
++ rejected_unchanged(host, host.snapshot()->scope,
++  {"recycle", host.snapshot()->revision, {Create{{"retired", "Retired", {{"x", 0}}, old_uuid}}}, "Recycle"}, "retired UUID cannot be recycled");
++ const auto current = host.snapshot();
++ rejected_unchanged(host, current->scope,
++  {"partial", current->revision,
++   {SetField{"cube", "x", 2, replacement_uuid}, SetField{"cube", "half_x", -1, replacement_uuid}}, "Invalid group"},
++  "invalid final edit rolls back whole group");
++ auto foreign_scope = current->scope;
++ foreign_scope.project = "different-project";
++ rejected_unchanged(host, foreign_scope, set(host, "foreign-project"), "project scope rejected");
++ foreign_scope = current->scope; foreign_scope.branch = "different-branch";
++ rejected_unchanged(host, foreign_scope, set(host, "foreign-branch"), "branch scope rejected");
++ foreign_scope = current->scope; foreign_scope.world_id = new_uuid();
++ rejected_unchanged(host, foreign_scope, set(host, "foreign-world"), "world scope rejected");
++ auto stale = set(host, "stale-revision"); stale.expected_revision = 0;
++ rejected_unchanged(host, current->scope, stale, "stale revision rejected");
++}
++
++void immutable_tokens_and_dependency_reassessment() {
++ static_assert(!std::is_default_constructible_v<CreatorPreparedChange>);
++ static_assert(!std::is_copy_constructible_v<CreatorPreparedChange>);
++ CreatorHost host(authored());
++ const auto original = host.snapshot();
++ require(host.apply(CreatorPreparedPtr{}).status == CreatorHostStatus::rejected, "null token rejected");
++ auto prepared = host.preview(original->scope, set(host, "prepared"));
++ require(prepared.status == CreatorHostStatus::prepared, "prepare token");
++ CreatorHost foreign(authored());
++ const auto foreign_before = foreign.snapshot();
++ require(foreign.apply(prepared.change).status == CreatorHostStatus::rejected && foreign.snapshot() == foreign_before,
++         "foreign owner cannot publish token");
++ require(host.apply(original->scope, set(host, "intervening", 4)).status == CreatorHostStatus::applied,
++         "intervening mutation");
++ require(host.apply(prepared.change).status == CreatorHostStatus::rejected, "stale token rejected");
++ require(original->world.at("cube").fields.at("x") == 0 && original->revision == 1,
++         "retained snapshot immutable after publication");
++ require(prepared.change->snapshot()->world.at("cube").fields.at("x") == 3,
++         "retained rejected candidate remains immutable");
++ unsigned dependency_version = 1;
++ unsigned calls = 0;
++ auto assessor = [&](const CreatorSnapshot& before, const CreatorSnapshot& after, const Transaction&) {
++  ++calls;
++  require(before.world.at("cube").fields.at("x") == 4 && after.world.at("cube").fields.at("x") == 8,
++          "assessor receives true before and after");
++  CreatorDependencyPreview result;
++  result.render_rebuild = true; result.collision_rebuild = true;
++  result.dependency_keys = {"power-graph:" + std::to_string(dependency_version)};
++  result.changed_uuids = {after.world.at("cube").persistent_id};
++  return result;
++ };
++ prepared = host.preview(host.snapshot()->scope, set(host, "dependency", 8), assessor);
++ require(prepared.status == CreatorHostStatus::prepared && calls == 1, "dependencies assessed before preview");
++ require(prepared.change->dependencies().save.compatible && prepared.change->dependencies().save.encoded_bytes > 0,
++         "host supplies exact checkpoint assessment");
++ require(!prepared.change->dependencies().navigation_validated, "generic host claims no navigation proof");
++ dependency_version = 2;
++ const auto before_apply = host.snapshot();
++ require(host.apply(prepared.change).status == CreatorHostStatus::rejected && calls == 2,
++         "external dependency drift rejected after reassessment");
++ require(host.snapshot() == before_apply, "dependency rejection never publishes");
++ auto invalid = host.preview(host.snapshot()->scope, set(host, "invalid-dependency"),
++  [](const auto&, const auto&, const auto&) { CreatorDependencyPreview result; result.valid = false; return result; });
++ require(invalid.status == CreatorHostStatus::rejected && host.snapshot() == before_apply, "invalid dependency preview rejected");
++ auto thrown = host.preview(host.snapshot()->scope, set(host, "throwing"),
++  [](const auto&, const auto&, const auto&) -> CreatorDependencyPreview { throw std::runtime_error("Assessor failure"); });
++ require(thrown.status == CreatorHostStatus::rejected && host.snapshot() == before_apply, "throwing assessor rejected unchanged");
++ bool rejected_reentrant = false;
++ prepared = host.preview(host.snapshot()->scope, set(host, "outer"), [&](const auto&, const auto&, const auto&) {
++  const auto nested = host.apply(host.snapshot()->scope, set(host, "nested", 10));
++  rejected_reentrant = nested.status == CreatorHostStatus::rejected;
++  return CreatorDependencyPreview{};
++ });
++ require(rejected_reentrant && prepared.status == CreatorHostStatus::prepared && host.snapshot() == before_apply,
++         "reentrant mutation rejected while outer observation prepares");
++ require(host.apply(prepared.change).status == CreatorHostStatus::applied && rejected_reentrant,
++         "reentrancy guard also holds during apply reassessment");
++ require(host.snapshot()->world.at("cube").fields.at("x") == 3, "only outer candidate published");
++ bool throw_during_apply = false;
++ prepared = host.preview(host.snapshot()->scope, set(host, "throw-at-publication", 6),
++  [&](const auto&, const auto&, const auto&) {
++   if (throw_during_apply) throw std::runtime_error("Late assessor failure");
++   return CreatorDependencyPreview{};
++  });
++ require(prepared.status == CreatorHostStatus::prepared, "prepare before late assessor exception");
++ throw_during_apply = true;
++ const auto before_throw = host.snapshot();
++ require(host.apply(prepared.change).status == CreatorHostStatus::rejected && host.snapshot() == before_throw,
++         "apply-time assessor throw preserves live snapshot");
++}
++
++void original_retry_and_restart(const std::filesystem::path& directory) {
++ CreatorHost host(authored());
++ const auto scope = host.snapshot()->scope;
++ const auto original = set(host, "negative-zero", -0.0);
++ require(host.apply(scope, original).status == CreatorHostStatus::applied, "signed-zero request applied");
++ auto positive = original; std::get<SetField>(positive.edits.front()).value = 0.0;
++ rejected_unchanged(host, scope, positive, "bit-different signed-zero reused ID rejected");
++ const auto accepted_snapshot = host.snapshot();
++ require(host.apply(scope, original).status == CreatorHostStatus::duplicate && host.snapshot() == accepted_snapshot,
++         "exact retry duplicate without republishing");
++ auto wrong_scope = scope; wrong_scope.branch = "other";
++ rejected_unchanged(host, wrong_scope, original, "accepted ID never bypasses document scope");
++ const auto erase = Transaction{"delete-target", host.snapshot()->revision,
++  {Erase{"cube", host.snapshot()->world.at("cube").persistent_id}}, "Delete original target"};
++ require(host.apply(scope, erase).status == CreatorHostStatus::applied, "delete original target");
++ const auto deleted = host.snapshot();
++ require(host.apply(scope, original).status == CreatorHostStatus::duplicate && host.snapshot() == deleted,
++         "exact retry resolves before missing target or stale head");
++ const auto undo = history(host, "undo-delete", CreatorHistoryDirection::undo);
++ require(host.travel(undo).status == CreatorHostStatus::undone, "undo deletion");
++ const auto undo_value = history(host, "undo-value", CreatorHistoryDirection::undo);
++ require(host.travel(undo_value).status == CreatorHostStatus::undone, "undo original numeric operation");
++ require(!std::signbit(host.snapshot()->world.at("cube").fields.at("x")), "undo restored positive zero");
++ const auto undone = host.snapshot();
++ require(host.apply(scope, original).status == CreatorHostStatus::duplicate && host.snapshot() == undone,
++         "retry of undone operation never reapplies it");
++ const auto slot = directory / "retry.aibs";
++ require(host.save(slot).status == CreatorHostStatus::saved, "save retry history");
++ auto resumed = CreatorHost::open(slot, schemas(), "generic-tools", "main");
++ const auto reopened = resumed.snapshot();
++ require(resumed.epoch_id() != host.epoch_id() && reopened->scope == scope, "restart retains document scope and changes host epoch");
++ require(resumed.apply(scope, original).status == CreatorHostStatus::duplicate && resumed.snapshot() == reopened,
++         "persisted original request resolves after reopen");
++ rejected_unchanged(resumed, scope, positive, "signed-zero conflict survives restart");
++ CreatorSession legacy(schemas(), "generic-tools", "main");
++ const Transaction legacy_create{"legacy-auto-id", 0, {Create{{"legacy", "Legacy", {{"x", -0.0}}, {}}}}, "Legacy generated UUID"};
++ require(legacy.apply(legacy_create).ok, "legacy original generated UUID request");
++ CreatorHost legacy_host(std::move(legacy));
++ const auto legacy_before = legacy_host.snapshot();
++ require(legacy_host.apply(legacy_before->scope, legacy_create).status == CreatorHostStatus::duplicate && legacy_host.snapshot() == legacy_before,
++         "accepted legacy retry resolves before new strict UUID admission");
++ auto legacy_positive = legacy_create;
++ std::get<Create>(legacy_positive.edits.front()).entity.fields.at("x") = 0.0;
++ rejected_unchanged(legacy_host, legacy_before->scope, legacy_positive, "Create receipt also compares signed-zero bits");
++}
++
++void save_and_epoch_bound_history(const std::filesystem::path& directory) {
++ CreatorHost host(authored());
++ auto prepared = host.preview(host.snapshot()->scope, set(host, "after-failed-save"));
++ require(prepared.status == CreatorHostStatus::prepared, "prepare before failing save");
++ const auto before_failure = host.snapshot();
++ require(host.save(directory / "nonexistent" / "failed.aibs").status == CreatorHostStatus::rejected,
++         "unavailable directory save rejects");
++ require(host.snapshot() == before_failure && host.apply(prepared.change).status == CreatorHostStatus::applied,
++         "failed save preserves valid preview generation");
++ prepared = host.preview(host.snapshot()->scope, set(host, "invalidated-by-save", 5));
++ const auto before_save = host.snapshot();
++ const auto slot = directory / "history.aibs";
++ require(host.save(slot).status == CreatorHostStatus::saved, "successful save");
++ require(host.snapshot()->revision == before_save->revision && host.snapshot()->checkpoint_id != before_save->checkpoint_id,
++         "save changes checkpoint ID without authored revision");
++ auto charge_reopened = CreatorHost::open(slot, schemas(), "generic-tools", "main");
++ require(host.snapshot()->charged_bytes == charge_reopened.snapshot()->charged_bytes,
++         "published save snapshot charge includes newly allocated checkpoint ID");
++ require(host.apply(prepared.change).status == CreatorHostStatus::rejected, "successful save invalidates prior token");
++ const auto undo = history(host, "history-operation", CreatorHistoryDirection::undo);
++ require(host.travel(undo).status == CreatorHostStatus::undone, "history undo applies");
++ const auto after_undo = host.snapshot();
++ require(host.travel(undo).status == CreatorHostStatus::duplicate && host.snapshot() == after_undo,
++         "same epoch history retry deduplicates before revision check");
++ auto conflicting = undo; conflicting.direction = CreatorHistoryDirection::redo;
++ require(host.travel(conflicting).status == CreatorHostStatus::rejected && host.snapshot() == after_undo,
++         "same history ID with changed content rejects");
++ conflicting = undo; conflicting.scope.branch = "other";
++ require(host.travel(conflicting).status == CreatorHostStatus::rejected, "history scope conflict rejects");
++ const auto redo = history(host, "redo-operation", CreatorHistoryDirection::redo);
++ require(host.travel(redo).status == CreatorHostStatus::redone, "fresh redo applies");
++ require(host.save(slot).status == CreatorHostStatus::saved, "save retained authored history");
++ auto reopened = CreatorHost::open(slot, schemas(), "generic-tools", "main");
++ const auto reopened_before = reopened.snapshot();
++ require(reopened.travel(undo).status == CreatorHostStatus::rejected && reopened.snapshot() == reopened_before,
++         "old host epoch history request rejects after restart");
++ auto new_undo = history(reopened, "history-operation", CreatorHistoryDirection::undo);
++ require(reopened.travel(new_undo).status == CreatorHostStatus::undone, "new epoch may reuse local history ID explicitly");
++ CreatorHostLimits receipt_limit; receipt_limit.maximum_history_receipts = 1;
++ CreatorHost one_receipt(authored(), receipt_limit);
++ const auto only_undo = history(one_receipt, "only-history-receipt", CreatorHistoryDirection::undo);
++ require(one_receipt.travel(only_undo).status == CreatorHostStatus::undone, "one local history receipt admitted");
++ const auto limited_before = one_receipt.snapshot();
++ require(one_receipt.travel(only_undo).status == CreatorHostStatus::duplicate, "bounded history retains duplicate resolution");
++ require(one_receipt.travel(history(one_receipt, "another-history-receipt", CreatorHistoryDirection::redo)).status == CreatorHostStatus::rejected &&
++         one_receipt.snapshot() == limited_before, "history receipt bound rejects new mutation unchanged");
++}
++
++void play_isolation_and_retained_clients(const std::filesystem::path& directory) {
++ static_assert(std::is_const_v<decltype(CreatorPlaySession::epoch)>);
++ static_assert(std::is_const_v<decltype(CreatorPlaySession::scope)>);
++ static_assert(std::is_const_v<decltype(CreatorPlaySession::authored_revision)>);
++ CreatorHost host(authored());
++ const auto authored_snapshot = host.snapshot();
++ require(!host.play(), "no play before start");
++ auto wrong_scope = authored_snapshot->scope; wrong_scope.world_id = new_uuid();
++ require(host.start_play(wrong_scope, authored_snapshot->revision).status == CreatorHostStatus::rejected, "foreign Play scope rejected");
++ require(host.start_play(authored_snapshot->scope, 0).status == CreatorHostStatus::rejected, "stale Play revision rejected");
++ require(host.start_play(authored_snapshot->scope, authored_snapshot->revision).status == CreatorHostStatus::playing,
++         "start isolated Play");
++ auto client = host.play();
++ require(client && client->scope == authored_snapshot->scope && client->authored_revision == authored_snapshot->revision,
++         "Play binds authored scope and revision");
++ const auto old_epoch = client->epoch;
++ client->world.at("cube").fields.at("x") = 44;
++ require(host.snapshot() == authored_snapshot && authored_snapshot->world.at("cube").fields.at("x") == 0,
++         "Play mutation never edits authored snapshot");
++ require(host.stop_play("foreign-epoch").status == CreatorHostStatus::rejected && host.play() == client,
++         "foreign Stop cannot stop current Play");
++ const auto slot = directory / "play.aibs";
++ require(host.save(slot).status == CreatorHostStatus::saved, "save while Play changes exist");
++ require(host.stop_play(old_epoch).status == CreatorHostStatus::stopped && !host.play(), "Stop releases host Play ownership");
++ require(host.stop_play(old_epoch).status == CreatorHostStatus::rejected, "old Stop epoch cannot address released context");
++ require(client->world.at("cube").fields.at("x") == 44, "client retained Play survives Stop independently");
++ require(host.start_play(host.snapshot()->scope, host.snapshot()->revision).status == CreatorHostStatus::playing,
++         "start next Play");
++ require(host.play()->epoch != old_epoch && host.play()->world.at("cube").fields.at("x") == 0,
++         "next Play fresh epoch and authored baseline");
++ client->world.at("cube").fields.at("x") = 88;
++ require(host.play()->world.at("cube").fields.at("x") == 0 && host.snapshot()->world.at("cube").fields.at("x") == 0,
++         "old retained Play cannot affect new Play or authoring");
++ auto reopened = CreatorHost::open(slot, schemas(), "generic-tools", "main");
++ require(!reopened.play() && reopened.snapshot()->world.at("cube").fields.at("x") == 0,
++         "restart reopens authored state without retained Play edits");
++}
++
++void limits_and_invalid_numbers() {
++ CreatorHostLimits limits;
++ limits.maximum_string_bytes = 64;
++ CreatorHost host(authored(), limits);
++ auto transaction = set(host, "long-description"); transaction.description.assign(65, 'd');
++ rejected_unchanged(host, host.snapshot()->scope, transaction, "description string limit");
++ transaction = set(host, std::string(65, 'i'));
++ rejected_unchanged(host, host.snapshot()->scope, transaction, "request ID string limit");
++ transaction = set(host, "long-field"); std::get<SetField>(transaction.edits.front()).field.assign(65, 'f');
++ rejected_unchanged(host, host.snapshot()->scope, transaction, "field string limit");
++ transaction = {"long-name", host.snapshot()->revision,
++  {Create{{"new", std::string(65, 'n'), {{"x", 0}}, new_uuid()}}}, "Long name"};
++ rejected_unchanged(host, host.snapshot()->scope, transaction, "entity name string limit");
++ for (const auto invalid : {std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::infinity(),
++                            -std::numeric_limits<double>::infinity(), 101.0}) {
++  rejected_unchanged(host, host.snapshot()->scope, set(host, "invalid-number", invalid), "non-finite or out-of-schema number rejected");
++ }
++ limits = {}; limits.maximum_edits = 1;
++ CreatorHost one_edit(authored(), limits);
++ transaction = set(one_edit, "two-edits"); transaction.edits.push_back(transaction.edits.front());
++ rejected_unchanged(one_edit, one_edit.snapshot()->scope, transaction, "group edit-count limit");
++ limits = {}; limits.maximum_request_bytes = 64;
++ CreatorHost small_request(authored(), limits);
++ rejected_unchanged(small_request, small_request.snapshot()->scope, set(small_request, "oversized-request"), "request logical byte limit");
++ limits = {}; limits.maximum_live_entities = 1;
++ CreatorHost one_entity(authored(), limits);
++ transaction = {"second-entity", one_entity.snapshot()->revision, {Create{{"second", "Second", {{"x", 1}}, new_uuid()}}}, "Second"};
++ rejected_unchanged(one_entity, one_entity.snapshot()->scope, transaction, "live entity count limit");
++ limits = {}; limits.maximum_fields_per_entity = 1;
++ CreatorSession one_field_source(schemas(), "generic-tools", "main");
++ require(one_field_source.apply({"seed", 0, {Create{{"cube", "Cube", {{"x", 0}}, new_uuid()}}}, "One field"}).ok,
++         "seed one-field document");
++ CreatorHost one_field(std::move(one_field_source), limits);
++ transaction = set(one_field, "add-second-field", 1);
++ std::get<SetField>(transaction.edits.front()).field = "half_x";
++ rejected_unchanged(one_field, one_field.snapshot()->scope, transaction, "Set cannot exceed resulting entity field limit");
++ limits = {}; limits.maximum_prepared = 1;
++ CreatorHost one_prepared(authored(), limits);
++ auto retained = one_prepared.preview(one_prepared.snapshot()->scope, set(one_prepared, "prepared-one"));
++ require(retained.status == CreatorHostStatus::prepared, "first token fits prepared count");
++ const auto original = one_prepared.snapshot();
++ require(one_prepared.preview(original->scope, set(one_prepared, "prepared-two")).status == CreatorHostStatus::rejected &&
++         one_prepared.snapshot() == original, "prepared count limit rejects without mutation");
++ require(one_prepared.apply(retained.change).status == CreatorHostStatus::applied, "bounded prepared token remains usable");
++ require(one_prepared.preview(one_prepared.snapshot()->scope, set(one_prepared, "new-generation")).status == CreatorHostStatus::prepared,
++         "successful mutation releases old generation admission budget");
++ require(one_prepared.preview(one_prepared.snapshot()->scope, set(one_prepared, "expired-client-token")).status == CreatorHostStatus::prepared,
++         "discarded client token releases admission on pruning");
++ limits = {}; limits.maximum_prepared_bytes = 1;
++ CreatorHost tiny_prepared(authored(), limits);
++ require(tiny_prepared.preview(tiny_prepared.snapshot()->scope, set(tiny_prepared, "too-large-preview")).status == CreatorHostStatus::rejected,
++         "aggregate prepared byte limit");
++ auto source = authored();
++ limits = {}; limits.maximum_session_bytes = source.charged_storage_bytes();
++ CreatorHost full_session(std::move(source), limits);
++ rejected_unchanged(full_session, full_session.snapshot()->scope, set(full_session, "exceeds-session"),
++                    "full session charge includes growing history and receipts");
++ source = authored(); limits.maximum_session_bytes = source.charged_storage_bytes() - 1;
++ bool rejected_initial = false;
++ try { CreatorHost oversized(std::move(source), limits); }
++ catch (const std::exception&) { rejected_initial = true; }
++ require(rejected_initial, "oversized initial session rejected before ownership copies");
++}
++
++void save_growth_obeys_session_budget(const std::filesystem::path& directory) {
++ auto source = authored();
++ CreatorHostLimits limits; limits.maximum_session_bytes = source.charged_storage_bytes();
++ CreatorHost host(std::move(source), limits);
++ const auto before = host.snapshot();
++ const auto slot = directory / "save-budget.aibs";
++ require(host.save(slot).status == CreatorHostStatus::rejected && host.snapshot() == before && !std::filesystem::exists(slot),
++         "first save checkpoint-ID growth rejected before durable publication when session budget full");
++}
++
++void callback_request_freeze_and_small_string_limit() {
++ CreatorHost host(authored());
++ auto caller_request = set(host, "freeze-callback-request", 1);
++ const auto original_request = caller_request;
++ bool observer_always_saw_original = true;
++ const auto prepared = host.preview(host.snapshot()->scope, caller_request,
++  [&](const auto&, const auto&, const Transaction& observed) {
++   observer_always_saw_original = observer_always_saw_original && std::get<SetField>(observed.edits.front()).value == 1;
++   // The caller still owns its request and may retain it in a callback capture.
++   // Its mutation must not alter the validated request observed here or the
++   // request subsequently retained in the private prepared token.
++   std::get<SetField>(caller_request.edits.front()).value = 2;
++   observer_always_saw_original = observer_always_saw_original && std::get<SetField>(observed.edits.front()).value == 1;
++   return CreatorDependencyPreview{};
++  });
++ require(prepared.status == CreatorHostStatus::prepared && prepared.change, "callback-mutated caller request still prepares original candidate");
++ require(prepared.change->snapshot()->world.at("cube").fields.at("x") == 1, "candidate uses admitted original numeric value");
++ require(host.apply(prepared.change).status == CreatorHostStatus::applied, "frozen original candidate applies");
++ require(host.snapshot()->world.at("cube").fields.at("x") == 1, "publication retains original candidate value");
++ const auto published = host.snapshot();
++ require(host.apply(published->scope, original_request).status == CreatorHostStatus::duplicate && host.snapshot() == published,
++         "original frozen request resolves as exact duplicate");
++ require(host.apply(published->scope, caller_request).status == CreatorHostStatus::rejected && host.snapshot() == published,
++         "callback-mutated caller request conflicts with original receipt");
++ CreatorHostLimits limits; limits.maximum_string_bytes = 64;
++ CreatorHost small_strings(authored(), limits);
++ const auto small_preview = small_strings.preview(small_strings.snapshot()->scope, set(small_strings, "valid-short-request", 1));
++ const bool valid_short_request = small_preview.status == CreatorHostStatus::prepared && small_preview.change;
++ if (!observer_always_saw_original || !valid_short_request) {
++  std::cerr << "Regression observations: callback request frozen=" << observer_always_saw_original
++            << ", valid 64-byte string limit preview=" << valid_short_request
++            << "; preview response=" << small_preview.message << '\n';
++ }
++ require(observer_always_saw_original, "callback observes frozen request independent of caller lvalue mutation during preview and apply");
++ require(valid_short_request, "built-in diagnostic strings permit valid request under 64-byte string limit");
++}
++}
++
++int main() {
++ const auto directory = std::filesystem::temp_directory_path() / ("aibs-host-contract-" + aibs::new_uuid());
++ std::filesystem::create_directories(directory);
++ try {
++  grouped_and_strict_identity();
++  immutable_tokens_and_dependency_reassessment();
++  original_retry_and_restart(directory);
++  save_and_epoch_bound_history(directory);
++  play_isolation_and_retained_clients(directory);
++  limits_and_invalid_numbers();
++  save_growth_obeys_session_budget(directory);
++  callback_request_freeze_and_small_string_limit();
++  std::filesystem::remove_all(directory);
++  std::cout << "PASS: " << checks << " creator host contract checks\n";
++  return 0;
++ } catch (const std::exception& error) {
++  std::cerr << "FAIL after " << checks << " checks: " << error.what() << '\n';
++  std::filesystem::remove_all(directory);
++  return 1;
++ }
++}
+--- pause/engine/tests/creator_introspection_tests.cpp
++++ current/engine/tests/creator_introspection_tests.cpp
+@@ -0,0 +1,152 @@
++#include <aibs/persistence.hpp>
++#include <bit>
++#include <cstdint>
++#include <filesystem>
++#include <iostream>
++#include <stdexcept>
++#include <type_traits>
++#include <utility>
++
++namespace {
++using namespace aibs;
++unsigned checks = 0;
++void require(bool condition, const char* message) {
++ ++checks;
++ if (!condition) throw std::runtime_error(message);
++}
++SchemaRegistry schemas() {
++ SchemaRegistry result;
++ require(result.add({"x", -100, 100}), "register x");
++ require(result.add({"capacity", 0, 100}), "register capacity");
++ return result;
++}
++CreatorSession empty() { return {schemas(), "introspection", "main"}; }
++
++void read_only_schema_and_empty_state() {
++ static_assert(std::is_same_v<decltype(std::declval<const SchemaRegistry&>().fields()),
++                             const std::map<std::string, FieldSchema>&>);
++ static_assert(std::is_same_v<decltype(std::declval<const CreatorSession&>().schemas()),
++                             const SchemaRegistry&>);
++ static_assert(std::is_same_v<decltype(std::declval<const CreatorSession&>().accepted_transaction("id")),
++                             const Transaction*>);
++ static_assert(noexcept(std::declval<const CreatorSession&>().charged_storage_bytes()));
++ auto session = empty();
++ require(session.schemas().fields().size() == 2, "schema enumeration");
++ require(session.schemas().fields().at("x").minimum == -100, "schema bounds visible");
++ require(session.undo_depth() == 0 && session.redo_depth() == 0 && session.receipt_count() == 0,
++         "empty history and receipts");
++ require(session.accepted_transaction("absent") == nullptr, "missing receipt pointer");
++ require(session.charged_storage_bytes() >= sizeof(CreatorSession), "empty session charged");
++ const auto initial = session.charged_storage_bytes();
++ const auto revision = session.revision();
++ (void)session.schemas().fields();
++ (void)session.accepted_transaction("absent");
++ require(session.charged_storage_bytes() == initial && session.revision() == revision,
++         "introspection has no side effects");
++ SchemaRegistry larger = schemas();
++ require(larger.add({std::string(2000, 'f'), -1, 1}), "register long field");
++ CreatorSession with_schema(std::move(larger), "introspection", "main");
++ require(with_schema.charged_storage_bytes() >= initial + 4000,
++         "registry keys and repeated schema IDs both charged");
++ CreatorSession with_scope(schemas(), std::string(2000, 'p'), std::string(2000, 'b'));
++ require(with_scope.charged_storage_bytes() > initial + 3900, "scope strings charged");
++}
++
++void original_requests_and_signed_zero_survive_restart(const std::filesystem::path& directory) {
++ auto session = empty();
++ const Transaction original{"create", 0, {Create{{"cube", "Authored cube", {{"x", 1}}, {}}}}, "Created cube"};
++ require(session.apply(original).ok, "create with generated UUID");
++ const auto* receipt = session.accepted_transaction("create");
++ require(receipt != nullptr && *receipt == original, "original request retained");
++ require(std::get<Create>(receipt->edits.front()).entity.persistent_id.empty(),
++         "original request not replaced by realized UUID");
++ require(!session.world().at("cube").persistent_id.empty(), "realized world UUID differs");
++ const Transaction negative_zero{"negative-zero", 1, {SetField{"cube", "x", -0.0, {}}}, "Exact original number"};
++ require(session.apply(negative_zero).ok, "write signed zero");
++ receipt = session.accepted_transaction("negative-zero");
++ require(receipt != nullptr && std::get<SetField>(receipt->edits.front()).persistent_id.empty(),
++         "omitted original target UUID retained");
++ require(std::bit_cast<std::uint64_t>(std::get<SetField>(receipt->edits.front()).value) == (std::uint64_t{1} << 63),
++         "original request preserves negative zero bits");
++ require(session.undo_depth() == 2 && session.redo_depth() == 0 && session.receipt_count() == 2,
++         "applied counts");
++ const auto before_observing = session.charged_storage_bytes();
++ require(session.accepted_transaction("negative-zero") == receipt, "same read-only pointer without mutation");
++ require(session.charged_storage_bytes() == before_observing, "receipt observation unchanged charge");
++ const auto slot = directory / "original.aibs";
++ require(CheckpointStore::save(slot, session).ok, "save original receipt");
++ auto resumed = empty();
++ require(CheckpointStore::load(slot, resumed).ok, "reopen original receipt");
++ require(resumed.schemas().fields() == session.schemas().fields(), "schemas survive checkpoint");
++ require(resumed.receipt_count() == 2 && resumed.undo_depth() == 2, "history counts survive checkpoint");
++ receipt = resumed.accepted_transaction("create");
++ require(receipt != nullptr && *receipt == original, "persisted original creation request");
++ receipt = resumed.accepted_transaction("negative-zero");
++ require(receipt != nullptr && std::bit_cast<std::uint64_t>(std::get<SetField>(receipt->edits.front()).value) == (std::uint64_t{1} << 63),
++         "persisted original signed-zero bit pattern");
++ require(resumed.apply(original).ok && resumed.revision() == 2 && resumed.receipt_count() == 2,
++         "read-only API preserves existing durable retry behavior");
++ require(resumed.undo().ok && resumed.undo_depth() == 1 && resumed.redo_depth() == 1,
++         "undo exposes moved history depths");
++ require(resumed.accepted_transaction("negative-zero") != nullptr && resumed.receipt_count() == 2,
++         "undo retains original accepted receipt");
++ require(resumed.redo().ok && resumed.undo_depth() == 2 && resumed.redo_depth() == 0,
++         "redo exposes moved history depths");
++}
++
++std::size_t build_delete_charge(std::size_t name_size, std::size_t description_size) {
++ auto session = empty();
++ require(session.apply({"create", 0, {Create{{"cube", std::string(name_size, 'n'), {{"x", 1}}, new_uuid()}}},
++                        std::string(description_size, 'd')}).ok, "create accounting entity");
++ require(session.apply({"erase", 1, {Erase{"cube", session.world().at("cube").persistent_id}}, "Erase cube"}).ok,
++         "erase accounting entity");
++ require(session.world().empty() && session.known_entity_ids().size() == 1, "retired identity retained");
++ require(session.undo_depth() == 2 && session.redo_depth() == 0 && session.receipt_count() == 2,
++         "empty world keeps history and receipts");
++ return session.charged_storage_bytes();
++}
++
++void retained_storage_and_both_history_stacks() {
++ const auto short_charge = build_delete_charge(1, 1);
++ const auto long_charge = build_delete_charge(3000, 1);
++ // The same retired name is owned by the original receipt, applied journal,
++ // and two history Worlds even though the live world is empty.
++ require(long_charge >= short_charge + 4 * 2999, "all retained name copies charged after deletion");
++ const auto long_description = build_delete_charge(1, 3000);
++ require(long_description >= short_charge + 2 * 2999, "receipt and journal descriptions both charged");
++ auto session = empty();
++ const auto before = session.charged_storage_bytes();
++ require(session.apply({"create", 0, {Create{{"cube", std::string(3000, 'n'), {{"x", 1}}, new_uuid()}}}, "Create"}).ok,
++         "create for redo retention");
++ require(session.undo().ok && session.world().empty(), "undo to empty world");
++ require(session.undo_depth() == 0 && session.redo_depth() == 1 && session.receipt_count() == 1,
++         "redo stores complete history while live empty");
++ require(session.charged_storage_bytes() >= before + 9000, "redo world plus receipt and journal charged");
++ const auto after_undo = session.charged_storage_bytes();
++ require(session.redo().ok && session.redo_depth() == 0 && session.undo_depth() == 1, "restore redo world");
++ require(session.charged_storage_bytes() > after_undo, "restored live world and additional journal charged");
++ const auto accepted = session.receipt_count();
++ const auto charged = session.charged_storage_bytes();
++ require(!session.apply({"rejected", session.revision(), {SetField{"absent", "x", 1, new_uuid()}}, "Rejected"}).ok,
++         "reject invalid transaction");
++ require(session.receipt_count() == accepted && session.charged_storage_bytes() == charged,
++         "rejection adds no retained storage or receipt");
++}
++}
++
++int main() {
++ const auto directory = std::filesystem::temp_directory_path() / ("aibs-introspection-" + aibs::new_uuid());
++ std::filesystem::create_directories(directory);
++ try {
++  read_only_schema_and_empty_state();
++  original_requests_and_signed_zero_survive_restart(directory);
++  retained_storage_and_both_history_stacks();
++  std::filesystem::remove_all(directory);
++  std::cout << "PASS: " << checks << " creator introspection checks\n";
++  return 0;
++ } catch (const std::exception& error) {
++  std::cerr << "FAIL after " << checks << " checks: " << error.what() << '\n';
++  std::filesystem::remove_all(directory);
++  return 1;
++ }
++}
+--- pause/engine/tests/creator_payload_probe.cpp
++++ current/engine/tests/creator_payload_probe.cpp
+@@ -0,0 +1,18 @@
++#include <aibs/creator_payload.hpp>
++#include <iostream>
++#include <fcntl.h>
++#include <io.h>
++int main() {
++ _setmode(_fileno(stdin), _O_BINARY); _setmode(_fileno(stdout), _O_BINARY);
++ try {
++  std::vector<unsigned char> bytes; char chunk[4096];
++  while(std::cin) {
++   std::cin.read(chunk,sizeof(chunk)); const auto n=static_cast<std::size_t>(std::cin.gcount());
++   if(bytes.size()+n>aibs::creator_payload::maximum_bytes) throw std::runtime_error("Payload too large");
++   bytes.insert(bytes.end(),chunk,chunk+n);
++  }
++  const auto request=aibs::creator_payload::decode_edit(bytes);
++  const auto output=aibs::creator_payload::encode_edit(request);
++  std::cout.write(reinterpret_cast<const char*>(output.data()),static_cast<std::streamsize>(output.size())); return 0;
++ } catch(const std::exception& e) {std::cerr<<e.what();return 2;}
++}
+--- pause/engine/tests/creator_wire_probe.cpp
++++ current/engine/tests/creator_wire_probe.cpp
+@@ -0,0 +1,21 @@
++#include <aibs/creator_wire.hpp>
++#include <iostream>
++#include <array>
++#include <fcntl.h>
++#include <io.h>
++int main() {
++ _setmode(_fileno(stdin), _O_BINARY); _setmode(_fileno(stdout), _O_BINARY);
++ try {
++  aibs::creator_wire::Parser parser;
++  std::array<unsigned char, 37> chunk{};
++  while (std::cin) {
++   std::cin.read(reinterpret_cast<char*>(chunk.data()), chunk.size());
++   const auto count = static_cast<std::size_t>(std::cin.gcount());
++   for (const auto& frame : parser.feed({chunk.data(), count})) {
++    const auto bytes = aibs::creator_wire::encode(frame);
++    std::cout.write(reinterpret_cast<const char*>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
++   }
++  }
++  parser.finish(); return 0;
++ } catch (const std::exception& error) { std::cerr << error.what(); return 2; }
++}
+--- pause/engine/tests/test_creator_commands.py
++++ current/engine/tests/test_creator_commands.py
+@@ -0,0 +1,70 @@
++import math
++import struct
++import unittest
++from native_studio.game_engine.creator_commands import decode_response, decode_page, decode_description, Status
++from native_studio.game_engine.creator_payload import PayloadError
++
++UUID='01234567-89ab-4cde-8fab-0123456789ab'
++
++
++def text(value):
++    raw=value.encode('utf-8') if isinstance(value,str) else value
++    return struct.pack('<I',len(raw))+raw
++
++
++def response(status=0,compatible=0,count=0,body_size=0,message='OK'):
++    return (struct.pack('<HH',1,status)+text(message)+text(UUID)+text('p')+text('b')+text(UUID)+
++            struct.pack('<Q',9)+text('')+struct.pack('<Q',1)+text('')+text('')+struct.pack('<BQ',compatible,0)+
++            text('Not assessed')+struct.pack('<IQQI',count,0,0,body_size))
++
++
++class CreatorCommandTests(unittest.TestCase):
++    def test_response_keeps_head_and_original_operation_revisions_distinct(self):
++        decoded=decode_response(response())
++        self.assertEqual(decoded.status,Status.OK)
++        self.assertEqual((decoded.head_revision,decoded.operation_revision),(9,1))
++        self.assertEqual(decoded.scope.host_epoch,UUID)
++
++    def test_every_response_truncation_and_trailing_data(self):
++        raw=response()
++        for end in range(len(raw)):
++            with self.subTest(end=end),self.assertRaises(PayloadError):
++                decode_response(raw[:end])
++        with self.assertRaises(PayloadError):
++            decode_response(raw+b'x')
++
++    def test_invalid_response_bounds_flags_status_and_text(self):
++        for raw in (response(status=99),response(compatible=2),response(count=10001),
++                    response(body_size=512*1024+1),response(message=b'\xff'),response(message=b'\0')):
++            with self.assertRaises(PayloadError):
++                decode_response(raw)
++
++    def test_schema_roundtrip_and_rejections(self):
++        raw=struct.pack('<I',1)+text('x')+struct.pack('<dd',-100.,100.)
++        self.assertEqual(decode_description(raw),(('x',-100.,100.),))
++        for invalid in (struct.pack('<I',65),raw+b'extra',
++                        struct.pack('<I',1)+text('x')+struct.pack('<dd',math.nan,100.),
++                        struct.pack('<I',1)+text('x')+struct.pack('<dd',10.,0.)):
++            with self.assertRaises(PayloadError):
++                decode_description(invalid)
++
++    def test_page_identity_and_exact_negative_zero(self):
++        raw=text('a')+struct.pack('<BI',0,1)+text('a')+text('A')+text(UUID)+struct.pack('<I',1)+text('x')+struct.pack('<d',-0.)
++        rows,cursor,more=decode_page(raw)
++        self.assertEqual((cursor,more,rows[0].uuid),('a',False,UUID))
++        self.assertEqual(math.copysign(1,rows[0].fields[0][1]),-1)
++        for end in range(len(raw)):
++            with self.subTest(end=end),self.assertRaises(PayloadError):
++                decode_page(raw[:end])
++
++    def test_oversized_and_duplicate_page_fields_reject(self):
++        prefix=text('a')+struct.pack('<BI',0,1)+text('a')+text('A')+text(UUID)
++        field=text('x')+struct.pack('<d',1.)
++        for raw in (text('')+struct.pack('<BI',0,65),prefix+struct.pack('<I',65),
++                    prefix+struct.pack('<I',2)+field+field,
++                    prefix+struct.pack('<I',1)+text('x')+struct.pack('<d',math.inf)):
++            with self.assertRaises(PayloadError):
++                decode_page(raw)
++
++
++if __name__=='__main__':unittest.main()
+--- pause/engine/tests/test_creator_payload.py
++++ current/engine/tests/test_creator_payload.py
+@@ -0,0 +1,73 @@
++import struct
++import unittest
++from native_studio.game_engine.creator_payload import (
++    Scope, Transaction, Create, Erase, SetField, EditRequest, encode_edit, decode_edit, PayloadError,
++)
++
++UUID = '01234567-89ab-4cde-8fab-0123456789ab'
++
++
++class CreatorPayloadTests(unittest.TestCase):
++    def request(self):
++        return EditRequest(Scope('project', 'main', UUID, UUID), Transaction(
++            'gesture', 7, 'Unicode pencil: ✏',
++            (Create('node', 'Node', UUID, (('x', -0.0), ('power', 3.5))),
++             SetField('node', 'x', 4.5, UUID), Erase('node', UUID))))
++
++    def test_roundtrip_and_numeric_bits(self):
++        request = self.request()
++        raw = encode_edit(request)
++        decoded = decode_edit(raw)
++        self.assertEqual(decoded.scope, request.scope)
++        self.assertEqual(encode_edit(decoded), raw)
++        self.assertIn(struct.pack('<d', -0.0), raw)
++        self.assertEqual(decoded.transaction.edits[0].fields, (('power', 3.5), ('x', -0.0)))
++
++    def test_truncation_and_trailing_bytes(self):
++        raw = encode_edit(self.request())
++        for size in range(len(raw)):
++            with self.subTest(size=size), self.assertRaises(PayloadError):
++                decode_edit(raw[:size])
++        with self.assertRaises(PayloadError):
++            decode_edit(raw + b'x')
++
++    def test_invalid_utf8_uuid_and_huge_lengths(self):
++        raw = bytearray(encode_edit(self.request()))
++        for offset, value in ((0, b'\x02\0'), (2, b'\xff\xff\xff\xff'), (6, b'\xff'),
++                              (6, b'\0')):
++            invalid = raw.copy()
++            invalid[offset:offset+len(value)] = value
++            with self.assertRaises(PayloadError):
++                decode_edit(bytes(invalid))
++        request = self.request()
++        for scope in (Scope('p', 'b', 'bad', UUID), Scope('p', 'b', UUID.upper(), UUID)):
++            with self.assertRaises(PayloadError):
++                encode_edit(EditRequest(scope, request.transaction))
++
++    def test_bounds_duplicates_and_nonfinite(self):
++        scope = self.request().scope
++        for edits in ((), (Erase('n', UUID),)*257,
++                      (Create('n', 'N', UUID, (('x', 1.), ('x', 2.))),),
++                      (SetField('n', 'x', float('nan'), UUID),),
++                      (SetField('n', 'x', float('inf'), UUID),)):
++            with self.assertRaises(PayloadError):
++                encode_edit(EditRequest(scope, Transaction('id', 0, '', edits)))
++        with self.assertRaises(PayloadError):
++            encode_edit(EditRequest(scope, Transaction('id', 0, 'x'*4097, (Erase('n',UUID),))))
++        with self.assertRaises(PayloadError):
++            decode_edit(b'x'*(1024*1024+1))
++
++    def test_absent_legacy_uuid_is_preserved_for_host_retry_resolution(self):
++        request = EditRequest(self.request().scope, Transaction('old', 0, '', (Erase('n',''),)))
++        self.assertEqual(decode_edit(encode_edit(request)), request)
++
++    def test_python_type_errors_are_payload_errors(self):
++        request = self.request()
++        with self.assertRaises(PayloadError):
++            encode_edit(EditRequest(Scope('p', 'b', None, UUID), request.transaction))
++        with self.assertRaises(PayloadError):
++            encode_edit(EditRequest(request.scope, Transaction('id', 0, '', (SetField('n','x',10**1000,UUID),))))
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- pause/engine/tests/test_creator_wire.py
++++ current/engine/tests/test_creator_wire.py
+@@ -0,0 +1,86 @@
++import struct
++import unittest
++
++from native_studio.game_engine.creator_wire import (
++    Frame, Opcode, Parser, WireError, encode, MAX_PAYLOAD, UNSCOPED_REVISION,
++)
++
++
++class CreatorWireTests(unittest.TestCase):
++    def frame(self, payload=b'abc'):
++        return Frame(Opcode.PREVIEW, 27, bytes(range(16)), 9, payload)
++
++    def test_exact_header_and_all_split_boundaries(self):
++        frame = self.frame(struct.pack('<d', -0.0))
++        raw = encode(frame)
++        self.assertEqual(raw[:16], b'AIBC\x01\x00\x30\x00\x20\x00\x00\x00\x08\x00\x00\x00')
++        self.assertEqual(raw[16:24], struct.pack('<Q', 27))
++        self.assertEqual(raw[24:40], bytes(range(16)))
++        self.assertEqual(raw[40:48], struct.pack('<Q', 9))
++        for split in range(len(raw) + 1):
++            with self.subTest(split=split):
++                parser = Parser()
++                self.assertEqual(parser.feed(raw[:split]) + parser.feed(raw[split:]), [frame])
++                parser.finish()
++
++    def test_every_truncation_fails_at_eof(self):
++        raw = encode(self.frame())
++        for end in range(1, len(raw)):
++            parser = Parser()
++            parser.feed(raw[:end])
++            with self.subTest(end=end), self.assertRaises(WireError):
++                parser.finish()
++
++    def test_invalid_headers_poison_connection(self):
++        raw = bytearray(encode(self.frame()))
++        for offset, data in [(0, b'FAIL'), (4, b'\x02\x00'), (6, b'\x31\x00'),
++                             (8, b'\x99\x00'), (10, b'\x02\x00'),
++                             (12, struct.pack('<I', MAX_PAYLOAD + 1)),
++                             (16, b'\0' * 8)]:
++            broken = raw.copy()
++            broken[offset:offset + len(data)] = data
++            parser = Parser()
++            with self.subTest(offset=offset), self.assertRaises(WireError):
++                parser.feed(bytes(broken[:48]))
++            self.assertLessEqual(parser.buffered_bytes, 48)
++            with self.assertRaises(WireError):
++                parser.feed(bytes(raw))
++
++    def test_coalesced_and_empty_frames(self):
++        a = Frame(Opcode.HELLO, 1, bytes(16), UNSCOPED_REVISION, b'')
++        b = self.frame()
++        parser = Parser()
++        self.assertEqual(parser.feed(encode(a) + encode(b)), [a, b])
++        parser.finish()
++
++    def test_read_chunk_and_frame_burst_are_bounded(self):
++        parser = Parser()
++        with self.assertRaises(WireError):
++            parser.feed(b'x' * (65536 + 1))
++        raw = encode(self.frame(b''))
++        parser = Parser()
++        with self.assertRaises(WireError):
++            parser.feed(raw * 9)
++
++    def test_maximum_payload_arrives_incrementally(self):
++        frame = self.frame(b'x' * MAX_PAYLOAD)
++        raw = encode(frame)
++        parser = Parser()
++        frames = []
++        for start in range(0, len(raw), 65536):
++            frames.extend(parser.feed(raw[start:start + 65536]))
++            self.assertLessEqual(parser.buffered_bytes, MAX_PAYLOAD)
++        self.assertEqual(frames, [frame])
++        parser.finish()
++
++    def test_encoder_rejects_invalid_fields(self):
++        for frame in [Frame(Opcode.HELLO, 0, bytes(16), 0, b''),
++                      Frame(Opcode.HELLO, 1, b'', 0, b''),
++                      Frame(Opcode.HELLO, 1, bytes(16), -1, b''),
++                      self.frame(b'x' * (MAX_PAYLOAD + 1))]:
++            with self.assertRaises(WireError):
++                encode(frame)
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- pause/engine/tests/verify_creator_payload.py
++++ current/engine/tests/verify_creator_payload.py
+@@ -0,0 +1,78 @@
++"""Cross-language payload proof with independently assembled malformed inputs."""
++from pathlib import Path
++import json
++import math
++import struct
++import subprocess
++import sys
++from datetime import datetime, timezone
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
++from native_studio.game_engine.creator_payload import (
++    Scope, Transaction, EditRequest, Create, SetField, Erase, PayloadError, encode_edit, decode_edit,
++)
++
++UUID = '01234567-89ab-4cde-8fab-0123456789ab'
++
++
++def text(value):
++    value = value.encode('utf-8') if isinstance(value, str) else value
++    return struct.pack('<I', len(value)) + value
++
++
++def raw(fields=(('x', 1.),), tag=0, world=UUID, project='project', description='text', count=1):
++    prefix = b'\x01\0' + text(project) + text('main') + text(world) + text(UUID)
++    prefix += text('operation') + struct.pack('<Q', 7) + text(description) + struct.pack('<I', count)
++    body = bytes([tag]) + text('node') + text('N') + text(UUID) + struct.pack('<I', len(fields))
++    return prefix + body + b''.join(text(key) + struct.pack('<d', value) for key, value in fields)
++
++
++def verify(executable):
++    cases = 0
++
++    def exchange(data, accepted):
++        nonlocal cases
++        result = subprocess.run([str(executable)], input=data, capture_output=True, timeout=15)
++        cases += 1
++        if accepted:
++            expected = encode_edit(decode_edit(data))
++            assert result.returncode == 0 and result.stdout == expected, (cases, result.stderr)
++        else:
++            try:
++                decode_edit(data)
++            except PayloadError:
++                pass
++            else:
++                raise AssertionError(('Python accepted invalid case', cases))
++            assert result.returncode == 2 and not result.stdout and result.stderr, (cases, result.returncode)
++
++    scope = Scope('Pencil ✏', 'main', UUID, UUID)
++    for value in (-0.0, 0.0, 1.0, -1.0, 1e300, 1e-300):
++        request = EditRequest(scope, Transaction('id', (1 << 64) - 1, '😀', (
++            Create('n', 'N', UUID, (('x', value),)), SetField('n', 'x', value, UUID), Erase('n', UUID))))
++        exchange(encode_edit(request), True)
++    exchange(encode_edit(EditRequest(scope, Transaction('legacy', 0, '', (Erase('n', ''),)))), True)
++    exchange(raw(fields=(('z', -0.), ('a', 3.))), True)
++    sample = raw()
++    for end in range(len(sample)):
++        exchange(sample[:end], False)
++    exchange(sample + b'extra', False)
++    for candidate in (
++        raw(fields=(('x', 1.), ('x', 2.))), raw(fields=tuple((str(i), 0.) for i in range(65))),
++        raw(fields=(('x', math.inf),)), raw(fields=(('x', math.nan),)), raw(tag=3),
++        raw(world=UUID.upper()), raw(world=''), raw(project=''), raw(project=b'\0'),
++        raw(project=b'\xc0\x80'), raw(project=b'\xed\xa0\x80'), raw(project=b'\xf4\x90\x80\x80'),
++        raw(project=b'\xf0\x80\x80\x80'), raw(project=b'\xf0\x9f'), raw(description='x'*4097),
++        raw(count=0), raw(count=257), raw(count=0xffffffff), b'x'*(1024*1024+1),
++    ):
++        exchange(candidate, False)
++    return {'schema_version': 1, 'status': 'passed', 'process_cases': cases,
++            'completed_at': datetime.now(timezone.utc).isoformat(), 'executable': str(executable),
++            'scope': 'Scoped numeric edit payload validation; no live document dispatcher'}
++
++
++if __name__ == '__main__':
++    report = verify(Path(sys.argv[1]).resolve())
++    if len(sys.argv) > 2:
++        Path(sys.argv[2]).write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
++    print(json.dumps(report))
+--- pause/engine/tests/verify_creator_process.py
++++ current/engine/tests/verify_creator_process.py
+@@ -0,0 +1,214 @@
++"""Actual interactive native owner lifecycle, using synthetic test worlds only."""
++from pathlib import Path
++import hashlib
++import json
++import os
++import queue
++import subprocess
++import sys
++import tempfile
++import threading
++from datetime import datetime, timezone
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
++from native_studio.game_engine.creator_wire import Frame, Opcode, Parser, encode, UNSCOPED_REVISION
++from native_studio.game_engine.creator_payload import EditRequest, Transaction, Create, SetField, encode_edit
++from native_studio.game_engine.creator_commands import (
++    Status, decode_response, open_document, scoped, prepared_handle, history, snapshot_page, decode_page, decode_description,
++)
++
++UUID = '01234567-89ab-4cde-8fab-0123456789ab'
++
++
++class Peer:
++    def __init__(self, exe, directory):
++        self.process = subprocess.Popen([str(exe), '--workspace', str(directory)],
++                                        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
++                                        creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
++        self.messages = queue.Queue(maxsize=8)
++        self.sequence = 0
++        self.epoch = bytes(16)
++        def reader():
++            parser = Parser()
++            try:
++                while chunk := os.read(self.process.stdout.fileno(), 65536):
++                    for frame in parser.feed(chunk):
++                        self.messages.put(frame, timeout=3)
++                parser.finish()
++                self.messages.put(EOFError('Native owner closed'), timeout=3)
++            except Exception as error:
++                self.messages.put(error, timeout=3)
++        self.reader = threading.Thread(target=reader, daemon=True)
++        self.reader.start()
++
++    def call(self, opcode, payload=b'', revision=UNSCOPED_REVISION, epoch=None):
++        self.sequence += 1
++        self.process.stdin.write(encode(Frame(opcode, self.sequence, self.epoch if epoch is None else epoch,
++                                             revision, payload)))
++        self.process.stdin.flush()
++        frame = self.messages.get(timeout=10)
++        if isinstance(frame, Exception):
++            raise frame
++        assert frame.response and frame.opcode == opcode and frame.request_id == self.sequence
++        response = decode_response(frame.payload)
++        assert frame.revision == response.head_revision
++        if opcode == Opcode.HELLO and response.status == Status.OK:
++            assert frame.epoch != bytes(16)
++            self.epoch = frame.epoch
++        else:
++            assert frame.epoch == self.epoch
++        return response
++
++    def close(self, graceful=True):
++        try:
++            if graceful and self.process.poll() is None:
++                assert self.call(Opcode.SHUTDOWN).status == Status.OK
++                self.process.wait(timeout=5)
++        finally:
++            if self.process.poll() is None:
++                self.process.kill()
++                self.process.wait(timeout=5)
++            try:
++                self.process.stdin.close()
++            except BrokenPipeError:
++                pass
++            self.reader.join(timeout=3)
++            assert not self.reader.is_alive()
++            self.process.stdout.close()
++            stderr = self.process.stderr.read(8192)
++            self.process.stderr.close()
++        if graceful:
++            assert self.process.returncode == 0, stderr
++
++
++def verify(exe):
++    checks = 0
++    def require(condition, message):
++        nonlocal checks
++        checks += 1
++        assert condition, message
++
++    with tempfile.TemporaryDirectory(prefix='aibs-owner-process-') as temp:
++        directory = Path(temp)
++        peer = Peer(exe, directory)
++        try:
++            require(peer.call(Opcode.OPEN, open_document('project','main',(('x',-100.,100.),),True)).status == Status.REJECTED,
++                    'Open before Hello must reject')
++            require(peer.call(Opcode.HELLO,b'invalid').status==Status.REJECTED,'Malformed Hello does not negotiate')
++            require(peer.call(Opcode.HELLO).status == Status.OK, 'Hello negotiates epoch')
++            require(peer.call(Opcode.OPEN,open_document('project','main',(('x',-100.,100.),),True)+b'bad').status==Status.REJECTED,
++                    'Trailing Open bytes reject before document replacement')
++            opened = peer.call(Opcode.OPEN, open_document('project','main',(('x',-100.,100.),),True))
++            require(opened.status == Status.OK and opened.head_revision == 0, 'Open synthetic blank world')
++            scope = opened.scope
++            description=peer.call(Opcode.DESCRIBE,scoped(scope),0)
++            require(decode_description(description.body)==(('x',-100.,100.),),'Describe returns actual registered metadata')
++            require(not (directory/'world.aibs').exists(), 'Open never silently saves')
++            tx = Transaction('create',0,'Author cube',(Create('cube','Cube',UUID,(('x',-0.),)),))
++            payload = encode_edit(EditRequest(scope,tx))
++            prepared = peer.call(Opcode.PREVIEW,payload,0)
++            require(prepared.status == Status.PREPARED and prepared.token and prepared.save_compatible, 'Preview with save assessment')
++            require(prepared.head_revision == 0, 'Preview does not publish')
++            require(peer.call(Opcode.RELEASE_PREPARED,prepared_handle(scope,prepared.token),0).status==Status.OK,'Release private preparation')
++            require(peer.call(Opcode.APPLY_PREPARED,prepared_handle(scope,prepared.token),0).status==Status.REJECTED,'Released preparation cannot apply')
++            prepared=peer.call(Opcode.PREVIEW,payload,0)
++            applied = peer.call(Opcode.APPLY_PREPARED,prepared_handle(scope,prepared.token),0)
++            require(applied.status == Status.APPLIED and applied.head_revision == 1,'Private server token applies')
++            current = peer.call(Opcode.APPLY_TRANSACTION,payload,0)
++            require(current.status == Status.DUPLICATE and current.head_revision == 1 and current.operation_revision == 1,
++                    'Original operation retry uses old request revision')
++            page = peer.call(Opcode.SNAPSHOT_PAGE,snapshot_page(scope,current.checkpoint_id),1)
++            rows, cursor, more = decode_page(page.body)
++            require(len(rows)==1 and rows[0].alias=='cube' and not more,'UUID snapshot page')
++            bad = peer.call(Opcode.DESCRIBE,scoped(scope),1,epoch=bytes(16))
++            require(bad.status == Status.REJECTED and bad.head_revision == 1,'Foreign transport epoch cannot mutate')
++            saved = peer.call(Opcode.SAVE,scoped(scope),1)
++            require(saved.status == Status.SAVED and saved.checkpoint_id,'Save publishes scoped world')
++            before = hashlib.sha256((directory/'world.aibs').read_bytes()).hexdigest()
++            stale = peer.call(Opcode.SNAPSHOT_PAGE,snapshot_page(scope,current.checkpoint_id),1)
++            require(stale.status == Status.REJECTED,'Save invalidates cursor without revision change')
++            malformed = peer.call(Opcode.APPLY_TRANSACTION,payload+b'bad',0)
++            require(malformed.status == Status.REJECTED and malformed.head_revision==1,'Malformed payload leaves document unchanged')
++            require(peer.call(Opcode.SAVE,scoped(scope),0).status == Status.REJECTED,'Stale save blocked before writing')
++            require(hashlib.sha256((directory/'world.aibs').read_bytes()).hexdigest()==before,'Rejected operations preserve durable bytes')
++            undone = peer.call(Opcode.HISTORY,history(scope,'undo',False),1)
++            require(undone.status==Status.UNDONE and undone.head_revision==2,'Undo through host')
++            require(peer.call(Opcode.HISTORY,history(scope,'undo',False),1).status==Status.DUPLICATE,'History retry remains epoch-local')
++            redone = peer.call(Opcode.HISTORY,history(scope,'redo',True),2)
++            require(redone.status==Status.REDONE and redone.head_revision==3,'Redo through host')
++            playing = peer.call(Opcode.START_PLAY,scoped(scope),3)
++            require(playing.status==Status.PLAYING and playing.play_epoch,'Explicit isolated in-process Play')
++            require(peer.call(Opcode.STOP_PLAY,prepared_handle(scope,playing.play_epoch),3).status==Status.STOPPED,'Stop matching Play epoch')
++            require(peer.call(Opcode.SAVE,scoped(scope),3).status==Status.SAVED,'Save final authored history')
++        finally:
++            peer.close()
++        original_scope,original_tx=scope,tx
++        unicode_dir=directory/'Pencil_✏';unicode_dir.mkdir()
++        peer=Peer(exe,unicode_dir)
++        try:
++            peer.call(Opcode.HELLO)
++            opened=peer.call(Opcode.OPEN,open_document('Pencil ✏','main',(('x',-100.,100.),),True))
++            require(opened.status==Status.OK,'Unicode selected workspace and project')
++            scope=opened.scope
++            uuids=(UUID,'11234567-89ab-4cde-8fab-0123456789ab','21234567-89ab-4cde-8fab-0123456789ab')
++            request=Transaction('three',0,'Three nodes',tuple(Create(alias,alias,uuid,(('x',1.),)) for alias,uuid in zip(('a','b','c'),uuids)))
++            require(peer.call(Opcode.APPLY_TRANSACTION,encode_edit(EditRequest(scope,request)),0).status==Status.APPLIED,'Grouped authored nodes')
++            cursor='';seen=[]
++            while True:
++                page=peer.call(Opcode.SNAPSHOT_PAGE,snapshot_page(scope,'',cursor,1),1)
++                rows,cursor,more=decode_page(page.body)
++                seen.extend(row.uuid for row in rows)
++                if not more:break
++            require(seen==list(uuids),'Pinned pages visit every unique UUID in order')
++            tokens=[]
++            for i in range(8):
++                tx=Transaction('prepare-'+str(i),1,'Move',(SetField('a','x',float(i),UUID),))
++                reply=peer.call(Opcode.PREVIEW,encode_edit(EditRequest(scope,tx)),1)
++                require(reply.status==Status.PREPARED,'Bounded server preparation admitted')
++                tokens.append(reply.token)
++            ninth=encode_edit(EditRequest(scope,Transaction('ninth',1,'',(SetField('a','x',9.,UUID),))))
++            require(peer.call(Opcode.PREVIEW,ninth,1).status==Status.REJECTED,'Ninth strong server preparation rejected')
++            require(peer.call(Opcode.RELEASE_PREPARED,prepared_handle(scope,tokens.pop()),1).status==Status.OK,'Release frees admission slot')
++            require(peer.call(Opcode.PREVIEW,ninth,1).status==Status.PREPARED,'Released slot reusable')
++            require(peer.call(Opcode.SAVE,scoped(scope),1).status==Status.SAVED,'Save Unicode workspace')
++            require(peer.call(Opcode.APPLY_PREPARED,prepared_handle(scope,tokens[0]),1).status==Status.REJECTED,
++                    'Successful save releases handles even at unchanged revision')
++        finally:
++            peer.close()
++        # A malformed frame terminates the connection without touching saved bytes.
++        durable=hashlib.sha256((unicode_dir/'world.aibs').read_bytes()).hexdigest()
++        peer=Peer(exe,unicode_dir)
++        try:
++            peer.call(Opcode.HELLO)
++            peer.call(Opcode.OPEN,open_document('Pencil ✏','main',(('x',-100.,100.),),False))
++            peer.process.stdin.write(b'FAIL'+bytes(44));peer.process.stdin.flush()
++            peer.process.wait(timeout=5)
++            require(peer.process.returncode==2,'Invalid frame terminates owner')
++            require(hashlib.sha256((unicode_dir/'world.aibs').read_bytes()).hexdigest()==durable,'Fatal parser failure preserves checkpoint bytes')
++        finally:
++            peer.close(False)
++        scope,tx=original_scope,original_tx
++        peer = Peer(exe,directory)
++        try:
++            peer.call(Opcode.HELLO)
++            reopened = peer.call(Opcode.OPEN,open_document('project','main',(('x',-100.,100.),),False))
++            require(reopened.status==Status.OK and reopened.scope.world_id==scope.world_id and reopened.head_revision==3,
++                    'Fresh process restores authored history/world identity')
++            new_scope = reopened.scope
++            require(new_scope.host_epoch != scope.host_epoch,'Fresh host epoch after restart')
++            require(peer.call(Opcode.APPLY_TRANSACTION,encode_edit(EditRequest(new_scope,tx)),0).status==Status.DUPLICATE,
++                    'Persisted original request resolves in fresh process')
++            require(peer.call(Opcode.DESCRIBE,scoped(scope),3).status==Status.REJECTED,'Old host epoch rejected')
++            require(peer.call(Opcode.SNAPSHOT_PAGE,snapshot_page(new_scope,reopened.checkpoint_id),3).status==Status.OK,
++                    'Fresh pinned snapshot works')
++        finally:
++            peer.close()
++    return {'status':'passed','checks':checks,'completed_at':datetime.now(timezone.utc).isoformat(),
++            'scope':'Actual native owner process; synthetic numeric authoring world only'}
++
++
++if __name__=='__main__':
++    report=verify(Path(sys.argv[1]).resolve())
++    if len(sys.argv)>2:
++        Path(sys.argv[2]).write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
++    print(json.dumps(report))
+--- pause/engine/tests/verify_creator_wire.py
++++ current/engine/tests/verify_creator_wire.py
+@@ -0,0 +1,57 @@
++"""Exercise actual C++ binary pipes against the Python frame implementation."""
++from pathlib import Path
++import json
++import struct
++import subprocess
++import sys
++from datetime import datetime, timezone
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
++from native_studio.game_engine.creator_wire import Frame, Opcode, Parser, encode, MAX_PAYLOAD
++
++
++def verify(executable):
++    count = 0
++
++    def exchange(raw, accepted):
++        nonlocal count
++        result = subprocess.run([str(executable)], input=raw, capture_output=True, timeout=30)
++        count += 1
++        if accepted:
++            assert result.returncode == 0 and result.stdout == raw, (count, result.stderr)
++        else:
++            assert result.returncode == 2 and result.stderr, (count, result.returncode)
++
++    for opcode in Opcode:
++        for response in (False, True):
++            frame = Frame(opcode, (1 << 64) - 1, bytes(range(16)), (1 << 64) - 1,
++                          bytes(range(256)) + struct.pack('<d', -0.0), response)
++            raw = encode(frame)
++            exchange(raw, True)
++            parser = Parser()
++            assert parser.feed(raw) == [frame]
++            parser.finish()
++    sample = encode(Frame(Opcode.PREVIEW, 1, bytes(16), 3, b'abc'))
++    exchange(b'', True)
++    for end in range(1, len(sample)):
++        exchange(sample[:end], False)
++    for offset, value in ((0, b'NOPE'), (4, b'\x02\0'), (6, b'\x31\0'),
++                          (8, b'\x99\0'), (10, b'\x02\0'),
++                          (12, struct.pack('<I', MAX_PAYLOAD + 1)), (16, bytes(8))):
++        bad = bytearray(sample)
++        bad[offset:offset + len(value)] = value
++        exchange(bytes(bad), False)
++    exchange(encode(Frame(Opcode.SNAPSHOT_PAGE, 1, bytes(16), 0, b'x' * MAX_PAYLOAD)), True)
++    # Coalesced messages cross many header/payload boundaries in 37-byte reads.
++    exchange(b''.join(encode(Frame(Opcode.DESCRIBE, i, bytes(16), 0, bytes(i)))
++                      for i in range(1, 100)), True)
++    return {'schema_version': 1, 'status': 'passed', 'process_cases': count,
++            'completed_at': datetime.now(timezone.utc).isoformat(),
++            'executable': str(executable), 'scope': 'Framing and actual pipe bytes only; no command dispatcher'}
++
++
++if __name__ == '__main__':
++    report = verify(Path(sys.argv[1]).resolve())
++    if len(sys.argv) > 2:
++        Path(sys.argv[2]).write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
++    print(json.dumps(report))

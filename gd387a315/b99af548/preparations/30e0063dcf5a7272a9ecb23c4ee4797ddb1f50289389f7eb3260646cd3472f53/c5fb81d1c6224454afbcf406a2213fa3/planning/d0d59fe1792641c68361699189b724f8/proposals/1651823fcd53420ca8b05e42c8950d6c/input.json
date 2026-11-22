@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "c5fb81d1c6224454afbcf406a2213fa3",
+  "plan_id": "d0d59fe1792641c68361699189b724f8",
+  "snapshot_sha256": "e54ae23bd06e298735ad04ece535ed6e3ccdc045aaafdddcca0b3e32f203eb72",
+  "review_digest": "65b90e24ce0ed746a487c5fbd37344454c6ae986fc4a980a18607c44cbcd77a5",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "1651823fcd53420ca8b05e42c8950d6c",
+  "reviewed_plan_sha256": "ecdecc5112f9b382be4882a80dfc04867c78ee699fac529edb5b538a75ac91a8",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 59156,
+    "created": 1794718679.0745277
+  },
+  "created_at_utc": "2026-11-15T04:58:03.753277+00:00",
+  "entry_sha256": "026538c87e8621c092ae327d56d25f91d8aa324065f31e49749a77024ab95bc7"
+}

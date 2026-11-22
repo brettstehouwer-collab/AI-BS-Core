@@ -1,0 +1,99 @@
+{
+  "kind": "project_preparation",
+  "request_id": "61dc3cd3c0e046eaa0c109d054cb3503",
+  "owner": "firebase:fixture:alice",
+  "plan": {
+    "request_id": "61dc3cd3c0e046eaa0c109d054cb3503",
+    "repository_id": "ai-bs",
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "files": [
+      {
+        "relative_path": "src/app.py",
+        "role": "editable"
+      },
+      {
+        "relative_path": "tests/test_app.py",
+        "role": "verification"
+      },
+      {
+        "relative_path": "tests/__init__.py",
+        "role": "dependency"
+      },
+      {
+        "relative_path": "src/other.py",
+        "role": "editable"
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "profile": "python_unittest",
+        "targets": [
+          "tests.test_app"
+        ]
+      }
+    ],
+    "limits": {
+      "check_seconds": 30,
+      "total_seconds": 180,
+      "output_bytes": 262144
+    }
+  },
+  "plan_sha256": "8b3f30eb29e7043386c6ee9439daf277fc61bba9964ce5cbbfc07dd15a1c005c",
+  "repository_policy_sha256": "abfc68b98730d1904f446d708049e59f65823fcf71959936123980174c78cd5b",
+  "snapshot": {
+    "schema_version": 1,
+    "state": "SNAPSHOT_ONLY",
+    "authorized": false,
+    "executed": false,
+    "commit": "caa09d2fc7d0ed19b3dc86ee7c853a7d6fd18c31",
+    "files": [
+      {
+        "relative_path": "src/app.py",
+        "role": "editable",
+        "length": 10,
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886"
+      },
+      {
+        "relative_path": "tests/test_app.py",
+        "role": "verification",
+        "length": 144,
+        "sha256": "9f70b36f029addc92c78901796a906f8ed8b74cdb05b22e7c5c4e08727f7ff56"
+      },
+      {
+        "relative_path": "tests/__init__.py",
+        "role": "dependency",
+        "length": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "relative_path": "src/other.py",
+        "role": "editable",
+        "length": 10,
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886"
+      }
+    ],
+    "byte_count": 164,
+    "captured_at_utc": "2026-11-14T14:14:34.390050+00:00",
+    "snapshot_sha256": "837cfb262b6180f330df91ac545edef0003715f247daaee410baa736c754c461"
+  },
+  "checks": [
+    {
+      "check_id": "python",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "tests.test_app"
+      ]
+    }
+  ],
+  "review_digest": "b5f89a2ef7c964c9be83545e6bdc9f87cd7904b3717583d84b6af3146c2b0b1e",
+  "state": "PREPARING",
+  "worker": {
+    "pid": 43900,
+    "created": 1794665673.337026
+  },
+  "created_at_utc": "2026-11-14T14:14:34.390050+00:00",
+  "entry_sha256": "c030baa16dce17209c7e59ac1c3e4fa0d2f8b0da172e5aff93c79bce1e216cee"
+}

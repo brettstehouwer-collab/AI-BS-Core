@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "evidence_class": "trusted_controller_infrastructure_only",
+  "disposable_vm_checks_performed": false,
+  "candidate_tests_executed": false,
+  "checks": [
+    {
+      "name": "exact fixed profile accepted",
+      "passed": true
+    },
+    {
+      "name": "profile rejects state PREPARED",
+      "passed": true
+    },
+    {
+      "name": "profile rejects vm_uuid 6c5a53da-ab80-4ecb-8be6-4059266f736e",
+      "passed": true
+    },
+    {
+      "name": "profile rejects vm_uuid 44444444-4444-4444-8444-444444444444",
+      "passed": true
+    },
+    {
+      "name": "profile rejects dispatcher_sid S-1-5-21-2133766663-4066672948-2456486318-1005",
+      "passed": true
+    },
+    {
+      "name": "profile rejects guest_sid S-1-5-21-2133766663-4066672948-2456486318-1006",
+      "passed": true
+    },
+    {
+      "name": "profile rejects guest_username Administrator",
+      "passed": true
+    },
+    {
+      "name": "profile rejects guest_executable C:\\Windows\\System32\\cmd.exe",
+      "passed": true
+    },
+    {
+      "name": "profile rejects vbox_sha256 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+      "passed": true
+    },
+    {
+      "name": "profile rejects vbox_user_home C:\\Users\\aibs_probe_host\\.VirtualBox",
+      "passed": true
+    },
+    {
+      "name": "profile rejects vm_cpus 8",
+      "passed": true
+    },
+    {
+      "name": "duplicate exact JSON keys rejected",
+      "passed": true
+    },
+    {
+      "name": "noninteger JSON rejected",
+      "passed": true
+    },
+    {
+      "name": "root JSON array rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid UTF8 rejected",
+      "passed": true
+    },
+    {
+      "name": "valid grant accepted at issue instant",
+      "passed": true
+    },
+    {
+      "name": "valid grant accepted one tick before expiry",
+      "passed": true
+    },
+    {
+      "name": "grant expires at exact boundary",
+      "passed": true
+    },
+    {
+      "name": "grant rejected one microsecond after expiry",
+      "passed": true
+    },
+    {
+      "name": "future grant rejected",
+      "passed": true
+    },
+    {
+      "name": "request rejects attempt_id",
+      "passed": true
+    },
+    {
+      "name": "request rejects challenge",
+      "passed": true
+    },
+    {
+      "name": "request rejects mode",
+      "passed": true
+    },
+    {
+      "name": "request rejects profile_sha256",
+      "passed": true
+    },
+    {
+      "name": "request rejects guest_timeout_ms",
+      "passed": true
+    },
+    {
+      "name": "request rejects output_bytes",
+      "passed": true
+    },
+    {
+      "name": "request rejects cancel_after_ms",
+      "passed": true
+    },
+    {
+      "name": "actual quoted storage key and recording marker syntax accepted",
+      "passed": true
+    },
+    {
+      "name": "duplicate quoted/unquoted key refused",
+      "passed": true
+    },
+    {
+      "name": "unknown bare line refused",
+      "passed": true
+    },
+    {
+      "name": "integration identity refused before control operations",
+      "passed": true
+    },
+    {
+      "name": "running VM is never taken over",
+      "passed": true
+    },
+    {
+      "name": "network enabled refused",
+      "passed": true
+    },
+    {
+      "name": "shared folder refused",
+      "passed": true
+    },
+    {
+      "name": "snapshot drift refused",
+      "passed": true
+    },
+    {
+      "name": "attached installation media refused",
+      "passed": true
+    },
+    {
+      "name": "USB channel enabled refused",
+      "passed": true
+    },
+    {
+      "name": "arbitrary VBox operation refused",
+      "passed": true
+    },
+    {
+      "name": "run uses password-file and exact16 guest arguments",
+      "passed": true
+    },
+    {
+      "name": "fixed guest emit report accepted",
+      "passed": true
+    },
+    {
+      "name": "guest report rejects challenge",
+      "passed": true
+    },
+    {
+      "name": "guest report rejects guest_sid",
+      "passed": true
+    },
+    {
+      "name": "guest report rejects self_hash_revalidated",
+      "passed": true
+    },
+    {
+      "name": "guest report rejects termination_confirmed",
+      "passed": true
+    },
+    {
+      "name": "guest report rejects standard_account",
+      "passed": true
+    },
+    {
+      "name": "guest report rejects input_sha256",
+      "passed": true
+    },
+    {
+      "name": "guest report rejects combined_output_bytes",
+      "passed": true
+    },
+    {
+      "name": "guest report rejects child_exit_code",
+      "passed": true
+    },
+    {
+      "name": "canonical serialization independent of property order",
+      "passed": true
+    },
+    {
+      "name": "raw VBox disk metadata adapter validates capacity units",
+      "passed": true
+    },
+    {
+      "name": "duplicate disk identity refused",
+      "passed": true
+    },
+    {
+      "name": "authenticated receipt binds exact attempt and payload",
+      "passed": true
+    },
+    {
+      "name": "altered receipt output rejected",
+      "passed": true
+    },
+    {
+      "name": "receipt wrong attempt rejected",
+      "passed": true
+    },
+    {
+      "name": "permanent attempt CreateNew rejects replay without overwriting",
+      "passed": true
+    },
+    {
+      "name": "exclusive lease excludes simultaneous controller",
+      "passed": true
+    },
+    {
+      "name": "held admitted file resists concurrent write and replacement",
+      "passed": true
+    },
+    {
+      "name": "changed admitted bytes rejected",
+      "passed": true
+    },
+    {
+      "name": "hardlinked admitted input rejected",
+      "passed": true
+    },
+    {
+      "name": "infrastructure process exact exit and bounded stdout collected",
+      "passed": true
+    },
+    {
+      "name": "infrastructure process timeout terminates owned process",
+      "passed": true
+    },
+    {
+      "name": "infrastructure process cancellation terminates owned process",
+      "passed": true
+    },
+    {
+      "name": "infrastructure stdout plus stderr ceiling enforced",
+      "passed": true
+    },
+    {
+      "name": "retained real VBox disk fixture parses without unsupported flags",
+      "passed": true
+    },
+    {
+      "name": "mocked lifecycle passed",
+      "passed": true
+    },
+    {
+      "name": "mocked lifecycle start_uncertain",
+      "passed": true
+    },
+    {
+      "name": "mocked lifecycle cleanup_uncertain",
+      "passed": true
+    },
+    {
+      "name": "mocked lifecycle replayed",
+      "passed": true
+    },
+    {
+      "name": "public worker fails closed before runtime when isolation missing",
+      "passed": true
+    }
+  ],
+  "passed": 69,
+  "failed": 0,
+  "completed_utc": "2026-10-26T18:23:23.6536991Z"
+}

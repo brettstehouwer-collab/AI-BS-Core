@@ -1,0 +1,69 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "44e02b56c42540dfb50d7971aedaba81",
+  "plan_id": "d601947f027949f09326e02df7fc0fc8",
+  "snapshot_sha256": "e478504d7803b2cd16043c1d519bb23c57efb55839f2915c7a49a30201859355",
+  "review_digest": "99ad911f407d2f83327d08a28eb330b59a0d60fc8dbc9c2697ea5e7ecf0b8feb",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "4ca9982944fc47abba2b9b54b3c61066",
+  "reviewed_plan_sha256": "a7a82bc65dcab258b7314ecf3af79bf8db6a23c3c8a8df7ca900e21918a30855",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "466ba5c70927632f895ca9304b50499d68bef80006e360a0534899d8408470de",
+        "content": "import unittest,time,subprocess,sys,pathlib\r\nclass Check(unittest.TestCase):\r\n def test_slow(self):\r\n  child=subprocess.Popen([sys.executable,\"-c\",\"import time; time.sleep(30)\"])\r\n  pathlib.Path(\"owned-child.pid\").write_text(str(child.pid))\r\n  time.sleep(8)\r\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/__init__.py",
+        "role": "dependency",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content": "",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "c268b64b2f4bccafb04f80103043f924e3b42298fa72793914f69dc029536f41",
+  "worker": {
+    "pid": 34804,
+    "created": 1794771336.628209
+  },
+  "created_at_utc": "2026-11-15T19:35:41.377942+00:00",
+  "entry_sha256": "788421a0b81b74df32a7129d661b33e4c38a588250e82c5181894d9269c5acd5"
+}

@@ -1,0 +1,34 @@
+{
+  "status": "anatomical_base_prepared",
+  "likeness_approved": false,
+  "style": "Naturalistic face and clothing with subtle hologram glow",
+  "source_bundle": "human-base-meshes-bundle-v1.2.0.zip",
+  "source_sha256": "b7421350cbad8425dd1ba93c4248867a1c236cc8a3a3dc140d4c2a03144c4bad",
+  "source_url": "https://download.blender.org/demo/asset-bundles/human-base-meshes/human-base-meshes-bundle-v1.2.0.zip",
+  "license_source": "https://www.blender.org/download/demo-files/",
+  "source_license": "CC0 Blender Human Base Meshes bundle",
+  "objects": [
+    {
+      "name": "GEO-head_animation_realistic.sclera.R",
+      "vertices": 546
+    },
+    {
+      "name": "GEO-head_animation_realistic.sclera.L",
+      "vertices": 546
+    },
+    {
+      "name": "GEO-head_animation_realistic.iris.R",
+      "vertices": 400
+    },
+    {
+      "name": "GEO-head_animation_realistic.iris.L",
+      "vertices": 400
+    },
+    {
+      "name": "GEO-head_animation_realistic",
+      "vertices": 3242
+    }
+  ],
+  "next": "Fit head proportions and facial landmarks to supplied podium/front references, connected clothed body and skinning, then close-up/full-body and deformation previews",
+  "original_family_references_embedded": false
+}

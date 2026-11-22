@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "de1dc54b6b5a40d586639493ab50f601",
+  "plan_id": "362f1cf7105b4b7398860a2a53cdeeda",
+  "snapshot_sha256": "473d5793b92b85ec58e66ba205400d4c2fad22865fab2b66b575d11804a5f5a2",
+  "review_digest": "806f848cb58b03838037f61bc2fff3d77158b983d8501570be485f6aaf5dba2e",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "5706aff58c6c46e4bef6d90d3ab27667",
+  "reviewed_plan_sha256": "2c805c80e24d8a08d541a189727d9b97d920453f3f46c2f149b767dc68385eed",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 25572,
+    "created": 1794664365.8543262
+  },
+  "created_at_utc": "2026-11-14T13:52:46.642121+00:00",
+  "entry_sha256": "2204f2628853cad393601b444ac2ff0aec643ec9317f87eb7ce984490f7f38e5"
+}

@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-04T00:57:21.218251+00:00",
+  "git_head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "status": "passed_frozen106_surface_preview_not_yet_deployed",
+  "verification": "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\verification.json",
+  "next_step": "Verify67A Drive raw restore, recheck package/protected releases, then retarget existing launchers to the tested106preview. Prepare user-started106play/measurement review. Continue remaining likeness/caption/pacing/performance acceptance; full goal incomplete.",
+  "all_owned_processes_joined": true,
+  "goal_complete": false
+}

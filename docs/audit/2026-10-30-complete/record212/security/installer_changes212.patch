@@ -1,0 +1,1987 @@
+--- original-preserved/setup_installer.py
++++ project-working-copy/setup_installer.py
+@@ -6,7 +6,7 @@
+ - Customizable Installation Directory with Folder Browser Dialog
+ - Disk Space Calculation & Verification
+ - Desktop & Start Menu Shortcut Generation
+-- Authenticode Digital Certificate Registration to Windows Trusted Root
++- Optional certificate fingerprint review (no trust store changes)
+ - Uninstaller Generation (Uninstall_October7_DAW.bat)
+ - Direct Launch on Completion
+ """
+@@ -24,8 +24,10 @@
+ from tkinter import ttk, filedialog, messagebox
+ 
+ BASE_DIR = Path(__file__).resolve().parent
+-SOURCE_DIR = BASE_DIR / "dist" / "October7_VocalStudio_DAW"
+-if not (SOURCE_DIR / "October7_VocalStudio_DAW.exe").exists():
++SOURCE_DIR = BASE_DIR / "dist" / "October7_VocalStudio_Native"
++if not (SOURCE_DIR / "October7_VocalStudio_Native.exe").is_file():
++    SOURCE_DIR = BASE_DIR / "dist" / "October7_VocalStudio_DAW"
++if not (SOURCE_DIR / "October7_VocalStudio_DAW.exe").is_file() and not (SOURCE_DIR / "October7_VocalStudio_Native.exe").is_file():
+     SOURCE_DIR = BASE_DIR
+ 
+ DEFAULT_INSTALL_PATH = os.path.join(os.environ.get("ProgramFiles", "C:\\Program Files"), "October7_VocalStudio_DAW")
+@@ -109,9 +111,8 @@
+         self.accept_eula = tk.BooleanVar(value=False)
+         self.opt_desktop = tk.BooleanVar(value=True)
+         self.opt_startmenu = tk.BooleanVar(value=True)
+-        self.opt_cert = tk.BooleanVar(value=True)
+-        self.opt_mmcss = tk.BooleanVar(value=True)
+-        self.opt_launch = tk.BooleanVar(value=True)
++        self.opt_cert = tk.BooleanVar(value=False)
++        self.opt_launch = tk.BooleanVar(value=False)
+ 
+         self.setup_ui()
+         self.show_step(0)
+@@ -365,8 +366,7 @@
+         options = [
+             ("Create Desktop Shortcut ('October 7 Vocal Studio DAW')", self.opt_desktop),
+             ("Register Start Menu Entry ('October 7 Vocal Studio')", self.opt_startmenu),
+-            ("Register Authenticode Digital Signature in Trusted Root (Eliminate SmartScreen warnings)", self.opt_cert),
+-            ("Enable Windows MMCSS Pro Audio Real-Time Thread Priority (Admin)", self.opt_mmcss),
++            ("Review certificate fingerprint only (no Windows trust changes)", self.opt_cert),
+             ("Launch October 7 Vocal Studio DAW when setup completes", self.opt_launch),
+         ]
+ 
+@@ -436,115 +436,104 @@
+         self.log_box.see("end")
+ 
+     def execute_installation(self):
+-        target = Path(self.target_path.get()).resolve()
+         try:
+-            self.status_lbl.config(text=f"Creating destination directory: {target}")
+-            self.append_log(f"[*] Creating target directory: {target}")
++            source = SOURCE_DIR.resolve()
++            target = Path(self.target_path.get()).resolve()
++            # Validate before creating anything: an installed package is also its source.
++            if target == source or target in source.parents or source in target.parents:
++                raise ValueError("Choose a destination separate from the source package (no nested paths).")
++            if target == Path(target.anchor):
++                raise ValueError("A drive root cannot be an installation directory.")
++            if not source.is_dir():
++                raise ValueError("The source package directory is unavailable.")
++
++            self.status_lbl.config(text=f"Deploying application files to: {target}")
+             target.mkdir(parents=True, exist_ok=True)
+-
+-            # Copy engine binaries and assets
+-            self.status_lbl.config(text="Deploying engine binaries and runtime libraries...")
+-            self.append_log(f"[*] Copying files from {SOURCE_DIR} to {target}...")
+-
+-            for item in SOURCE_DIR.iterdir():
+-                dst = target / item.name
++            preserved_dirs = {"takes", "stems", "recordings", "projects", "sessions", "backups"}
++            preserved_media = {".wav", ".mp3", ".flac", ".ogg", ".aif", ".aiff", ".mid", ".midi"}
++
++            def copy_entry(item, dst):
++                # Keep user sessions out of application upgrades, including bundled takes.
++                if item.name.casefold() in preserved_dirs or (dst.exists() and item.suffix.casefold() in preserved_media):
++                    self.append_log(f" [PRESERVED] User media/session path: {item.name}")
++                    return
++                if item.is_symlink() or getattr(item, "is_junction", lambda: False)():
++                    raise ValueError(f"Linked source entries are not supported: {item.name}")
++                if dst.is_symlink() or getattr(dst, "is_junction", lambda: False)():
++                    raise ValueError(f"Linked destination entries are not supported: {item.name}")
++                if not item.resolve().is_relative_to(source) or not dst.resolve().is_relative_to(target):
++                    raise ValueError("A package path escapes its installation boundary.")
+                 if item.is_dir():
+-                    if dst.exists():
+-                        shutil.rmtree(dst)
+-                    shutil.copytree(item, dst)
+-                    self.append_log(f" [OK] Directory deployed: {item.name}")
++                    dst.mkdir(parents=True, exist_ok=True)
++                    for child in item.iterdir():
++                        copy_entry(child, dst / child.name)
+                 else:
+                     shutil.copy2(item, dst)
+-                    self.append_log(f" [OK] File deployed: {item.name}")
+-
+-            # Register Authenticode Certificate
++
++            for item in source.iterdir():
++                copy_entry(item, target / item.name)
++            self.append_log(" [OK] Application files copied; existing media and session directories preserved.")
++
++            # Optional certificate review is informational; installers never alter trust stores.
+             if self.opt_cert.get():
+-                self.status_lbl.config(text="Registering Authenticode certificate into Windows Trusted Root...")
+                 cer_file = target / "October7_CodeSigning.cer"
+-                if not cer_file.exists():
+-                    src_cer = BASE_DIR / "dist" / "October7_VocalStudio_DAW" / "October7_CodeSigning.cer"
+-                    if src_cer.exists():
+-                        shutil.copy2(src_cer, cer_file)
+-
+-                if cer_file.exists():
+-                    self.append_log("[*] Registering certificate into Trusted Root via certutil...")
+-                    cmd = ["certutil", "-addstore", "-f", "Root", str(cer_file)]
+-                    res = subprocess.run(cmd, capture_output=True, text=True)
+-                    if res.returncode == 0:
+-                        self.append_log(" [OK] Authenticode certificate registered in Trusted Root (SmartScreen Verified)")
+-                    else:
+-                        self.append_log(f" [!] certutil warning: {res.stderr.strip()}")
+-
+-            # Create Desktop Shortcut
+-            if self.opt_desktop.get():
+-                self.status_lbl.config(text="Generating Desktop Shortcut...")
+-                self.append_log("[*] Creating Desktop shortcut...")
+-                desktop = Path(os.environ.get("USERPROFILE", "C:\\Users\\Default")) / "Desktop"
+-                shortcut_path = desktop / "October 7 Vocal Studio DAW.lnk"
++                if cer_file.is_file():
++                    import hashlib
++                    self.append_log(f" [REVIEW] Certificate file SHA-256: {hashlib.sha256(cer_file.read_bytes()).hexdigest()}")
++                self.append_log(" [NOTICE] Verify the signer independently before any manual trust change. No trust store was changed.")
++
++            # Resolve both optional paths regardless of which shortcuts the user selects.
++            desktop = Path(os.environ.get("USERPROFILE", "C:\\Users\\Default")) / "Desktop"
++            start_dir = Path(os.environ.get("APPDATA", "")) / "Microsoft" / "Windows" / "Start Menu" / "Programs" / "October 7 Vocal Studio"
++            exe_path = target / "October7_VocalStudio_Native.exe"
++            if not exe_path.is_file():
++                exe_path = target / "October7_VocalStudio_DAW.exe"
++            for selected, folder, label in (
++                (self.opt_desktop.get(), desktop, "Desktop"),
++                (self.opt_startmenu.get(), start_dir, "Start Menu"),
++            ):
++                if not selected:
++                    continue
++                folder.mkdir(parents=True, exist_ok=True)
++                shortcut_path = folder / "October 7 Vocal Studio DAW.lnk"
++                # PowerShell single-quoted literals escape apostrophes by doubling them.
++                shortcut_literal = str(shortcut_path).replace("'", "''")
++                executable_literal = str(exe_path).replace("'", "''")
++                target_literal = str(target).replace("'", "''")
+                 ps_script = f"""
++                $ErrorActionPreference = 'Stop'
+                 $WshShell = New-Object -ComObject WScript.Shell
+-                $Shortcut = $WshShell.CreateShortcut('{str(shortcut_path)}')
+-                $Shortcut.TargetPath = '{str(target / "October7_VocalStudio_DAW.exe")}'
+-                $Shortcut.WorkingDirectory = '{str(target)}'
+-                $Shortcut.Description = 'October 7 Vocal Tracking Studio & Performance Engine (DAW Pro)'
++                $Shortcut = $WshShell.CreateShortcut('{shortcut_literal}')
++                $Shortcut.TargetPath = '{executable_literal}'
++                $Shortcut.WorkingDirectory = '{target_literal}'
+                 $Shortcut.Save()
+                 """
+-                subprocess.run(["powershell", "-Command", ps_script], capture_output=True)
+-                self.append_log(" [OK] Desktop shortcut created")
+-
+-            # Create Start Menu Shortcut
+-            if self.opt_startmenu.get():
+-                self.status_lbl.config(text="Registering Start Menu Entry...")
+-                self.append_log("[*] Creating Start Menu entry...")
+-                start_dir = Path(os.environ.get("APPDATA", "")) / "Microsoft" / "Windows" / "Start Menu" / "Programs" / "October 7 Vocal Studio"
+-                start_dir.mkdir(parents=True, exist_ok=True)
+-                shortcut_path = start_dir / "October 7 Vocal Studio DAW.lnk"
+-                ps_script = f"""
+-                $WshShell = New-Object -ComObject WScript.Shell
+-                $Shortcut = $WshShell.CreateShortcut('{str(shortcut_path)}')
+-                $Shortcut.TargetPath = '{str(target / "October7_VocalStudio_DAW.exe")}'
+-                $Shortcut.WorkingDirectory = '{str(target)}'
+-                $Shortcut.Save()
+-                """
+-                subprocess.run(["powershell", "-Command", ps_script], capture_output=True)
+-                self.append_log(" [OK] Start Menu shortcut created")
+-
+-            # Generate Uninstaller
+-            self.status_lbl.config(text="Creating uninstaller script...")
+-            uninstaller_path = target / "Uninstall_October7_DAW.bat"
+-            desktop_lnk = desktop / "October 7 Vocal Studio DAW.lnk"
+-            with open(uninstaller_path, "w", encoding="utf-8") as f:
+-                f.write(f"""@echo off
+-title Uninstall October 7 Vocal Studio DAW
+-echo ============================================================
+-echo   UNINSTALL OCTOBER 7 VOCAL STUDIO DAW
+-echo ============================================================
+-echo.
+-echo Removing Desktop and Start Menu shortcuts...
+-del /f /q "{desktop_lnk}" 2>nul
+-rmdir /s /q "{start_dir}" 2>nul
+-echo Removing application directory...
+-cd /d "%TEMP%"
+-rmdir /s /q "{target}" 2>nul
+-echo.
+-echo [OK] Successfully uninstalled October 7 Vocal Studio DAW.
+-pause
+-""")
+-            self.append_log(f" [OK] Uninstaller generated: {uninstaller_path.name}")
+-
+-            self.status_lbl.config(text="Installation Complete!")
+-            self.append_log("\n============================================================")
+-            self.append_log(" [SUCCESS] All components and libraries deployed successfully!")
+-            self.append_log("============================================================")
++                result = subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps_script],
++                                        capture_output=True, text=True, timeout=30)
++                if result.returncode != 0:
++                    raise RuntimeError(f"{label} shortcut creation failed: {result.stderr.strip()}")
++                self.append_log(f" [OK] {label} shortcut created")
++
++            # A safe uninstall needs a tracked install manifest and media ownership checks.
++            # Until that exists, fail closed rather than recursively deleting user recordings.
++            (target / "Uninstall_October7_DAW.bat").write_text(
++                '@echo off\n'
++                'title October 7 Vocal Studio - Data Preservation\n'
++                'echo Automatic uninstall is disabled to preserve recordings and project data.\n'
++                'echo No files or shortcuts have been removed.\n'
++                'echo Back up your media and use a reviewed install manifest before removal.\n'
++                'exit /b 1\n', encoding="utf-8")
++            self.status_lbl.config(text="Installation complete. Audio capabilities require a runtime check.")
++            self.append_log(" [SUCCESS] File deployment and requested shortcuts completed. Windows trust and audio settings were not changed.")
+             self.progress.stop()
+-
+             self.after(600, lambda: self.show_step(3))
+-
+         except Exception as e:
++            self.progress.stop()
+             self.append_log(f"\n[ERROR] Installation failed: {e}")
+             self.status_lbl.config(text=f"Error: {e}")
+             messagebox.showerror("Installation Error", f"Installation encountered an error:\n{e}")
+             self.btn_cancel.config(state="normal")
++
+ 
+     # --- STEP 3: Finished ---
+     def render_finished_step(self):
+@@ -565,10 +554,10 @@
+ 
+         info_lines = [
+             f"• Installation Folder: {self.target_path.get()}",
+-            "• Digital Signature: Valid (CN=October 7 Vocal Studio Audio Engine)",
+-            "• SmartScreen Status: Verified in Windows Trusted Root CA",
+-            "• Core PC Functions: WASAPI Exclusive, MMCSS Pro Audio Active",
+-            "• Local AI Fallbacks: Offline Safe (ACE-Step & Ollama Fallbacks)",
++            "• Windows certificate trust: unchanged",
++            "• Existing recordings and session directories: preserved",
++            "• Audio devices, scheduling and AI services: require a runtime check",
++            "• Automatic uninstall: disabled until a safe ownership manifest exists",
+         ]
+ 
+         for line in info_lines:
+@@ -596,7 +585,9 @@
+ 
+     def finish_installation(self):
+         target = Path(self.target_path.get())
+-        exe_path = target / "October7_VocalStudio_DAW.exe"
++        exe_path = target / "October7_VocalStudio_Native.exe"
++        if not exe_path.is_file():
++            exe_path = target / "October7_VocalStudio_DAW.exe"
+         if self.opt_launch.get() and exe_path.exists():
+             subprocess.Popen([str(exe_path)], cwd=str(target))
+         self.destroy()
+--- original-preserved/Install_Wizard.ps1
++++ project-working-copy/Install_Wizard.ps1
+@@ -7,7 +7,7 @@
+   - End-User License Agreement (EULA) Acceptance
+   - Customizable Destination Directory with Folder Browser Dialog
+   - Desktop & Start Menu Shortcut Integration
+-  - Authenticode Certificate Registration (Trusted Root)
++  - Optional certificate fingerprint review (no trust store changes)
+ #>
+ 
+ Add-Type -AssemblyName System.Windows.Forms
+@@ -21,8 +21,12 @@
+ }
+ 
+ $ScriptDir = Split-Path -Parent $PSCommandPath
+-$SourceDir = Join-Path $ScriptDir "dist\October7_VocalStudio_DAW"
+-if (-not (Test-Path "$SourceDir\October7_VocalStudio_DAW.exe")) {
++$SourceDir = Join-Path $ScriptDir "dist\October7_VocalStudio_Native"
++if (-not (Test-Path -LiteralPath (Join-Path $SourceDir 'October7_VocalStudio_Native.exe'))) {
++    $SourceDir = Join-Path $ScriptDir "dist\October7_VocalStudio_DAW"
++}
++if (-not (Test-Path -LiteralPath (Join-Path $SourceDir 'October7_VocalStudio_DAW.exe')) -and
++    -not (Test-Path -LiteralPath (Join-Path $SourceDir 'October7_VocalStudio_Native.exe'))) {
+     $SourceDir = $ScriptDir
+ }
+ 
+@@ -272,16 +276,17 @@
+ $optPanel.Controls.Add($chkStart)
+ 
+ $chkCert = New-Object System.Windows.Forms.CheckBox
+-$chkCert.Text = "Register Authenticode Certificate into Windows Trusted Root (SmartScreen Safe)"
+-$chkCert.Checked = $true
++$chkCert.Text = "Review certificate fingerprint only (no Windows trust changes)"
++$chkCert.Checked = $false
+ $chkCert.ForeColor = [System.Drawing.Color]::White
+ $chkCert.Location = New-Object System.Drawing.Point(15, 88)
+ $chkCert.Size = New-Object System.Drawing.Size(580, 22)
+ $optPanel.Controls.Add($chkCert)
+ 
+ $chkMmcss = New-Object System.Windows.Forms.CheckBox
+-$chkMmcss.Text = "Configure Windows MMCSS Pro Audio Real-Time Thread Scheduling (Admin)"
+-$chkMmcss.Checked = $true
++$chkMmcss.Text = "Audio scheduling requires a runtime engine check"
++$chkMmcss.Checked = $false
++$chkMmcss.Enabled = $false
+ $chkMmcss.ForeColor = [System.Drawing.Color]::White
+ $chkMmcss.Location = New-Object System.Drawing.Point(15, 114)
+ $chkMmcss.Size = New-Object System.Drawing.Size(580, 22)
+@@ -289,7 +294,7 @@
+ 
+ $chkLaunch = New-Object System.Windows.Forms.CheckBox
+ $chkLaunch.Text = "Launch October 7 Vocal Studio DAW when setup completes"
+-$chkLaunch.Checked = $true
++$chkLaunch.Checked = $false
+ $chkLaunch.ForeColor = [System.Drawing.Color]::FromArgb(245, 158, 11)
+ $chkLaunch.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+ $chkLaunch.Location = New-Object System.Drawing.Point(15, 144)
+@@ -379,11 +384,10 @@
+ October 7 Vocal Tracking Studio DAW has been successfully installed.
+ 
+ • Destination Path: $($txtPath.Text)
+-• Authenticode Signature: Valid & Trusted
+-• Windows SmartScreen: Verified in Trusted Root CA
+-• Realtime Audio Driver: WASAPI Exclusive Active
+-• MMCSS Pro Audio Tuning: High Thread Priority Configured
+-• Local AI Engines: Zero-Hang Offline Fallbacks Active
++• Windows certificate trust: unchanged
++• Existing recordings and session directories: preserved
++• Audio devices, scheduling and AI services: require a runtime check
++• Automatic uninstall: disabled until a safe ownership manifest exists
+ 
+ Click 'Finish & Launch' to begin using the DAW.
+ "@
+@@ -393,72 +397,118 @@
+ }
+ 
+ function Start-Installation {
+-    $targetDir = $txtPath.Text
+-    $logTxt.AppendText("[*] Creating destination directory: $targetDir`r`n")
+-
+-    if (-not (Test-Path $targetDir)) {
+-        New-Item -Path $targetDir -ItemType Directory -Force | Out-Null
+-    }
+-
+-    $logTxt.AppendText("[*] Deploying engine binaries and libraries from: $SourceDir`r`n")
+-    Copy-Item -Path "$SourceDir\*" -Destination $targetDir -Recurse -Force
+-    $logTxt.AppendText("[OK] Deployed audio engine, GUI frontend, and runtime libraries.`r`n")
+-
+-    # Register Certificate
+-    if ($chkCert.Checked) {
+-        $cer = Join-Path $targetDir "October7_CodeSigning.cer"
+-        if (Test-Path $cer) {
+-            $logTxt.AppendText("[*] Registering Authenticode certificate into Windows Trusted Root...`r`n")
+-            certutil -addstore -f Root "$cer" | Out-Null
+-            $logTxt.AppendText("[OK] Authenticode certificate registered (SmartScreen Verified).`r`n")
+-        }
+-    }
+-
+-    # Shortcuts
+-    $exePath = Join-Path $targetDir "October7_VocalStudio_DAW.exe"
+-    if ($chkDesktop.Checked) {
++    $script:InstallSucceeded = $false
++    try {
++        $source = [System.IO.Path]::GetFullPath($SourceDir).TrimEnd('\')
++        $targetDir = [System.IO.Path]::GetFullPath($txtPath.Text).TrimEnd('\')
++        $comparison = [System.StringComparison]::OrdinalIgnoreCase
++        if ($source.Equals($targetDir, $comparison) -or
++            $targetDir.StartsWith($source + '\', $comparison) -or
++            $source.StartsWith($targetDir + '\', $comparison)) {
++            throw 'Choose a destination separate from the source package (no nested paths).'
++        }
++        if ($targetDir -eq [System.IO.Path]::GetPathRoot($targetDir).TrimEnd('\')) {
++            throw 'A drive root cannot be an installation directory.'
++        }
++        $sourceInfo = Get-Item -LiteralPath $source -ErrorAction Stop
++        if (-not $sourceInfo.PSIsContainer -or ($sourceInfo.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
++            throw 'The source must be an ordinary package directory.'
++        }
++        # Reject linked destination ancestors before any copy follows them outside the target.
++        $ancestor = $targetDir
++        while ($ancestor) {
++            if (Test-Path -LiteralPath $ancestor) {
++                $info = Get-Item -LiteralPath $ancestor -ErrorAction Stop
++                if ($info.Attributes -band [IO.FileAttributes]::ReparsePoint) {
++                    throw 'Linked installation paths are not supported.'
++                }
++            }
++            $parent = Split-Path -Parent $ancestor
++            if ($parent -eq $ancestor) { break }
++            $ancestor = $parent
++        }
++        New-Item -Path $targetDir -ItemType Directory -Force -ErrorAction Stop | Out-Null
++        $preservedDirs = @('takes', 'stems', 'recordings', 'projects', 'sessions', 'backups')
++        $preservedMedia = @('.wav', '.mp3', '.flac', '.ogg', '.aif', '.aiff', '.mid', '.midi')
++
++        function Copy-PackageEntry($item, [string]$destination) {
++            if ($preservedDirs -contains $item.Name.ToLowerInvariant() -or
++                ((Test-Path -LiteralPath $destination) -and $preservedMedia -contains $item.Extension.ToLowerInvariant())) {
++                $logTxt.AppendText("[PRESERVED] Media/session path: $($item.Name)`r`n")
++                return
++            }
++            if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) {
++                throw "Linked source entries are not supported: $($item.Name)"
++            }
++            if (Test-Path -LiteralPath $destination) {
++                $existing = Get-Item -LiteralPath $destination -ErrorAction Stop
++                if ($existing.Attributes -band [IO.FileAttributes]::ReparsePoint) {
++                    throw "Linked destination entries are not supported: $($item.Name)"
++                }
++            }
++            if ($item.PSIsContainer) {
++                New-Item -Path $destination -ItemType Directory -Force -ErrorAction Stop | Out-Null
++                foreach ($child in Get-ChildItem -LiteralPath $item.FullName -Force -ErrorAction Stop) {
++                    Copy-PackageEntry $child (Join-Path $destination $child.Name)
++                }
++            } else {
++                Copy-Item -LiteralPath $item.FullName -Destination $destination -Force -ErrorAction Stop
++            }
++        }
++        foreach ($item in Get-ChildItem -LiteralPath $source -Force -ErrorAction Stop) {
++            Copy-PackageEntry $item (Join-Path $targetDir $item.Name)
++        }
++        $logTxt.AppendText("[OK] Application files copied; media and session directories preserved.`r`n")
++
++        if ($chkCert.Checked) {
++            $cer = Join-Path $targetDir 'October7_CodeSigning.cer'
++            if (Test-Path -LiteralPath $cer) {
++                $hash = (Get-FileHash -LiteralPath $cer -Algorithm SHA256 -ErrorAction Stop).Hash
++                $logTxt.AppendText("[REVIEW] Certificate file SHA-256: $hash`r`n")
++            }
++            $logTxt.AppendText("[NOTICE] Review the signer independently before any manual trust change. No trust store was changed.`r`n")
++        }
++
+         $desktop = [System.Environment]::GetFolderPath('Desktop')
+-        $wsh = New-Object -ComObject WScript.Shell
+-        $sc = $wsh.CreateShortcut("$desktop\October 7 Vocal Studio DAW.lnk")
+-        $sc.TargetPath = $exePath
+-        $sc.WorkingDirectory = $targetDir
+-        $sc.Description = "October 7 Vocal Tracking Studio & Performance Engine (DAW Pro)"
+-        $sc.Save()
+-        $logTxt.AppendText("[OK] Desktop shortcut created.`r`n")
+-    }
+-
+-    if ($chkStart.Checked) {
+-        $startMenu = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\October 7 Vocal Studio"
+-        if (-not (Test-Path $startMenu)) { New-Item -Path $startMenu -ItemType Directory -Force | Out-Null }
+-        $wsh = New-Object -ComObject WScript.Shell
+-        $sc = $wsh.CreateShortcut("$startMenu\October 7 Vocal Studio DAW.lnk")
+-        $sc.TargetPath = $exePath
+-        $sc.WorkingDirectory = $targetDir
+-        $sc.Save()
+-        $logTxt.AppendText("[OK] Start Menu entry registered.`r`n")
+-    }
+-
+-    # Generate Uninstaller
+-    $uninstaller = Join-Path $targetDir "Uninstall_October7_DAW.bat"
+-    $uninstScript = @"
++        $startMenu = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\October 7 Vocal Studio'
++        $exePath = Join-Path $targetDir 'October7_VocalStudio_Native.exe'
++        if (-not (Test-Path -LiteralPath $exePath -PathType Leaf)) {
++            $exePath = Join-Path $targetDir 'October7_VocalStudio_DAW.exe'
++        }
++        foreach ($shortcut in @(
++            @{ Enabled = $chkDesktop.Checked; Folder = $desktop; Label = 'Desktop' },
++            @{ Enabled = $chkStart.Checked; Folder = $startMenu; Label = 'Start Menu' }
++        )) {
++            if (-not $shortcut.Enabled) { continue }
++            New-Item -Path $shortcut.Folder -ItemType Directory -Force -ErrorAction Stop | Out-Null
++            $wsh = New-Object -ComObject WScript.Shell -ErrorAction Stop
++            $sc = $wsh.CreateShortcut((Join-Path $shortcut.Folder 'October 7 Vocal Studio DAW.lnk'))
++            $sc.TargetPath = $exePath
++            $sc.WorkingDirectory = $targetDir
++            $sc.Save()
++            $logTxt.AppendText("[OK] $($shortcut.Label) shortcut created.`r`n")
++        }
++
++        # Do not delete recordings or an untracked application tree during uninstall.
++        $uninstScript = @'
+ @echo off
+-title Uninstall October 7 Vocal Studio DAW
+-echo Removing shortcuts...
+-del /f /q "$desktop\October 7 Vocal Studio DAW.lnk" 2>nul
+-rmdir /s /q "$startMenu" 2>nul
+-echo Removing application files...
+-cd /d "%TEMP%"
+-rmdir /s /q "$targetDir" 2>nul
+-echo [OK] Successfully uninstalled October 7 Vocal Studio DAW.
+-pause
+-"@
+-    Set-Content -Path $uninstaller -Value $uninstScript -Encoding Ascii
+-    $logTxt.AppendText("[OK] Uninstaller generated at: $uninstaller`r`n")
+-
+-    $logTxt.AppendText("`r`n[SUCCESS] Setup Completed Successfully!`r`n")
+-    Start-Sleep -Milliseconds 600
+-    Show-Step 3
++title October 7 Vocal Studio - Data Preservation
++echo Automatic uninstall is disabled to preserve recordings and project data.
++echo No files or shortcuts have been removed.
++echo Back up your media and use a reviewed install manifest before removal.
++exit /b 1
++'@
++        Set-Content -LiteralPath (Join-Path $targetDir 'Uninstall_October7_DAW.bat') -Value $uninstScript -Encoding Ascii -ErrorAction Stop
++        $logTxt.AppendText("[SUCCESS] Deployment completed. Windows trust and audio settings were not changed.`r`n")
++        $script:InstallSucceeded = $true
++        Show-Step 3
++    } catch {
++        $logTxt.AppendText("[ERROR] Installation stopped: $($_.Exception.Message)`r`n")
++        $btnCancel.Enabled = $true
++        [System.Windows.Forms.MessageBox]::Show($_.Exception.Message, 'Installation error') | Out-Null
++    }
+ }
++
+ 
+ $btnNext.Add_Click({
+     if ($script:currentStep -eq 0) {
+@@ -469,7 +519,10 @@
+     }
+     elseif ($script:currentStep -eq 3) {
+         if ($chkLaunch.Checked) {
+-            $exe = Join-Path $txtPath.Text "October7_VocalStudio_DAW.exe"
++            $exe = Join-Path $txtPath.Text "October7_VocalStudio_Native.exe"
++            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
++                $exe = Join-Path $txtPath.Text "October7_VocalStudio_DAW.exe"
++            }
+             if (Test-Path $exe) {
+                 Start-Process -FilePath $exe -WorkingDirectory $txtPath.Text
+             }
+@@ -487,3 +540,4 @@
+ # Show Initial Step
+ Show-Step 0
+ [void]$form.ShowDialog()
++if (-not $script:InstallSucceeded) { exit 1 }
+--- original-preserved/Install_October7_DAW.bat
++++ project-working-copy/Install_October7_DAW.bat
+@@ -1,128 +1,11 @@
+ @echo off
+-setlocal EnableDelayedExpansion
+-title October 7 Vocal Studio DAW - Windows Installer
+-
+-echo ============================================================
+-echo   OCTOBER 7 VOCAL TRACKING STUDIO DAW - WINDOWS INSTALLER
+-echo   Core PC Functions: WASAPI Exclusive, Realtime MMCSS Pro Audio
+-echo ============================================================
+-echo.
+-
+-:: 1. Check for Administrator Permissions
+-net session >nul 2>&1
+-if %errorLevel% neq 0 (
+-    echo [!] Administrator permissions required to configure Pro Audio scheduling.
+-    echo [*] Requesting Administrator elevation...
+-    powershell -Command "Start-Process '%~f0' -Verb RunAs"
+-    exit /b
++setlocal DisableDelayedExpansion
++title October 7 Vocal Studio - Installer
++if not exist "%~dp0Install_Wizard.ps1" (
++    echo [ERROR] The supported installer wizard is missing. No fallback install was attempted.
++    exit /b 1
+ )
+-
+-echo [OK] Running with Windows Administrator privileges.
+-echo.
+-
+-:: 2. Check for Graphical GUI Wizard
+-if exist "%~dp0Install_Wizard.ps1" (
+-    echo Launching Graphical Setup Wizard...
+-    powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0Install_Wizard.ps1"
+-    if %errorLevel% equ 0 exit /b
+-)
+-
+-:: 3. Interactive Console Agreement & Options Fallback
+-echo ============================================================
+-echo   END USER LICENSE AGREEMENT (EULA) & SOVEREIGN AUDIO TERMS
+-echo ============================================================
+-echo 1. Local Sovereignty: 100%% local processing of vocal takes, DSP, and AI.
+-echo 2. Administrator Access: Configures Windows MMCSS Pro Audio priority.
+-echo 3. Hardware Acceleration: Direct WASAPI Exclusive buffer management.
+-echo ============================================================
+-echo.
+-set /p "AGREE=Do you accept the License Agreement? (Y/N) [Default: Y]: "
+-if /i "%AGREE%"=="N" (
+-    echo [!] Installation cancelled by user.
+-    pause
+-    exit /b
+-)
+-
+-echo.
+-echo ============================================================
+-echo   DESTINATION DIRECTORY SELECTION
+-echo ============================================================
+-set "DEFAULT_DIR=%ProgramFiles%\October7_VocalStudio_DAW"
+-echo Default Directory: %DEFAULT_DIR%
+-echo Alternative (User AppData): %LOCALAPPDATA%\October7_VocalStudio_DAW
+-echo.
+-set /p "USER_DIR=Enter installation path [Press ENTER for Default]: "
+-
+-if "%USER_DIR%"=="" (
+-    set "TARGET_DIR=%DEFAULT_DIR%"
+-) else (
+-    set "TARGET_DIR=%USER_DIR%"
+-)
+-
+-echo.
+-echo [*] Installing to: %TARGET_DIR%
+-if not exist "%TARGET_DIR%" mkdir "%TARGET_DIR%"
+-
+-set "SOURCE_DIR=%~dp0dist\October7_VocalStudio_DAW"
+-if not exist "%SOURCE_DIR%\October7_VocalStudio_DAW.exe" (
+-    set "SOURCE_DIR=%~dp0"
+-)
+-
+-:: Copy Files
+-echo [*] Deploying engine binaries and audio libraries...
+-xcopy /E /I /Y "%SOURCE_DIR%\*" "%TARGET_DIR%\" >nul
+-
+-:: Register Authenticode Certificate to Windows Trusted Root (SmartScreen / UAC Verified)
+-if exist "%TARGET_DIR%\October7_CodeSigning.cer" (
+-    echo [*] Registering Authenticode Certificate to Windows Trusted Root...
+-    certutil -addstore -f Root "%TARGET_DIR%\October7_CodeSigning.cer" >nul 2>&1
+-)
+-
+-:: Create Desktop Shortcut
+-echo [*] Generating Desktop Shortcut...
+-powershell -Command ^
+-  "$WshShell = New-Object -ComObject WScript.Shell; " ^
+-  "$Shortcut = $WshShell.CreateShortcut([System.Environment]::GetFolderPath('Desktop') + '\October 7 Vocal Studio DAW.lnk'); " ^
+-  "$Shortcut.TargetPath = '%TARGET_DIR%\October7_VocalStudio_DAW.exe'; " ^
+-  "$Shortcut.WorkingDirectory = '%TARGET_DIR%'; " ^
+-  "$Shortcut.Description = 'October 7 Vocal Tracking Studio & Performance Engine (DAW Pro)'; " ^
+-  "$Shortcut.Save()"
+-
+-:: Create Start Menu Entry
+-echo [*] Registering Windows Start Menu entry...
+-set "START_MENU_DIR=%APPDATA%\Microsoft\Windows\Start Menu\Programs\October 7 Vocal Studio"
+-if not exist "%START_MENU_DIR%" mkdir "%START_MENU_DIR%"
+-powershell -Command ^
+-  "$WshShell = New-Object -ComObject WScript.Shell; " ^
+-  "$Shortcut = $WshShell.CreateShortcut('%START_MENU_DIR%\October 7 Vocal Studio DAW.lnk'); " ^
+-  "$Shortcut.TargetPath = '%TARGET_DIR%\October7_VocalStudio_DAW.exe'; " ^
+-  "$Shortcut.WorkingDirectory = '%TARGET_DIR%'; " ^
+-  "$Shortcut.Save()"
+-
+-:: Create Uninstaller
+-(
+-echo @echo off
+-echo title Uninstall October 7 Vocal Studio DAW
+-echo echo Removing shortcuts...
+-echo del /f /q "%%USERPROFILE%%\Desktop\October 7 Vocal Studio DAW.lnk" 2^>nul
+-echo rmdir /s /q "%%APPDATA%%\Microsoft\Windows\Start Menu\Programs\October 7 Vocal Studio" 2^>nul
+-echo echo Removing application files...
+-echo cd /d "%%TEMP%%"
+-echo rmdir /s /q "%TARGET_DIR%" 2^>nul
+-echo echo [OK] Successfully uninstalled October 7 Vocal Studio DAW.
+-echo pause
+-) > "%TARGET_DIR%\Uninstall_October7_DAW.bat"
+-
+-echo.
+-echo ============================================================
+-echo   [OK] INSTALLATION COMPLETE
+-echo   - Destination: %TARGET_DIR%
+-echo   - Desktop Shortcut: 'October 7 Vocal Studio DAW'
+-echo   - Start Menu Program Created
+-echo   - Authenticode Certificate: Registered in Trusted Root
+-echo   - Realtime MMCSS Pro Audio and WASAPI Exclusive Enabled
+-echo ============================================================
+-echo.
+-echo Launching October 7 Vocal Studio DAW now...
+-start "" "%TARGET_DIR%\October7_VocalStudio_DAW.exe"
+-pause
++powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Install_Wizard.ps1"
++set "OCTOBER7_INSTALL_RESULT=%ERRORLEVEL%"
++if not "%OCTOBER7_INSTALL_RESULT%"=="0" echo [ERROR] Setup did not complete. Review the wizard error.
++exit /b %OCTOBER7_INSTALL_RESULT%
+--- original-preserved/Uninstall_October7_DAW.bat
++++ project-working-copy/Uninstall_October7_DAW.bat
+@@ -1,10 +1,6 @@
+ @echo off
+-title Uninstall October 7 Vocal Studio DAW
+-echo Removing shortcuts...
+-del /f /q "C:\Users\footb\OneDrive\Desktop\October 7 Vocal Studio DAW.lnk" 2>nul
+-rmdir /s /q "C:\Users\footb\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\October 7 Vocal Studio" 2>nul
+-echo Removing application files...
+-cd /d "%TEMP%"
+-rmdir /s /q "C:\Program Files\October7_VocalStudio_DAW" 2>nul
+-echo [OK] Successfully uninstalled October 7 Vocal Studio DAW.
+-pause
++title October 7 Vocal Studio - Data Preservation
++echo Automatic uninstall is disabled to preserve recordings and project data.
++echo No files or shortcuts have been removed.
++echo Back up your media and use a reviewed install manifest before removal.
++exit /b 1
+--- original-preserved/source/setup_installer.py
++++ project-working-copy/source/setup_installer.py
+@@ -1,625 +1,10 @@
+-"""
+-October 7 Vocal Tracking Studio DAW - Official Windows GUI Directory Installer
+-Features:
+-- Windows Administrator Elevation (UAC)
+-- End-User License Agreement (EULA) with Acceptance Verification
+-- Customizable Installation Directory with Folder Browser Dialog
+-- Disk Space Calculation & Verification
+-- Desktop & Start Menu Shortcut Generation
+-- Authenticode Digital Certificate Registration to Windows Trusted Root
+-- Uninstaller Generation (Uninstall_October7_DAW.bat)
+-- Direct Launch on Completion
+-"""
++"""Reference-source installer entry point; delegate to the repaired package installer."""
++from pathlib import Path
++import runpy
+ 
+-import os
+-import sys
+-import shutil
+-import ctypes
+-import subprocess
+-import threading
+-from pathlib import Path
+-
+-# GUI Modules
+-import tkinter as tk
+-from tkinter import ttk, filedialog, messagebox
+-
+-if getattr(sys, "frozen", False):
+-    EXE_DIR = Path(sys.executable).resolve().parent
+-else:
+-    EXE_DIR = Path(__file__).resolve().parent
+-
+-candidates = [
+-    EXE_DIR / "dist" / "October7_VocalStudio_DAW",
+-    EXE_DIR / "October7_VocalStudio_DAW",
+-    EXE_DIR,
+-    Path(r"C:\Users\footb\OneDrive\Desktop\VOICECOACHF\dist\October7_VocalStudio_DAW")
+-]
+-SOURCE_DIR = candidates[-1]
+-for c in candidates:
+-    if (c / "October7_VocalStudio_DAW.exe").exists():
+-        SOURCE_DIR = c
+-        break
+-BASE_DIR = EXE_DIR
+-
+-DEFAULT_INSTALL_PATH = os.path.join(os.environ.get("ProgramFiles", "C:\\Program Files"), "October7_VocalStudio_DAW")
+-ALT_INSTALL_PATH = os.path.join(os.environ.get("LOCALAPPDATA", "C:\\AppData\\Local"), "October7_VocalStudio_DAW")
+-
+-EULA_TEXT = """================================================================================
+-OCTOBER 7 VOCAL STUDIO & PERFORMANCE ENGINE - END USER LICENSE AGREEMENT (EULA)
+-================================================================================
+-VERSION 1.0 - WINDOWS CORE PRO EDITION (RELEASE CANDIDATE)
+-
+-1. LICENSE GRANT & LOCAL SOVEREIGNTY:
+-October 7 Vocal Studio is licensed as a sovereign, local-first digital audio
+-workstation (DAW) for multi-track vocal recording, bio-acoustic telemetry, and stem
+-management. All audio recordings, vocal takes, bio-acoustic measurements, and AI
+-music latents are processed and stored 100% locally on your machine. No voice
+-samples or session telemetry are transmitted to remote servers.
+-
+-2. CORE PC ACCESS & REALTIME OS OPTIMIZATIONS:
+-This software executes with Windows Administrator privileges to configure:
+-- Windows Multimedia Class Scheduler Service (MMCSS) 'Pro Audio' thread priority.
+-- Direct WASAPI Exclusive buffer management and sub-millisecond round-trip compensation.
+-- Local NVIDIA GeForce CUDA acceleration (Demucs stem separation, ACE-Step 1.5 DiT).
+-
+-3. HARDWARE & LOCAL AI ACCELERATION:
+-Local generative AI components (Ollama on Port 11434, ACE-Step 1.5 on Port 7860) run
+-within local hardware parameters. A thread-safe CUDA VRAM queue manager protects
+-system memory from oversubscription.
+-
+-4. USER ACCEPTANCE & ELEVATED SETUP:
+-By installing and using this software, you agree to these terms and authorize
+-the installer to deploy the audio engine, configure system MMCSS scheduling,
+-and register the local Authenticode digital signature for trusted execution.
+-================================================================================"""
+-
+-
+-def is_admin():
+-    try:
+-        return ctypes.windll.shell32.IsUserAnAdmin() != 0
+-    except Exception:
+-        return False
+-
+-
+-def elevate_to_admin():
+-    if not is_admin():
+-        params = " ".join([f'"{arg}"' for arg in sys.argv])
+-        executable = sys.executable
+-        ret = ctypes.windll.shell32.ShellExecuteW(
+-            None, "runas", executable, params, str(BASE_DIR), 1
+-        )
+-        if ret > 32:
+-            sys.exit(0)
+-        else:
+-            messagebox.showerror(
+-                "Elevation Required",
+-                "Administrator privileges are required to install system audio drivers and shortcuts.\nInstallation cancelled."
+-            )
+-            sys.exit(1)
+-
+-
+-class InstallerWizard(tk.Tk):
+-    def __init__(self):
+-        super().__init__()
+-        self.title("October 7 Vocal Studio DAW - Windows Installer")
+-        self.geometry("680x560")
+-        self.resizable(False, False)
+-        self.configure(bg="#0c0f17")
+-
+-        # Color Palette
+-        self.c_bg = "#0c0f17"
+-        self.c_card = "#141a24"
+-        self.c_border = "#222c3d"
+-        self.c_text = "#f1f5f9"
+-        self.c_sub = "#94a3b8"
+-        self.c_gold = "#f59e0b"
+-        self.c_green = "#10b981"
+-        self.c_cyan = "#06b6d4"
+-
+-        # Wizard State
+-        self.current_step = 0
+-        self.target_path = tk.StringVar(value=DEFAULT_INSTALL_PATH)
+-        self.accept_eula = tk.BooleanVar(value=False)
+-        self.opt_desktop = tk.BooleanVar(value=True)
+-        self.opt_startmenu = tk.BooleanVar(value=True)
+-        self.opt_cert = tk.BooleanVar(value=True)
+-        self.opt_mmcss = tk.BooleanVar(value=True)
+-        self.opt_launch = tk.BooleanVar(value=True)
+-
+-        self.setup_ui()
+-        self.show_step(0)
+-
+-    def setup_ui(self):
+-        # Header Banner
+-        self.header = tk.Frame(self, bg="#111622", height=70)
+-        self.header.pack(fill="x", side="top")
+-        self.header.pack_propagate(False)
+-
+-        self.title_lbl = tk.Label(
+-            self.header,
+-            text="October 7 Vocal Studio DAW",
+-            font=("Segoe UI", 14, "bold"),
+-            bg="#111622",
+-            fg=self.c_gold
+-        )
+-        self.title_lbl.pack(anchor="w", padx=20, pady=(12, 2))
+-
+-        self.subtitle_lbl = tk.Label(
+-            self.header,
+-            text="Official Windows Directory Installer (WASAPI Exclusive & MMCSS Pro Audio)",
+-            font=("Segoe UI", 9),
+-            bg="#111622",
+-            fg=self.c_sub
+-        )
+-        self.subtitle_lbl.pack(anchor="w", padx=20)
+-
+-        # Content Container
+-        self.content_container = tk.Frame(self, bg=self.c_bg)
+-        self.content_container.pack(fill="both", expand=True, padx=20, pady=15)
+-
+-        # Navigation Footer
+-        self.footer = tk.Frame(self, bg="#111622", height=60)
+-        self.footer.pack(fill="x", side="bottom")
+-        self.footer.pack_propagate(False)
+-
+-        self.btn_cancel = tk.Button(
+-            self.footer,
+-            text="Cancel",
+-            bg="#222c3d",
+-            fg=self.c_text,
+-            relief="flat",
+-            padx=14,
+-            pady=4,
+-            command=self.destroy
+-        )
+-        self.btn_cancel.pack(side="right", padx=(5, 20), pady=14)
+-
+-        self.btn_next = tk.Button(
+-            self.footer,
+-            text="Next >",
+-            bg=self.c_gold,
+-            fg="#000000",
+-            font=("Segoe UI", 9, "bold"),
+-            relief="flat",
+-            padx=16,
+-            pady=4,
+-            command=self.next_step
+-        )
+-        self.btn_next.pack(side="right", padx=5, pady=14)
+-
+-        self.btn_back = tk.Button(
+-            self.footer,
+-            text="< Back",
+-            bg="#222c3d",
+-            fg=self.c_text,
+-            relief="flat",
+-            padx=14,
+-            pady=4,
+-            command=self.prev_step
+-        )
+-        self.btn_back.pack(side="right", padx=5, pady=14)
+-
+-    def show_step(self, step_idx):
+-        self.current_step = step_idx
+-        for widget in self.content_container.winfo_children():
+-            widget.destroy()
+-
+-        if step_idx == 0:
+-            self.render_eula_step()
+-        elif step_idx == 1:
+-            self.render_location_step()
+-        elif step_idx == 2:
+-            self.render_installing_step()
+-        elif step_idx == 3:
+-            self.render_finished_step()
+-
+-    # --- STEP 0: EULA & License Agreement ---
+-    def render_eula_step(self):
+-        self.btn_back.config(state="disabled")
+-        self.btn_next.config(text="Accept & Next >", state="normal" if self.accept_eula.get() else "disabled")
+-
+-        lbl = tk.Label(
+-            self.content_container,
+-            text="End-User License Agreement & Audio System Access",
+-            font=("Segoe UI", 11, "bold"),
+-            bg=self.c_bg,
+-            fg=self.c_text
+-        )
+-        lbl.pack(anchor="w", pady=(0, 6))
+-
+-        txt_frame = tk.Frame(self.content_container, bg=self.c_card, bd=1, relief="solid")
+-        txt_frame.pack(fill="both", expand=True, pady=(0, 10))
+-
+-        scroll = tk.Scrollbar(txt_frame)
+-        scroll.pack(side="right", fill="y")
+-
+-        eula_box = tk.Text(
+-            txt_frame,
+-            wrap="word",
+-            bg=self.c_card,
+-            fg="#cbd5e1",
+-            font=("Consolas", 9),
+-            yscrollcommand=scroll.set,
+-            bd=0,
+-            padx=10,
+-            pady=10
+-        )
+-        eula_box.pack(side="left", fill="both", expand=True)
+-        scroll.config(command=eula_box.yview)
+-        eula_box.insert("1.0", EULA_TEXT)
+-        eula_box.config(state="disabled")
+-
+-        def on_toggle_eula():
+-            if self.accept_eula.get():
+-                self.btn_next.config(state="normal")
+-            else:
+-                self.btn_next.config(state="disabled")
+-
+-        chk = tk.Checkbutton(
+-            self.content_container,
+-            text="I accept the terms in the License Agreement and authorize elevated audio tuning",
+-            variable=self.accept_eula,
+-            bg=self.c_bg,
+-            fg=self.c_gold,
+-            selectcolor="#1a212e",
+-            activebackground=self.c_bg,
+-            activeforeground=self.c_gold,
+-            font=("Segoe UI", 9, "bold"),
+-            command=on_toggle_eula
+-        )
+-        chk.pack(anchor="w")
+-
+-    # --- STEP 1: Directory & Options ---
+-    def render_location_step(self):
+-        self.btn_back.config(state="normal")
+-        self.btn_next.config(text="Install Now", state="normal")
+-
+-        lbl = tk.Label(
+-            self.content_container,
+-            text="Select Destination Directory & Installation Options",
+-            font=("Segoe UI", 11, "bold"),
+-            bg=self.c_bg,
+-            fg=self.c_text
+-        )
+-        lbl.pack(anchor="w", pady=(0, 8))
+-
+-        path_card = tk.Frame(self.content_container, bg=self.c_card, padx=12, pady=12, bd=1, relief="solid")
+-        path_card.pack(fill="x", pady=(0, 15))
+-
+-        tk.Label(
+-            path_card,
+-            text="Installation Path:",
+-            font=("Segoe UI", 9, "bold"),
+-            bg=self.c_card,
+-            fg=self.c_text
+-        ).pack(anchor="w", pady=(0, 4))
+-
+-        input_row = tk.Frame(path_card, bg=self.c_card)
+-        input_row.pack(fill="x", pady=(0, 6))
+-
+-        entry = tk.Entry(
+-            input_row,
+-            textvariable=self.target_path,
+-            font=("Segoe UI", 9),
+-            bg="#0f141c",
+-            fg="#ffffff",
+-            insertbackground="#ffffff",
+-            bd=1,
+-            relief="solid"
+-        )
+-        entry.pack(side="left", fill="x", expand=True, padx=(0, 8), ipady=3)
+-
+-        btn_browse = tk.Button(
+-            input_row,
+-            text="Browse...",
+-            bg="#222c3d",
+-            fg=self.c_text,
+-            relief="flat",
+-            padx=12,
+-            pady=2,
+-            command=self.browse_folder
+-        )
+-        btn_browse.pack(side="right")
+-
+-        # Preset Buttons
+-        btn_row = tk.Frame(path_card, bg=self.c_card)
+-        btn_row.pack(anchor="w")
+-
+-        tk.Button(
+-            btn_row,
+-            text="Use Program Files (System-Wide)",
+-            font=("Segoe UI", 8),
+-            bg="#1a2333",
+-            fg=self.c_cyan,
+-            relief="flat",
+-            command=lambda: self.target_path.set(DEFAULT_INSTALL_PATH)
+-        ).pack(side="left", padx=(0, 6))
+-
+-        tk.Button(
+-            btn_row,
+-            text="Use AppData (User-Specific)",
+-            font=("Segoe UI", 8),
+-            bg="#1a2333",
+-            fg=self.c_cyan,
+-            relief="flat",
+-            command=lambda: self.target_path.set(ALT_INSTALL_PATH)
+-        ).pack(side="left")
+-
+-        # Space details
+-        space_lbl = tk.Label(
+-            path_card,
+-            text="Required Space: ~260 MB | Available Space: Calculating...",
+-            font=("Segoe UI", 8),
+-            bg=self.c_card,
+-            fg=self.c_sub
+-        )
+-        space_lbl.pack(anchor="w", pady=(8, 0))
+-
+-        try:
+-            drive = os.path.splitdrive(self.target_path.get())[0] or "C:"
+-            usage = shutil.disk_usage(drive + "\\")
+-            avail_gb = usage.free / (1024 ** 3)
+-            space_lbl.config(text=f"Required Space: ~260 MB | Available on {drive}: {avail_gb:.1f} GB")
+-        except Exception:
+-            pass
+-
+-        # Options Card
+-        opt_card = tk.Frame(self.content_container, bg=self.c_card, padx=12, pady=10, bd=1, relief="solid")
+-        opt_card.pack(fill="both", expand=True)
+-
+-        tk.Label(
+-            opt_card,
+-            text="Installation Components & Windows Integration:",
+-            font=("Segoe UI", 9, "bold"),
+-            bg=self.c_card,
+-            fg=self.c_text
+-        ).pack(anchor="w", pady=(0, 6))
+-
+-        options = [
+-            ("Create Desktop Shortcut ('October 7 Vocal Studio DAW')", self.opt_desktop),
+-            ("Register Start Menu Entry ('October 7 Vocal Studio')", self.opt_startmenu),
+-            ("Register Authenticode Digital Signature in Trusted Root (Eliminate SmartScreen warnings)", self.opt_cert),
+-            ("Enable Windows MMCSS Pro Audio Real-Time Thread Priority (Admin)", self.opt_mmcss),
+-            ("Launch October 7 Vocal Studio DAW when setup completes", self.opt_launch),
+-        ]
+-
+-        for text, var in options:
+-            tk.Checkbutton(
+-                opt_card,
+-                text=text,
+-                variable=var,
+-                bg=self.c_card,
+-                fg=self.c_text,
+-                selectcolor="#0f141c",
+-                activebackground=self.c_card,
+-                activeforeground=self.c_text,
+-                font=("Segoe UI", 9)
+-            ).pack(anchor="w", pady=2)
+-
+-    def browse_folder(self):
+-        chosen = filedialog.askdirectory(initialdir=self.target_path.get(), title="Select Installation Folder")
+-        if chosen:
+-            self.target_path.set(chosen)
+-
+-    # --- STEP 2: Installing & Progress ---
+-    def render_installing_step(self):
+-        self.btn_back.config(state="disabled")
+-        self.btn_next.config(state="disabled")
+-        self.btn_cancel.config(state="disabled")
+-
+-        tk.Label(
+-            self.content_container,
+-            text="Installing October 7 Vocal Studio DAW...",
+-            font=("Segoe UI", 12, "bold"),
+-            bg=self.c_bg,
+-            fg=self.c_gold
+-        ).pack(anchor="w", pady=(20, 10))
+-
+-        self.status_lbl = tk.Label(
+-            self.content_container,
+-            text="Initializing deployment...",
+-            font=("Segoe UI", 9),
+-            bg=self.c_bg,
+-            fg=self.c_sub
+-        )
+-        self.status_lbl.pack(anchor="w", pady=(0, 12))
+-
+-        self.progress = ttk.Progressbar(self.content_container, mode="indeterminate", length=640)
+-        self.progress.pack(fill="x", pady=(0, 20))
+-        self.progress.start(12)
+-
+-        self.log_box = tk.Text(
+-            self.content_container,
+-            height=12,
+-            bg=self.c_card,
+-            fg="#94a3b8",
+-            font=("Consolas", 8),
+-            bd=1,
+-            relief="solid",
+-            padx=8,
+-            pady=8
+-        )
+-        self.log_box.pack(fill="both", expand=True)
+-
+-        # Run installation in background thread
+-        threading.Thread(target=self.execute_installation, daemon=True).start()
+-
+-    def append_log(self, msg):
+-        self.log_box.insert("end", msg + "\n")
+-        self.log_box.see("end")
+-
+-    def execute_installation(self):
+-        target = Path(self.target_path.get()).resolve()
+-        try:
+-            self.status_lbl.config(text=f"Creating destination directory: {target}")
+-            self.append_log(f"[*] Creating target directory: {target}")
+-            target.mkdir(parents=True, exist_ok=True)
+-
+-            # Copy engine binaries and assets
+-            self.status_lbl.config(text="Deploying engine binaries and runtime libraries...")
+-            self.append_log(f"[*] Copying files from {SOURCE_DIR} to {target}...")
+-
+-            for item in SOURCE_DIR.iterdir():
+-                dst = target / item.name
+-                if item.is_dir():
+-                    if dst.exists():
+-                        shutil.rmtree(dst)
+-                    shutil.copytree(item, dst)
+-                    self.append_log(f" [OK] Directory deployed: {item.name}")
+-                else:
+-                    shutil.copy2(item, dst)
+-                    self.append_log(f" [OK] File deployed: {item.name}")
+-
+-            # Register Authenticode Certificate
+-            if self.opt_cert.get():
+-                self.status_lbl.config(text="Registering Authenticode certificate into Windows Trusted Root...")
+-                cer_file = target / "October7_CodeSigning.cer"
+-                if not cer_file.exists():
+-                    src_cer = BASE_DIR / "dist" / "October7_VocalStudio_DAW" / "October7_CodeSigning.cer"
+-                    if src_cer.exists():
+-                        shutil.copy2(src_cer, cer_file)
+-
+-                if cer_file.exists():
+-                    self.append_log("[*] Registering certificate into Trusted Root via certutil...")
+-                    cmd = ["certutil", "-addstore", "-f", "Root", str(cer_file)]
+-                    res = subprocess.run(cmd, capture_output=True, text=True)
+-                    if res.returncode == 0:
+-                        self.append_log(" [OK] Authenticode certificate registered in Trusted Root (SmartScreen Verified)")
+-                    else:
+-                        self.append_log(f" [!] certutil warning: {res.stderr.strip()}")
+-
+-            # Create Desktop Shortcut
+-            if self.opt_desktop.get():
+-                self.status_lbl.config(text="Generating Desktop Shortcut...")
+-                self.append_log("[*] Creating Desktop shortcut...")
+-                desktop = Path(os.environ.get("USERPROFILE", "C:\\Users\\Default")) / "Desktop"
+-                shortcut_path = desktop / "October 7 Vocal Studio DAW.lnk"
+-                ps_script = f"""
+-                $WshShell = New-Object -ComObject WScript.Shell
+-                $Shortcut = $WshShell.CreateShortcut('{str(shortcut_path)}')
+-                $Shortcut.TargetPath = '{str(target / "October7_VocalStudio_DAW.exe")}'
+-                $Shortcut.WorkingDirectory = '{str(target)}'
+-                $Shortcut.Description = 'October 7 Vocal Tracking Studio & Performance Engine (DAW Pro)'
+-                $Shortcut.Save()
+-                """
+-                subprocess.run(["powershell", "-Command", ps_script], capture_output=True)
+-                self.append_log(" [OK] Desktop shortcut created")
+-
+-            # Create Start Menu Shortcut
+-            if self.opt_startmenu.get():
+-                self.status_lbl.config(text="Registering Start Menu Entry...")
+-                self.append_log("[*] Creating Start Menu entry...")
+-                start_dir = Path(os.environ.get("APPDATA", "")) / "Microsoft" / "Windows" / "Start Menu" / "Programs" / "October 7 Vocal Studio"
+-                start_dir.mkdir(parents=True, exist_ok=True)
+-                shortcut_path = start_dir / "October 7 Vocal Studio DAW.lnk"
+-                ps_script = f"""
+-                $WshShell = New-Object -ComObject WScript.Shell
+-                $Shortcut = $WshShell.CreateShortcut('{str(shortcut_path)}')
+-                $Shortcut.TargetPath = '{str(target / "October7_VocalStudio_DAW.exe")}'
+-                $Shortcut.WorkingDirectory = '{str(target)}'
+-                $Shortcut.Save()
+-                """
+-                subprocess.run(["powershell", "-Command", ps_script], capture_output=True)
+-                self.append_log(" [OK] Start Menu shortcut created")
+-
+-            # Generate Uninstaller
+-            self.status_lbl.config(text="Creating uninstaller script...")
+-            uninstaller_path = target / "Uninstall_October7_DAW.bat"
+-            desktop_lnk = desktop / "October 7 Vocal Studio DAW.lnk"
+-            with open(uninstaller_path, "w", encoding="utf-8") as f:
+-                f.write(f"""@echo off
+-title Uninstall October 7 Vocal Studio DAW
+-echo ============================================================
+-echo   UNINSTALL OCTOBER 7 VOCAL STUDIO DAW
+-echo ============================================================
+-echo.
+-echo Removing Desktop and Start Menu shortcuts...
+-del /f /q "{desktop_lnk}" 2>nul
+-rmdir /s /q "{start_dir}" 2>nul
+-echo Removing application directory...
+-cd /d "%TEMP%"
+-rmdir /s /q "{target}" 2>nul
+-echo.
+-echo [OK] Successfully uninstalled October 7 Vocal Studio DAW.
+-pause
+-""")
+-            self.append_log(f" [OK] Uninstaller generated: {uninstaller_path.name}")
+-
+-            self.status_lbl.config(text="Installation Complete!")
+-            self.append_log("\n============================================================")
+-            self.append_log(" [SUCCESS] All components and libraries deployed successfully!")
+-            self.append_log("============================================================")
+-            self.progress.stop()
+-
+-            self.after(600, lambda: self.show_step(3))
+-
+-        except Exception as e:
+-            self.append_log(f"\n[ERROR] Installation failed: {e}")
+-            self.status_lbl.config(text=f"Error: {e}")
+-            messagebox.showerror("Installation Error", f"Installation encountered an error:\n{e}")
+-            self.btn_cancel.config(state="normal")
+-
+-    # --- STEP 3: Finished ---
+-    def render_finished_step(self):
+-        self.btn_back.config(state="disabled")
+-        self.btn_cancel.config(state="disabled")
+-        self.btn_next.config(text="Finish & Launch", state="normal", command=self.finish_installation)
+-
+-        tk.Label(
+-            self.content_container,
+-            text="✓ Installation Complete!",
+-            font=("Segoe UI", 16, "bold"),
+-            bg=self.c_bg,
+-            fg=self.c_green
+-        ).pack(anchor="w", pady=(25, 10))
+-
+-        summary_card = tk.Frame(self.content_container, bg=self.c_card, padx=16, pady=16, bd=1, relief="solid")
+-        summary_card.pack(fill="x", pady=(0, 20))
+-
+-        info_lines = [
+-            f"• Installation Folder: {self.target_path.get()}",
+-            "• Digital Signature: Valid (CN=October 7 Vocal Studio Audio Engine)",
+-            "• SmartScreen Status: Verified in Windows Trusted Root CA",
+-            "• Core PC Functions: WASAPI Exclusive, MMCSS Pro Audio Active",
+-            "• Local AI Fallbacks: Offline Safe (ACE-Step & Ollama Fallbacks)",
+-        ]
+-
+-        for line in info_lines:
+-            tk.Label(
+-                summary_card,
+-                text=line,
+-                font=("Segoe UI", 9),
+-                bg=self.c_card,
+-                fg=self.c_text
+-            ).pack(anchor="w", pady=3)
+-
+-        tk.Label(
+-            self.content_container,
+-            text="Click 'Finish & Launch' to start October 7 Vocal Studio DAW now.",
+-            font=("Segoe UI", 10),
+-            bg=self.c_bg,
+-            fg=self.c_gold
+-        ).pack(anchor="w")
+-
+-    def next_step(self):
+-        self.show_step(self.current_step + 1)
+-
+-    def prev_step(self):
+-        self.show_step(max(0, self.current_step - 1))
+-
+-    def finish_installation(self):
+-        target = Path(self.target_path.get())
+-        exe_path = target / "October7_VocalStudio_DAW.exe"
+-        if self.opt_launch.get() and exe_path.exists():
+-            subprocess.Popen([str(exe_path)], cwd=str(target))
+-        self.destroy()
+-
+-
+-def main():
+-    elevate_to_admin()
+-    app = InstallerWizard()
+-    app.mainloop()
+-
++_ROOT_INSTALLER = Path(__file__).resolve().parents[1] / "setup_installer.py"
+ 
+ if __name__ == "__main__":
+-    main()
++    if not _ROOT_INSTALLER.is_file():
++        raise SystemExit("The repaired root installer is missing. No installation was attempted.")
++    runpy.run_path(str(_ROOT_INSTALLER), run_name="__main__")
+--- original-preserved/source/Install_Wizard.ps1
++++ project-working-copy/source/Install_Wizard.ps1
+@@ -1,498 +1,8 @@
+-<#
+-.SYNOPSIS
+-  Official Windows Directory Installer Wizard for October 7 Vocal Studio DAW
+-.DESCRIPTION
+-  Modern native Windows GUI installer featuring:
+-  - UAC Administrator Elevation
+-  - End-User License Agreement (EULA) Acceptance
+-  - Customizable Destination Directory with Folder Browser Dialog
+-  - Desktop & Start Menu Shortcut Integration
+-  - Authenticode Certificate Registration (Trusted Root)
+-#>
+-
+-Add-Type -AssemblyName System.Windows.Forms
+-Add-Type -AssemblyName System.Drawing
+-
+-# 1. Verify and Request Administrator Elevation
+-$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+-if (-not $isAdmin) {
+-    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+-    exit
++# Reference-source entry point. Installation logic belongs to the repaired package root.
++$ErrorActionPreference = 'Stop'
++$RootInstaller = Join-Path (Split-Path -Parent $PSScriptRoot) 'Install_Wizard.ps1'
++if (-not (Test-Path -LiteralPath $RootInstaller -PathType Leaf)) {
++    throw 'The repaired root installer is missing. No installation was attempted.'
+ }
+-
+-$ScriptDir = Split-Path -Parent $PSCommandPath
+-$SourceDir = Join-Path $ScriptDir "dist\October7_VocalStudio_Native"
+-if (-not (Test-Path "$SourceDir\October7_VocalStudio_Native.exe")) {
+-    $SourceDir = Join-Path $ScriptDir "dist\October7_VocalStudio_DAW"
+-    if (-not (Test-Path "$SourceDir\October7_VocalStudio_DAW.exe")) {
+-        $SourceDir = $ScriptDir
+-    }
+-}
+-
+-$DefaultInstallPath = Join-Path $env:ProgramFiles "October7_VocalStudio_DAW"
+-$AltInstallPath = Join-Path $env:LOCALAPPDATA "October7_VocalStudio_DAW"
+-
+-$EulaText = @"
+-================================================================================
+-OCTOBER 7 VOCAL STUDIO & PERFORMANCE ENGINE - END USER LICENSE AGREEMENT (EULA)
+-================================================================================
+-VERSION 1.0 - WINDOWS CORE PRO EDITION (RELEASE CANDIDATE)
+-
+-1. LICENSE GRANT & LOCAL SOVEREIGNTY:
+-October 7 Vocal Studio is licensed as a sovereign, local-first digital audio
+-workstation (DAW) for vocal tracking, real-time bio-acoustic telemetry, and stem
+-management. All audio recordings, vocal stems, bio-acoustic measurements, and AI
+-music latents are processed and retained 100% locally on your machine. No voice
+-samples or session data are transmitted to external cloud servers.
+-
+-2. HARDWARE & REALTIME OS OPTIMIZATIONS:
+-This software executes with Windows Administrator privileges to engage:
+-- Windows Multimedia Class Scheduler Service (MMCSS) Pro Audio thread priority.
+-- Direct WASAPI Exclusive buffer management and low-latency round-trip alignment.
+-- Local NVIDIA GeForce CUDA acceleration (Demucs stem separation, ACE-Step 1.5).
+-
+-3. LOCAL AI MODELS & DISK ALLOCATION:
+-Any local AI components (Ollama, ACE-Step 1.5, Demucs) run within local hardware
+-bounds. The software includes automatic thread-safe CUDA VRAM management to protect
+-system resources.
+-
+-4. USER ACCEPTANCE:
+-By installing or using this software, you confirm acceptance of these terms and
+-authorize the installer to deploy the audio engine, configure system audio priority,
+-and register the local Authenticode digital signature for trusted execution.
+-================================================================================
+-"@
+-
+-# Initialize Form
+-$form = New-Object System.Windows.Forms.Form
+-$form.Text = "October 7 Vocal Studio DAW - Windows Setup Wizard"
+-$form.Size = New-Object System.Drawing.Size(680, 560)
+-$form.StartPosition = "CenterScreen"
+-$form.FormBorderStyle = "FixedDialog"
+-$form.MaximizeBox = $false
+-$form.BackColor = [System.Drawing.Color]::FromArgb(12, 15, 23)
+-
+-# Header Banner
+-$headerPanel = New-Object System.Windows.Forms.Panel
+-$headerPanel.Size = New-Object System.Drawing.Size(680, 70)
+-$headerPanel.Dock = "Top"
+-$headerPanel.BackColor = [System.Drawing.Color]::FromArgb(17, 22, 34)
+-$form.Controls.Add($headerPanel)
+-
+-$titleLbl = New-Object System.Windows.Forms.Label
+-$titleLbl.Text = "October 7 Vocal Studio DAW"
+-$titleLbl.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
+-$titleLbl.ForeColor = [System.Drawing.Color]::FromArgb(245, 158, 11)
+-$titleLbl.Location = New-Object System.Drawing.Point(20, 12)
+-$titleLbl.AutoSize = $true
+-$headerPanel.Controls.Add($titleLbl)
+-
+-$subLbl = New-Object System.Windows.Forms.Label
+-$subLbl.Text = "Official Windows Directory Installer (WASAPI Exclusive & MMCSS Pro Audio)"
+-$subLbl.Font = New-Object System.Drawing.Font("Segoe UI", 9)
+-$subLbl.ForeColor = [System.Drawing.Color]::FromArgb(148, 163, 184)
+-$subLbl.Location = New-Object System.Drawing.Point(22, 40)
+-$subLbl.AutoSize = $true
+-$headerPanel.Controls.Add($subLbl)
+-
+-# Main Container Panel
+-$contentPanel = New-Object System.Windows.Forms.Panel
+-$contentPanel.Location = New-Object System.Drawing.Point(20, 85)
+-$contentPanel.Size = New-Object System.Drawing.Size(625, 385)
+-$contentPanel.BackColor = [System.Drawing.Color]::FromArgb(12, 15, 23)
+-$form.Controls.Add($contentPanel)
+-
+-# Footer Panel
+-$footerPanel = New-Object System.Windows.Forms.Panel
+-$footerPanel.Size = New-Object System.Drawing.Size(680, 60)
+-$footerPanel.Dock = "Bottom"
+-$footerPanel.BackColor = [System.Drawing.Color]::FromArgb(17, 22, 34)
+-$form.Controls.Add($footerPanel)
+-
+-$btnCancel = New-Object System.Windows.Forms.Button
+-$btnCancel.Text = "Cancel"
+-$btnCancel.Size = New-Object System.Drawing.Size(85, 32)
+-$btnCancel.Location = New-Object System.Drawing.Point(560, 14)
+-$btnCancel.FlatStyle = "Flat"
+-$btnCancel.BackColor = [System.Drawing.Color]::FromArgb(34, 44, 61)
+-$btnCancel.ForeColor = [System.Drawing.Color]::White
+-$btnCancel.Add_Click({ $form.Close() })
+-$footerPanel.Controls.Add($btnCancel)
+-
+-$btnNext = New-Object System.Windows.Forms.Button
+-$btnNext.Text = "Next >"
+-$btnNext.Size = New-Object System.Drawing.Size(110, 32)
+-$btnNext.Location = New-Object System.Drawing.Point(440, 14)
+-$btnNext.FlatStyle = "Flat"
+-$btnNext.BackColor = [System.Drawing.Color]::FromArgb(245, 158, 11)
+-$btnNext.ForeColor = [System.Drawing.Color]::Black
+-$btnNext.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+-$footerPanel.Controls.Add($btnNext)
+-
+-$btnBack = New-Object System.Windows.Forms.Button
+-$btnBack.Text = "< Back"
+-$btnBack.Size = New-Object System.Drawing.Size(85, 32)
+-$btnBack.Location = New-Object System.Drawing.Point(345, 14)
+-$btnBack.FlatStyle = "Flat"
+-$btnBack.BackColor = [System.Drawing.Color]::FromArgb(34, 44, 61)
+-$btnBack.ForeColor = [System.Drawing.Color]::White
+-$footerPanel.Controls.Add($btnBack)
+-
+-# Global Wizard State
+-$currentStep = 0
+-$selectedInstallPath = $DefaultInstallPath
+-
+-# Controls for Step 1 (EULA)
+-$eulaHeader = New-Object System.Windows.Forms.Label
+-$eulaHeader.Text = "End-User License Agreement & Core PC Authorization"
+-$eulaHeader.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
+-$eulaHeader.ForeColor = [System.Drawing.Color]::White
+-$eulaHeader.Location = New-Object System.Drawing.Point(0, 0)
+-$eulaHeader.AutoSize = $true
+-
+-$eulaBox = New-Object System.Windows.Forms.TextBox
+-$eulaBox.Multiline = $true
+-$eulaBox.ScrollBars = "Vertical"
+-$eulaBox.ReadOnly = $true
+-$eulaBox.Location = New-Object System.Drawing.Point(0, 28)
+-$eulaBox.Size = New-Object System.Drawing.Size(625, 310)
+-$eulaBox.BackColor = [System.Drawing.Color]::FromArgb(20, 26, 36)
+-$eulaBox.ForeColor = [System.Drawing.Color]::FromArgb(203, 213, 225)
+-$eulaBox.Font = New-Object System.Drawing.Font("Consolas", 8.5)
+-$eulaBox.Text = $EulaText
+-
+-$chkEula = New-Object System.Windows.Forms.CheckBox
+-$chkEula.Text = "I accept the terms in the License Agreement and authorize elevated audio tuning"
+-$chkEula.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+-$chkEula.ForeColor = [System.Drawing.Color]::FromArgb(245, 158, 11)
+-$chkEula.Location = New-Object System.Drawing.Point(0, 350)
+-$chkEula.Size = New-Object System.Drawing.Size(625, 25)
+-$chkEula.Add_CheckedChanged({
+-    $btnNext.Enabled = $chkEula.Checked
+-})
+-
+-# Controls for Step 2 (Path & Options)
+-$pathHeader = New-Object System.Windows.Forms.Label
+-$pathHeader.Text = "Select Destination Directory & Components"
+-$pathHeader.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
+-$pathHeader.ForeColor = [System.Drawing.Color]::White
+-$pathHeader.Location = New-Object System.Drawing.Point(0, 0)
+-$pathHeader.AutoSize = $true
+-
+-$pathPanel = New-Object System.Windows.Forms.Panel
+-$pathPanel.Location = New-Object System.Drawing.Point(0, 28)
+-$pathPanel.Size = New-Object System.Drawing.Size(625, 120)
+-$pathPanel.BackColor = [System.Drawing.Color]::FromArgb(20, 26, 36)
+-
+-$lblPath = New-Object System.Windows.Forms.Label
+-$lblPath.Text = "Installation Directory:"
+-$lblPath.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+-$lblPath.ForeColor = [System.Drawing.Color]::White
+-$lblPath.Location = New-Object System.Drawing.Point(12, 10)
+-$lblPath.AutoSize = $true
+-$pathPanel.Controls.Add($lblPath)
+-
+-$txtPath = New-Object System.Windows.Forms.TextBox
+-$txtPath.Text = $DefaultInstallPath
+-$txtPath.Location = New-Object System.Drawing.Point(12, 34)
+-$txtPath.Size = New-Object System.Drawing.Size(490, 24)
+-$txtPath.BackColor = [System.Drawing.Color]::FromArgb(15, 20, 28)
+-$txtPath.ForeColor = [System.Drawing.Color]::White
+-$pathPanel.Controls.Add($txtPath)
+-
+-$btnBrowse = New-Object System.Windows.Forms.Button
+-$btnBrowse.Text = "Browse..."
+-$btnBrowse.Location = New-Object System.Drawing.Point(510, 32)
+-$btnBrowse.Size = New-Object System.Drawing.Size(95, 28)
+-$btnBrowse.FlatStyle = "Flat"
+-$btnBrowse.BackColor = [System.Drawing.Color]::FromArgb(34, 44, 61)
+-$btnBrowse.ForeColor = [System.Drawing.Color]::White
+-$btnBrowse.Add_Click({
+-    $dialog = New-Object System.Windows.Forms.FolderBrowserDialog
+-    $dialog.SelectedPath = $txtPath.Text
+-    $dialog.Description = "Select Installation Directory for October 7 Vocal Studio DAW"
+-    if ($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+-        $txtPath.Text = $dialog.SelectedPath
+-    }
+-})
+-$pathPanel.Controls.Add($btnBrowse)
+-
+-$btnProgFiles = New-Object System.Windows.Forms.Button
+-$btnProgFiles.Text = "Program Files (System)"
+-$btnProgFiles.Location = New-Object System.Drawing.Point(12, 70)
+-$btnProgFiles.Size = New-Object System.Drawing.Size(150, 26)
+-$btnProgFiles.FlatStyle = "Flat"
+-$btnProgFiles.BackColor = [System.Drawing.Color]::FromArgb(26, 35, 51)
+-$btnProgFiles.ForeColor = [System.Drawing.Color]::FromArgb(6, 182, 212)
+-$btnProgFiles.Add_Click({ $txtPath.Text = $DefaultInstallPath })
+-$pathPanel.Controls.Add($btnProgFiles)
+-
+-$btnAppData = New-Object System.Windows.Forms.Button
+-$btnAppData.Text = "AppData (User)"
+-$btnAppData.Location = New-Object System.Drawing.Point(170, 70)
+-$btnAppData.Size = New-Object System.Drawing.Size(150, 26)
+-$btnAppData.FlatStyle = "Flat"
+-$btnAppData.BackColor = [System.Drawing.Color]::FromArgb(26, 35, 51)
+-$btnAppData.ForeColor = [System.Drawing.Color]::FromArgb(6, 182, 212)
+-$btnAppData.Add_Click({ $txtPath.Text = $AltInstallPath })
+-$pathPanel.Controls.Add($btnAppData)
+-
+-$lblSpace = New-Object System.Windows.Forms.Label
+-$lblSpace.Text = "Space Required: ~260 MB | Available Space: Calculating..."
+-$lblSpace.ForeColor = [System.Drawing.Color]::FromArgb(148, 163, 184)
+-$lblSpace.Location = New-Object System.Drawing.Point(330, 75)
+-$lblSpace.AutoSize = $true
+-$pathPanel.Controls.Add($lblSpace)
+-
+-# Options Panel
+-$optPanel = New-Object System.Windows.Forms.Panel
+-$optPanel.Location = New-Object System.Drawing.Point(0, 160)
+-$optPanel.Size = New-Object System.Drawing.Size(625, 210)
+-$optPanel.BackColor = [System.Drawing.Color]::FromArgb(20, 26, 36)
+-
+-$lblOptTitle = New-Object System.Windows.Forms.Label
+-$lblOptTitle.Text = "Windows Audio & Integration Options:"
+-$lblOptTitle.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+-$lblOptTitle.ForeColor = [System.Drawing.Color]::White
+-$lblOptTitle.Location = New-Object System.Drawing.Point(12, 10)
+-$lblOptTitle.AutoSize = $true
+-$optPanel.Controls.Add($lblOptTitle)
+-
+-$chkDesktop = New-Object System.Windows.Forms.CheckBox
+-$chkDesktop.Text = "Create Desktop Shortcut ('October 7 Vocal Studio DAW')"
+-$chkDesktop.Checked = $true
+-$chkDesktop.ForeColor = [System.Drawing.Color]::White
+-$chkDesktop.Location = New-Object System.Drawing.Point(15, 36)
+-$chkDesktop.Size = New-Object System.Drawing.Size(580, 22)
+-$optPanel.Controls.Add($chkDesktop)
+-
+-$chkStart = New-Object System.Windows.Forms.CheckBox
+-$chkStart.Text = "Create Start Menu Program Entry"
+-$chkStart.Checked = $true
+-$chkStart.ForeColor = [System.Drawing.Color]::White
+-$chkStart.Location = New-Object System.Drawing.Point(15, 62)
+-$chkStart.Size = New-Object System.Drawing.Size(580, 22)
+-$optPanel.Controls.Add($chkStart)
+-
+-$chkCert = New-Object System.Windows.Forms.CheckBox
+-$chkCert.Text = "Register Authenticode Certificate into Windows Trusted Root (SmartScreen Safe)"
+-$chkCert.Checked = $true
+-$chkCert.ForeColor = [System.Drawing.Color]::White
+-$chkCert.Location = New-Object System.Drawing.Point(15, 88)
+-$chkCert.Size = New-Object System.Drawing.Size(580, 22)
+-$optPanel.Controls.Add($chkCert)
+-
+-$chkMmcss = New-Object System.Windows.Forms.CheckBox
+-$chkMmcss.Text = "Configure Windows MMCSS Pro Audio Real-Time Thread Scheduling (Admin)"
+-$chkMmcss.Checked = $true
+-$chkMmcss.ForeColor = [System.Drawing.Color]::White
+-$chkMmcss.Location = New-Object System.Drawing.Point(15, 114)
+-$chkMmcss.Size = New-Object System.Drawing.Size(580, 22)
+-$optPanel.Controls.Add($chkMmcss)
+-
+-$chkLaunch = New-Object System.Windows.Forms.CheckBox
+-$chkLaunch.Text = "Launch October 7 Vocal Studio DAW when setup completes"
+-$chkLaunch.Checked = $true
+-$chkLaunch.ForeColor = [System.Drawing.Color]::FromArgb(245, 158, 11)
+-$chkLaunch.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+-$chkLaunch.Location = New-Object System.Drawing.Point(15, 144)
+-$chkLaunch.Size = New-Object System.Drawing.Size(580, 22)
+-$optPanel.Controls.Add($chkLaunch)
+-
+-# Controls for Step 3 (Progress)
+-$progTitle = New-Object System.Windows.Forms.Label
+-$progTitle.Text = "Installing Engine Binaries..."
+-$progTitle.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
+-$progTitle.ForeColor = [System.Drawing.Color]::FromArgb(245, 158, 11)
+-$progTitle.Location = New-Object System.Drawing.Point(0, 20)
+-$progTitle.AutoSize = $true
+-
+-$progBar = New-Object System.Windows.Forms.ProgressBar
+-$progBar.Location = New-Object System.Drawing.Point(0, 60)
+-$progBar.Size = New-Object System.Drawing.Size(625, 24)
+-$progBar.Style = "Marquee"
+-$progBar.MarqueeAnimationSpeed = 20
+-
+-$logTxt = New-Object System.Windows.Forms.TextBox
+-$logTxt.Multiline = $true
+-$logTxt.ScrollBars = "Vertical"
+-$logTxt.ReadOnly = $true
+-$logTxt.Location = New-Object System.Drawing.Point(0, 100)
+-$logTxt.Size = New-Object System.Drawing.Size(625, 270)
+-$logTxt.BackColor = [System.Drawing.Color]::FromArgb(20, 26, 36)
+-$logTxt.ForeColor = [System.Drawing.Color]::FromArgb(148, 163, 184)
+-$logTxt.Font = New-Object System.Drawing.Font("Consolas", 8.5)
+-
+-# Controls for Step 4 (Finished)
+-$finTitle = New-Object System.Windows.Forms.Label
+-$finTitle.Text = "[OK] Installation Complete!"
+-$finTitle.Font = New-Object System.Drawing.Font("Segoe UI", 16, [System.Drawing.FontStyle]::Bold)
+-$finTitle.ForeColor = [System.Drawing.Color]::FromArgb(16, 185, 129)
+-$finTitle.Location = New-Object System.Drawing.Point(0, 20)
+-$finTitle.AutoSize = $true
+-
+-$finSummary = New-Object System.Windows.Forms.TextBox
+-$finSummary.Multiline = $true
+-$finSummary.ReadOnly = $true
+-$finSummary.Location = New-Object System.Drawing.Point(0, 70)
+-$finSummary.Size = New-Object System.Drawing.Size(625, 220)
+-$finSummary.BackColor = [System.Drawing.Color]::FromArgb(20, 26, 36)
+-$finSummary.ForeColor = [System.Drawing.Color]::White
+-$finSummary.Font = New-Object System.Drawing.Font("Segoe UI", 9.5)
+-
+-# Function to Update View
+-function Show-Step([int]$step) {
+-    $script:currentStep = $step
+-    $contentPanel.Controls.Clear()
+-
+-    if ($step -eq 0) {
+-        $btnBack.Enabled = $false
+-        $btnNext.Text = "Accept & Next >"
+-        $btnNext.Enabled = $chkEula.Checked
+-        $contentPanel.Controls.Add($eulaHeader)
+-        $contentPanel.Controls.Add($eulaBox)
+-        $contentPanel.Controls.Add($chkEula)
+-    }
+-    elseif ($step -eq 1) {
+-        $btnBack.Enabled = $true
+-        $btnNext.Text = "Install Now"
+-        $btnNext.Enabled = $true
+-        $contentPanel.Controls.Add($pathHeader)
+-        $contentPanel.Controls.Add($pathPanel)
+-        $contentPanel.Controls.Add($optPanel)
+-    }
+-    elseif ($step -eq 2) {
+-        $btnBack.Enabled = $false
+-        $btnNext.Enabled = $false
+-        $btnCancel.Enabled = $false
+-        $contentPanel.Controls.Add($progTitle)
+-        $contentPanel.Controls.Add($progBar)
+-        $contentPanel.Controls.Add($logTxt)
+-
+-        # Execute deployment in background job
+-        Start-Installation
+-    }
+-    elseif ($step -eq 3) {
+-        $btnBack.Enabled = $false
+-        $btnCancel.Enabled = $false
+-        $btnNext.Text = "Finish & Launch"
+-        $btnNext.Enabled = $true
+-
+-        $finSummary.Text = @"
+-October 7 Vocal Tracking Studio DAW has been successfully installed.
+-
+-• Destination Path: $($txtPath.Text)
+-• Authenticode Signature: Valid & Trusted
+-• Windows SmartScreen: Verified in Trusted Root CA
+-• Realtime Audio Driver: WASAPI Exclusive Active
+-• MMCSS Pro Audio Tuning: High Thread Priority Configured
+-• Local AI Engines: Zero-Hang Offline Fallbacks Active
+-
+-Click 'Finish & Launch' to begin using the DAW.
+-"@
+-        $contentPanel.Controls.Add($finTitle)
+-        $contentPanel.Controls.Add($finSummary)
+-    }
+-}
+-
+-function Start-Installation {
+-    $targetDir = $txtPath.Text
+-    $logTxt.AppendText("[*] Creating destination directory: $targetDir`r`n")
+-
+-    if (-not (Test-Path $targetDir)) {
+-        New-Item -Path $targetDir -ItemType Directory -Force | Out-Null
+-    }
+-
+-    $logTxt.AppendText("[*] Deploying engine binaries and libraries from: $SourceDir`r`n")
+-    Copy-Item -Path "$SourceDir\*" -Destination $targetDir -Recurse -Force
+-    $logTxt.AppendText("[OK] Deployed audio engine, GUI frontend, and runtime libraries.`r`n")
+-
+-    # Register Certificate
+-    if ($chkCert.Checked) {
+-        $cer = Join-Path $targetDir "October7_CodeSigning.cer"
+-        if (Test-Path $cer) {
+-            $logTxt.AppendText("[*] Registering Authenticode certificate into Windows Trusted Root...`r`n")
+-            certutil -addstore -f Root "$cer" | Out-Null
+-            $logTxt.AppendText("[OK] Authenticode certificate registered (SmartScreen Verified).`r`n")
+-        }
+-    }
+-
+-    # Shortcuts
+-    $exePath = Join-Path $targetDir "October7_VocalStudio_Native.exe"
+-    if (-not (Test-Path $exePath)) {
+-        $exePath = Join-Path $targetDir "October7_VocalStudio_DAW.exe"
+-    }
+-    if ($chkDesktop.Checked) {
+-        $desktop = [System.Environment]::GetFolderPath('Desktop')
+-        $wsh = New-Object -ComObject WScript.Shell
+-        $sc = $wsh.CreateShortcut("$desktop\October 7 Vocal Studio DAW.lnk")
+-        $sc.TargetPath = $exePath
+-        $sc.WorkingDirectory = $targetDir
+-        $sc.Description = "October 7 Vocal Tracking Studio & Performance Engine (DAW Pro)"
+-        $sc.Save()
+-        $logTxt.AppendText("[OK] Desktop shortcut created.`r`n")
+-    }
+-
+-    if ($chkStart.Checked) {
+-        $startMenu = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\October 7 Vocal Studio"
+-        if (-not (Test-Path $startMenu)) { New-Item -Path $startMenu -ItemType Directory -Force | Out-Null }
+-        $wsh = New-Object -ComObject WScript.Shell
+-        $sc = $wsh.CreateShortcut("$startMenu\October 7 Vocal Studio DAW.lnk")
+-        $sc.TargetPath = $exePath
+-        $sc.WorkingDirectory = $targetDir
+-        $sc.Save()
+-        $logTxt.AppendText("[OK] Start Menu entry registered.`r`n")
+-    }
+-
+-    # Generate Uninstaller
+-    $uninstaller = Join-Path $targetDir "Uninstall_October7_DAW.bat"
+-    $uninstScript = @"
+-@echo off
+-title Uninstall October 7 Vocal Studio DAW
+-echo Removing shortcuts...
+-del /f /q "$desktop\October 7 Vocal Studio DAW.lnk" 2>nul
+-rmdir /s /q "$startMenu" 2>nul
+-echo Removing application files...
+-cd /d "%TEMP%"
+-rmdir /s /q "$targetDir" 2>nul
+-echo [OK] Successfully uninstalled October 7 Vocal Studio DAW.
+-pause
+-"@
+-    Set-Content -Path $uninstaller -Value $uninstScript -Encoding Ascii
+-    $logTxt.AppendText("[OK] Uninstaller generated at: $uninstaller`r`n")
+-
+-    $logTxt.AppendText("`r`n[SUCCESS] Setup Completed Successfully!`r`n")
+-    Start-Sleep -Milliseconds 600
+-    Show-Step 3
+-}
+-
+-$btnNext.Add_Click({
+-    if ($script:currentStep -eq 0) {
+-        Show-Step 1
+-    }
+-    elseif ($script:currentStep -eq 1) {
+-        Show-Step 2
+-    }
+-    elseif ($script:currentStep -eq 3) {
+-        if ($chkLaunch.Checked) {
+-            $exe = Join-Path $txtPath.Text "October7_VocalStudio_Native.exe"
+-            if (-not (Test-Path $exe)) {
+-                $exe = Join-Path $txtPath.Text "October7_VocalStudio_DAW.exe"
+-            }
+-            if (Test-Path $exe) {
+-                Start-Process -FilePath $exe -WorkingDirectory $txtPath.Text
+-            }
+-        }
+-        $form.Close()
+-    }
+-})
+-
+-$btnBack.Add_Click({
+-    if ($script:currentStep -gt 0) {
+-        Show-Step ($script:currentStep - 1)
+-    }
+-})
+-
+-# Show Initial Step
+-Show-Step 0
+-[void]$form.ShowDialog()
++& $RootInstaller @args
++if ($LASTEXITCODE) { exit $LASTEXITCODE }
+--- original-preserved/source/Install_October7_DAW.bat
++++ project-working-copy/source/Install_October7_DAW.bat
+@@ -1,137 +1,8 @@
+ @echo off
+-setlocal EnableDelayedExpansion
+-title October 7 Vocal Studio DAW - Windows Installer
+-
+-echo ============================================================
+-echo   OCTOBER 7 VOCAL TRACKING STUDIO DAW - WINDOWS INSTALLER
+-echo   Core PC Functions: WASAPI Exclusive, Realtime MMCSS Pro Audio
+-echo ============================================================
+-echo.
+-
+-:: 1. Check for Administrator Permissions
+-net session >nul 2>&1
+-if %errorLevel% neq 0 (
+-    echo [!] Administrator permissions required to configure Pro Audio scheduling.
+-    echo [*] Requesting Administrator elevation...
+-    powershell -Command "Start-Process '%~f0' -Verb RunAs"
+-    exit /b
++setlocal DisableDelayedExpansion
++if not exist "%~dp0..\Install_October7_DAW.bat" (
++    echo [ERROR] The repaired root installer is missing. No installation was attempted.
++    exit /b 1
+ )
+-
+-echo [OK] Running with Windows Administrator privileges.
+-echo.
+-
+-:: 2. Check for Graphical GUI Wizard
+-if exist "%~dp0Install_Wizard.ps1" (
+-    echo Launching Graphical Setup Wizard...
+-    powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0Install_Wizard.ps1"
+-    if %errorLevel% equ 0 exit /b
+-)
+-
+-:: 3. Interactive Console Agreement & Options Fallback
+-echo ============================================================
+-echo   END USER LICENSE AGREEMENT (EULA) & SOVEREIGN AUDIO TERMS
+-echo ============================================================
+-echo 1. Local Sovereignty: 100%% local processing of vocal takes, DSP, and AI.
+-echo 2. Administrator Access: Configures Windows MMCSS Pro Audio priority.
+-echo 3. Hardware Acceleration: Direct WASAPI Exclusive buffer management.
+-echo ============================================================
+-echo.
+-set /p "AGREE=Do you accept the License Agreement? (Y/N) [Default: Y]: "
+-if /i "%AGREE%"=="N" (
+-    echo [!] Installation cancelled by user.
+-    pause
+-    exit /b
+-)
+-
+-echo.
+-echo ============================================================
+-echo   DESTINATION DIRECTORY SELECTION
+-echo ============================================================
+-set "DEFAULT_DIR=%ProgramFiles%\October7_VocalStudio_DAW"
+-echo Default Directory: %DEFAULT_DIR%
+-echo Alternative (User AppData): %LOCALAPPDATA%\October7_VocalStudio_DAW
+-echo.
+-set /p "USER_DIR=Enter installation path [Press ENTER for Default]: "
+-
+-if "%USER_DIR%"=="" (
+-    set "TARGET_DIR=%DEFAULT_DIR%"
+-) else (
+-    set "TARGET_DIR=%USER_DIR%"
+-)
+-
+-echo.
+-echo [*] Installing to: %TARGET_DIR%
+-if not exist "%TARGET_DIR%" mkdir "%TARGET_DIR%"
+-
+-set "SOURCE_DIR=%~dp0dist\October7_VocalStudio_Native"
+-if not exist "%SOURCE_DIR%\October7_VocalStudio_Native.exe" (
+-    set "SOURCE_DIR=%~dp0dist\October7_VocalStudio_DAW"
+-    if not exist "%SOURCE_DIR%\October7_VocalStudio_DAW.exe" (
+-        set "SOURCE_DIR=%~dp0"
+-    )
+-)
+-
+-:: Copy Files
+-echo [*] Deploying engine binaries and audio libraries...
+-xcopy /E /I /Y "%SOURCE_DIR%\*" "%TARGET_DIR%\" >nul
+-
+-:: Determine Primary Exe
+-set "MAIN_EXE=%TARGET_DIR%\October7_VocalStudio_Native.exe"
+-if not exist "%MAIN_EXE%" (
+-    set "MAIN_EXE=%TARGET_DIR%\October7_VocalStudio_DAW.exe"
+-)
+-
+-:: Register Authenticode Certificate to Windows Trusted Root (SmartScreen / UAC Verified)
+-if exist "%TARGET_DIR%\October7_CodeSigning.cer" (
+-    echo [*] Registering Authenticode Certificate to Windows Trusted Root...
+-    certutil -addstore -f Root "%TARGET_DIR%\October7_CodeSigning.cer" >nul 2>&1
+-)
+-
+-:: Create Desktop Shortcut
+-echo [*] Generating Desktop Shortcut...
+-powershell -Command ^
+-  "$WshShell = New-Object -ComObject WScript.Shell; " ^
+-  "$Shortcut = $WshShell.CreateShortcut([System.Environment]::GetFolderPath('Desktop') + '\October 7 Vocal Studio DAW.lnk'); " ^
+-  "$Shortcut.TargetPath = '%MAIN_EXE%'; " ^
+-  "$Shortcut.WorkingDirectory = '%TARGET_DIR%'; " ^
+-  "$Shortcut.Description = 'October 7 Vocal Tracking Studio & Performance Engine (DAW Pro)'; " ^
+-  "$Shortcut.Save()"
+-
+-:: Create Start Menu Entry
+-echo [*] Registering Windows Start Menu entry...
+-set "START_MENU_DIR=%APPDATA%\Microsoft\Windows\Start Menu\Programs\October 7 Vocal Studio"
+-if not exist "%START_MENU_DIR%" mkdir "%START_MENU_DIR%"
+-powershell -Command ^
+-  "$WshShell = New-Object -ComObject WScript.Shell; " ^
+-  "$Shortcut = $WshShell.CreateShortcut('%START_MENU_DIR%\October 7 Vocal Studio DAW.lnk'); " ^
+-  "$Shortcut.TargetPath = '%MAIN_EXE%'; " ^
+-  "$Shortcut.WorkingDirectory = '%TARGET_DIR%'; " ^
+-  "$Shortcut.Save()"
+-
+-:: Create Uninstaller
+-(
+-echo @echo off
+-echo title Uninstall October 7 Vocal Studio DAW
+-echo echo Removing shortcuts...
+-echo del /f /q "%%USERPROFILE%%\Desktop\October 7 Vocal Studio DAW.lnk" 2^>nul
+-echo rmdir /s /q "%%APPDATA%%\Microsoft\Windows\Start Menu\Programs\October 7 Vocal Studio" 2^>nul
+-echo echo Removing application files...
+-echo cd /d "%%TEMP%%"
+-echo rmdir /s /q "%TARGET_DIR%" 2^>nul
+-echo echo [OK] Successfully uninstalled October 7 Vocal Studio DAW.
+-echo pause
+-) > "%TARGET_DIR%\Uninstall_October7_DAW.bat"
+-
+-echo.
+-echo ============================================================
+-echo   [OK] INSTALLATION COMPLETE
+-echo   - Destination: %TARGET_DIR%
+-echo   - Desktop Shortcut: 'October 7 Vocal Studio DAW'
+-echo   - Start Menu Program Created
+-echo   - Authenticode Certificate: Registered in Trusted Root
+-echo   - Realtime MMCSS Pro Audio and WASAPI Exclusive Enabled
+-echo ============================================================
+-echo.
+-echo Launching October 7 Vocal Studio DAW now...
+-start "" "%MAIN_EXE%"
+-pause
++call "%~dp0..\Install_October7_DAW.bat"
++exit /b %ERRORLEVEL%

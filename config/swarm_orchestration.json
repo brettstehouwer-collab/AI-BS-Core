@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "source_baseline": "5.329.146",
+  "classification": "SOURCE_IMPLEMENTED_LIVE_ACTIVATION_PENDING",
+  "activation": {"automatic_start": true, "live_database_changes": true, "provider_calls": false},
+  "roles": ["lead_orchestrator", "test_runner", "frontend_ui_worker", "native_ui_worker", "database_state_worker"],
+  "admission": {
+    "max_active_agents": 4,
+    "max_active_workers": 3,
+    "max_local_gpu_jobs": 1,
+    "gpu_advisory_budget_bytes": 21474836480,
+    "gpu_headroom_bytes": 4294967296,
+    "failure_threshold": 2,
+    "max_snapshot_entries": 20000,
+    "max_snapshot_bytes": 536870912
+  },
+  "databases": {"master": "C:/AI-BS/backend/aibs_master.db", "cdz_audit": "C:/AI-BS/database/aibs_master.db"},
+  "sqlite": {"journal_mode": "WAL", "synchronous": "FULL", "busy_timeout_ms": 10000, "cache_size_kib": 8192, "mmap_size_bytes": 0, "wal_autocheckpoint_pages": 1000, "max_read_connections_per_database": 8, "max_concurrent_writers_per_database": 1},
+  "enforcement": {"exact_task_paths": true, "same_account_not_os_sandbox": true, "gpu_budget_is_advisory": true, "cpu_affinity_enforced": false, "cross_boundary_action": "stop_admission_and_cooperative_cancel"}
+}

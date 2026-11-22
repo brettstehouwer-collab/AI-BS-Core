@@ -10,7 +10,9 @@ import os
 import sys
 import json
 import hashlib
+import re
 import subprocess
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -35,7 +37,12 @@ CRITICAL_FILES = [
     "backend/core/optional_web_search.py",
     "backend/tools/tool_registry.py",
     "backend/core/sovereign_reasoning/document_engine.py",
+    "backend/core/subagent_coordinator.py",
+    "backend/core/pipeline_context_injector.py",
+    "backend/core/bs_chat_provider.py",
+    "backend/routers/agent_crew_router.py",
     "frontend/src/components/CodingTaskReviewCard.jsx",
+    "scripts/verify_immutable_diff.py",
     "scripts/verify_and_connect_guest_runner.py",
     "scripts/tests/test_coding_guest_runner.py",
     "scripts/agent_sync/sync_gateway.py",
@@ -53,6 +60,18 @@ MIRROR_GROUPS = {
         "frontend/components/MobileStehouwerChat.jsx",
         "frontend/src/components/components/MobileStehouwerChat.jsx",
         "frontend/components/components/MobileStehouwerChat.jsx",
+    ],
+    "SpecialistSwarmExplorer.jsx": [
+        "frontend/src/components/SpecialistSwarmExplorer.jsx",
+        "frontend/components/SpecialistSwarmExplorer.jsx",
+        "frontend/src/components/components/SpecialistSwarmExplorer.jsx",
+        "frontend/components/components/SpecialistSwarmExplorer.jsx",
+    ],
+    "MobileBottomNav.jsx": [
+        "frontend/src/components/MobileBottomNav.jsx",
+        "frontend/components/MobileBottomNav.jsx",
+        "frontend/src/components/components/MobileBottomNav.jsx",
+        "frontend/components/components/MobileBottomNav.jsx",
     ],
     "CodingTaskReviewCard.jsx": [
         "frontend/src/components/CodingTaskReviewCard.jsx",
@@ -105,25 +124,100 @@ def verify_mirror_parity(mirrors):
     return is_valid, hashes
 
 
+def summarize_test_evidence(command, returncode, stdout='', stderr='', *, elapsed_seconds=0,
+                            execution_error=None, timed_out=False):
+    """Describe this unittest invocation only; fail closed on missing/partial evidence."""
+    def decoded(value):
+        return value.decode('utf-8', errors='replace') if isinstance(value, bytes) else (value or '')
+
+    stdout, stderr = decoded(stdout), decoded(stderr)
+    output = stdout + '\n' + stderr
+    counts = None
+    status = 'unrecognized_output'
+    # Exactly one terminal unittest summary is required, not a loose 'OK' substring.
+    summaries = re.findall(r'^Ran \d+ tests? in [0-9]+(?:\.[0-9]+)?s[ \t]*\r?$', output, re.MULTILINE)
+    terminal = re.search(
+        r'^Ran (\d+) tests? in [0-9]+(?:\.[0-9]+)?s[ \t]*\r?\n\s*'
+        r'(OK|FAILED)(?: \(([^\r\n()]*)\))?[ \t]*\s*\Z', output, re.MULTILINE)
+    if len(summaries) == 1 and terminal:
+        counts = dict(run=int(terminal[1]), confirmed_passed=None, failures=0, errors=0,
+                      skipped=0, expected_failures=0, unexpected_successes=0)
+        valid = terminal[3] is None or bool(terminal[3].strip())
+        seen = set()
+        for detail in terminal[3].split(',') if terminal[3] is not None else []:
+            if not detail.strip():
+                valid = False
+                break
+            match = re.fullmatch(r'(failures|errors|skipped|expected failures|unexpected successes)=(\d+)', detail.strip())
+            if not match or match[1] in seen:
+                valid = False
+                break
+            seen.add(match[1])
+            counts[match[1].replace(' ', '_')] = int(match[2])
+        # Failure/skip events can exceed testsRun when subtests are used. Infer no
+        # successful-case count from subtraction; only a fully clean run proves it.
+        if not valid:
+            status = 'invalid_summary'
+        elif returncode != 0 or terminal[2] != 'OK' or any(counts[k] for k in ('failures', 'errors', 'unexpected_successes')):
+            status = 'failed'
+        elif counts['run'] == 0 or counts['skipped'] or counts['expected_failures']:
+            status = 'incomplete'
+        else:
+            status = 'passed'
+    if timed_out:
+        status = 'timeout'
+    elif execution_error:
+        status = 'execution_error'
+    if counts is not None and status == 'passed':
+        counts['confirmed_passed'] = counts['run']
+    return {
+        'schema': 'aibs.observable_test_evidence.v1',
+        'scope': 'configured_unittest_suite_only',
+        'command': list(command), 'returncode': returncode,
+        'elapsed_seconds': round(elapsed_seconds, 6), 'status': status,
+        'passed': status == 'passed', 'counts': counts,
+        'stdout': stdout, 'stderr': stderr,
+        'stdout_sha256': hashlib.sha256(stdout.encode('utf-8')).hexdigest(),
+        'stderr_sha256': hashlib.sha256(stderr.encode('utf-8')).hexdigest(),
+        'error': execution_error,
+    }
+
+
 def run_acceptance_tests():
     cmd = [
         sys.executable, "-X", "utf8", "-m", "unittest",
         "scripts.tests.test_coding_guest_runner",
         "scripts.tests.test_chat_attachment_upload",
-        "scripts.tests.test_router_mount_integrity",
+        "scripts.tests.test_bs_chat_openai",
+        "scripts.tests.test_ai_provider_environment",
         "scripts.tests.test_audio_router_trace",
     ]
+    started = time.monotonic()
     try:
-        res = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True, timeout=120)
-        passed = (res.returncode == 0) and ("OK" in res.stderr or "OK" in res.stdout)
-        return {
-            "passed": passed,
-            "returncode": res.returncode,
-            "stdout": res.stdout[-500:] if res.stdout else "",
-            "stderr": res.stderr[-500:] if res.stderr else "",
-        }
+        res = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True,
+                             encoding='utf-8', errors='replace', timeout=120)
+        return summarize_test_evidence(cmd, res.returncode, res.stdout, res.stderr,
+                                       elapsed_seconds=time.monotonic() - started)
+    except subprocess.TimeoutExpired as e:
+        return summarize_test_evidence(cmd, None, e.stdout, e.stderr,
+                                       elapsed_seconds=time.monotonic() - started,
+                                       execution_error=str(e), timed_out=True)
     except Exception as e:
-        return {"passed": False, "error": str(e)}
+        return summarize_test_evidence(cmd, None, elapsed_seconds=time.monotonic() - started,
+                                       execution_error=str(e))
+
+
+def acceptance_markdown(result):
+    counts = result.get('counts')
+    text = f"\n### Acceptance Tests\n- **Status:** {result.get('status', 'unrecognized_output')}\n"
+    if counts is not None:
+        text += ('- **Observed counts:** ' + ', '.join(f'{key}={value}' for key, value in counts.items()) + '\n')
+    else:
+        text += '- **Observed counts:** unavailable\n'
+    text += f"- **Return code:** {result.get('returncode')}\n"
+    text += '- **Scope:** configured unittest suite only; see JSON for command, full output and output hashes.\n'
+    text += '- **Model quality evaluation:** not run; no answer-quality or live-isolation claim.\n\n'
+    return text
 
 
 def generate_handoff_manifest(outgoing_agent, receiving_agent, tasks_completed, next_step):
@@ -171,6 +265,8 @@ def generate_handoff_manifest(outgoing_agent, receiving_agent, tasks_completed, 
         "critical_file_hashes": file_hashes,
         "mirror_parity": mirror_results,
         "acceptance_tests": tests_result,
+        "model_quality_evaluation": {"status": "not_run", "affects_acceptance": False,
+                                     "rubric_id": None, "evaluator_id": None, "scores": []},
         "tasks_completed": tasks_completed,
         "next_step": next_step,
     }
@@ -199,10 +295,7 @@ def generate_handoff_manifest(outgoing_agent, receiving_agent, tasks_completed, 
         f.write("### Mirror Parity\n")
         for name, item in mirror_results.items():
             f.write(f"- **{name} (4 Mirrors):** {'100% Parity' if item['parity'] else 'Mismatch'}\n")
-        f.write(
-            f"\n### Acceptance Tests\n- **Status:** "
-            f"{'47/47 Tests Passing (non-promoting, zero saved_data mutation; strict windows_vm fail-closed + live wsl2_vm guest isolation)' if tests_result.get('passed') else 'Tests Failed'}\n\n"
-        )
+        f.write(acceptance_markdown(tests_result))
         f.write("### Tasks Completed\n")
         for t in tasks_completed:
             f.write(f"- {t}\n")
@@ -259,17 +352,15 @@ if __name__ == "__main__":
             outgoing_agent="Google Antigravity",
             receiving_agent="OpenAI Codex",
             tasks_completed=[
-                "Enforced strict OS-boundary separation in backend/core/coding_guest_runner.py and backend/core/coding_workflow.py (Record 173, ADR-109): explicit windows_vm requests strictly fail closed (ISOLATION_UNAVAILABLE) unless a dedicated, licensed, containment-sanitized Windows guest (vbox_windows) is enrolled — zero host fallback and zero Linux/WSL2 substitution",
-                "Hardened inspect_vbox_provider() and enroll-vbox to reject preserved integration guest 6c5a53da-ab80-4ecb-8be6-4059266f736e by default (Record 126) and verify active Windows guest licensing (LicenseStatus == 1 per docs/phase4/WINDOWS_EVALUATION_REVIEW.md)",
-                "Made scripts/verify_and_connect_guest_runner.py (status, verify, verify-vbox, test-all) and scripts/tests/test_coding_guest_runner.py 100% non-promoting (removed apply_task completely) and 100% zero-mutation on C:\\AI-BS and C:\\AI-BS\\saved_data via ephemeral temp stores and pre/post saved_data immutability assertions",
-                "Verified status, verify, and test-all (106/106 automated tests passing across guest runner, baseline regressions, RepositorySnapshotTests, and PreparationTests) with non_mutating: true",
+                "Expanded SQLite WAL specialist registry in backend/core/subagent_coordinator.py (C:\\AI-BS\\backend\\data\\aibs_master.db) from 14 to 64 specialist subagent profiles across 7 operational domains mapped to Chat (24), Cockpit (8), NoCo (8), VLC/Media (8), and All Tools (16), with bounded semaphores (max_concurrent_llm=1, max_concurrent_builds=1), two-tier HierarchicalDomainRouter, and Role 49 (immutable_fire_scribe) verbatim lexical diff guard (scripts/verify_immutable_diff.py)",
+                "Wired /api/v1/agents/domains, /api/v1/agents/specialists, /api/v1/agents/route-hierarchical, and /api/v1/agents/immutable-scribe/verify in backend/routers/agent_crew_router.py",
+                "Created backend/core/pipeline_context_injector.py (Stage 1 of Pipeline 6/6) with AIBS_SOVEREIGN_SYSTEM_PROMPT and SHORTHAND_DISAMBIGUATION_MAP, hooked into backend/core/bs_chat_provider.py, backend/core/sovereign_reasoning/dispatcher.py, and backend/routers/chat_router.py, and restored active_provider='local' in database/ai_providers_config.json (36/36 provider/OpenAI tests passing)",
+                "Patched mobile streaming Markdown code-block renderer (MobileStehouwerChat.jsx, ChatTab.jsx, MobileGeminiChat.jsx, ArtifactRenderer.jsx) to eliminate the 00:52 'undefined' string flicker, added SPECIALIST_NAV_CATALOG to MobileBottomNav.jsx, verified 499/499 4-mirror SHA-256 byte parity, bumped version to v5.329.128, compiled Vite production bundle, and deployed live to https://ai-bs-dashboard.web.app",
             ],
             next_step=(
                 "Codex runs 'python C:\\AI-BS\\scripts\\agent_sync\\sync_gateway.py verify', "
-                "'python C:\\AI-BS\\scripts\\verify_and_connect_guest_runner.py status', "
-                "'python C:\\AI-BS\\scripts\\verify_and_connect_guest_runner.py verify', and "
-                "'python C:\\AI-BS\\scripts\\verify_and_connect_guest_runner.py test-all' "
-                "(all 100% non-promoting, never calling apply_task, and zero-mutation on C:\\AI-BS and C:\\AI-BS\\saved_data) "
-                "to confirm strict windows_vm fail-closed semantics, preserved VirtualBox VM boundaries, and live wsl2_vm Linux Hyper-V guest isolation."
+                "'python C:\\AI-BS\\backend\\core\\subagent_coordinator.py --test', and "
+                "'python -m unittest scripts.tests.test_bs_chat_openai scripts.tests.test_ai_provider_environment' "
+                "to confirm 7/7 synchronization parity, 64/64 SQLite WAL specialist contracts, and Stage 1 Pipeline (6/6) identity injection."
             ),
         )

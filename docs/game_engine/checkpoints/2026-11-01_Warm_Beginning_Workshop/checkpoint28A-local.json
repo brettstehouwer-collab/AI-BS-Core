@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "checkpoint": "28A",
+  "status": "locally_sealed_verified",
+  "archive_path": "D:\\AI-BS-Game-Resources\\Backups\\28A_Adam_Face_Studies_v11-v13_UNAPPROVED.zip",
+  "archive_bytes": 68659943,
+  "archive_sha256": "dfb531298f2f47d26d901743bd52ae9f59869b0fd53f9b9b3c8d7b15f5d7d402",
+  "manifest_sha256": "5d914a182cf0840ad0107f9e0cc2958add65842b03531c42a90137b67328c168",
+  "selected_files": 152,
+  "zip_members": 154,
+  "selected_bytes": 118426106,
+  "every_SHA_size_CRC_exact": true,
+  "parts": [
+    {
+      "path": "D:\\AI-BS-Game-Resources\\Backups\\28A_Adam_Face_Studies_v11-v13_UNAPPROVED.zip.part01of03",
+      "bytes": 25165824,
+      "sha256": "e0d68c93de0117e38cfe96374198658a2e9fd4d0c2f677ca4e15e6201c8f2264"
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\Backups\\28A_Adam_Face_Studies_v11-v13_UNAPPROVED.zip.part02of03",
+      "bytes": 25165824,
+      "sha256": "62299f9e573c78111409c9ff4d78339067a518d4fac02058c24b9b3a279e20e4"
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\Backups\\28A_Adam_Face_Studies_v11-v13_UNAPPROVED.zip.part03of03",
+      "bytes": 18328295,
+      "sha256": "c0e7827559dfb4339670cefa421b5e511ce080cbce27fa83902b57e3f2e3f793"
+    }
+  ],
+  "recombination_SHA256_verified": true,
+  "likeness_approved": false,
+  "cloud_uploaded": false,
+  "goal_complete": false,
+  "original_family_media_included": false,
+  "disk_free_bytes": {
+    "C": 71095144448,
+    "D": 92872933376,
+    "E": 146813599744
+  }
+}

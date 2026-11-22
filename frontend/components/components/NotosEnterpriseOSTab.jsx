@@ -1,12 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Sparkles, Calendar, Users, MessageSquare, Utensils, Award, 
-  MapPin, CheckCircle, Clock, AlertTriangle, ShieldCheck, 
-  FileText, Download, Search, Filter, Wine, Building2, Flame,
-  DollarSign, ChevronRight, RefreshCw, Send, PlusCircle, Check,
-  Play, Pause, FastForward, Rewind, Presentation, Layers, ArrowRight
-} from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import { Sparkles, MessageSquare, Utensils, Award, FileText, Download, Search, Wine, Building2, Flame, Send, Play, Pause, Presentation, ArrowRight } from "lucide-react";
 
+/** @param {{"backendUrl": string}} props */
 export default function NotosEnterpriseOSTab({ backendUrl }) {
   const baseUrl = backendUrl || import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
 
@@ -25,8 +20,8 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
 
   // ─── 1. Joanne's 12,000-Bottle Cellar Master State ───
   const [cellarSearch, setCellarSearch] = useState('');
-  const [selectedRegion, setSelectedRegion] = useState('ALL');
-  const [cellarInventory, setCellarInventory] = useState([
+  const [] = useState('ALL');
+  const [cellarInventory] = useState([
     {
         "varietal": "Fictional demonstration blend",
         "bottles": 12,
@@ -102,7 +97,7 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
 ]);
 
   // ─── 2. Valentina's Live BEO & Banquet Engine State ───
-  const [beoList, setBeoList] = useState([
+  const [beoList] = useState([
     {
         "client": "Demo Client 1",
         "deposit": 400,
@@ -154,7 +149,7 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
   const [new86Reason, setNew86Reason] = useState('');
 
   // ─── 4. Dual-Location Shift Logs State ───
-  const [shiftLogs, setShiftLogs] = useState({
+  const [shiftLogs] = useState(/** @type {Record<string, {"kitchenTicketAvg": string, "maintenanceAlerts": string, "totalRevenue": number, "diningCovers": number, "laborVariance": string, "status": string, "managerNotes": string, "wineRevenue": number, "date": string, "banquetGuests": number}>} */ (/** @type {Record<string, {"kitchenTicketAvg": string, "maintenanceAlerts": string, "totalRevenue": number, "diningCovers": number, "laborVariance": string, "status": string, "managerNotes": string, "wineRevenue": number, "date": string, "banquetGuests": number}>} */ (/** @type {Record<string, {"kitchenTicketAvg": string, "maintenanceAlerts": string, "totalRevenue": number, "diningCovers": number, "laborVariance": string, "status": string, "managerNotes": string, "wineRevenue": number, "date": string, "banquetGuests": number}>} */ ({
     "GR": {
         "kitchenTicketAvg": "12 mins",
         "maintenanceAlerts": "Demo equipment check: no live maintenance report.",
@@ -179,11 +174,11 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
         "date": "2030-06-15",
         "banquetGuests": 25
     }
-});
+}))));
   const [isExportingBrief, setIsExportingBrief] = useState(false);
 
   // ─── 5. Employee Chat State ───
-  const [employeeChatDepts, setEmployeeChatDepts] = useState(() => {
+  const [employeeChatDepts, setEmployeeChatDepts] = useState(/** @returns {Array<{department: string, icon: string, channels: Array<{id: string, name: string, position: string, unread: number, messages: Array<{sender: string, role: string, time: string, text: string}>}>}>} */ () => {
     try {
       const saved = localStorage.getItem('aibs_notos_employee_chat');
       if (saved) return JSON.parse(saved);
@@ -306,10 +301,12 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
 ];
   });
   const [activeChannelId, setActiveChannelId] = useState('exec-urgent-86');
-  const activeChannel = employeeChatDepts.flatMap(dept => dept.channels).find(channel => channel.id === activeChannelId) || null;
+  const activeChannel = employeeChatDepts.flatMap( 
+dept => dept.channels).find( 
+channel => channel.id === activeChannelId) || null;
   const [chatMessageInput, setChatMessageInput] = useState('');
   const [selectedPostingRole, setSelectedPostingRole] = useState("Demo Operator (General Manager)");
-  const chatEndRef = useRef(null);
+  const chatEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   // Presentation Storyboard Matrix
   const presentationSlides = [
@@ -371,10 +368,12 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
 
   // Auto-Tour Interval
   useEffect(() => {
+    /** @type {ReturnType<typeof setInterval> | undefined} */
     let timer;
     if (isPresentationMode && isAutoTour) {
       timer = setInterval(() => {
-        setPresentationStep(prev => {
+        setPresentationStep( /** @param {number} prev */
+prev => {
           if (prev < presentationSlides.length - 1) return prev + 1;
           setIsAutoTour(false);
           return prev;
@@ -421,7 +420,8 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       reportedBy: selectedPostingRole.split(' (')[0]
     };
-    setEightySixItems(prev => [newEntry, ...prev]);
+    setEightySixItems(
+prev => [newEntry, ...prev]);
 
     const alertMsg = {
       sender: selectedPostingRole.split(' (')[0],
@@ -429,17 +429,22 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       text: `🚨 86 BROADCAST: ${newItemTo86.trim()} is 86'd across all POS screens and kitchen expo stations! (${new86Reason.trim() || 'Depleted'})`
     };
-    setEmployeeChatDepts(prev => prev.map(d => ({
+    setEmployeeChatDepts(
+prev => prev.map( 
+d => ({
       ...d,
-      channels: d.channels.map(c => c.id === 'exec-urgent-86' ? { ...c, messages: [...c.messages, alertMsg] } : c)
+      channels: d.channels.map( 
+c => c.id === 'exec-urgent-86' ? { ...c, messages: [...c.messages, alertMsg] } : c)
     })));
 
     setNewItemTo86('');
     setNew86Reason('');
   };
 
-  const handleResolve86 = (id) => {
-    setEightySixItems(prev => prev.filter(item => item.id !== id));
+  /** @param {string} id */
+const handleResolve86 = ( id) => {
+    setEightySixItems(
+prev => prev.filter(item => item.id !== id));
   };
 
   const handleSendChatMessage = () => {
@@ -455,14 +460,18 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
       text: chatMessageInput.trim()
     };
 
-    setEmployeeChatDepts(prev => prev.map(dept => ({
+    setEmployeeChatDepts(
+prev => prev.map( 
+dept => ({
       ...dept,
-      channels: dept.channels.map(ch => ch.id === activeChannelId ? { ...ch, messages: [...ch.messages, msg] } : ch)
+      channels: dept.channels.map( 
+ch => ch.id === activeChannelId ? { ...ch, messages: [...ch.messages, msg] } : ch)
     })));
     setChatMessageInput('');
   };
 
-  const handleExportBeoDocx = async (beo) => {
+  /** @param {{"name": string, "client": string, "date": string, "time": string, "room": string, "guests": number, "menu": string, "bar": string, "total": number, "deposit": number, "balance": number, "id": string}} beo */
+const handleExportBeoDocx = async ( beo) => {
     setIsExportingBeo(true);
     try {
       const res = await fetch(`${baseUrl}/api/documents/banquet/generate_beo`, {
@@ -503,7 +512,7 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
         alert('Could not export Word BEO contract.');
       }
     } catch (e) {
-      alert(`BEO export error: ${e.message}`);
+      alert(`BEO export error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsExportingBeo(false);
     }
@@ -536,7 +545,7 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
         alert('Could not download Operations Brief.');
       }
     } catch (e) {
-      alert(`Export error: ${e.message}`);
+      alert(`Export error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsExportingBrief(false);
     }
@@ -1135,7 +1144,8 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {beoList.map(beo => (
+              {beoList.map( 
+beo => (
                 <div key={beo.id} style={{ backgroundColor: 'rgba(20, 4, 8, 0.9)', border: '1px solid rgba(159, 18, 57, 0.4)', borderLeft: '4px solid #f59e0b', borderRadius: '14px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxWidth: '60%' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -1303,13 +1313,15 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
               <span style={{ padding: '0 8px', fontSize: '0.75rem', fontWeight: '800', letterSpacing: '0.1em', color: '#f59e0b' }}>
                 POSITION DEPARTMENTS
               </span>
-              {employeeChatDepts.map((dept, dIdx) => (
+              {employeeChatDepts.map(
+( dept,  dIdx) => (
                 <div key={dIdx} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 8px', color: '#fda4af', fontWeight: '700', fontSize: '0.8rem' }}>
                     <span>{dept.icon}</span>
                     <span>{dept.department}</span>
                   </div>
-                  {dept.channels.map(channel => (
+                  {dept.channels.map( 
+channel => (
                     <button
                       key={channel.id}
                       onClick={() => setActiveChannelId(channel.id)}
@@ -1351,7 +1363,8 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
               </div>
               
               <div style={{ flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {(activeChannel?.messages || []).map((msg, mIdx) => (
+                {(activeChannel?.messages || []).map(
+( msg,  mIdx) => (
                   <div key={mIdx} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ fontWeight: '700', color: '#f59e0b', fontSize: '0.9rem' }}>{msg.sender}</span>

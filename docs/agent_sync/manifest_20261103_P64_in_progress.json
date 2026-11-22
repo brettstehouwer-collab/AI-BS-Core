@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-04T00:20:19.323195+00:00",
+  "status": "in_progress",
+  "active_execution_session": 73372,
+  "command_script": "C:/Users/footb/.codex/visualizations/2026/11/01/01a19491-7a5c-71e0-a6ba-0dc4a3f58f44/P64_source.py",
+  "Release_registered_tests_passed": 128,
+  "Debug_full_build_passed": true,
+  "Debug_suite_complete": false,
+  "next_step": "Poll same session73372 and inspect source-verification.json; do not restart on observation timeout. After full source pass run P64_consumers.py; after independent consumers pass run P65_prepare.py then P65_routes.py. SDK0.17not deployed. Preserve105/0166 and saves.",
+  "last_verified_backup": "docs/game_engine/checkpoints/63A-drive.json",
+  "goal_complete": false
+}

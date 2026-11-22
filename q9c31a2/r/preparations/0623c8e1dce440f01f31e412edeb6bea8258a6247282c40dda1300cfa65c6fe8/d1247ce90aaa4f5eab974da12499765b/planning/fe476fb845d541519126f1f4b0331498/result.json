@@ -1,0 +1,30 @@
+{
+  "state": "PLAN_PROPOSED",
+  "input_sha256": "e4465f86d5e26ec6471f2407194ea27c8676846a7db0232aafa24498e9f449cd",
+  "proposal": {
+    "summary": "Synthetic fixture: change value from1 to42.",
+    "steps": [
+      {
+        "path": "app.py",
+        "change": "Replace value = 1 with value = 42; preserve tests."
+      }
+    ],
+    "questions": []
+  },
+  "error_code": null,
+  "finished_at_utc": "2026-11-14T22:52:44.825528+00:00",
+  "elapsed_seconds": 0.0,
+  "response_sha256": "ac8abd8286518aaf564919dffc3f5e05a80c711d7ebafd1068eac1a3ebf22bf1",
+  "response_bytes": 170,
+  "public_json": {
+    "summary": "Synthetic fixture: change value from1 to42.",
+    "steps": [
+      {
+        "path": "app.py",
+        "change": "Replace value = 1 with value = 42; preserve tests."
+      }
+    ],
+    "questions": []
+  },
+  "entry_sha256": "91394b3c87aa5ef88a3905021693cb28bd15578d395f6274c34537545179d898"
+}

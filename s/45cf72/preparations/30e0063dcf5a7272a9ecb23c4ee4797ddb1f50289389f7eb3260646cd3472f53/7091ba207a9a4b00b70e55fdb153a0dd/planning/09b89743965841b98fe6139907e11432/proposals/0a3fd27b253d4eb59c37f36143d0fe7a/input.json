@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "7091ba207a9a4b00b70e55fdb153a0dd",
+  "plan_id": "09b89743965841b98fe6139907e11432",
+  "snapshot_sha256": "fa576e0c3e320eea7f0ee5cbcc27e91cc71943aedb8f6347b63173ccd850a25b",
+  "review_digest": "b635fa0e8a9752ba7ffc352ea3b304faa6f217faca4b39811446a608c141aafb",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "0a3fd27b253d4eb59c37f36143d0fe7a",
+  "reviewed_plan_sha256": "92419da570fa66cfaa0a05271bb3bf7bbf9a935b35264530bffec108529366d8",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 35052,
+    "created": 1794664412.676453
+  },
+  "created_at_utc": "2026-11-14T13:53:38.181918+00:00",
+  "entry_sha256": "20a076422134171191901ef049e12a0ad6711ac469408353b2caad599b7f0796"
+}

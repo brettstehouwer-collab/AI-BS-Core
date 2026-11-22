@@ -1,0 +1,642 @@
+{
+  "record": 209,
+  "utc": "2026-10-31T20:54:18.836156+00:00",
+  "version": "5.329.85",
+  "classification": "VERIFIED_INSTALLED_PREVIEW_CAPABILITY_HTTP_DECODER_AND_SAFE_HELD_GUI_LIVE_GAME_UNVERIFIED",
+  "base_commit": "f53527c0440d5e7255ba257ebf86c5315b7a440c",
+  "branch": "codex/audit-v532976-20261031",
+  "source_commit_reference": "docs/agent_sync/manifest_record209_v532985.json",
+  "report": "docs/audit/2026-10-30-complete/NATIVE_PROGRAM_PREVIEW_AND_OBS_RETIREMENT_v5.329.85_RECORD209.md",
+  "source_scope_receipts": [
+    "backups/record209_web/completion.json",
+    "backups/record209_native_retirement/completion.json",
+    "backups/native_preview209_work/completion_ui209.json",
+    "backups/native_broadcast_preview209_work/completion.json"
+  ],
+  "changes": [
+    "Native program preview plays the existing fixed local HLS through one Qt QMediaPlayer/QVideoSink and copies decoded images into the canvas; delayed program output, no second game/desktop capture.",
+    "Preview eligibility requires fresh private verified coordinator ownership, creation epochs, progress and manifest checks; source/session changes clear frames and invalidate callbacks; retries and cleanup are bounded.",
+    "No QAudioOutput, microphone capture or audio configuration change. Runtime remains intentionally silent.",
+    "Current native and web broadcast workspaces retire OBS buttons, labels, fake scene dispatch, process-status placeholders and active port4455 probes.",
+    "Legacy shared-memory V1 preserves its original25slot bit layout; reserved4455 slot is not probed or rendered, active count24.",
+    "Existing browser A/V/OAuth settings and eight stream/panic/lookup handler bodies preserved. Canonical source and all three mirrors agree exactly; standalone app receives narrow compatible edits.",
+    "Corrective85 uses delete-sharing Windows IPC/HLS reads and bounded atomic-replace retries. Qt preview reads a fixed loopback HTTP9011HLS route instead of opening the writer playlist directly."
+  ],
+  "verification": {
+    "web": {
+      "tests": 35,
+      "failures": 0,
+      "typescript_exit": 0,
+      "green": "backups/record209_secret_default_cleanup/green.log",
+      "typescript": "backups/record209_secret_default_cleanup/typescript.log",
+      "handler_preservation": "backups/record209_web/handler_preservation.json",
+      "actual_command": "node --test scripts/tests/test_broadcast_contracts198.cjs scripts/tests/test_broadcast_truth204.cjs scripts/tests/test_broadcast_debranding209.cjs",
+      "credential_cleanup_receipt": "backups/record209_secret_default_cleanup/completion.json"
+    },
+    "version_mirrors": {
+      "count": 16,
+      "version": "5.329.85",
+      "status": "VERIFIED_READONLY_CHECK_PASS",
+      "receipt": "backups/record209_close_work/version85_check.json"
+    },
+    "actual_qt_prototype": {
+      "kind": "explicitly authorized bounded read-only offscreen existing HLS playback",
+      "qt": "6.11.0",
+      "pyqt": "6.11.0",
+      "frames": 145,
+      "elapsed_seconds": 5.328,
+      "first_frame_seconds": 0.438,
+      "frame_size": [
+        1280,
+        720
+      ],
+      "distinct_image_sha256": true,
+      "audio_output_created": false,
+      "audio_output_is_none": true,
+      "media_errors": [],
+      "evidence": "probe/qt_file_result.json"
+    },
+    "native_build": {
+      "receipt": "backups/native_preview_v85_20261031_record209/build_verification/build_independent_verification209.json",
+      "result": {
+        "status": "VERIFIED_WINDOWS_V85_PE_PYZ_FROZEN_INPUTS_PACKAGE_BOUNDARY",
+        "utc": "2026-10-31T20:32:37.361238+00:00",
+        "exe": "backups\\native_preview_v85_20261031_record209\\stage1\\dist\\AI_BS_Studio\\AI_BS_Studio.exe",
+        "exeSha256": "26db181ca8414de555f31ec0010acf51bb35a679d042bd50a72f03e82d0fb34c",
+        "fileVersion": "5.329.85.0",
+        "packageFiles": 2256,
+        "packageBytes": 552599001,
+        "frozenInputCount": 82,
+        "frozenInputsAllUnchanged": true,
+        "canonicalMappingCounts": {
+          "canonical_native_or_version": 72,
+          "canonical_frontend_public_asset": 2,
+          "retained_v81_distribution_metadata": 7,
+          "generated_native_build_metadata": 1
+        },
+        "allNativeModulesCompiledSourceEquivalent": 71,
+        "requiredHelpers": {
+          "native_studio.broadcast_ipc": {
+            "compiledSourceEquivalent": true,
+            "matchingOptimizationLevels": [
+              0,
+              1
+            ]
+          },
+          "native_studio.broadcast_preview": {
+            "compiledSourceEquivalent": true,
+            "matchingOptimizationLevels": [
+              0,
+              1
+            ]
+          },
+          "native_studio.broadcast_secondary_control": {
+            "compiledSourceEquivalent": true,
+            "matchingOptimizationLevels": [
+              0,
+              1
+            ]
+          }
+        },
+        "backendModuleCount": 0,
+        "sensitiveRuntimeFilenameMatches": [],
+        "sensitiveDataScope": "Filename/data-boundary check plus previously recorded prebuild source-key scan; no live credential values read or printed",
+        "applicationExecuted": false,
+        "desktopOrCursorControl": false,
+        "runtimeChanges": false,
+        "fullGuiCertification": false,
+        "knownLimits": [
+          "Explicit screen sharing held/unsupported",
+          "Audio generated silence only"
+        ]
+      },
+      "build_start_utc": "2026-10-31T20:29:47.722Z",
+      "build_end_utc": "2026-10-31T20:32:17.543Z",
+      "duration_seconds": 149.821
+    },
+    "native_installation": {
+      "receipt": "backups/native_preview_v85_20261031_record209/installation209.json",
+      "result": {
+        "status": "VERIFIED_WINDOWS_V85_INSTALLED",
+        "utc": "2026-10-31T20:32:48Z",
+        "exe": "C:\\AI-BS\\native_studio\\releases\\v5.329.85\\AI_BS_Studio\\AI_BS_Studio.exe",
+        "exe_sha256": "26db181ca8414de555f31ec0010acf51bb35a679d042bd50a72f03e82d0fb34c",
+        "file_version": "5.329.85.0",
+        "package_files": 2256,
+        "package_bytes": 552599001,
+        "all_package_bytes_match_stage": true,
+        "new_release_acl": "CurrentUser and SYSTEM only; old releases unchanged",
+        "shortcuts": [
+          {
+            "path": "C:\\Users\\footb\\Desktop\\AI-BS Sovereign Studio.lnk",
+            "before": {
+              "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.84\\AI_BS_Studio\\AI_BS_Studio.exe",
+              "arguments": ""
+            },
+            "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.85\\AI_BS_Studio\\AI_BS_Studio.exe",
+            "preimage_sha256": "2627e2471d78fc11771fde707680f2f6a5d6ce07232802635fdce47c51eabf5b",
+            "after_sha256": "986b93760cef89e323b6344dc9a41afe0fb7c45b021ae97d674e17ade976137d"
+          },
+          {
+            "path": "C:\\Users\\footb\\Desktop\\AI-BS Executive Studio.lnk",
+            "before": {
+              "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.84\\AI_BS_Studio\\AI_BS_Studio.exe",
+              "arguments": ""
+            },
+            "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.85\\AI_BS_Studio\\AI_BS_Studio.exe",
+            "preimage_sha256": "b01d85018168bfc08bb78fdb1daa9ba421714f40899bd2b2fcbf7be8dccc39fb",
+            "after_sha256": "fb4ffe3b43bf22e4cc759f71d078cfaa0ec6c459053f391cea6b86d0c750389b"
+          },
+          {
+            "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AI-BS Sovereign Studio.lnk",
+            "before": {
+              "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.84\\AI_BS_Studio\\AI_BS_Studio.exe",
+              "arguments": ""
+            },
+            "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.85\\AI_BS_Studio\\AI_BS_Studio.exe",
+            "preimage_sha256": "37294810ad006c96bfafb68e91f5577c72802739dc19b70a0892838f28a5ee12",
+            "after_sha256": "7241167900ad5d48ca87584ec0c1ec3b0d240eeb1833974223818e3a20e284ba"
+          },
+          {
+            "path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AI-BS Sovereign Studio\\AI-BS Sovereign Studio.lnk",
+            "before": {
+              "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.84\\AI_BS_Studio\\AI_BS_Studio.exe",
+              "arguments": ""
+            },
+            "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.85\\AI_BS_Studio\\AI_BS_Studio.exe",
+            "preimage_sha256": "18c7162ad3c22f2c2adabe0d1440532bc2066d2991c63f2575e7cb2d3d5f953e",
+            "after_sha256": "940d8141cbd25150fa596879208fd4cacc0a49ead88e2e8664d6152cc38178a7"
+          }
+        ],
+        "running_stream_action": "NONE",
+        "audio_capture": "DISABLED",
+        "microphone_capture": "DISABLED",
+        "live_trading": "DISABLED"
+      }
+    },
+    "actual_installed_gui_preview": {
+      "basis": "PARENT_DIRECT_GUI_OBSERVATION",
+      "version": "5.329.85",
+      "reopen_maximize_navigation": "VERIFIED",
+      "earlier_control": "Program preview checked; Preview: held; canvas correctly blank with no verified game",
+      "latest_before_toggle": {
+        "utc": "2026-10-31T20:43:37.296788+00:00",
+        "preview_phase": "root-reported OFF, before ON confirmation",
+        "status": {
+          "status": "running_unverified",
+          "active": true,
+          "controller_pid": 36868,
+          "controller_create_time": 1793478612.624772,
+          "encoder_pid": 31084,
+          "encoder_create_time": 1793478613.372554,
+          "capture_state": "holding",
+          "game_frame_verified": false,
+          "holding_reason": "NO_VERIFIED_GAME",
+          "source_mode": "auto_game",
+          "frames_encoded": 24003,
+          "out_time_us": 800100000,
+          "audio_mode": "generated_silence"
+        },
+        "port8007_listeners": 0,
+        "obs_process_count": 0
+      },
+      "latest_after_toggle": null,
+      "final_preview_ON": "NOT_CONFIRMED",
+      "actual85_live_game_render": "NOT_PERFORMED_USER_INTENTIONALLY_CLOSED_GAME",
+      "independent_HTTP_decode": {
+        "receipt": "backups/native_preview_v85_20261031_record209/runtime/http_qt_probe/receipt.json",
+        "frames": 200,
+        "seconds": 7.25,
+        "size": [
+          1280,
+          720
+        ],
+        "timestamps_advance": true,
+        "distinct_first_last_images": false,
+        "holding_black_expected": true,
+        "audio_output": false,
+        "actual_GUI_render_tested": false
+      },
+      "last_observed_checkbox": "OFF",
+      "final_ON_attempt": "BLOCKED_TWICE_BY_CONCURRENT_USER_INPUT_GUARD_ROOT_STOPPED_INPUTS",
+      "parent_message": "user input was detected in this window; call get_window_state before continuing",
+      "user_source_drafts": "Visible user edits were not applied or assumed accepted.",
+      "gui_evidence": [
+        {
+          "path": "backups/native_preview_v85_20261031_record209/gui/preview_held.png",
+          "sha256": "601bf69888664f5544676fbbdf98de2b3a16fd5575a1ee4e5a9961fd694942a3",
+          "bytes": 351794,
+          "approved_visual_no_credentials": true,
+          "version": "5.329.85"
+        },
+        {
+          "path": "backups/native_preview_v85_20261031_record209/gui/preview_off.png",
+          "sha256": "b48d6897d63f9b8f2896ac78d94e5104b5bb472c935d3b6b45545c3bd0da11be",
+          "bytes": 351235,
+          "approved_visual_no_credentials": true,
+          "version": "5.329.85"
+        }
+      ],
+      "latest_readonly_after_sample": {
+        "utc": "2026-10-31T20:50:17.913779+00:00",
+        "preview_phase": "root-confirmed last observed OFF; ON not performed because user input was detected twice",
+        "status": {
+          "status": "running_unverified",
+          "active": true,
+          "can_select": true,
+          "protocol_version": 2,
+          "controller_pid": 36868,
+          "controller_create_time": 1793478612.624772,
+          "encoder_pid": 31084,
+          "encoder_create_time": 1793478613.372554,
+          "capture_state": "holding",
+          "game_frame_verified": false,
+          "holding_reason": "NO_VERIFIED_GAME",
+          "source_mode": "auto_game",
+          "frames_encoded": 36009,
+          "out_time_us": 1200300000,
+          "audio_mode": "generated_silence"
+        },
+        "port8007_listeners": 0,
+        "obs_process_count": 0
+      }
+    },
+    "native_guarded": {
+      "tests": 352,
+      "groups": 28,
+      "failures": 0,
+      "errors": 0,
+      "guard_denials": 0,
+      "receipt": "backups/native_broadcast207_work/guarded_native/run_1793478440711116700/receipt.json",
+      "self_pipe_allowance": {
+        "socket.__new__": 24,
+        "socket.bind": 12,
+        "socket.connect": 12
+      },
+      "operational_effects_authorized": false
+    },
+    "prior_guard_harness_failure": {
+      "receipt": "backups/native_broadcast207_work/guarded_native/run_1793478363110168600/receipt.json",
+      "tests": 352,
+      "errors": 5,
+      "guard_denials": 5,
+      "classification": "HARNESS_FIXTURE_MKDIR_WHITELIST_TOO_NARROW",
+      "resolution": "Only the exact physical C sharing-fixture directory was admitted; operational paths remain denied. Clean352case rerun retained separately."
+    },
+    "loopback_hls_route": {
+      "receipt": "backups/native_preview_v85_20261031_record209/loopback_http_route209.json",
+      "result": {
+        "utc": "2026-10-31T20:25:40.125485+00:00",
+        "status": "VERIFIED_READONLY_LOOPBACK_HLS_ROUTE",
+        "config": "C:\\StehouwerPublishing.com\\restoration_staging\\20261025T205656Z\\nginx.static.conf",
+        "preimage_sha256": "23a2a2341b1fa6b748ba7c1905c775eb7bcaef2e71b8d6fbb30fd909bb650280",
+        "after_sha256": "2c13e1db7bf4d6aa0a52184896024380552af98e9ade1a986633fa4700d7fc33",
+        "master_pid": 15532,
+        "nginx_config_test_exit": 0,
+        "reload_exit": 0,
+        "url": "http://127.0.0.1:9011/hls/native/index.m3u8",
+        "listeners": [
+          {
+            "pid": 24476,
+            "ip": "127.0.0.1",
+            "port": 9011
+          }
+        ],
+        "GET_playlist": 200,
+        "POST_playlist": 403,
+        "negative_paths": {
+          "hls/native/index.m3u8.tmp": 404,
+          "stream_profiles.json": 404,
+          "hls/native/private.json": 404
+        },
+        "broadcast_started_or_stopped": false,
+        "playlist_is_live_verified_by_this_route_check": false
+      }
+    },
+    "new_test_subsets": {
+      "preview_core": 12,
+      "preview_ui": 4,
+      "native_retirement": 5,
+      "sharing_fixture": 5,
+      "overlap_notice": "Included within352; do not add focused cohorts."
+    },
+    "first_restored_soak": {
+      "receipt": "backups/native_preview_v85_20261031_record209/runtime/20261031T203059Z/soak.json",
+      "start_utc": "2026-10-31T20:30:59.216459+00:00",
+      "end_utc": "2026-10-31T20:34:11.286589+00:00",
+      "seconds": 192.156,
+      "controller_pid": 36868,
+      "encoder_pid": 31084,
+      "frames": [
+        1240,
+        6999
+      ],
+      "hls_sequences": [
+        15,
+        111
+      ],
+      "new_errors": 0,
+      "same_pipeline": true,
+      "preview85HTTPactivated": false
+    },
+    "latest_readonly_hold": {
+      "utc": "2026-10-31T20:36:54.258841+00:00",
+      "basis": "SAVED_FILTERED_READONLY_RECEIPT",
+      "controller_pid": 36868,
+      "encoder_pid": 31084,
+      "both_alive": true,
+      "frames": 11906,
+      "media_seconds": 396.885,
+      "capture_state": "holding",
+      "holding_reason": "NO_VERIFIED_GAME",
+      "game_frame_verified": false,
+      "meaning": "Liveness with correct no-game holding; not85GUIpreview or remote-ingest acceptance.",
+      "receipt": "backups/native_preview_v85_20261031_record209/runtime/holding_advancement_readonly.json"
+    },
+    "corrective85": {
+      "sharing_completion": "backups/native_broadcast_preview209_work/ipc_hotfix209/completion.json",
+      "route_receipt": "backups/native_preview_v85_20261031_record209/loopback_http_route209.json",
+      "first_restored_soak": {
+        "receipt": "backups/native_preview_v85_20261031_record209/runtime/20261031T203059Z/soak.json",
+        "start_utc": "2026-10-31T20:30:59.216459+00:00",
+        "end_utc": "2026-10-31T20:34:11.286589+00:00",
+        "seconds": 192.156,
+        "controller_pid": 36868,
+        "encoder_pid": 31084,
+        "frames": [
+          1240,
+          6999
+        ],
+        "hls_sequences": [
+          15,
+          111
+        ],
+        "new_errors": 0,
+        "same_pipeline": true,
+        "preview85HTTPactivated": false
+      },
+      "final_runtime_receipt": "backups/native_preview_v85_20261031_record209/runtime/final_runtime209.json",
+      "all_four_crypto_pins_match": true,
+      "long_reader_limit": "Immediate rename while shared reader remains open is not universally supported on this host; retry succeeds after brief reader closes, exhausted bound still fails."
+    }
+  },
+  "operational_boundary": {
+    "prior_controller_pid": 52852,
+    "prior_encoder_pid": 43860,
+    "runtime_restart_for_preview": "RESTORED_AFTER84TERMINAL_FAILURE_NO_RESTART_FOR85PREVIEW",
+    "preview_dispatches_start_stop": false,
+    "additional_game_capture": false,
+    "audio_output": false,
+    "microphone_change": false,
+    "trading": "DISABLED",
+    "recdebut_sending": "DISABLED",
+    "firebase_deployment_this_turn": false,
+    "hosting_parity": "NOT_CLAIMED",
+    "rtmp_dashboard_acceptance": "UNVERIFIED_ALL_TARGETS",
+    "all_game_or_all_workflow_acceptance": false,
+    "continuity": "NOT_UNINTERRUPTED_84_FAILURE_AND_LATER_RESTORE_RETAINED",
+    "last_verified_controller_pid": 36868,
+    "last_verified_encoder_pid": 31084,
+    "last_verified_capture_state": "holding",
+    "game_frame_verified": false,
+    "preview_final_ON": "NOT_CONFIRMED_INPUTS_STOPPED",
+    "port8007_listeners": 0,
+    "obs_process_count": 0,
+    "all_four_crypto_pins_match": true,
+    "user_intentionally_closed_games_and_studios": true,
+    "games_reopened_for_final_acceptance": false,
+    "preview_last_observed": "OFF",
+    "user_source_drafts_applied": false,
+    "no_more_screen_cursor_control": true,
+    "final_readonly_runtime": {
+      "utc": "2026-10-31T20:50:17.913779+00:00",
+      "preview_phase": "root-confirmed last observed OFF; ON not performed because user input was detected twice",
+      "status": {
+        "status": "running_unverified",
+        "active": true,
+        "can_select": true,
+        "protocol_version": 2,
+        "controller_pid": 36868,
+        "controller_create_time": 1793478612.624772,
+        "encoder_pid": 31084,
+        "encoder_create_time": 1793478613.372554,
+        "capture_state": "holding",
+        "game_frame_verified": false,
+        "holding_reason": "NO_VERIFIED_GAME",
+        "source_mode": "auto_game",
+        "frames_encoded": 36009,
+        "out_time_us": 1200300000,
+        "audio_mode": "generated_silence"
+      },
+      "port8007_listeners": 0,
+      "obs_process_count": 0
+    }
+  },
+  "findings": [
+    {
+      "id": "R209-PREVIEW",
+      "status": "REPAIRED_INSTALLED_HELD_GUI_HTTP_DECODER_VERIFIED_LIVE_GAME_UNVERIFIED",
+      "severity": "MEDIUM",
+      "finding": "Native broadcast canvas lacked actual delayed program playback."
+    },
+    {
+      "id": "R209-OBS",
+      "status": "REPAIRED_SOURCE_AND_FOCUSED_TESTS_VERIFIED",
+      "severity": "MEDIUM",
+      "finding": "Retired external-engine labels, probes and fake scene-control/status placeholders remained in current native/web surfaces."
+    },
+    {
+      "id": "R209-HLS-ACL",
+      "status": "OPEN",
+      "severity": "MEDIUM",
+      "finding": "Shared local HLS source ACL and replacement TOCTOU are not a cross-user security guarantee. Preview uses fixed local admission/freshness gates; no global Qt protocol policy changed."
+    },
+    {
+      "id": "R209-IMPORT",
+      "status": "REPAIRED_TYPESCRIPT_AND_IMPORT_RESOLUTION_VERIFIED",
+      "severity": "LOW",
+      "finding": "Omni relative component imports resolved through a nonexistent nested src directory; canonical /src aliases now resolve across mirrors."
+    },
+    {
+      "id": "R209-WINDOWS-SHARING",
+      "status": "REPAIRED_FIXTURES_AND192SECOND_RESTORED_SOAK_VERIFIED",
+      "severity": "HIGH",
+      "finding": "Windows readers without delete sharing blocked atomic private-status/HLS publication.84preview worked initially but prior52852/43860sender later failed STATUS_WRITE_UNAVAILABLE; root sent no Stop."
+    },
+    {
+      "id": "R209-CREDENTIAL-DEFAULTS",
+      "severity": "HIGH",
+      "status": "REPAIRED_CURRENT_SOURCE_DEFAULTS_EMPTY_AST_RED_GREEN_VERIFIED",
+      "finding": "Two hardcoded Twitch/Facebook stream-key defaults existed in the standalone broadcast component. Exactly those defaults are now empty; saved settings and handlers are preserved. No credential rotation, historical exposure assessment or clean-old-history claim is made. Original source/preimages remain private C-only and are excluded from cloud."
+    }
+  ],
+  "recovery": {
+    "preimages": "backups/record209_close_work/preimages",
+    "source_preimages": "C_BACKED_EXACT_BYTES",
+    "encrypted_full_source_binary_cloud": "BLOCKED_E_KEY_UNREADABLE_NO_RETRY_OR_NEW_KEY",
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "cloud_uploads_by_document_agent": false,
+    "local_source_closure_manifest": "backups/record209_source_closure_corrected/manifest.json",
+    "prior_private_source_closure": "backups/record209_source_closure/manifest.json (historical before credential-default fix; never uploaded)"
+  },
+  "limits": [
+    "Program preview was last observed OFF. Final ON attempts were blocked twice by the concurrent-user-input guard; root stopped inputs and advised the user to enable the checkbox manually. Visible source drafts are not evidence of an accepted runtime source change.",
+    "Installed v85 GUI held blank without a verified game. The independent HTTP decoder read black holding output; actual v85 live-game GUI rendering and final ON/after-toggle remain UNVERIFIED.",
+    "The user intentionally closed Fortnite and all studios and does not want games or the broadcast restarted for acceptance.",
+    "The 84 sender failed STATUS_WRITE_UNAVAILABLE before corrective 85 restoration; continuity was not uninterrupted.",
+    "Shared HLS source ACL/TOCTOU and prolonged Windows file-lock exhaustion remain open machine-trust/durability limits.",
+    "No Firebase deployment or hosting-parity claim. No all-games/workflows or RTMP dashboard certification.",
+    "Encrypted full-source/binary cloud recovery remains blocked by the unreadable existing E key. Sanitized uploads remain root-owned and are not completed by this agent.",
+    "Per-task tokens, active model time, costs and refunds remain unavailable; the account-wide 67 percent weekly snapshot is not task usage."
+  ],
+  "next_step": "Root commits scoped records and closes sanitized source/evidence in the existing single Drive folder, retaining outstanding limits and trading holds.",
+  "historical84": {
+    "version": "5.329.84",
+    "preview": "Actual embedded preview worked, and preview off/on preserved the same encoder before later failure. Final parent evidence references forthcoming.",
+    "terminal_failure": "STATUS_WRITE_UNAVAILABLE",
+    "controller_pid": 52852,
+    "encoder_pid": 43860,
+    "stop_command_sent_by_root": false,
+    "diagnostic": "Windows fixture proves Path.open readers deny os.replace with WinError5; local Qt/HLS playlist rename also produced Operation not permitted.",
+    "prior_native_guarded": {
+      "tests": 346,
+      "groups": 27,
+      "failures": 0,
+      "errors": 0,
+      "guard_denials": 0,
+      "receipt": "backups/native_broadcast207_work/guarded_native/run_1793477574952579600/receipt.json",
+      "self_pipe_allowance": {
+        "socket.__new__": 24,
+        "socket.bind": 12,
+        "socket.connect": 12
+      },
+      "operational_effects_authorized": false
+    },
+    "prior_preview_subsets": {
+      "preview_core": 11,
+      "preview_ui": 4,
+      "native_retirement": 5,
+      "overlap_notice": "Included within346; do not add overlapping focused suites."
+    },
+    "artifact_static": {
+      "receipt": "backups/native_preview209_work/artifact_review/static_media_artifact209.json",
+      "result": {
+        "utc": "2026-10-31T20:16:21.587077+00:00",
+        "status": "STATIC_MEDIA_ARTIFACT_VERIFIED",
+        "version": "5.329.84.0",
+        "native_modules_equivalent": 71,
+        "media_imports": [
+          "QMediaPlayer",
+          "QVideoSink",
+          "QVideoFrame"
+        ],
+        "backend_direct_dependencies_packaged": [
+          "Qt6Multimedia.dll",
+          "Qt6Gui.dll",
+          "Qt6Core.dll",
+          "avformat-61.dll",
+          "avcodec-61.dll",
+          "swresample-5.dll",
+          "swscale-8.dll",
+          "avutil-59.dll",
+          "MSVCP140.dll",
+          "VCRUNTIME140.dll",
+          "VCRUNTIME140_1.dll"
+        ],
+        "media_files": {
+          "_internal/PyQt6/QtMultimedia.pyd": "1f30fea8a3327be317ab426e0e09ec5b34efb07c7f27fd4c9402f4b705d8fb3f",
+          "_internal/PyQt6/Qt6/bin/Qt6Multimedia.dll": "7cd2a057ca7838c0cfbc405303c53351bb4701ba47c29666fcd8ed31f267c2be",
+          "_internal/PyQt6/Qt6/plugins/multimedia/ffmpegmediaplugin.dll": "f0913ee8f3d732640e23b90002e4fa720cc762c5807b05df4daafca400ad97ee"
+        },
+        "exe_sha256": "10c09a8e58541a71516209519b2eeccc7f3e59cd679b0a72a18780b5f84fb7bf",
+        "backend_modules": 0,
+        "qt_imported": false,
+        "application_executed": false,
+        "runtime_actions": 0,
+        "full_gui_certification": false
+      }
+    },
+    "independent_interop": {
+      "receipt": "backups/native_preview209_work/interop_review209.json",
+      "result": {
+        "utc": "2026-10-31T20:16:27.598965+00:00",
+        "result": "NO_NEW_BLOCKING_INTEROP_FINDING",
+        "source_sha256": {
+          "native_studio/broadcast_preview.py": "a90500f3e2f09b42c25bbef47628ad20636e3781de861ec9b4702014d261fb42",
+          "native_studio/broadcast_secondary_control.py": "1159e5cd2c6a06f60baa1100d7163a90bb3a047a1bd6955d2e1ab7224feed0da",
+          "native_studio/omni_broadcast_studio.py": "00a87e173539d374e0244631c9331f77457e15c42ef34072366fd1ae9fcfb620"
+        },
+        "reviewed": [
+          "Verified modern ownership epochs exported only after process identity validation",
+          "Positive encoder progress and HLS mtime tied to current encoder",
+          "Session/source/owner changes invalidate buffered callbacks",
+          "Delayed local-only read-only muted decoder separated from dispatch",
+          "Bounded retries, TTL and stale manifest clearing",
+          "No Qt import or execution in artifact inspection"
+        ],
+        "known_remaining": [
+          "Shared repository/HLS-directory ACL remains separate machine trust issue",
+          "Actual compiled UI playback verification remains parent-owned",
+          "Screen sharing held; audio is generated silence"
+        ],
+        "runtime_actions": 0,
+        "source_edits_in_review": 0
+      }
+    },
+    "installed_candidate": {
+      "receipt": "backups/native_preview_v84_20261031_record209/installation209.json",
+      "utc": "2026-10-31T20:16:32Z",
+      "status": "VERIFIED_WINDOWS_V84_INSTALLED",
+      "exe_sha256": "10c09a8e58541a71516209519b2eeccc7f3e59cd679b0a72a18780b5f84fb7bf",
+      "package_files": 2256,
+      "retained": true
+    }
+  },
+  "incident_usage_review": {
+    "report": "docs/audit/2026-10-30-complete/INCIDENT_AND_USAGE_REVIEW_RECORD209.md",
+    "summary": "docs/audit/2026-10-30-complete/INCIDENT_AND_USAGE_REVIEW_RECORD209.json",
+    "per_task_usage": "UNAVAILABLE",
+    "platform_outage": "NOT_CONFIRMED",
+    "support_submission": false,
+    "account_snapshot": "backups/native_preview_v85_20261031_record209/usage_snapshot209.json"
+  },
+  "window_closure": {
+    "classification": "USER_CONFIRMED_INTENTIONAL",
+    "resolution": "User explicitly confirmed closing Fortnite and all studios to prevent a failure loop. This is not classified as a crash or platform outage.",
+    "prior_observation": {
+      "window_utc": "2026-10-31T20:34Z_to20:35Z",
+      "classification": "UNATTRIBUTED_WINDOW_LOSS_USER_RESPONSE_PENDING",
+      "observed": "Fortnite and83/84/85visible app windows disappeared concurrently; hidden legacy78GUIprocess35288remained.",
+      "os_event_limit": "No Application1000/1001errors found in the queried previous8minutes; absence of those events does not prove no crash occurred.",
+      "sender": "Sender31084was present; log last-write20:34:11needed separate liveness verification. This observation alone is not a healthy-stream proof.",
+      "user_action": "Root asked whether the user closed applications; do not assume either user closure or crash.",
+      "next_action": "Root reopens only verified85through computer-use and checks actual preview/runtime.",
+      "attribution": "No confirmed platform outage or cause.",
+      "later_readonly_state": {
+        "utc": "2026-10-31T20:36:54.258841+00:00",
+        "basis": "SAVED_FILTERED_READONLY_RECEIPT",
+        "controller_pid": 36868,
+        "encoder_pid": 31084,
+        "both_alive": true,
+        "frames": 11906,
+        "media_seconds": 396.885,
+        "capture_state": "holding",
+        "holding_reason": "NO_VERIFIED_GAME",
+        "game_frame_verified": false,
+        "meaning": "Liveness with correct no-game holding; not85GUIpreview or remote-ingest acceptance.",
+        "receipt": "backups/native_preview_v85_20261031_record209/runtime/holding_advancement_readonly.json"
+      }
+    },
+    "current_runtime": "Existing sender correctly holds NO_VERIFIED_GAME after intentional game closure.",
+    "user_constraint": "Do not reopen games or restart the broadcast for acceptance.",
+    "application_reopen": "Verified85reopened/maximized and navigation recovered. Program preview checked, statusheld, canvas correctly blank because no verified game."
+  },
+  "actual_release_receipts": [
+    "backups/native_preview_v85_20261031_record209/runtime/final_runtime209.json",
+    "backups/native_preview_v85_20261031_record209/runtime/http_qt_probe/receipt.json",
+    "backups/native_preview_v85_20261031_record209/build_verification/build_independent_verification209.json",
+    "backups/native_preview_v85_20261031_record209/installation209.json",
+    "backups/native_preview_v85_20261031_record209/runtime/20261031T203059Z/soak.json"
+  ],
+  "final_user_constraint": "NO_MORE_SCREEN_CURSOR_CONTROL_OR_GUI_RETRIES_BACKEND_FRONTEND_OFFLINE_READONLY_ONLY"
+}

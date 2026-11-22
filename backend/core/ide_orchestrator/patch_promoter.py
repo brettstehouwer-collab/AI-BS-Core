@@ -1,6 +1,7 @@
 import os
 import json
 import subprocess
+import tempfile
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Dict, Any, Optional
@@ -11,7 +12,7 @@ from sandbox_runner import SubprocessSandboxRunner, SandboxResult
 
 @dataclass
 class PromotionResult:
-    status: str  # "PROMOTED", "BLOCKED_RISK", "BLOCKED_SANDBOX", "GIT_ERROR", "FILE_WRITE_ERROR"
+    status: str  # "PROMOTED", "BLOCKED_PATH", "BLOCKED_CONCURRENT", "BLOCKED_RISK", "BLOCKED_SANDBOX", "FILE_WRITE_ERROR"
     target_file: str
     risk_report: Dict[str, Any]
     sandbox_result: Dict[str, Any]
@@ -47,15 +48,20 @@ class PatchPromoter:
         new_code_content: str,
         test_script_code: Optional[str] = None
     ) -> PromotionResult:
-        full_target_path = self.workspace_root / rel_target_path
+        candidate_path = Path(rel_target_path)
+        full_target_path = (self.workspace_root / candidate_path).resolve()
+        if candidate_path.is_absolute() or not full_target_path.is_relative_to(self.workspace_root) or full_target_path == self.workspace_root:
+            return PromotionResult(
+                status="BLOCKED_PATH", target_file=rel_target_path, risk_report={},
+                sandbox_result={}, git_commit_hash=None, audit_log_path="",
+            )
         audit_dir = self.workspace_root / ".ide_audit_logs"
         audit_dir.mkdir(exist_ok=True)
         audit_file = audit_dir / f"promotion_{Path(rel_target_path).stem}.json"
 
-        # Read current code baseline for evaluation
-        current_code = ""
-        if full_target_path.exists():
-            current_code = full_target_path.read_text(encoding="utf-8")
+        # Retain exact baseline bytes before guest validation. Missing and empty
+        # files have distinct identities when checking concurrent changes.
+        baseline_bytes = full_target_path.read_bytes() if full_target_path.exists() else None
 
         # -------------------------------------------------------------
         # STEP 1: Implication Risk Evaluation
@@ -87,7 +93,7 @@ class PatchPromoter:
             test_script_code=test_script_code
         )
 
-        if sandbox_res.status != "PASSED":
+        if sandbox_res.status != "PASSED" or sandbox_res.isolation_verified is not True:
             res = PromotionResult(
                 status="BLOCKED_SANDBOX",
                 target_file=rel_target_path,
@@ -102,12 +108,40 @@ class PatchPromoter:
         # -------------------------------------------------------------
         # STEP 3: Host File System Write
         # -------------------------------------------------------------
+        temporary_path = None
+        publication_status = "FILE_WRITE_ERROR"
+
+        def verify_publication_target():
+            nonlocal publication_status
+            resolved = (self.workspace_root / candidate_path).resolve()
+            if resolved != full_target_path or not resolved.is_relative_to(self.workspace_root):
+                publication_status = "BLOCKED_PATH"
+                raise ValueError("Target path changed after validation")
+            current = full_target_path.read_bytes() if full_target_path.exists() else None
+            if current != baseline_bytes:
+                publication_status = "BLOCKED_CONCURRENT"
+                raise ValueError("Target bytes changed after validation")
+
         try:
+            verify_publication_target()
             full_target_path.parent.mkdir(parents=True, exist_ok=True)
-            full_target_path.write_text(new_code_content, encoding="utf-8")
+            # Stage on the same filesystem. A partial write or fsync failure
+            # never truncates the original; publication is one atomic replace.
+            with tempfile.NamedTemporaryFile(
+                mode="wb", dir=full_target_path.parent,
+                prefix=f".{full_target_path.name}.aibs_", suffix=".tmp", delete=False,
+            ) as staged:
+                temporary_path = Path(staged.name)
+                staged.write(new_code_content.encode("utf-8"))
+                staged.flush()
+                os.fsync(staged.fileno())
+            verify_publication_target()
+            os.replace(temporary_path, full_target_path)
+            temporary_path = None
+            sandbox_res.patch_applied = True
         except Exception as e:
             res = PromotionResult(
-                status="FILE_WRITE_ERROR",
+                status=publication_status,
                 target_file=rel_target_path,
                 risk_report=asdict(risk_report),
                 sandbox_result=asdict(sandbox_res),
@@ -116,6 +150,12 @@ class PatchPromoter:
             )
             self._write_audit_log(audit_file, res)
             return res
+        finally:
+            if temporary_path is not None:
+                try:
+                    temporary_path.unlink(missing_ok=True)
+                except OSError:
+                    pass  # Preserve an unremovable task-owned staging file for recovery.
 
         # -------------------------------------------------------------
         # STEP 4: Optional Git Working Tree Commit

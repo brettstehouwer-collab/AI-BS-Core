@@ -1,0 +1,116 @@
+{
+  "at": "2026-11-03T15:53:45.958840+00:00",
+  "classification": "progress: both canonical current-content routes verified and fresh native walkthroughs recorded/decoded/visually sampled/authenticated cloud-restored",
+  "previous_goal_turn": "Progress: exact physical return failure fixed/tested,27CPUchecks and timeout input diagnostics; checkpoint37A verified.",
+  "goal_complete": false,
+  "reports": [
+    "D:\\T36\\CurrentWorkshopR01\\repair-R05\\route.json",
+    "D:\\T36\\CurrentWorkshopR01\\repair-R06-recorded\\route.json",
+    "D:\\T36\\CurrentWorkshopR01\\bypass-R05\\route.json",
+    "D:\\T36\\CurrentWorkshopR01\\bypass-R06-recorded\\route.json"
+  ],
+  "videos": {
+    "repair": {
+      "file_id": "1-9W_0Aqatt4DmqPNK_GjfXZCCJvcI3tB",
+      "url": "https://drive.google.com/file/d/1-9W_0Aqatt4DmqPNK_GjfXZCCJvcI3tB/view?usp=drivesdk",
+      "bytes": 10551596,
+      "sha256": "bf6fd58bcf99f1b79b75a677aa35a24bc3146c25ea77dd2aec6aaa83b328ae9c",
+      "duration_seconds": 89.428,
+      "encoder": "h264_nvenc",
+      "raw_authenticated_restore_verified": true,
+      "decoded_full_source_video": true,
+      "audio_streams": 0
+    },
+    "bypass": {
+      "file_id": "1fmQaett3Lncx6JXB1JCvTwxqQ7P7ZjRW",
+      "url": "https://drive.google.com/file/d/1fmQaett3Lncx6JXB1JCvTwxqQ7P7ZjRW/view?usp=drivesdk",
+      "bytes": 9898830,
+      "sha256": "cc6c6e1f27e757acb569663d477e44153199b38ea23d5fe7040d1f5326cf275d",
+      "duration_seconds": 89.43,
+      "encoder": "h264_nvenc",
+      "raw_authenticated_restore_verified": true,
+      "decoded_full_source_video": true,
+      "audio_streams": 0
+    }
+  },
+  "visual_review": {
+    "reviewed_images": [
+      "repair-early.png",
+      "repair-middle.png",
+      "repair-late.png",
+      "repair-action-55.png",
+      "bypass-late.png"
+    ],
+    "findings": [
+      "Memory text/source/footer fit sampled native panels; default white Win32 styling and small text remain prototype presentation.",
+      "Repair55s shows Adam very close to the camera with part of the model filling the left foreground; investigate close-camera fading/clearance. Physics remains nonblocking; likeness/presentation is not accepted as final.",
+      "Bypass late sample shows the animated companion beside the shelter reading station."
+    ],
+    "coverage": "Sampled visual review plus full codec decode; not an every-frame artistic review or human pacing/likeness approval."
+  },
+  "candidate_exe": {
+    "path": "D:\\AI-BS-Game-Resources\\P36\\CurrentWorkshopTour\\build\\Release\\aibs_current_workshop_tour.exe",
+    "sha256": "91add0481312e1352cc325cc80cdd1aaea6ca26852bc336ec16fa51416c5faac"
+  },
+  "prior_failures_preserved": "P36R01/R02 and P37R03/R04 remain retained; no cause for the transient post-door timeout is inferred from later passes.",
+  "creator_memory_wording_feedback": {
+    "at": "2026-11-03T15:55:31.176841+00:00",
+    "question": "After watching the current repair walkthrough, do Adam\u2019s written guidance and the memory panels feel true to your story, or is there wording you want changed?",
+    "user_answer": "works for now",
+    "decision": "Keep current authored guidance and memory-panel wording for now.",
+    "scope": "Interim text/story feedback only; no final likeness,original-recording caption,pacing,performance or release approval is inferred."
+  },
+  "remaining": "Close-camera companion occlusion, final naturalistic likeness/animation presentation, supported settings/audio/caption review as retained, actual1080p performance and8\u201312minute human pacing, full regression/release/launcher acceptance and final source/art backup.",
+  "installed": "Studio102/SDK0.16.3 unchanged; current canonical candidate is not deployed",
+  "next_step": "Address close-camera companion obstruction observed in the repair preview, then measure current opening performance with explicit no-focus-stealing behavior and complete full SDK/Studio package regression. Preserve original scope and request human pacing/likeness review on a usable release.",
+  "space_free_bytes": {
+    "C": 68310306816,
+    "D": 86386188288,
+    "E": 146813599744
+  },
+  "backup38B": {
+    "status": "verified_authenticated_raw_restore_all_members_and_both_videos",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\38B_Current_Tours_Candidate_And_Creator_Feedback.zip",
+    "bytes": 9588249,
+    "sha256": "3989ef25131af64df74185e3c6a46ab9f0b26c17a40b90c9ad8a0cece49a953a",
+    "members": 136,
+    "goal_complete": false,
+    "videos_authenticated_restore_verified": true,
+    "at": "2026-11-03T15:57:54.465373+00:00",
+    "file_id": "1gvvsWNCPvfvJqVJMBtNuW1EF8uVUg4M8",
+    "folder_id": "1LKnRKWdsEqANQQpNGaJ8BQr9hsxtqV8D",
+    "url": "https://drive.google.com/file/d/1gvvsWNCPvfvJqVJMBtNuW1EF8uVUg4M8/view?usp=drivesdk",
+    "all_member_sizes_hashes_crc_and_exact_set_verified": true,
+    "videos": {
+      "repair": {
+        "file_id": "1-9W_0Aqatt4DmqPNK_GjfXZCCJvcI3tB",
+        "url": "https://drive.google.com/file/d/1-9W_0Aqatt4DmqPNK_GjfXZCCJvcI3tB/view?usp=drivesdk",
+        "bytes": 10551596,
+        "sha256": "bf6fd58bcf99f1b79b75a677aa35a24bc3146c25ea77dd2aec6aaa83b328ae9c",
+        "duration_seconds": 89.428,
+        "encoder": "h264_nvenc",
+        "raw_authenticated_restore_verified": true,
+        "decoded_full_source_video": true,
+        "audio_streams": 0
+      },
+      "bypass": {
+        "file_id": "1fmQaett3Lncx6JXB1JCvTwxqQ7P7ZjRW",
+        "url": "https://drive.google.com/file/d/1fmQaett3Lncx6JXB1JCvTwxqQ7P7ZjRW/view?usp=drivesdk",
+        "bytes": 9898830,
+        "sha256": "cc6c6e1f27e757acb569663d477e44153199b38ea23d5fe7040d1f5326cf275d",
+        "duration_seconds": 89.43,
+        "encoder": "h264_nvenc",
+        "raw_authenticated_restore_verified": true,
+        "decoded_full_source_video": true,
+        "audio_streams": 0
+      }
+    },
+    "creator_wording": "works for now; current wording retained; other acceptance remains pending",
+    "release_acceptance": "Internal canonical candidate only; not deployed, no final likeness/pacing/performance approval"
+  },
+  "space_free_bytes_closeout": {
+    "C": 68305383424,
+    "D": 86357401600,
+    "E": 146813599744
+  }
+}

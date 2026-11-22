@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-05T00:27:54.818613+00:00",
+  "status": "fresh_D_release_build_running",
+  "exec_session": 36918,
+  "source_root": "D:/S174R2",
+  "build_root": "D:/B174R2",
+  "TEMP": "D:/T174R2",
+  "native_evidence_root": "D:/R174R2",
+  "source_files": 563,
+  "goal_complete": false,
+  "E_build_writes": false,
+  "sampled_E_review": "D:\\AI-BS-Game-Resources\\P110\\SDK174Recovery\\E-recovery-sampled-review.json",
+  "safe_free_GiB": {
+    "C": 262.84,
+    "D": 97.25
+  },
+  "previous_goal_turn_classification": "progress_source_backup_and_user_requested_pause_then_explicit_resume",
+  "next_step": "Poll the existing D Release rebuild session36918; do not restart from observation timeout. After Release/focused test and preview staging pass, run actual consistent174native third-person E plus both full routes using isolated saves. Then full registered Release/Debug suites and staged/relocated SDK consumers, fresh Studio candidate and verified backup. Keep E read-only for build work; do not reuse interrupted E174products. Preserve all prior releases, originals and real saves. Final likeness/captions/human pacing/current1080p60 remain open."
+}

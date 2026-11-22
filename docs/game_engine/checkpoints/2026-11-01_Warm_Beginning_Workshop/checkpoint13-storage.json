@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "archive_root": "D:\\AI-BS-Game-Resources\\Archived_Test_Evidence\\20261102T074409Z",
+  "manifest": "D:\\AI-BS-Game-Resources\\Archived_Test_Evidence\\20261102T074409Z\\manifest.json",
+  "before_free_bytes": {
+    "C": 75196112896,
+    "E": 146813599744,
+    "D": 180876095488
+  },
+  "after_free_bytes": {
+    "C": 84027465728,
+    "E": 146813599744,
+    "D": 172002127872
+  },
+  "reclaimed_c_bytes": 8831352832,
+  "files": [
+    7678,
+    4413
+  ],
+  "manifest_sha256": "5d2368435ff7a4ed047c1e11f8d8e39121ebcda9e46b36c26fff55d205f49285",
+  "independent_audit": {
+    "scope": "all counts/lengths/paths and8sample hashes",
+    "status": "passed",
+    "full_hash_repeat": false
+  },
+  "recorded_at": "2026-11-02T07:51:33.606414+00:00"
+}

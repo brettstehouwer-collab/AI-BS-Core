@@ -1,0 +1,15 @@
+# AI-BS Hierarchical Memory Configuration
+chunk_size: 256
+
+# Tier 2: System DDR5 Memory Buffer
+local_cpu: true
+max_local_cpu_size: 16.0  # GB
+
+# Tier 3: High-Speed NVMe Storage Tier
+# In WSL2, native ext4 filesystem (/var/lib/ai_bs_kv or /tmp/ai_bs_kv) delivers maximum I/O throughput
+local_disk: "file:///var/lib/ai_bs_kv/"
+max_local_disk_size: 1000.0  # GB (1 TB threshold)
+
+# Asynchronous DMA & Pipelining
+async_save: true
+pipelined_backend: true

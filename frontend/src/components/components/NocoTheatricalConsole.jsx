@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export default function NocoTheatricalConsole() {
   // Master Production Mode
@@ -10,20 +10,20 @@ export default function NocoTheatricalConsole() {
   const [colorTemp, setColorTemp] = useState(2800); // 2200K - 6500K
   const [hazeDensity, setHazeDensity] = useState(35); // 0 - 100%
   const [growLightBlend, setGrowLightBlend] = useState(true);
-  const [movingHeadSpeed, setMovingHeadSpeed] = useState(50);
+  const [] = useState(50);
 
   // Audio Telemetry & VU Meters
   const [leftVu, setLeftVu] = useState(72);
   const [rightVu, setRightVu] = useState(75);
-  const [cardioidRejectionDb, setCardioidRejectionDb] = useState(18.5); // dB rear attenuation
+  const [cardioidRejectionDb] = useState(18.5); // dB rear attenuation
   const [isSubwooferCardioid, setIsSubwooferCardioid] = useState(true);
-  const [selectedMicChannel, setSelectedMicChannel] = useState('mic1');
+  const [] = useState('mic1');
 
   // Teleprompter & Setlist State
   const [activeSongIndex, setActiveSongIndex] = useState(0);
   const [isPrompterScrolling, setIsPrompterScrolling] = useState(false);
   const [prompterSpeed, setPrompterSpeed] = useState(3);
-  const [prompterFontSize, setPrompterFontSize] = useState(22);
+  const [prompterFontSize] = useState(22);
   const [isMirroredPrompter, setIsMirroredPrompter] = useState(false);
   const [scrollOffset, setScrollOffset] = useState(0);
 
@@ -84,6 +84,7 @@ Found the quiet frequency that the machine hid...`
 
   // Auto-scroll simulation for teleprompter
   useEffect(() => {
+    /** @type {ReturnType<typeof setInterval> | undefined} */
     let interval;
     if (isPrompterScrolling) {
       interval = setInterval(() => {
@@ -107,7 +108,8 @@ Found the quiet frequency that the machine hid...`
     return () => clearInterval(vuInterval);
   }, [productionMode]);
 
-  const lightingPresets = {
+  /** @type {Record<string, {"name": string, "temp": number, "dim": number, "haze": number, "color": string}>} */
+const lightingPresets = {
     sunset: { name: '🌅 Warm Acoustic Sunset', temp: 2400, dim: 75, haze: 20, color: '#f59e0b' },
     cyberpunk: { name: '🌌 Cyberpunk Neon Violet', temp: 5600, dim: 90, haze: 65, color: '#c084fc' },
     emerald: { name: '🌿 Living Greenhouse Emerald', temp: 4000, dim: 70, haze: 30, color: '#10b981' },
@@ -115,7 +117,8 @@ Found the quiet frequency that the machine hid...`
     spotlight: { name: '🎭 Dramatic Key Spotlight', temp: 3200, dim: 85, haze: 15, color: '#f8fafc' }
   };
 
-  const applyPreset = (key) => {
+  /** @param {string} key */
+const applyPreset = ( key) => {
     setActiveLightingPreset(key);
     const p = lightingPresets[key];
     if (p) {
@@ -213,7 +216,8 @@ Found the quiet frequency that the machine hid...`
 
           {/* Quick Presets */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '16px' }}>
-            {Object.keys(lightingPresets).map(key => (
+            {Object.keys(lightingPresets).map( 
+key => (
               <button
                 key={key}
                 onClick={() => applyPreset(key)}

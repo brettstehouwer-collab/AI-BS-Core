@@ -1,0 +1,12 @@
+{
+  "schema_version":1,
+  "asset_id":"4b079cd2-8ace-4e17-a35b-a45eb8f3d1c2",
+  "name":"Bypass parts bench and copper approach kit v01",
+  "source":{"sha256":"bec266e7a31e67ea4ca40b70612ff5d4658649d64c07937547cee4ce0ad9c7ef","bytes":356028},
+  "materials":{"sha256":"d634495ef978702b0f3108125a0f9c6c2b6ad7c10dc8b93ebedded9be3a24e99","bytes":369},
+  "license":{"sha256":"e6af6d800c9dd4c988e80d4cbbee98824177ee501ba84a8ec8e794eb054a9a53","bytes":631},
+  "license_review":"Supplied declaration copied verbatim; ownership/permission not inferred",
+  "importer":{"name":"aibs-obj","format_version":1},
+  "options":{"units":"meters","up_axis":"+Y","axis_conversion":"none","material_model":"opaque-base-color-emission-v1","external_material_libraries":"ignored-explicit-material-table-only"},
+  "cooked":{"file":"c4dfcb03624113a73092a1cd6ff02cad3c4df9fc3d63d81a243fade865564243.aibmesh","sha256":"c4dfcb03624113a73092a1cd6ff02cad3c4df9fc3d63d81a243fade865564243","bytes":139206}
+}

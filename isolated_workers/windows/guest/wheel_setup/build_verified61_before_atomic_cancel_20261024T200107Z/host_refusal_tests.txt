@@ -1,0 +1,3 @@
+PASS actual host entry [] exit=2
+PASS actual host entry [--check-identity] exit=2
+PASS actual host entry [--test-bypass] exit=64

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:aibs:ui-tokens:1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "name", "font_family", "colors", "spacing", "radius", "typography", "density", "layout"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "name": {"const": "aibs-fluent-zinc"},
+    "font_family": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9 ]{1,50}$"},
+    "colors": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canvas", "surface", "raised", "hover", "border", "divider", "text", "muted", "cyan", "violet", "ready", "warning", "error", "unavailable"],
+      "properties": {
+        "canvas": {"$ref": "#/$defs/color"}, "surface": {"$ref": "#/$defs/color"},
+        "raised": {"$ref": "#/$defs/color"}, "hover": {"$ref": "#/$defs/color"},
+        "border": {"$ref": "#/$defs/color"}, "divider": {"$ref": "#/$defs/color"},
+        "text": {"$ref": "#/$defs/color"}, "muted": {"$ref": "#/$defs/color"},
+        "cyan": {"$ref": "#/$defs/color"}, "violet": {"$ref": "#/$defs/color"},
+        "ready": {"$ref": "#/$defs/color"}, "warning": {"$ref": "#/$defs/color"},
+        "error": {"$ref": "#/$defs/color"}, "unavailable": {"$ref": "#/$defs/color"}
+      }
+    },
+    "spacing": {"type": "object", "required": ["xs", "sm", "md", "lg", "xl", "xxl"], "propertyNames": {"enum": ["xs", "sm", "md", "lg", "xl", "xxl"]}, "additionalProperties": {"$ref": "#/$defs/size"}},
+    "radius": {"type": "object", "required": ["control", "card", "pill"], "propertyNames": {"enum": ["control", "card", "pill"]}, "additionalProperties": {"$ref": "#/$defs/size"}},
+    "typography": {"type": "object", "required": ["body", "caption", "section", "title", "metric"], "propertyNames": {"enum": ["body", "caption", "section", "title", "metric"]}, "additionalProperties": {"$ref": "#/$defs/size"}},
+    "density": {"type": "object", "required": ["normal", "mom"], "additionalProperties": false, "properties": {"normal": {"const": 1}, "mom": {"type": "number", "minimum": 1.2, "maximum": 1.5}}},
+    "layout": {"type": "object", "required": ["rail", "rail_expanded", "content_max", "focus", "control_height"], "propertyNames": {"enum": ["rail", "rail_expanded", "content_max", "focus", "control_height"]}, "additionalProperties": {"$ref": "#/$defs/size"}}
+  },
+  "$defs": {"color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}, "size": {"type": "integer", "minimum": 1, "maximum": 1600}}
+}

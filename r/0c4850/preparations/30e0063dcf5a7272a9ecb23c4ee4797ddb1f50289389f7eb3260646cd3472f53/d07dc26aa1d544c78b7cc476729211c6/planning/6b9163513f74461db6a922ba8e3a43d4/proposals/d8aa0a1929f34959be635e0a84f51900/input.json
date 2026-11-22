@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "d07dc26aa1d544c78b7cc476729211c6",
+  "plan_id": "6b9163513f74461db6a922ba8e3a43d4",
+  "snapshot_sha256": "b878b34db5a30803b8f479b1167fc3e180a0742b21ecaca2cc1759d6999c0ee6",
+  "review_digest": "e29145b3bf6f215b488a603f51e8228c34427546f1fbfde2a54e312be5016752",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "d8aa0a1929f34959be635e0a84f51900",
+  "reviewed_plan_sha256": "70acf15d1b52b1d62f9ce43ae74739c791fae231433bb3148b5a7eabb58ff190",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 25572,
+    "created": 1794664365.8543262
+  },
+  "created_at_utc": "2026-11-14T13:52:48.362115+00:00",
+  "entry_sha256": "a945c329e8f471fcbcc0559930ddc1dd4766ba58754e8a673698181bb0a609e7"
+}

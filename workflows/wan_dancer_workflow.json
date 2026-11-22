@@ -1,0 +1,64 @@
+{
+  "1": {
+    "inputs": {
+      "model_name": "wan_dancer_14B_fp8.safetensors",
+      "weight_dtype": "fp8_e4m3fn"
+    },
+    "class_type": "WanDancerModelLoader"
+  },
+  "2": {
+    "inputs": {
+      "text_encoder_name": "umt5_xxl_fp8_e4m3fn.safetensors"
+    },
+    "class_type": "WanTextEncoderLoader"
+  },
+  "3": {
+    "inputs": {
+      "vae_name": "wan_2.1_vae.safetensors"
+    },
+    "class_type": "WanVAELoader"
+  },
+  "4": {
+    "inputs": {
+      "image": "character_ref.png",
+      "upload": "image"
+    },
+    "class_type": "LoadImage"
+  },
+  "5": {
+    "inputs": {
+      "prompt": "cinematic character dancing, fluid motion, studio lighting",
+      "text_encoder": ["2", 0]
+    },
+    "class_type": "WanTextEncode"
+  },
+  "6": {
+    "inputs": {
+      "model": ["1", 0],
+      "conditioning": ["5", 0],
+      "reference_image": ["4", 0],
+      "seed": 42,
+      "steps": 30,
+      "cfg": 6.0,
+      "width": 720,
+      "height": 1280,
+      "length_frames": 81
+    },
+    "class_type": "WanDancerSampler"
+  },
+  "7": {
+    "inputs": {
+      "samples": ["6", 0],
+      "vae": ["3", 0]
+    },
+    "class_type": "WanVAEDecode"
+  },
+  "8": {
+    "inputs": {
+      "images": ["7", 0],
+      "fps": 24,
+      "filename_prefix": "WanDancer_Output"
+    },
+    "class_type": "SaveAnimatedWEBP"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "state": "NEEDS_CLARIFICATION",
+  "input_sha256": "c9f3e4c673b06d050aaffb44fe3ea9ce45a60966264f7a05b25468ac59e96ea0",
+  "proposal": {
+    "summary": "Value choice unresolved.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Change only after clarification."
+      }
+    ],
+    "questions": [
+      "Should this use42 or43?"
+    ]
+  },
+  "error_code": null,
+  "finished_at_utc": "2026-11-14T13:59:29.538520+00:00",
+  "elapsed_seconds": 0.015,
+  "response_sha256": "5f8f36503389be5cfa6dd95efa16f415cebe1a51c2be9f2aeadeb762ab22c493",
+  "response_bytes": 162,
+  "public_json": {
+    "summary": "Value choice unresolved.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Change only after clarification."
+      }
+    ],
+    "questions": [
+      "Should this use42 or43?"
+    ]
+  },
+  "entry_sha256": "618f4d96ee75a869f742fc25d62bf2e78f01524bad9d9cbeae2b00a9554e2662"
+}

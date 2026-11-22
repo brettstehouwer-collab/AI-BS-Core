@@ -1,0 +1,79 @@
+{
+  "kind": "project_preparation",
+  "request_id": "e612286eb00b4e51b32c03e81630df52",
+  "owner": "firebase:ai-bs-dashboard:Y0WF5eDChuSrVUdXQoWTMs6oyUE2",
+  "plan": {
+    "request_id": "e612286eb00b4e51b32c03e81630df52",
+    "repository_id": "ai-bs",
+    "objective": "Implement clamp(value, lower, upper) in app.py: return lower below the lower bound, upper above the upper bound, otherwise value. Assume lower <= upper. Preserve the function signature and existing tests.",
+    "files": [
+      {
+        "relative_path": "app.py",
+        "role": "editable"
+      },
+      {
+        "relative_path": "test_app.py",
+        "role": "verification"
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "profile": "python_unittest",
+        "targets": [
+          "test_app"
+        ]
+      }
+    ],
+    "limits": {
+      "check_seconds": 30,
+      "total_seconds": 180,
+      "output_bytes": 262144
+    }
+  },
+  "plan_sha256": "6a4140dd02bff5e2a7d965a6073bb8ecec50e83c4bd2fe8a84d75a64b673e67a",
+  "repository_policy_sha256": "76a7c436fb17d74208fa8b7ca6661ca25224125a8c7b5083263135c3c498d33e",
+  "snapshot": {
+    "schema_version": 1,
+    "state": "SNAPSHOT_ONLY",
+    "authorized": false,
+    "executed": false,
+    "commit": "66135a08a2b8bd4e20cc04e02a4f069a373d8115",
+    "files": [
+      {
+        "relative_path": "app.py",
+        "role": "editable",
+        "length": 49,
+        "sha256": "431f7ff295b4b180e99157c8bd2d5191459f8b8511799b90808ce71bc5ccc556"
+      },
+      {
+        "relative_path": "test_app.py",
+        "role": "verification",
+        "length": 303,
+        "sha256": "965a9f7b9d3d826245ecd2d02f1d9175c1be86d1969cef31189580ed83c38b3c"
+      }
+    ],
+    "byte_count": 352,
+    "captured_at_utc": "2026-11-14T23:21:50.548760+00:00",
+    "snapshot_sha256": "5994319ce5997ac6fad1edac30aa5c4624eeffe8bf10d39db45daf830f512c5e"
+  },
+  "checks": [
+    {
+      "check_id": "python",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "test_app"
+      ]
+    }
+  ],
+  "review_digest": "2318c03a49c504ce3c3f8d35fea0badf582bdb9b7ea0fc0c57c85543cc92eeca",
+  "state": "PREPARING",
+  "worker": {
+    "pid": 55908,
+    "created": 1794697973.2263496
+  },
+  "created_at_utc": "2026-11-14T23:21:50.548760+00:00",
+  "entry_sha256": "0ca0f1bdc1e739ed95cd85b8448d9206064b3ef6b9f331393eee6559bae25797"
+}

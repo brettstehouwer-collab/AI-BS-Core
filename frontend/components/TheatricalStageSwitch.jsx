@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import './TheatricalStageSwitch.css'; // Assuming we might add specific styles
 
 const TheatricalStageSwitch = () => {

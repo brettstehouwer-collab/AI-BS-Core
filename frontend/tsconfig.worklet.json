@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "WebWorker"
+    ],
+    "types": [],
+    "moduleDetection": "force"
+  },
+  "files": [],
+  "include": [
+    "public/vst-worklet.js",
+    "types/audio-worklet-env.d.ts"
+  ]
+}

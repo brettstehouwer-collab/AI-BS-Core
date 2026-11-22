@@ -1,0 +1,81 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "db2c7cc1bee5424dadeb8313b8e1375b",
+  "plan_id": "ef2456b4cdfa49b18ac76580b3c083be",
+  "snapshot_sha256": "bc81efbbae099680a813707ae4ac91ac5ac38dc9d670ba5c2784fc97c9e2cb77",
+  "review_digest": "b94f2ccd5fef33246f88063a2c325468c16cc26ea909a6ecfb9e153347c248dc",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "b017419aa57e4c82a51cec968fc42c74",
+  "reviewed_plan_sha256": "e49fa3ccd71512706343e06992d5c592230c37e94a39ee3d470b594c123e1b6f",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        },
+        {
+          "path": "src/other.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "9f70b36f029addc92c78901796a906f8ed8b74cdb05b22e7c5c4e08727f7ff56",
+        "content": "import unittest, runpy\r\nclass Check(unittest.TestCase):\r\n def test_value(self):\r\n  self.assertEqual(runpy.run_path(\"src/app.py\")[\"value\"], 42)\r\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/__init__.py",
+        "role": "dependency",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content": "",
+        "source_complete": true
+      },
+      {
+        "path": "src/other.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py",
+      "src/other.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "2f702a06407da32d42d3c3fcda0b5abad3055ca9d4fbb3c1f3fb427a4b4965bf",
+  "worker": {
+    "pid": 37348,
+    "created": 1794718693.242895
+  },
+  "created_at_utc": "2026-11-15T04:58:19.265140+00:00",
+  "entry_sha256": "9ed44f1fd7798a49bfacd59f142e20ab7ef65a04d1933571e9a83e0ab045f190"
+}

@@ -1,0 +1,355 @@
+ID,Date,Type,Category,Description,Amount,Schedule_C,Receipt
+8,2026-09-13,expense,Software & Computing Operations,"🚨
+
+🚨 🌸 MOM VERSION — CLICK HERE FOR BIG TEXT & EASY VIEW 🌸 🚨
+⚠️ Click to enlarge text and boost readability for Julie / Mom.
+🧠
+Neural Intelligence & IDE
+◀
+
+💻
+BS-CHAT Developer IDE
+
+🎮
+🎮 Gaming & Process Memory Lab
+
+🧠
+Deep Learning Studio
+
+💾
+Agent Memory & ChromaDB Vault
+
+⚡
+Self-Refinement & Attention
+
+🎭
+🎭 Lexicon Engine Dashboard
+
+📖
+Definitions & Architectural Lore
+
+🎓
+Educational Modules
+▶
+💬
+AI-BS Autonomous Agentic IDE Chat
+● Single-Pane Active (Phase 7 Sandbox)
+↔ Toggle Split View
+STEHOUWER LLM CENTRAL HUB
+Active Model:
+
+⚡ Stehouwer LLM (Unified Swarm System)
+Target:
+
+🖥️ Host PC (Local)
+⚡ 70+ DBs Ready (2ms)
+🛠️ 8 Master Tools
+🎨 ComfyUI Port 8189
+🔗 Share IDE
+
+💾
+Save to Memory & Clear
+⚡ 18 Quick Starters
+
+🎯
+Mission Control
+
+🔥
+Grill Architecture
+💡 IDE Guide
+👤 You
+/ingest Name,Shell Command Shortcut
+3D Objects,""explorer """"shell:3D Objects""""""
+AccountPictures,""explorer """"shell:AccountPictures""""""
+AddNewProgramsFolder,""explorer """"shell:AddNewProgramsFolder""""""
+Administrative Tools,""explorer """"shell:Administrative Tools""""""
+AppData,""explorer """"shell:AppData""""""
+AppDataDesktop,""explorer """"shell:AppDataDesktop""""""
+AppDataDocuments,""explorer """"shell:AppDataDocuments""""""
+AppDataFavorites,""explorer """"shell:AppDataFavorites""""""
+AppDataProgramData,""explorer """"shell:AppDataProgramData""""""
+Application Shortcuts,""explorer """"shell:Application Shortcuts""""""
+AppMods,""explorer """"shell:AppMods""""""
+AppsFolder,""explorer """"shell:AppsFolder""""""
+AppUpdatesFolder,""explorer """"shell:AppUpdatesFolder""""""
+Cache,""explorer """"shell:Cache""""""
+Camera Roll,""explorer """"shell:Camera Roll""""""
+CameraRollLibrary,""explorer """"shell:CameraRollLibrary""""""
+Captures,""explorer """"shell:Captures""""""
+CD Burning,""explorer """"shell:CD Burning""""""
+ChangeRemoveProgramsFolder,""explorer """"shell:ChangeRemoveProgramsFolder""""""
+Common Administrative Tools,""explorer """"shell:Common Administrative Tools""""""
+Common AppData,""explorer """"shell:Common AppData""""""
+Common Desktop,""explorer """"shell:Common Desktop""""""
+Common Documents,""explorer """"shell:Common Documents""""""
+Common Programs,""explorer """"shell:Common Programs""""""
+Common Start Menu,""explorer """"shell:Common Start Menu""""""
+Common Start Menu Places,""explorer """"shell:Common Start Menu Places""""""
+Common Startup,""explorer """"shell:Common Startup""""""
+Common Templates,""explorer """"shell:Common Templates""""""
+CommonDownloads,""explorer """"shell:CommonDownloads""""""
+CommonMusic,""explorer """"shell:CommonMusic""""""
+CommonPictures,""explorer """"shell:CommonPictures""""""
+CommonRingtones,""explorer """"shell:CommonRingtones""""""
+CommonVideo,""explorer """"shell:CommonVideo""""""
+ConflictFolder,""explorer """"shell:ConflictFolder""""""
+ConnectionsFolder,""explorer """"shell:ConnectionsFolder""""""
+Contacts,""explorer """"shell:Contacts""""""
+ControlPanelFolder,""explorer """"shell:ControlPanelFolder""""""
+Cookies,""explorer """"shell:Cookies""""""
+CredentialManager,""explorer """"shell:CredentialManager""""""
+CryptoKeys,""explorer """"shell:CryptoKeys""""""
+CSCFolder,""explorer """"shell:CSCFolder""""""
+Desktop,""explorer """"shell:Desktop""""""
+Development Files,""explorer """"shell:Development Files""""""
+Device Metadata Store,""explorer """"shell:Device Metadata Store""""""
+DocumentsLibrary,""explorer """"shell:DocumentsLibrary""""""
+Downloads,""explorer """"shell:Downloads""""""
+DpapiKeys,""explorer """"shell:DpapiKeys""""""
+Favorites,""explorer """"shell:Favorites""""""
+Fonts,""explorer """"shell:Fonts""""""
+GameTasks,""explorer """"shell:GameTasks""""""
+History,""explorer """"shell:History""""""
+ImplicitAppShortcuts,""explorer """"shell:ImplicitAppShortcuts""""""
+InternetFolder,""explorer """"shell:InternetFolder""""""
+Libraries,""explorer """"shell:Libraries""""""
+Links,""explorer """"shell:Links""""""
+Local AppData,""explorer """"shell:Local AppData""""""
+Local Documents,""explorer """"shell:Local Documents""""""
+Local Downloads,""explorer """"shell:Local Downloads""""""
+Local Music,""explorer """"shell:Local Music""""""
+Local Pictures,""explorer """"shell:Local Pictures""""""
+Local Videos,""explorer """"shell:Local Videos""""""
+LocalAppDataLow,""explorer """"shell:LocalAppDataLow""""""
+LocalizedResourcesDir,""explorer """"shell:LocalizedResourcesDir""""""
+MAPIFolder,""explorer """"shell:MAPIFolder""""""
+MusicLibrary,""explorer """"shell:MusicLibrary""""""
+My Music,""explorer """"shell:My Music""""""
+My Pictures,""explorer """"shell:My Pictures""""""
+My Video,""explorer """"shell:My Video""""""
+MyComputerFolder,""explorer """"shell:MyComputerFolder""""""
+NetHood,""explorer """"shell:NetHood""""""
+NetworkPlacesFolder,""explorer """"shell:NetworkPlacesFolder""""""
+OEM Links,""explorer """"shell:OEM Links""""""
+OneDrive,""explorer """"shell:OneDrive""""""
+OneDriveCameraRoll,""explorer """"shell:OneDriveCameraRoll""""""
+OneDriveDocuments,""explorer """"shell:OneDriveDocuments""""""
+OneDriveMusic,""explorer """"shell:OneDriveMusic""""""
+OneDrivePictures,""explorer """"shell:OneDrivePictures""""""
+Original Images,""explorer """"shell:Original Images""""""
+Personal,""explorer """"shell:Personal""""""
+PhotoAlbums,""explorer """"shell:PhotoAlbums""""""
+PicturesLibrary,""explorer """"shell:PicturesLibrary""""""
+Playlists,""explorer """"shell:Playlists""""""
+PrintersFolder,""explorer """"shell:PrintersFolder""""""
+PrintHood,""explorer """"shell:PrintHood""""""
+Profile,""explorer """"shell:Profile""""""
+ProgramFiles,""explorer """"shell:ProgramFiles""""""
+ProgramFilesCommon,""explorer """"shell:ProgramFilesCommon""""""
+ProgramFilesCommonX64,""explorer """"shell:ProgramFilesCommonX64""""""
+ProgramFilesCommonX86,""explorer """"shell:ProgramFilesCommonX86""""""
+ProgramFilesX64,""explorer """"shell:ProgramFilesX64""""""
+ProgramFilesX86,""explorer """"shell:ProgramFilesX86""""""
+Programs,""explorer """"shell:Programs""""""
+Public,""explorer """"shell:Public""""""
+PublicAccountPictures,""explorer """"shell:PublicAccountPictures""""""
+PublicGameTasks,""explorer """"shell:PublicGameTasks""""""
+PublicLibraries,""explorer """"shell:PublicLibraries""""""
+Quick Launch,""explorer """"shell:Quick Launch""""""
+Recent,""explorer """"shell:Recent""""""
+Recorded Calls,""explorer """"shell:Recorded Calls""""""
+RecordedTVLibrary,""explorer """"shell:RecordedTVLibrary""""""
+RecycleBinFolder,""explorer """"shell:RecycleBinFolder""""""
+ResourceDir,""explorer """"shell:ResourceDir""""""
+Retail Demo,""explorer """"shell:Retail Demo""""""
+Ringtones,""explorer """"shell:Ringtones""""""
+Roamed Tile Images,""explorer """"shell:Roamed Tile Images""""""
+Roaming Tiles,""explorer """"shell:Roaming Tiles""""""
+SavedGames,""explorer """"shell:SavedGames""""""
+SavedPictures,""explorer """"shell:SavedPictures""""""
+SavedPicturesLibrary,""explorer """"shell:SavedPicturesLibrary""""""
+Screenshots,""explorer """"shell:Screenshots""""""
+Searches,""explorer """"shell:Searches""""""
+SearchHistoryFolder,""explorer """"shell:SearchHistoryFolder""""""
+SearchHomeFolder,""explorer """"shell:SearchHomeFolder""""""
+SearchTemplatesFolder,""explorer """"shell:SearchTemplatesFolder""""""
+SendTo,""explorer """"shell:SendTo""""""
+Start Menu,""explorer """"shell:Start Menu""""""
+Startup,""explorer """"shell:Startup""""""
+SyncCenterFolder,""explorer """"shell:SyncCenterFolder""""""
+SyncResultsFolder,""explorer """"shell:SyncResultsFolder""""""
+SyncSetupFolder,""explorer """"shell:SyncSetupFolder""""""
+System,""explorer """"shell:System""""""
+SystemCertificates,""explorer """"shell:SystemCertificates""""""
+SystemX86,""explorer """"shell:SystemX86""""""
+Templates,""explorer """"shell:Templates""""""
+ThisDeviceFolder,""explorer """"shell:ThisDeviceFolder""""""
+ThisPCDesktopFolder,""explorer """"shell:ThisPCDesktopFolder""""""
+User Pinned,""explorer """"shell:User Pinned""""""
+UserProfiles,""explorer """"shell:UserProfiles""""""
+UserProgramFiles,""explorer """"shell:UserProgramFiles""""""
+UserProgramFilesCommon,""explorer """"shell:UserProgramFilesCommon""""""
+UsersFilesFolder,""explorer """"shell:UsersFilesFolder""""""
+UsersLibrariesFolder,""explorer """"shell:UsersLibrariesFolder""""""
+VideosLibrary,""explorer """"shell:VideosLibrary""""""
+Windows,""explorer """"shell:Windows""""""
+🤖 Stehouwer LLM
+💾 On-Demand Space Ingestion Result:
+Status: success
+Target Space: drip_ledger
+Target Table: trades
+Record ID: 7
+Integrity Check: verified
+Timestamp: 2026-09-13 11:24:24
+Live record persisted to disk with WAL synchronization.
+
+🧠 Inspect AI Reasoning & Execution Trace
+(Fast API Edge)
+👤 You
+learn from past chat errors
+🤖 Stehouwer LLM
+Brett: 🚀 Alright, let's sift through the past chat errors to see what we can learn and improve. What specific errors are you referring to, and what would you like to focus on?
+
+🧠 Inspect AI Reasoning & Execution Trace
+(Fast API Edge)
+👤 You
+try to look back and figure that out
+🤖 Stehouwer LLM
+Brett: 🧠 Alright, let's dive into the past chat errors and see what we can learn. Could you please specify which errors you're interested in reviewing? Whether it's about command syntax, tool usage, or something else, I'm here to help you figure out what went wrong and how to fix it.
+Steps to Review:
+Identify the Errors: List out the specific errors you want to examine.
+Contextual Analysis: Look at the context in which each error occurred.
+Learn from the Mistakes: Identify patterns or common issues.
+Implement Solutions: Come up with actionable steps to prevent future occurrences.
+Feel free to share the errors, and I'll help you break them down and learn from them.
+
+🧠 Inspect AI Reasoning & Execution Trace
+(Fast API Edge)
+👤 You
+no id like you to try to find errors or potential errors
+🤖 Stehouwer LLM
+Got it. Let’s take a step back and focus on what you need assistance with directly, without diving into error analysis. What specific tasks or questions do you have for me?
+
+🧠 Inspect AI Reasoning & Execution Trace
+(Fast API Edge)
+👤 You
+whatis the correct question to ask you
+🤖 Stehouwer LLM
+The correct question to ask me, Brett, is one that clearly and directly states what you need help with. For example, if you need assistance with a specific task or have a particular question, you could ask:
+What is the correct Python code to accomplish [task]?
+How can I optimize this database query in SQLite?
+Can you help me debug this piece of code?
+What are the best practices for [topic]?
+Feel free to be as detailed as possible so I can provide the most accurate and helpful response.
+
+🧠 Inspect AI Reasoning & Execution Trace
+(Fast API Edge)
+👤 You
+What is the correct Python code to accomplish [task]?
+How can I optimize this database query in SQLite?
+Can you help me debug this piece of code?
+What are the best practices
+🤖 Stehouwer LLM
+Got it! Let's dive into what you need help with. What specific task or question do you have for me?
+
+🧠 Inspect AI Reasoning & Execution Trace
+(Fast API Edge)
+👤 You
+How can I optimize this database query in SQLite?
+🤖 Stehouwer LLM
+To optimize a database query in SQLite, consider the following steps:
+Indexing:
+Identify the columns that are frequently used in WHERE clauses, JOIN conditions, or ORDER BY clauses.
+Create indexes on these columns using the CREATE INDEX statement. For example:
+SQL
+🔍 Validate
+⚡ Patch
+📋 Copy Code
+❌ Syntax Error: Syntax invalid
+✕
+CREATE INDEX idx_clients_name ON clients(name);
+Query Rewrite:
+Analyze the query to see if it can be rewritten to reduce complexity. Avoid using subqueries in the WHERE clause if possible.
+Use EXPLAIN to understand how SQLite executes the query and identify bottlenecks.
+PRAGMA Cache Size and MMAP Size:
+Set the cache_size and mmap_size pragmas for better performance. For example:
+SQL
+🔍 Validate
+⚡ Patch
+📋 Copy Code
+❌ Syntax Error: Syntax invalid
+✕
+PRAGMA cache_size = -32000;
+PRAGMA mmap_size = 536870912;
+Database Maintenance:
+Regularly run VACUUM and PRAGMA wal_checkpoint(TRUNCATE) to defragment the database and improve performance.
+**Avoid SELECT ***:
+Only select the columns you need instead of using SELECT *. This reduces the amount of data transferred and processed.
+Limit Results:
+If you only need a subset of the results, use the LIMIT clause to reduce the number of rows returned.
+Avoid Nested Queries:
+Use JOINs instead of nested queries whenever possible. Joins can be more efficient than subqueries.
+Use EXPLAIN QUERY PLAN:
+Use the EXPLAIN QUERY PLAN statement to understand how SQLite executes the query and identify any inefficiencies.
+Here is an example of an optimized query:
+SQL
+🔍 Validate
+⚡ Patch
+📋 Copy Code
+❌ Syntax Error: Syntax invalid
+✕
+-- Original query
+SELECT * FROM clients WHERE name LIKE '%John%';
+
+-- Optimized query with indexing and LIMIT
+CREATE INDEX idx_clients_name ON clients(name);
+SELECT * FROM clients WHERE name LIKE '%John%' LIMIT 10;
+By following these steps, you can significantly improve the performance of your SQLite queries. If you have a specific query you'd like to optimize, feel free to share it, and I can provide more detailed guidance.
+
+🧠 Inspect AI Reasoning & Execution Trace
+(Fast API Edge)
+@Developer
+@Ecosystem
+@Calendar
+@Documents
+@Email
+📊 Context Budget: 0 chars • ~0 tokens
+(0% of 8,192 max window)
+🛠️ Active Agent Tools:
+○ 📋 Mode: Plan & Review
+● ⚡ Shadow Coder
+● unreal 3d_engine
+● search local_files
+● polyglot runner
+● vector vault
+● ast shredder
+● auto healer
+
+
+
+
+
+📦 Artifacts & Tools
+
+[/]
+Commands
+▼
+📎
+Message Stehouwer LLM or run /read, /write, /ls, /edit, /ps, /wsl... (Enter to send)
+🎙️
+🔊
+➤
+Clear Screen (Retains Memory)
+👑 43-Module Oversight
+🔍 11 Spaces
+💾 Ingest to DB
+🛡️ Risk & Governance Review
+📊 Context Stress Test
+🟢
+Auto-Save Active
+Stehouwer LLM v5.273.0 • RTX 4090 GPU Accelerated",7.0,Part II Line 18,Logged via BS-Chat
+7,2026-08-10,expense,Other Business,FUEL,15.0,Sec179_Hardware,
+4,2026-07-25,income,Commercial API Payouts,PayPal Commercial API Payout - Pro Tier,29.99,Gross_Sales,PayPal TX #99182
+3,2026-07-25,expense,Server Electricity,Dedicated GPU Host Rig Utility Cost,120.0,Utilities_Electric,Estimated Monthly Power
+2,2026-07-25,expense,Cloud Infrastructure,Cloudflare Zero-Trust & Domain Hosting,45.0,Utilities_Software,Cloudflare Invoice
+1,2026-07-25,expense,Hardware / Equipment,NVIDIA GeForce RTX 4090 GPU (Section 179 Write-off),1599.99,Sec179_Hardware,Newegg Receipt #88412

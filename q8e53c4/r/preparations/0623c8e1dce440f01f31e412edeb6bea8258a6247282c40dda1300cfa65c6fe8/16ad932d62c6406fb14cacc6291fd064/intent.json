@@ -1,0 +1,79 @@
+{
+  "kind": "project_preparation",
+  "request_id": "16ad932d62c6406fb14cacc6291fd064",
+  "owner": "local_admin",
+  "plan": {
+    "request_id": "16ad932d62c6406fb14cacc6291fd064",
+    "repository_id": "ai-bs",
+    "objective": "Implement clamp(value, lower, upper) in native_app.py: return lower below the lower bound, upper above the upper bound, otherwise value. Assume lower <= upper. Preserve the signature and existing tests.",
+    "files": [
+      {
+        "relative_path": "native_app.py",
+        "role": "editable"
+      },
+      {
+        "relative_path": "test_native_app.py",
+        "role": "verification"
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python_unittest",
+        "profile": "python_unittest",
+        "targets": [
+          "test_native_app"
+        ]
+      }
+    ],
+    "limits": {
+      "check_seconds": 30,
+      "total_seconds": 180,
+      "output_bytes": 262144
+    }
+  },
+  "plan_sha256": "1692c4d78ae6e1f49a168bf600edb1c65961f9c375e8a31df6eeec391bba5971",
+  "repository_policy_sha256": "76a7c436fb17d74208fa8b7ca6661ca25224125a8c7b5083263135c3c498d33e",
+  "snapshot": {
+    "schema_version": 1,
+    "state": "SNAPSHOT_ONLY",
+    "authorized": false,
+    "executed": false,
+    "commit": "66135a08a2b8bd4e20cc04e02a4f069a373d8115",
+    "files": [
+      {
+        "relative_path": "native_app.py",
+        "role": "editable",
+        "length": 49,
+        "sha256": "431f7ff295b4b180e99157c8bd2d5191459f8b8511799b90808ce71bc5ccc556"
+      },
+      {
+        "relative_path": "test_native_app.py",
+        "role": "verification",
+        "length": 310,
+        "sha256": "b63dc6e81da6501833b06f60ad78c2f053e6ac169c4b454d41c42d1769ee9251"
+      }
+    ],
+    "byte_count": 359,
+    "captured_at_utc": "2026-11-14T23:26:37.964939+00:00",
+    "snapshot_sha256": "63327daee581f6db41296005efb37a528a48b51d9bc0dd2aca5386ed69de25cc"
+  },
+  "checks": [
+    {
+      "check_id": "python_unittest",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "test_native_app"
+      ]
+    }
+  ],
+  "review_digest": "9d4f284d4d79a07f663958f2b6c1aab6eaca6352149055ed26e4367685f37bdd",
+  "state": "PREPARING",
+  "worker": {
+    "pid": 55908,
+    "created": 1794697973.2263496
+  },
+  "created_at_utc": "2026-11-14T23:26:37.965937+00:00",
+  "entry_sha256": "46991f53140b949d206e4cd814f6783b59ba01006e66781cd32a9429f288dc99"
+}

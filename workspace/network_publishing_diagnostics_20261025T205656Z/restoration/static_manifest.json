@@ -1,0 +1,158 @@
+{
+  "actor": "/root",
+  "utc": "2026-10-25T21:26:07.456479+00:00",
+  "phase": "prepared_static_origin",
+  "prefix": "C:\\StehouwerPublishing.com\\restoration_staging\\20261025T205656Z",
+  "public": "C:\\StehouwerPublishing.com\\restoration_staging\\20261025T205656Z\\public",
+  "exe": "C:\\Users\\footb\\AppData\\Local\\Microsoft\\WinGet\\Packages\\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\\nginx-1.31.3\\nginx.exe",
+  "config": "C:\\StehouwerPublishing.com\\restoration_staging\\20261025T205656Z\\nginx.static.conf",
+  "config_sha256": "fcf8f8e919e2fe02e1797f555845f584f6c8782d1487ce1c82f6e891211dc1a9",
+  "file_count": 19,
+  "total_bytes": 2429241,
+  "source_total_bytes": 2432840,
+  "free_bytes_before": 43219386368,
+  "private_or_tracking_files_copied": false,
+  "optional_structured_contact_data_removed": true,
+  "ordinary_website_contact_copy": "retained under explicit owner request to restore intended website; no values exported",
+  "source_originals_unchanged": true,
+  "config_test_exit": 0,
+  "files": [
+    {
+      "relative": "index.html",
+      "source_bytes": 5108,
+      "source_sha256": "954807c904fb03bf3ac91d9e0fe0201f353626bf89996707603c9593dd8fb684",
+      "bytes": 1509,
+      "sha256": "efa51df9c46d5506358cb04fe54976d1a8124d562973a19a2ddd25a478639b10"
+    },
+    {
+      "relative": "assets/Preview-DG7rwkwP.js",
+      "source_bytes": 1520,
+      "source_sha256": "23685e7c8abf09d2a25818867148b17176eeff4160794adda14f5d41d58e8ace",
+      "bytes": 1520,
+      "sha256": "23685e7c8abf09d2a25818867148b17176eeff4160794adda14f5d41d58e8ace"
+    },
+    {
+      "relative": "assets/dash.all.min-BJ49VMfO.js",
+      "source_bytes": 858289,
+      "source_sha256": "2d7cd408417d5884c08ac8b58571991a7d347435391a15d4e16adee61ea0051c",
+      "bytes": 858289,
+      "sha256": "2d7cd408417d5884c08ac8b58571991a7d347435391a15d4e16adee61ea0051c"
+    },
+    {
+      "relative": "assets/hls-CoORUb_e.js",
+      "source_bytes": 524226,
+      "source_sha256": "d0d90a05c965b5b2673c2fc9d3ee54111f253886b3dcb94d3e3b1a41c3ef1897",
+      "bytes": 524226,
+      "sha256": "d0d90a05c965b5b2673c2fc9d3ee54111f253886b3dcb94d3e3b1a41c3ef1897"
+    },
+    {
+      "relative": "assets/index-B6_3PTYU.js",
+      "source_bytes": 2339,
+      "source_sha256": "3df068b3eebfadb164a19c4edfcdb40dfc7f57a919be2f37d2e6fb35a56b6809",
+      "bytes": 2339,
+      "sha256": "3df068b3eebfadb164a19c4edfcdb40dfc7f57a919be2f37d2e6fb35a56b6809"
+    },
+    {
+      "relative": "assets/index-DiVaW3ll.css",
+      "source_bytes": 3909,
+      "source_sha256": "4a2425cf1e349335dd0967fb1ae19522f731f0344cd90698fc701734f802f5e3",
+      "bytes": 3909,
+      "sha256": "4a2425cf1e349335dd0967fb1ae19522f731f0344cd90698fc701734f802f5e3"
+    },
+    {
+      "relative": "assets/index-NQ4u1ogD.js",
+      "source_bytes": 256344,
+      "source_sha256": "f8ce8d921e9e8ea7bb6e4b1265483754da83b0a0ab84a79e0135648e065a38bb",
+      "bytes": 256344,
+      "sha256": "f8ce8d921e9e8ea7bb6e4b1265483754da83b0a0ab84a79e0135648e065a38bb"
+    },
+    {
+      "relative": "assets/index-UzGUYM6D.js",
+      "source_bytes": 538168,
+      "source_sha256": "80805f12146fb0f9a477576ffc1211cc7cb29ec3e91054bc78102c8e34297ad2",
+      "bytes": 538168,
+      "sha256": "80805f12146fb0f9a477576ffc1211cc7cb29ec3e91054bc78102c8e34297ad2"
+    },
+    {
+      "relative": "assets/mixin-DIQKSja0.js",
+      "source_bytes": 18962,
+      "source_sha256": "f8ae155310e54215e5e66fd5717abd58cd01601d5f7de559bde8056f4a7c788f",
+      "bytes": 18962,
+      "sha256": "f8ae155310e54215e5e66fd5717abd58cd01601d5f7de559bde8056f4a7c788f"
+    },
+    {
+      "relative": "assets/react-BDl8_mUz.js",
+      "source_bytes": 8558,
+      "source_sha256": "ed8ae96a6144a289f45b9a139ca19b3ccf8d52d79abd7fb4fdd683d0a0bdbc06",
+      "bytes": 8558,
+      "sha256": "ed8ae96a6144a289f45b9a139ca19b3ccf8d52d79abd7fb4fdd683d0a0bdbc06"
+    },
+    {
+      "relative": "assets/react-BJcVQbmV.js",
+      "source_bytes": 8939,
+      "source_sha256": "d083a71c3791fa6ecbe7d06f70318795d77852eca8ae11d6efb8678b7a380fe5",
+      "bytes": 8939,
+      "sha256": "d083a71c3791fa6ecbe7d06f70318795d77852eca8ae11d6efb8678b7a380fe5"
+    },
+    {
+      "relative": "assets/react-BSmgMon5.js",
+      "source_bytes": 10221,
+      "source_sha256": "c2b2d2bb7a6048d0ec6be7a9eb4b56dc3eb6bdc61fc19b5acaf71c5ce60201ba",
+      "bytes": 10221,
+      "sha256": "c2b2d2bb7a6048d0ec6be7a9eb4b56dc3eb6bdc61fc19b5acaf71c5ce60201ba"
+    },
+    {
+      "relative": "assets/react-CWY_MlsN.js",
+      "source_bytes": 52428,
+      "source_sha256": "bef0be688c5605f3fdd51de7b96214150a4db4bf9b41cfebc6283603ad9d3416",
+      "bytes": 52428,
+      "sha256": "bef0be688c5605f3fdd51de7b96214150a4db4bf9b41cfebc6283603ad9d3416"
+    },
+    {
+      "relative": "assets/react-CaXKJ2qg.js",
+      "source_bytes": 6390,
+      "source_sha256": "c8ae18a05c42ce22f28963dccc68d94b4050ceafcce8db5b47da56bbd7622d1b",
+      "bytes": 6390,
+      "sha256": "c8ae18a05c42ce22f28963dccc68d94b4050ceafcce8db5b47da56bbd7622d1b"
+    },
+    {
+      "relative": "assets/react-D60ae7iM.js",
+      "source_bytes": 13290,
+      "source_sha256": "c51f4146132a56e224bd5f0aa701883bec97da93c63b42ac995d2f04affd5b3b",
+      "bytes": 13290,
+      "sha256": "c51f4146132a56e224bd5f0aa701883bec97da93c63b42ac995d2f04affd5b3b"
+    },
+    {
+      "relative": "assets/react-DbfVaVVq.js",
+      "source_bytes": 7740,
+      "source_sha256": "f921af9d4dafb5e76cf003275cf317410d310a7f686a84bac8657c8fdb0e5b2c",
+      "bytes": 7740,
+      "sha256": "f921af9d4dafb5e76cf003275cf317410d310a7f686a84bac8657c8fdb0e5b2c"
+    },
+    {
+      "relative": "assets/react-DjczQAhS.js",
+      "source_bytes": 11434,
+      "source_sha256": "e082c2b38577b6aef6329f0da0c70526b203772a538cccc650e5101d2d7c94ce",
+      "bytes": 11434,
+      "sha256": "e082c2b38577b6aef6329f0da0c70526b203772a538cccc650e5101d2d7c94ce"
+    },
+    {
+      "relative": "images/brett.jpg",
+      "source_bytes": 91201,
+      "source_sha256": "01db736530f6f375fa9a36598520666ba8086160d7404cd2318ebaaae1abeb0a",
+      "bytes": 91201,
+      "sha256": "01db736530f6f375fa9a36598520666ba8086160d7404cd2318ebaaae1abeb0a"
+    },
+    {
+      "relative": "images/julie.jpg",
+      "source_bytes": 13774,
+      "source_sha256": "dc458bbaae2c074c3e44d0aa9682cc270a0b6410472cf5d6fe7ab27500294c94",
+      "bytes": 13774,
+      "sha256": "dc458bbaae2c074c3e44d0aa9682cc270a0b6410472cf5d6fe7ab27500294c94"
+    }
+  ],
+  "config_test_attempt": 3,
+  "config_test_correction": "server_names_hash_bucket_size64 for intended hostname length",
+  "config_test_utc": "2026-10-25T21:27:14.297064+00:00",
+  "prefix_setup_correction": "Created isolated default temp directories after syntax succeeded but directory setup failed; hash sizing issue resolved on attempt2"
+}
