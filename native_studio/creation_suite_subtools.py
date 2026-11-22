@@ -4,7 +4,7 @@ Pixel-perfect native desktop replica of http://localhost:5173/?tab=unified_creat
 1. Video Studio: Wan2.1 diffusion renderer on RTX 4090, 7 engines, 6 style modifiers, live logs, video monitor, recent clips.
 2. ComfyUI Studio: Workflow selection, chunk duration slider, Hollywood script upload/parser (130 wpm), scene timeline cards, GPU queue.
 3. Visual Scripting: GPU Direct2D QGraphicsScene node flow graph (Start, Print, Math, Logic Branch, Spawn 3D, Telemetry Matrix), code compiler & runner.
-4. Lock Screen: Security barrier requiring password 'jssdbdAS2631' or Julie Stehouwer / operator bypass.
+4. Lock Screen: Privacy screen that hides the suite until Unlock is pressed (no password).
 5. Studio Guide: Comprehensive interactive documentation dialog.
 """
 
@@ -1168,7 +1168,7 @@ class VisualScriptingPage(QWidget):
 
 
 # ===========================================================================
-# 4. LOCK SCREEN PAGE (Security Password Barrier 'jssdbdAS2631')
+# 4. LOCK SCREEN PAGE (privacy screen, no password)
 # ===========================================================================
 class LockScreenPage(QWidget):
     """Creation Suite Security Barrier & Password Unlock Modal."""
@@ -1201,24 +1201,11 @@ class LockScreenPage(QWidget):
         lbl_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         c_lay.addWidget(lbl_title)
 
-        lbl_desc = QLabel("Enter security password to access Hollywood Screenwriting, Video Studio, ComfyUI, and Visual Scripting:")
+        lbl_desc = QLabel("Your work is hidden. Unlock to return to Screenwriting, Video Studio, ComfyUI, and Visual Scripting.")
         lbl_desc.setStyleSheet("color: #94a3b8; font-size: 8.5pt; text-align: center;")
         lbl_desc.setWordWrap(True)
         lbl_desc.setAlignment(Qt.AlignmentFlag.AlignCenter)
         c_lay.addWidget(lbl_desc)
-
-        self.txt_pwd = QLineEdit()
-        self.txt_pwd.setEchoMode(QLineEdit.EchoMode.Password)
-        self.txt_pwd.setPlaceholderText("Enter creation suite password...")
-        self.txt_pwd.setStyleSheet("background: #070b14; border: 1px solid #334155; color: #ffffff; padding: 8px 12px; border-radius: 6px; font-size: 9pt;")
-        self.txt_pwd.returnPressed.connect(self._on_unlock)
-        c_lay.addWidget(self.txt_pwd)
-
-        self.lbl_err = QLabel()
-        self.lbl_err.setStyleSheet("color: #ef4444; font-size: 8pt; font-weight: bold;")
-        self.lbl_err.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lbl_err.hide()
-        c_lay.addWidget(self.lbl_err)
 
         btn_unlock = QPushButton("Unlock Creation Suite")
         btn_unlock.setStyleSheet(
@@ -1227,29 +1214,12 @@ class LockScreenPage(QWidget):
         btn_unlock.clicked.connect(self._on_unlock)
         c_lay.addWidget(btn_unlock)
 
-        btn_bypass = QPushButton("🌸 Julie Stehouwer / Operator Quick Bypass")
-        btn_bypass.setStyleSheet(
-            "background: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid #db2777; padding: 6px 14px; border-radius: 6px; font-size: 8pt; font-weight: bold; cursor: pointer;"
-        )
-        btn_bypass.clicked.connect(lambda: self.unlock_callback("BYPASS"))
-        c_lay.addWidget(btn_bypass)
-
         layout.addWidget(card)
 
     def _on_unlock(self) -> None:
-        pwd = self.txt_pwd.text().strip()
-        if not pwd:
-            self.lbl_err.show()
-            self.lbl_err.setText("Please enter the security password.")
-            return
-
-        if pwd == "jssdbdAS2631":
-            self.lbl_err.hide()
-            self.txt_pwd.clear()
-            self.unlock_callback("jssdbdAS2631")
-        else:
-            self.lbl_err.show()
-            self.lbl_err.setText("❌ Invalid security password. Access denied.")
+        # Privacy screen only. The former hard-coded password (removed 2026-11-22) protected
+        # nothing: a bypass button sat beside it and the password was public in source.
+        self.unlock_callback("UNLOCK")
 
 
 # ===========================================================================
@@ -1288,7 +1258,7 @@ class StudioGuideDialog(QDialog):
             ("🎬 Video Studio", "Real-time diffusion video generation powered by Wan2.1 and Wan-Dancer-14B on NVIDIA RTX 4090. Select from 7 video engines and 6 artistic styles (Cinematic 8K, Pixar 3D, Anime Ghibli, Vintage 70s). Includes hardware-accelerated playback monitor and local clip registry."),
             ("❇️ ComfyUI Studio", "Direct GPU pipeline to ComfyUI on Ports 8189 & 8188. Parse standard Hollywood scripts using industry-standard duration calculators (130 words per minute). Queue multi-scene chunk timelines with reference image consistency and latent diffusion."),
             ("🔀 Visual Scripting", "Direct2D GPU-accelerated node flow canvas. Assemble complex computational workflows with Start, Action (Print), Math (+, -, *, /), Logic Branch (If/Else), 3D Object Spawner, and Hardware Telemetry matrix nodes. Compile to Python, Node.js, or live Direct2D."),
-            ("🔒 Security & Lockouts", "Locked studios require password 'jssdbdAS2631'. Julie Stehouwer and authorized operators have automatic biometric bypass."),
+            ("🔒 Privacy Lock", "The Lock button hides your work behind a privacy screen; press Unlock to return. It is not a password-protected security barrier."),
         ]
 
         for title, text in guides:
